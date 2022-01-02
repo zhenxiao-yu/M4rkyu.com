@@ -11,6 +11,7 @@ const Box = styled.div`
   align-items: center;
 `;
 
+// loading functional component
 const Loading = () => {
   return (
     <Box>

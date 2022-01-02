@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { DarkTheme, mediaQueries } from "../components/Themes";
 
+// define common style for social media icons
 const Icons = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,22 +14,16 @@ const Icons = styled.div`
   position: fixed;
   bottom: 0;
   left: 2rem;
-
   z-index: 3;
-
   & > *:not(:last-child) {
     margin: 0.5rem 0;
-
     ${mediaQueries(20)`
       margin: 0.3rem 0;
-
-
   `};
   }
 
   ${mediaQueries(40)`
   left: 1rem;
-
       svg{
         width:20px;
         height:20px
@@ -55,7 +50,7 @@ const SocialIcons = (props) => {
         <NavLink
           style={{ color: "inherit" }}
           target="_blank"
-          to={{ pathname: "https://github.com/codebucks27" }}
+          to={{ pathname: "https://github.com/zhenxiao-yu" }}
         >
           <Github
             width={25}
@@ -66,6 +61,7 @@ const SocialIcons = (props) => {
           />
         </NavLink>
       </motion.div>
+
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
