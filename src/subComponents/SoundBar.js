@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-
-import music from "../assets/audio/u-said-it-v13-1167.mp3";
 import { mediaQueries } from "../components/Themes";
+
+// music file
+import music from "../assets/audio/u-said-it-v13-1167.mp3";
+
 const Box = styled.div`
   display: flex;
   cursor: pointer;
@@ -63,13 +65,14 @@ const Line = styled.span`
   `};
 `;
 
+// sound bar functional component
 const SoundBar = () => {
+  // click state initially set to false
   const [click, setClick] = useState(false);
-
+  //toggle between play & pause when clicked
   const handleClick = () => {
     setClick(!click);
     if (!click) {
-      //
       ref.current.play();
     } else {
       ref.current.pause();
@@ -85,7 +88,6 @@ const SoundBar = () => {
       <Line click={click} />
       <Line click={click} />
       <Line click={click} />
-
       <audio src={music} ref={ref} loop />
     </Box>
   );
