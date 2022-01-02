@@ -31,6 +31,7 @@ const Icons = styled.div`
 
   `};
 `;
+
 const Line = styled(motion.span)`
   width: 2px;
   height: 8rem;
@@ -42,6 +43,8 @@ const SocialIcons = (props) => {
 
   return (
     <Icons>
+
+      {/* github */}
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
@@ -62,6 +65,7 @@ const SocialIcons = (props) => {
         </NavLink>
       </motion.div>
 
+      {/* twitter */}
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
@@ -81,6 +85,8 @@ const SocialIcons = (props) => {
           />
         </NavLink>
       </motion.div>
+
+      {/* facebook */}
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
@@ -89,7 +95,7 @@ const SocialIcons = (props) => {
         <NavLink
           style={{ color: "inherit" }}
           target="_blank"
-          to={{ pathname: "https://www.facebook.com/codebucks27" }}
+          to={{ pathname: "https://www.facebook.com/mark.yu.3762584" }}
         >
           <Facebook
             width={25}
@@ -100,6 +106,8 @@ const SocialIcons = (props) => {
           />
         </NavLink>
       </motion.div>
+      
+      {/* youtube chanel */}
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
@@ -110,7 +118,7 @@ const SocialIcons = (props) => {
           target="_blank"
           to={{
             pathname:
-              "https://www.youtube.com/channel/UCeYt6blRBKuNrEg_-282fSA",
+              "https://www.youtube.com/channel/UCUY09EUdbMoyDeWrMBYcUZQ",
           }}
         >
           <YouTube
@@ -123,6 +131,7 @@ const SocialIcons = (props) => {
         </NavLink>
       </motion.div>
 
+      {/* line decoration */}
       <Line
         initial={{ height: 0 }}
         animate={{ height: mq ? "5rem" : "8rem" }}
