@@ -7,7 +7,7 @@ import astronaut from "../assets/Images/spaceman.png";
 import Loading from '../subComponents/Loading';
 //Components
 const SocialIcons = lazy(() => import('../subComponents/SocialIcons'))
-const PowerButton = lazy(() => import('../subComponents/PowerButton'))
+const HomeButton = lazy(() => import('../subComponents/HomeButton'))
 const LogoComponent = lazy(() => import('../subComponents/LogoComponent'))
 const ParticlesComponent = lazy(() =>
   import('../subComponents/ParticlesComponent')
@@ -94,7 +94,7 @@ const AboutPage = () => {
           animate={{ opacity: 1, transition: { duration: 0.5 } }}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}>
           <LogoComponent theme='dark' />
-          <PowerButton />
+          <HomeButton />
           <SocialIcons theme='dark' />
           <ParticlesComponent theme='dark' />
 

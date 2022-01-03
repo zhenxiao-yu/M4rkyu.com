@@ -8,7 +8,7 @@ import Loading from "../subComponents/Loading"; //loading component
 
 //Components
 const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const PowerButton = lazy(() => import("../subComponents/PowerButton"));
+const HomeButton = lazy(() => import("../subComponents/HomeButton"));
 const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
 const ParticlesComponent = lazy(() =>
   import("../subComponents/ParticlesComponent")
@@ -157,7 +157,7 @@ const MySkillsPage = () => {
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
         >
           <LogoComponent theme="light" />
-          <PowerButton />
+          <HomeButton />
           <SocialIcons theme="light" />
           <ParticlesComponent theme="light" />
 

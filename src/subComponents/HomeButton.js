@@ -1,4 +1,4 @@
-import { PowerBtn } from "../components/AllSvgs";
+import { Home } from "../components/AllSvgs";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { mediaQueries } from "../components/Themes";
@@ -12,19 +12,18 @@ const Power = styled.button`
   background-color: #fcf6f4;
   padding: 0.3rem;
   border-radius: 50%;
-  border: 1px solid black;
-  width: 2.5rem;
-  height: 2.5rem;
+  border: 2px solid black;
+  width: 3rem;
+  height: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 3;
-
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 255, 0, 0.4);
-    box-shadow: 0 0 8px 6px rgba(0, 255, 0, 0.2);
+    background-color: rgba(30, 215, 96, 1);
+    box-shadow: 0 0 7px 6px rgba(30, 215, 96, 0.3);
   }
 
   & > *:first-child {
@@ -34,7 +33,7 @@ const Power = styled.button`
 
   ${mediaQueries(40)`
    width: 2rem;
-  height: 2rem;
+   height: 2rem;
       svg{
         width:20px;
         height:20px;
@@ -42,14 +41,16 @@ const Power = styled.button`
 
   `};
 `;
-const PowerButton = () => {
+
+// 
+const HomeButton = () => {
   return (
     <Power>
       <NavLink to="/">
-        <PowerBtn width={30} height={30} fill="currentColor" />
+        <Home width={30} height={30} fill="currentColor" />
       </NavLink>
     </Power>
   );
 };
 
-export default PowerButton;
+export default HomeButton;

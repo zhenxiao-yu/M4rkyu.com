@@ -19,6 +19,28 @@ export const PowerBtn = (props) => {
   );
 };
 
+export const Home = (props) => {
+  return (
+    <svg
+      t="1641246891229"
+      class="icon"
+      viewBox="0 0 1024 1024"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      p-id="6606"
+      width="200"
+      height="200"
+      {...props}
+    >
+      <path
+        d="M169.024 596.032v280.512h149.12v-167.488h382.528v167.488h149.12V593.536L509.632 351.744 169.024 596.032z m340.352-347.52l425.536 302.4V960h-319.36v-167.488H403.264V960H83.84V553.664L509.44 248.448zM49.664 491.008L0 423.168 509.248 64 1024 423.168l-49.28 67.968-465.152-324.48L49.664 491.008z"
+        fill="#000000"
+        p-id="6607"
+      ></path>
+    </svg>
+  );
+};
+
 export const Github = (props) => {
   return (
     <svg

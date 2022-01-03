@@ -2,8 +2,11 @@ import styled from "styled-components";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
+//background image
 import img from "../assets/Images/blogBG.jpg";
+//blog data
 import { Blogs } from "./BlogData";
+
 
 import BlogComponent from "./BlogComponent";
 import Loading from "../subComponents/Loading";
@@ -11,7 +14,7 @@ import { mediaQueries } from "./Themes";
 
 const AnchorComponent = lazy(() => import("../subComponents/Anchor"));
 const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const PowerButton = lazy(() => import("../subComponents/PowerButton"));
+const HomeButton = lazy(() => import("../subComponents/HomeButton"));
 const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
 const BigTitle = lazy(() => import("../subComponents/BigTitle"));
 
@@ -25,7 +28,6 @@ const MainContainer = styled(motion.div)`
 
 const Container = styled.div`
   background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.8)`};
-
   //width:100vw;
   width: 100%;
   height: auto;
@@ -38,11 +40,8 @@ const Center = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 10rem;
-
   ${mediaQueries(30)`
     padding-top: 7rem;
-    
-  
   `};
 `;
 
@@ -83,9 +82,7 @@ const BlogPage = () => {
       >
         <Container>
           <LogoComponent />
-
-          <PowerButton />
-
+          <HomeButton />
           <SocialIcons />
           <AnchorComponent number={number} />
 

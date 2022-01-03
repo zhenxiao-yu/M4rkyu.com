@@ -21,26 +21,21 @@ const Box = styled(motion(NavLink))`
   &:hover {
     color: ${(props) => props.theme.body};
     background-color: ${(props) => props.theme.text};
-
     transition: all 0.3s ease;
   }
 
   ${mediaQueries(50)`
     width:calc(60vw);
-
   `};
-  ${mediaQueries(30)`
-    
-    height:18rem;
 
+  ${mediaQueries(30)`
+    height:18rem;
   `};
 
   ${mediaQueries(25)`
-    
     height:14rem;
     padding:0.8rem;
     backdrop-filter: none;
-
   `};
 `;
 
@@ -52,10 +47,7 @@ const Image = styled.div`
   border: 1px solid transparent;
   background-position: center center;
   ${mediaQueries(25)`
-    
     height:70%;
-
-
   `};
 
   ${Box}:hover & {
@@ -63,6 +55,7 @@ const Image = styled.div`
   }
 `;
 
+//Blog title
 const Title = styled.h3`
   color: inherit;
   padding: 0.5rem 0;
@@ -71,15 +64,10 @@ const Title = styled.h3`
   font-weight: 700;
   ${mediaQueries(40)`
     font-size:calc(0.8em + 1vw);
-
   `};
 
   ${mediaQueries(25)`
-    
     font-size:calc(0.6em + 1vw);
-
-
-
   `};
 
   border-bottom: 1px solid ${(props) => props.theme.text};
@@ -88,16 +76,14 @@ const Title = styled.h3`
     border-bottom: 1px solid ${(props) => props.theme.body};
   }
 `;
+
 const HashTags = styled.div`
   padding: 0.5rem 0;
   ${mediaQueries(25)`
-    
     font-size:calc(0.5em + 1vw);
-
-
-
   `};
 `;
+
 const Tag = styled.span`
   padding-right: 0.5rem;
 `;
@@ -105,11 +91,7 @@ const Tag = styled.span`
 const Date = styled.span`
   padding: 0.5rem 0;
   ${mediaQueries(25)`
-    
     font-size:calc(0.5em + 1vw);
-
-
-
   `};
 `;
 

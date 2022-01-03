@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LogoComponent from "./LogoComponent";
-import PowerButton from "./PowerButton";
+import HomeButton from "./HomeButton";
 
 const Box = styled.div`
   position: fixed;
@@ -13,7 +13,7 @@ const TopBar = () => {
   return (
     <Box>
       <LogoComponent />
-      <PowerButton />
+      <HomeButton />
     </Box>
   );
 };
