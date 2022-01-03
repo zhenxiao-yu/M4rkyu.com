@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { lightTheme, mediaQueries } from "./Themes";
 
 import { Design, Develope } from "./AllSvgs";
-import Loading from "../subComponents/Loading";
+import Loading from "../subComponents/Loading"; //loading component
 
 //Components
 const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
@@ -31,7 +31,6 @@ height:auto;
             &>*:nth-child(5){
               margin-bottom:5rem;
             }
-           
   `};
   ${mediaQueries(30)`
            

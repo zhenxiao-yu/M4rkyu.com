@@ -16,7 +16,6 @@ const Box = styled(motion.li)`
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid ${(props) => props.theme.body};
-
   transition: all 0.2s ease;
   &:hover {
     background-color: ${(props) => props.theme.body};
@@ -28,58 +27,44 @@ const Box = styled(motion.li)`
         width:16rem;
         margin-right:6rem;
         height:35vh;
-       
-
   `};
   ${mediaQueries(40)`
         width:14rem;
         margin-right:4rem;
         height:35vh;
-        
-        
-
   `};
   ${mediaQueries(25)`
         width:12rem;
         margin-right:4rem;
         height:35vh;
 padding:1.5rem 1.5rem;
-        
-        
-
   `};
   ${mediaQueries(20)`
         width:10rem;
         margin-right:4rem;
         height:40vh;
-
-        
-        
-
   `};
 `;
 
+// Project title
 const Title = styled.h2`
   font-size: calc(1em + 0.5vw);
 `;
+
+// Project Description
 const Description = styled.h4`
   font-size: calc(0.8em + 0.3vw);
-
   font-family: "Karla", sans-serif;
   font-weight: 500;
   ${mediaQueries(25)`
   font-size:calc(0.7em + 0.3vw);
-
-
-
   `};
   ${mediaQueries(20)`
   font-size:calc(0.6em + 0.3vw);
-
-
-
   `};
 `;
+
+// Project tags (div)
 const Tags = styled.div`
   border-top: 2px solid ${(props) => props.theme.body};
   padding-top: 0.5rem;
@@ -89,16 +74,16 @@ const Tags = styled.div`
     border-top: 2px solid ${(props) => props.theme.text};
   }
 `;
+
+// Project tag (span)
 const Tag = styled.span`
   margin-right: 1rem;
   font-size: calc(0.8em + 0.3vw);
-
   ${mediaQueries(25)`
   font-size:calc(0.7em);
-
-
   `};
 `;
+
 const Footer = styled.footer`
   display: flex;
   justify-content: space-between;

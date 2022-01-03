@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// Big title style
 const Text = styled.h1`
   position: fixed;
   top: ${(props) => props.top};
@@ -10,6 +11,7 @@ const Text = styled.h1`
   z-index: 0;
 `;
 
+// 
 const BigTitle = (props) => {
   return (
     <Text top={props.top} left={props.left} right={props.right}>
