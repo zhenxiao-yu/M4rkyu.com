@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-import img from "../assets/Images/patrick-tomasso-Oaqk7qqNh_c-unsplash.jpg";
+import img from "../assets/Images/blogBG.jpg";
 import { Blogs } from "./BlogData";
 
 import BlogComponent from "./BlogComponent";
@@ -49,14 +49,9 @@ const Center = styled.div`
 const Grid = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(2, minmax(calc(10rem + 15vw), 1fr));
-
   grid-gap: calc(1rem + 2vw);
-
   ${mediaQueries(50)`
     grid-template-columns: 100%;
-
-    
-  
   `};
 `;
 
