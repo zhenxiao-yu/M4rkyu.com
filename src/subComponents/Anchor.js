@@ -4,25 +4,19 @@ import { useEffect, useRef } from "react";
 import { Anchor, Link } from "../components/AllSvgs";
 import { mediaQueries } from "../components/Themes";
 
+//anchor container
 const Container = styled.div`
   position: relative;
   ${mediaQueries(40)`
-    
     display:none;
-
-
-
   `};
 `;
 
+// initial position
 const PreDisplay = styled.div`
   position:absolute;
   top:0;
   right:2rem;
-
- 
-
-
 }
 `;
 
