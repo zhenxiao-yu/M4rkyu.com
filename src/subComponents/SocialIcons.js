@@ -1,4 +1,4 @@
-import { Github, Twitter, Facebook, YouTube } from "../components/AllSvgs";
+import { Github, Instagram, Facebook, YouTube, Linkedin } from "../components/AllSvgs";
 
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -65,7 +65,7 @@ const SocialIcons = (props) => {
         </NavLink>
       </motion.div>
 
-      {/* twitter */}
+      {/* linkedin */}
       <motion.div
         initial={{ transform: "scale(0)" }}
         animate={{ scale: [0, 1, 1.5, 1] }}
@@ -74,9 +74,30 @@ const SocialIcons = (props) => {
         <NavLink
           style={{ color: "inherit" }}
           target="_blank"
-          to={{ pathname: "https://twitter.com/code_bucks" }}
+          to={{ pathname: "" }}
         >
-          <Twitter
+          <Linkedin
+            width={25}
+            height={25}
+            fill={
+              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
+            }
+          />
+        </NavLink>
+      </motion.div>
+
+       {/* instagram */}
+       <motion.div
+        initial={{ transform: "scale(0)" }}
+        animate={{ scale: [0, 1, 1.5, 1] }}
+        transition={{ type: "spring", duration: 1, delay: 1.2 }}
+      >
+        <NavLink
+          style={{ color: "inherit" }}
+          target="_blank"
+          to={{ pathname: "https://www.instagram.com/m4rkyu/" }}
+        >
+          <Instagram
             width={25}
             height={25}
             fill={
