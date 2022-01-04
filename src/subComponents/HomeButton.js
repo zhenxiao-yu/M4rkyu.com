@@ -9,7 +9,7 @@ const Power = styled.button`
   left: 50%;
   transform: translate(-50%, 0);
 
-  background-color: #fcf6f4;
+  background-color: #FFE01B;
   padding: 0.3rem;
   border-radius: 50%;
   border: 2px solid black;

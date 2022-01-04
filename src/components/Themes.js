@@ -1,18 +1,17 @@
 export const lightTheme = {
-    body:"#FCF6F4",
-    text:"#000000",
+    body:"#FFE01B",
+    text:"#241C15",
     fontFamily:"'Ubuntu Mono', monospace",
-    bodyRgba : "252, 246, 244",
-    textRgba:"0,0,0",
-
+    bodyRgba : "255, 224, 27",
+    textRgba:"36,28,21",
 }
 
 export const DarkTheme = {
-    body:"#000000",
-    text:"#FCF6F4",
+    body:"#241C15",
+    text:"#FFE01B",
     fontFamily:"'Ubuntu Mono', monospace",
     textRgba : "252, 246, 244",
-    bodyRgba:"0,0,0",
+    bodyRgba:"36,28,21",
 
 }
 
