@@ -1,4 +1,4 @@
-export const Work = [
+export const Project = [
     {
         id:1,
         name:"Spring Boot Wiki",

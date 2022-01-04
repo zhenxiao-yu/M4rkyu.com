@@ -4,7 +4,7 @@ import { useEffect, useRef, lazy, Suspense } from "react";
 import styled, { ThemeProvider } from "styled-components";
 
 import { Spinner } from "./AllSvgs";
-import { Work } from "./WorkData";
+import { Project } from "./ProjectData";
 import { DarkTheme, mediaQueries } from "./Themes";
 
 import Card from "../subComponents/Card";
@@ -99,7 +99,7 @@ const container = {
   },
 };
 
-const WorkPage = () => {
+const ProjectPage = () => {
   const ref = useRef(null);
 
   const gearlogo = useRef(null);
@@ -124,7 +124,7 @@ const WorkPage = () => {
     <ThemeProvider theme={DarkTheme}>
       <Suspense fallback={<Loading />}>
         <Box
-          key="work"
+          key="project"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 1 } }}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -134,7 +134,7 @@ const WorkPage = () => {
           <SocialIcons theme="dark" />
 
           <Main ref={ref} variants={container} initial="hidden" animate="show">
-            {Work.map((d) => (
+            {Project.map((d) => (
               <Card key={d.id} data={d} />
             ))}
           </Main>
@@ -150,4 +150,4 @@ const WorkPage = () => {
   );
 };
 
-export default WorkPage;
+export default ProjectPage;

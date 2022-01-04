@@ -114,7 +114,7 @@ const BLOG = styled(NavLink)`
     text-shadow: ${(props) => (props.click ? "0 0 4px #000" : "none")};
   }
 `;
-const WORK = styled(NavLink)`
+const PROJECT = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 50%;
@@ -179,15 +179,13 @@ const Main = () => {
   const [click, setClick] = useState(false);
   const [path, setpath] = useState("");
   const handleClick = () => setClick(!click);
-
   const moveY = {
     y: "-100%",
   };
   const moveX = {
-    x: `${path === "work" ? "100%" : "-100%"}`,
+    x: `${path === "project" ? "100%" : "-100%"}`,
   };
   const mq = window.matchMedia("(max-width: 50em)").matches;
-
   return (
     <Suspense fallback={<Loading />}>
       <MainContainer
@@ -226,6 +224,7 @@ const Main = () => {
             <span>click here</span>
           </Center>
 
+          {/* Contact Link */}
           {mq ? (
             <Contact
               click={+click}
@@ -244,7 +243,7 @@ const Main = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                Contact Me &gt;
+                Contact Me
               </motion.h3>
             </Contact>
           ) : (
@@ -265,11 +264,13 @@ const Main = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                Contact Me &gt;
+                Contact Me
               </motion.h3>
             </Contact>
           )}
 
+
+          {/* Blog Link */}
           {mq ? (
             <BLOG click={+click} onClick={() => setpath("blog")} to="/blog">
               <motion.h2
@@ -306,9 +307,10 @@ const Main = () => {
             </BLOG>
           )}
 
-          <WORK click={+click} to="/work">
+          {/* Project LInk */}
+          <PROJECT click={+click} to="/project">
             <motion.h2
-              onClick={() => setpath("work")}
+              onClick={() => setpath("project")}
               initial={{
                 y: -200,
                 transition: { type: "spring", duration: 1.5, delay: 1 },
@@ -322,7 +324,7 @@ const Main = () => {
             >
               Projects
             </motion.h2>
-          </WORK>
+          </PROJECT>
 
           <BottomBar>
             <ABOUT
