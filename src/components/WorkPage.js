@@ -3,7 +3,7 @@ import { useEffect, useRef, lazy, Suspense } from "react";
 
 import styled, { ThemeProvider } from "styled-components";
 
-import { GearCircle } from "./AllSvgs";
+import { Spinner } from "./AllSvgs";
 import { Work } from "./WorkData";
 import { DarkTheme, mediaQueries } from "./Themes";
 
@@ -102,7 +102,7 @@ const container = {
 const WorkPage = () => {
   const ref = useRef(null);
 
-  const yinyang = useRef(null);
+  const gearlogo = useRef(null);
 
   useEffect(() => {
     let element = ref.current;
@@ -110,7 +110,7 @@ const WorkPage = () => {
     const rotate = () => {
       element.style.transform = `translateX(${-window.pageYOffset}px)`;
 
-      return (yinyang.current.style.transform =
+      return (gearlogo.current.style.transform =
         "rotate(" + -window.pageYOffset + "deg)");
     };
 
@@ -141,8 +141,8 @@ const WorkPage = () => {
 
           <BigTitle text="PROJECTS" top="10%" right="20%" />
 
-          <Rotate ref={yinyang}>
-            <GearCircle width={85} height={85} fill={DarkTheme.text} />
+          <Rotate ref={gearlogo}>
+            <Spinner width={85} height={85} fill={DarkTheme.text} />
           </Rotate>
         </Box>
       </Suspense>

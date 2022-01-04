@@ -4,7 +4,7 @@ import { lazy, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
 //Components
-import { YinYang, CodeCircle } from "./AllSvgs";
+import { GearLogo } from "./AllSvgs";
 import Intro from "./Intro";
 import Loading from "../subComponents/Loading";
 import { mediaQueries } from "./Themes";
@@ -208,14 +208,14 @@ const Main = () => {
           )}
           <Center click={click}>
             {mq ? (
-              <YinYang
+              <GearLogo
                 onClick={() => handleClick()}
                 width={click ? 80 : 150}
                 height={click ? 80 : 150}
                 fill="currentColor"
               />
             ) : (
-              <YinYang
+              <GearLogo
                 onClick={() => handleClick()}
                 width={click ? 120 : 200}
                 height={click ? 120 : 200}
