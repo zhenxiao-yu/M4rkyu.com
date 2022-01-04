@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../assets/Images/david.jpg";
+import Me from "../assets/Images/profile-img.png";
 import { mediaQueries } from "./Themes";
 
 const Box = styled(motion.div)`
@@ -47,27 +47,19 @@ height:50vh;
   ${mediaQueries(50)`
     width: 50vw;
     background-size: 100% 2px;
-
     flex-direction:column;
     justify-content:space-between;
-  
   `};
 
   ${mediaQueries(40)`
     width: 60vw;
-    
-  
   `};
 
   ${mediaQueries(30)`
     width: 70vw;
-    
-  
   `};
   ${mediaQueries(20)`
     width: 60vw;
-    
-  
   `};
 
   @media only screen and (max-width: 50em) {

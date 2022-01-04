@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
+
 //Components
 import { GearLogo } from "./AllSvgs";
 import Intro from "./Intro";
@@ -30,19 +31,16 @@ const MainContainer = styled(motion.div)`
   h5,
   h6 {
     font-family: "Karla", sans-serif;
-
     font-weight: 500;
   }
 
   h2 {
     ${mediaQueries(40)`
       font-size:1.2em;
-
   `};
 
     ${mediaQueries(30)`
       font-size:1em;
-
   `};
   }
 `;
@@ -166,7 +164,6 @@ const DarkDiv = styled.div`
   right:0;
   width: 100%;
   transition: width 0.5s ease, height 1s ease 0.5s;
-
   `
       : mediaQueries(50)`
        height: 0;
@@ -220,8 +217,7 @@ const Main = () => {
                 fill="currentColor"
               />
             )}
-
-            <span>click here</span>
+            <h2><i class="far fa-arrow-alt-circle-up"></i> start here <i class="far fa-arrow-alt-circle-up"></i></h2>
           </Center>
 
           {/* Contact Link */}
@@ -269,7 +265,6 @@ const Main = () => {
             </Contact>
           )}
 
-
           {/* Blog Link */}
           {mq ? (
             <BLOG click={+click} onClick={() => setpath("blog")} to="/blog">
@@ -307,7 +302,7 @@ const Main = () => {
             </BLOG>
           )}
 
-          {/* Project LInk */}
+          {/* Project Link */}
           <PROJECT click={+click} to="/project">
             <motion.h2
               onClick={() => setpath("project")}
@@ -326,6 +321,7 @@ const Main = () => {
             </motion.h2>
           </PROJECT>
 
+          {/* About Link */}
           <BottomBar>
             <ABOUT
               onClick={() => setClick(false)}
@@ -349,6 +345,7 @@ const Main = () => {
               </motion.h2>
             </ABOUT>
 
+            {/* Skills Link */}
             <SKILLS to="/skills">
               <motion.h2
                 onClick={() => setpath("skills")}
