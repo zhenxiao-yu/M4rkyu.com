@@ -4,7 +4,7 @@ import { lazy, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
 //Components
-import { YinYang } from "./AllSvgs";
+import { YinYang, CodeCircle } from "./AllSvgs";
 import Intro from "./Intro";
 import Loading from "../subComponents/Loading";
 import { mediaQueries } from "./Themes";
@@ -100,6 +100,7 @@ const Contact = styled(NavLink)`
   text-decoration: none;
   z-index: 1;
 `;
+
 const BLOG = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
@@ -141,10 +142,12 @@ const ABOUT = styled(NavLink)`
   text-decoration: none;
   z-index: 1;
 `;
+
 const SKILLS = styled(NavLink)`
   color: ${(props) => props.theme.text};
   text-decoration: none;
 `;
+
 const DarkDiv = styled.div`
   position: absolute;
   top: 0;
@@ -161,7 +164,6 @@ const DarkDiv = styled.div`
       ? mediaQueries(50)`
        height: 50%;
   right:0;
-  
   width: 100%;
   transition: width 0.5s ease, height 1s ease 0.5s;
 
@@ -173,11 +175,9 @@ const DarkDiv = styled.div`
   `};
 `;
 
-
 const Main = () => {
   const [click, setClick] = useState(false);
   const [path, setpath] = useState("");
-
   const handleClick = () => setClick(!click);
 
   const moveY = {

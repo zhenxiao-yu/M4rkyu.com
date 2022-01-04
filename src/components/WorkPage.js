@@ -3,7 +3,7 @@ import { useEffect, useRef, lazy, Suspense } from "react";
 
 import styled, { ThemeProvider } from "styled-components";
 
-import { YinYang } from "./AllSvgs";
+import { GearCircle } from "./AllSvgs";
 import { Work } from "./WorkData";
 import { DarkTheme, mediaQueries } from "./Themes";
 
@@ -64,8 +64,8 @@ const Rotate = styled.span`
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  width: 80px;
-  height: 80px;
+  width: 85px;
+  height: 85px;
 
   z-index: 1;
   ${mediaQueries(40)`
@@ -142,7 +142,7 @@ const WorkPage = () => {
           <BigTitle text="PROJECTS" top="10%" right="20%" />
 
           <Rotate ref={yinyang}>
-            <YinYang width={80} height={80} fill={DarkTheme.text} />
+            <GearCircle width={85} height={85} fill={DarkTheme.text} />
           </Rotate>
         </Box>
       </Suspense>
