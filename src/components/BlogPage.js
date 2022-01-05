@@ -24,6 +24,7 @@ const MainContainer = styled(motion.div)`
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
+  user-select: none;
 `;
 
 const Container = styled.div`

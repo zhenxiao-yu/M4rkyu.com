@@ -19,6 +19,7 @@ const MainContainer = styled(motion.div)`
   height: 100vh;
   position: relative;
   overflow: hidden;
+  user-select: none;
 
   h2,
   h3,

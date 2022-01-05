@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Me from "../assets/Images/profile-img.png";
 import { mediaQueries } from "./Themes";
 
+// outer box
 const Box = styled(motion.div)`
   /* width: 50vw;
 height:50vh;
@@ -24,12 +25,9 @@ height:50vh;
       top;
   background-repeat: no-repeat;
   background-size: 100% 2px;
-
   border-left: 2px solid ${(props) => props.theme.body};
   border-right: 2px solid ${(props) => props.theme.text};
-
   z-index: 1;
-
   position: absolute;
   left: 50%;
   top: 50%;
@@ -83,6 +81,7 @@ height:50vh;
   //height:55vh;
 `;
 
+// inside box containing text and picture
 const SubBox = styled.div`
   width: 50%;
   position: relative;
@@ -99,10 +98,8 @@ const SubBox = styled.div`
       width: 100%;
     height: 50%;
       .pic {
-    
     width: 70%;
   }
-
   `};
 
   ${mediaQueries(40)`
@@ -124,47 +121,35 @@ const SubBox = styled.div`
  `};
 `;
 
+// Text
 const Text = styled(motion.div)`
   font-size: calc(1rem + 1.5vw);
   color: ${(props) => props.theme.body};
   padding: 2rem;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-
+  user-select: none;
   & > *:last-child {
     color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
-
     font-size: calc(0.5rem + 1.5vw);
     font-weight: 300;
-
     ${mediaQueries(40)`
         font-size: calc(0.5rem + 1vw);
-
-
   `};
   }
 
   ${mediaQueries(40)`
         font-size: calc(1rem + 1.5vw);
-
-
   `};
   ${mediaQueries(20)`
          padding: 1rem;
-
-
-
   `};
 `;
 
 const Intro = () => {
-  /* console.log(mq); */
-
   const [height, setHeight] = useState("55vh");
-
   useEffect(() => {
     if (window.matchMedia("(max-width: 50em)").matches) {
       setHeight("70vh");

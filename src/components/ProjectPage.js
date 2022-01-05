@@ -26,7 +26,7 @@ const Main = styled(motion.ul)`
   position: fixed;
   top: 12rem;
   left: calc(10rem + 15vw);
-
+  user-select: none;
   height: 40vh;
   /* height:200vh; */
   //border:1px solid white;

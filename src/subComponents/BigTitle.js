@@ -8,6 +8,7 @@ const Text = styled.h1`
   right: ${(props) => props.right};
   color: ${(props) => `rgba(${props.theme.textRgba}, 0.1)`};
   font-size: calc(5rem + 5vw);
+  user-select: none;
   z-index: 0;
 `;
 

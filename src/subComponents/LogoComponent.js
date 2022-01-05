@@ -9,6 +9,7 @@ const Logo = styled.h1`
   left: 2rem;
   top: 2rem;
   z-index: 3;
+  user-select: none;
   ${mediaQueries(40)`
       font-size:1.5em;
       left:1rem;
