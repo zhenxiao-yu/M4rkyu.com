@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../assets/Images/sus.png";
+import Me from "../assets/Images/profile-img.png";
 import { mediaQueries } from "./Themes";
 
 // outer box
@@ -129,12 +129,15 @@ const Text = styled(motion.div)`
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  font-family: 'Source Sans Pro', sans-serif;
   justify-content: space-evenly;
+  letter-spacing: 2px;
   user-select: none;
   & > *:last-child {
     color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
     font-size: calc(0.5rem + 1.5vw);
-    font-weight: 300;
+    font-weight: 350;
+    line-height: 1.4;
     ${mediaQueries(40)`
         font-size: calc(0.5rem + 1vw);
   `};
@@ -168,15 +171,16 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h1>Howdy,</h1>
+          <h1> Welcome,</h1>
 
-          <h3>My name is <br/> Mark Yu.</h3>
-
-          <h5>I'm an artist and a software engineer based in Ontario, CA. </h5>
+          <h2>
+            My name is <br /> Mark Yu.
+          </h2>
 
           <h6>
-            Feel free to explore my portfolio website using the links around the
-            edges...
+              {/* &lt;div&gt; */}
+              I'm a software developer based in Ontario, CA. Here you can learn more
+              about my life, skills and latest works... 
           </h6>
         </Text>
       </SubBox>
@@ -184,7 +188,7 @@ const Intro = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 3 }}
+          transition={{ duration: 2, delay: 2 }}
         >
           <img className="pic" src={Me} alt="My Pic" />
         </motion.div>
