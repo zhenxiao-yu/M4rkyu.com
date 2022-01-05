@@ -3,20 +3,15 @@ import { NavLink } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
-
 //Components
-import { GearLogo } from "./AllSvgs";
+import { CodeCircle } from "./AllSvgs";
 import Intro from "./Intro";
 import Loading from "../subComponents/Loading";
 import { mediaQueries } from "./Themes";
 
-const HomeButton = lazy(() => import("../subComponents/HomeButton"));
+const RefreshButton = lazy(() => import("../subComponents/RefreshButton"));
 const SocialIcons = lazy(() => import("./../subComponents/SocialIcons"));
-
 const LogoComponent = lazy(() => import("./../subComponents/LogoComponent"));
-
-//   import SocialIcons from './../subComponents/SocialIcons';
-// import LogoComponent from './../subComponents/LogoComponent';
 
 const MainContainer = styled(motion.div)`
   background: ${(props) => props.theme.body};
@@ -57,6 +52,7 @@ from {
     transform: rotate(360deg) ;
   }
 `;
+
 const Center = styled.button`
   position: absolute;
   top: ${(props) => (props.click ? "85%" : "50%")};
@@ -71,7 +67,7 @@ const Center = styled.button`
   align-items: center;
   transition: all 1s ease;
   & > *:first-child {
-    animation: ${rotate} infinite 1.5s linear;
+    animation: ${rotate} infinite 8s linear;
   }
   & > *:last-child {
     display: ${(props) => (props.click ? "none" : "inline-block")};
@@ -102,35 +98,35 @@ const Contact = styled(NavLink)`
 const BLOG = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
-  top: 50%;
+  top: 48%;
   right: calc(1rem + 2vw);
   transform: rotate(90deg) translate(-50%, -50%);
   z-index: 1;
-
   text-decoration: none;
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? "0 0 4px #000" : "none")};
+    text-shadow: ${(props) => (props.click ? "0 0 3px #101010, 1px 1px 5px #000" : "none")};
   }
 `;
+
 const PROJECT = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: calc(1rem + 2vw);
   transform: translate(-50%, -50%) rotate(-90deg);
   z-index: 1;
   text-decoration: none;
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? "0 0 4px #000" : "none")};
+    text-shadow: ${(props) => (props.click ? "0 0 3px #101010, 1px 1px 5px #000" : "none")};
   }
 `;
+
 const BottomBar = styled.div`
   position: absolute;
   bottom: 1rem;
   left: 0;
   right: 0;
   width: 100%;
-
   display: flex;
   justify-content: space-evenly;
 `;
@@ -139,11 +135,13 @@ const ABOUT = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   text-decoration: none;
   z-index: 1;
+  bottom: 1.2rem;
 `;
 
 const SKILLS = styled(NavLink)`
   color: ${(props) => props.theme.text};
   text-decoration: none;
+  bottom: 1.2rem;
 `;
 
 const DarkDiv = styled.div`
@@ -152,11 +150,10 @@ const DarkDiv = styled.div`
   bottom: 0;
   right: 50%;
   width: ${(props) => (props.click ? "50%" : "0%")};
-  background-color: #241C15;
+  background-color: #101010;
   height: ${(props) => (props.click ? "100%" : "0%")};
   transition: height 0.5s ease, width 1s ease 0.5s;
   z-index: 1;
-
   ${(props) =>
     props.click
       ? mediaQueries(50)`
@@ -193,9 +190,9 @@ const Main = () => {
         transition={{ duration: 0.5 }}
       >
         <DarkDiv click={click} />
+        <RefreshButton/>
         <Container>
           <LogoComponent theme={click ? "dark" : "light"} />
-          <HomeButton />
           {mq ? (
             <SocialIcons theme="light" />
           ) : (
@@ -203,21 +200,24 @@ const Main = () => {
           )}
           <Center click={click}>
             {mq ? (
-              <GearLogo
+              <CodeCircle
                 onClick={() => handleClick()}
                 width={click ? 80 : 150}
                 height={click ? 80 : 150}
-                fill="currentColor"
+                fill="#101010"
               />
             ) : (
-              <GearLogo
+              <CodeCircle
                 onClick={() => handleClick()}
                 width={click ? 120 : 200}
                 height={click ? 120 : 200}
-                fill="currentColor"
+                fill="#101010"
               />
             )}
-            <h2><i class="far fa-arrow-alt-circle-up"></i> start here <i class="far fa-arrow-alt-circle-up"></i></h2>
+            <h2>
+              <i class="far fa-arrow-alt-circle-up"></i> start here{" "}
+              <i class="far fa-arrow-alt-circle-up"></i>
+            </h2>
           </Center>
 
           {/* Contact Link */}
@@ -236,10 +236,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.85 }}
               >
-                Contact Me
+                Contact
               </motion.h3>
             </Contact>
           ) : (
@@ -257,10 +257,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.85 }}
               >
-                Contact Me
+                Email Me
               </motion.h3>
             </Contact>
           )}
@@ -277,8 +277,8 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ rotate: -90, scale: 1.3 }}
+                whileTap={{ rotate: -90, scale: 0.85 }}
               >
                 Blog
               </motion.h2>
@@ -294,8 +294,8 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ rotate: -90, scale: 1.3 }}
+                whileTap={{ rotate: -90, scale: 0.85 }}
               >
                 Blog
               </motion.h2>
@@ -314,8 +314,8 @@ const Main = () => {
                 y: 0,
                 transition: { type: "spring", duration: 1.5, delay: 1 },
               }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ translateY: 25, rotate: 90, scale: 1.3 }}
+              whileTap={{ translateY: 25, rotate: 90, scale: 0.85 }}
             >
               Projects
             </motion.h2>
@@ -338,12 +338,13 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.85 }}
               >
                 About
               </motion.h2>
             </ABOUT>
+
 
             {/* Skills Link */}
             <SKILLS to="/skills">
@@ -357,8 +358,8 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.85 }}
               >
                 Skills
               </motion.h2>

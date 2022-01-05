@@ -21,7 +21,7 @@ display:inline-block;
   body {
     margin: 0;
     padding: 0;
-   overflow-x:hidden;
+    overflow-x:hidden;
     font-family: 'Ubuntu Mono', monospace;
   }
 `;

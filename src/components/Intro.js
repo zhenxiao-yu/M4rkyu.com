@@ -101,40 +101,26 @@ const SubBox = styled.div`
       .pic {
     
     width: 70%;
-    
   }
 
   `};
 
   ${mediaQueries(40)`
-  
       .pic {
-    
     width: 80%;
-    
   }
-
   `};
 
   ${mediaQueries(30)`
-     
-
       .pic {
-    
     width: 90%;
-    
   }
 
   `};
   ${mediaQueries(20)`
-     
-
      .pic {
-   
    width: 80%;
-   
  }
-
  `};
 `;
 

@@ -1,15 +1,15 @@
-import { Home } from "../components/AllSvgs";
+import { Refresher } from "../components/AllSvgs";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { mediaQueries } from "../components/Themes";
 
-const HomeBtn = styled.button`
+const RefreshBtn = styled.button`
   position: fixed;
   top: 2rem;
   left: 50%;
   transform: translate(-50%, 0);
 
-  background-color: #87D271;
+  background-color: #87d271;
   padding: 0.3rem;
   border-radius: 50%;
   border: 2px solid black;
@@ -22,8 +22,8 @@ const HomeBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: rgb(255,224,27,0.7);
-    box-shadow: 0 0 7px 6px rgba(255,224,27, 0.3);
+    background-color: rgb(242, 95, 37, 0.7);
+    box-shadow: 0 0 7px 6px rgba(242, 95, 37, 0.3);
   }
 
   & > *:first-child {
@@ -45,11 +45,11 @@ const HomeBtn = styled.button`
 //home button
 const HomeButton = () => {
   return (
-    <HomeBtn>
+    <RefreshBtn>
       <NavLink to="/">
-        <Home width={30} height={30} fill="currentColor" />
+        <Refresher width={30} height={30} fill="currentColor" />
       </NavLink>
-    </HomeBtn>
+    </RefreshBtn>
   );
 };
 
