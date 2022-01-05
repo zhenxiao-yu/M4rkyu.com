@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../assets/Images/profile-img.png";
+import Me from "../assets/Images/sus.png";
 import { mediaQueries } from "./Themes";
 
 // outer box
@@ -25,8 +25,8 @@ height:50vh;
       top;
   background-repeat: no-repeat;
   background-size: 100% 2px;
-  border-left: 2px solid ${(props) => props.theme.body};
-  border-right: 2px solid ${(props) => props.theme.text};
+  border-left: 5px groove ${(props) => props.theme.body};
+  border-right: 5px groove ${(props) => props.theme.text};
   z-index: 1;
   position: absolute;
   left: 50%;
@@ -63,8 +63,8 @@ height:50vh;
   @media only screen and (max-width: 50em) {
     background: none;
     border: none;
-    border-top: 2px solid ${(props) => props.theme.body};
-    border-bottom: 2px solid ${(props) => props.theme.text};
+    border-top: 5px groove ${(props) => props.theme.body};
+    border-bottom: 5px groove ${(props) => props.theme.text};
     background-image: linear-gradient(
         ${(props) => props.theme.body} 50%,
         ${(props) => props.theme.text} 50%
@@ -149,7 +149,9 @@ const Text = styled(motion.div)`
 `;
 
 const Intro = () => {
+  // inner box height
   const [height, setHeight] = useState("55vh");
+  // change width based on platform
   useEffect(() => {
     if (window.matchMedia("(max-width: 50em)").matches) {
       setHeight("70vh");
@@ -166,18 +168,23 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h1>Hi,</h1>
+          <h1>Howdy,</h1>
 
-          <h3>I'm Mark Yu.</h3>
+          <h3>My name is <br/> Mark Yu.</h3>
 
-          <h6>I design and Code simple yet beautiful websites.</h6>
+          <h5>I'm an artist and a software engineer based in Ontario, CA. </h5>
+
+          <h6>
+            Feel free to explore my portfolio website using the links around the
+            edges...
+          </h6>
         </Text>
       </SubBox>
       <SubBox>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2 }}
+          transition={{ duration: 2, delay: 3 }}
         >
           <img className="pic" src={Me} alt="My Pic" />
         </motion.div>
