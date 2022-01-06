@@ -25,8 +25,8 @@ height:50vh;
       top;
   background-repeat: no-repeat;
   background-size: 100% 2px;
-  border-left: 5px groove ${(props) => props.theme.body};
-  border-right: 5px groove ${(props) => props.theme.text};
+  border-left: 5px dashed ${(props) => props.theme.body};
+  border-right: 5px dashed ${(props) => props.theme.text};
   z-index: 1;
   position: absolute;
   left: 50%;
@@ -63,8 +63,8 @@ height:50vh;
   @media only screen and (max-width: 50em) {
     background: none;
     border: none;
-    border-top: 5px groove ${(props) => props.theme.body};
-    border-bottom: 5px groove ${(props) => props.theme.text};
+    border-top: 5px dashed ${(props) => props.theme.body};
+    border-bottom: 5px dashed ${(props) => props.theme.text};
     background-image: linear-gradient(
         ${(props) => props.theme.body} 50%,
         ${(props) => props.theme.text} 50%
@@ -91,7 +91,7 @@ const SubBox = styled.div`
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 0%);
-    width: 100%;
+    width: 105%;
     height: auto;
   }
   ${mediaQueries(50)`
@@ -128,16 +128,17 @@ const Text = styled(motion.div)`
   padding: 2rem;
   cursor: pointer;
   display: flex;
+  z-index:2;
   flex-direction: column;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   justify-content: space-evenly;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   user-select: none;
   & > *:last-child {
     color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
     font-size: calc(0.5rem + 1.5vw);
-    font-weight: 350;
-    line-height: 1.4;
+    font-weight: 300;
+
     ${mediaQueries(40)`
         font-size: calc(0.5rem + 1vw);
   `};
@@ -171,16 +172,12 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h1> Welcome,</h1>
+          <h2> Welcome,</h2>
 
-          <h2>
-            My name is <br /> Mark Yu.
-          </h2>
+          <h3>I am Mark Yu.</h3>
 
           <h6>
-              {/* &lt;div&gt; */}
-              I'm a software developer based in Ontario, CA. Here you can learn more
-              about my life, skills and latest works... 
+            {/* &lt;div&gt; */}A fullstack developer based in Ontario, CA.
           </h6>
         </Text>
       </SubBox>
@@ -188,7 +185,7 @@ const Intro = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 2 }}
+          transition={{ duration: 2, delay: 1 }}
         >
           <img className="pic" src={Me} alt="My Pic" />
         </motion.div>

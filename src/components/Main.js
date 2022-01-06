@@ -228,7 +228,7 @@ const Main = () => {
               target="_blank"
               to={{ pathname: "mailto:zyu347@uwo.ca" }}
             >
-              <motion.h3
+              <motion.h2
                 initial={{
                   y: -200,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
@@ -241,7 +241,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
               >
                 Contact
-              </motion.h3>
+              </motion.h2>
             </Contact>
           ) : (
             <Contact
@@ -249,7 +249,7 @@ const Main = () => {
               target="_blank"
               to={{ pathname: "mailto:zyu347@uwo.ca" }}
             >
-              <motion.h3
+              <motion.h2
                 initial={{
                   y: -200,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
@@ -262,7 +262,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
               >
                 Email Me
-              </motion.h3>
+              </motion.h2>
             </Contact>
           )}
 
