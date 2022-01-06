@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 //background image
-import img from "../assets/Images/blogBG.jpg";
+import img from "../assets/Images/blogBG.png";
 //blog data
 import { Blogs } from "./BlogData";
 
@@ -20,15 +20,15 @@ const BigTitle = lazy(() => import("../subComponents/BigTitle"));
 
 const MainContainer = styled(motion.div)`
   background-image: url(${img});
-  background-size: cover;
-  background-repeat: no-repeat;
+  // background-size: cover;
+  background-repeat: repeat;
   background-attachment: fixed;
   background-position: center;
   user-select: none;
 `;
 
 const Container = styled.div`
-  background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.8)`};
+  background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
   //width:100vw;
   width: 100%;
   height: auto;
