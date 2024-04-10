@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { mediaQueries } from "./Themes";
+import { mediaQueries } from "../theme/Themes";
 
 const Box = styled(motion(NavLink))`
   backdrop-filter: blur(2px);

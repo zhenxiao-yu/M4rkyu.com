@@ -3,17 +3,17 @@ import { useEffect, useRef, lazy, Suspense } from "react";
 
 import styled, { ThemeProvider } from "styled-components";
 
-import { Spinner } from "./AllSvgs";
-import { Project } from "./ProjectData";
-import { DarkTheme, mediaQueries } from "./Themes";
+import { Spinner } from "../../assets/svg/AllSvgs";
+import { Project } from "../../assets/data/ProjectData";
+import { DarkTheme, mediaQueries } from "../../theme/Themes";
 
-import Card from "../components/Card";
-import Loading from "../components/Loading";
+import Card from "../../components/Card";
+import Loading from "../../components/Loading";
 
-const SocialIcons = lazy(() => import("../components/SocialIcons"));
-const HomeButton = lazy(() => import("../components/HomeButton"));
-const LogoComponent = lazy(() => import("../components/LogoComponent"));
-const BigTitle = lazy(() => import("../components/BigTitle"));
+const SocialIcons = lazy(() => import("../../components/SocialIcons"));
+const HomeButton = lazy(() => import("../../components/HomeButton"));
+const LogoComponent = lazy(() => import("../../components/LogoComponent"));
+const BigTitle = lazy(() => import("../../components/BigTitle"));
 
 const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.body};

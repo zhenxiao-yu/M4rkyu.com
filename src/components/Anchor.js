@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useEffect, useRef } from "react";
 
-import { Anchor, Link } from "../pages/AllSvgs";
-import { mediaQueries } from "../pages/Themes";
+import { Anchor, Link } from "../assets/svg/AllSvgs";
+import { mediaQueries } from "../theme/Themes";
 
 //anchor container
 const Container = styled.div`

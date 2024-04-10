@@ -15,7 +15,6 @@ export const DarkTheme = {
 
 }
 
-// You can also use these breakpoints after importing it and use it as breakpoints.sm
 export const breakpoints = {
     sm: 20,//em
     md: 30,

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../assets/Images/me.png";
-import { mediaQueries } from "./Themes";
+import Me from "../../assets/Images/me.png";
+import { mediaQueries } from "../../theme/Themes";
 
 // outer box
 const Box = styled(motion.div)`

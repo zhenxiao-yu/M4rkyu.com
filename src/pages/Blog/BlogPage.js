@@ -3,24 +3,24 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 //background image
-import img from "../assets/Images/blogBG.png";
+import img from "../../assets/Images/blogBG.png";
 //blog data
-import { Blogs } from "./BlogData";
+import { Blogs } from "../../assets/data/BlogData";
 
 
-import BlogComponent from "./BlogComponent";
-import Loading from "../components/Loading";
-import { mediaQueries } from "./Themes";
+import BlogComponent from "../../components/BlogComponent";
+import Loading from "../../components/Loading";
+import { mediaQueries } from "../../theme/Themes";
 
-const AnchorComponent = lazy(() => import("../components/Anchor"));
-const SocialIcons = lazy(() => import("../components/SocialIcons"));
-const HomeButton = lazy(() => import("../components/HomeButton"));
-const LogoComponent = lazy(() => import("../components/LogoComponent"));
-const BigTitle = lazy(() => import("../components/BigTitle"));
+const AnchorComponent = lazy(() => import("../../components/Anchor"));
+const SocialIcons = lazy(() => import("../../components/SocialIcons"));
+const HomeButton = lazy(() => import("../../components/HomeButton"));
+const LogoComponent = lazy(() => import("../../components/LogoComponent"));
+const BigTitle = lazy(() => import("../../components/BigTitle"));
 
 const MainContainer = styled(motion.div)`
   background-image: url(${img});
-  // background-size: cover;
+   background-size: cover;
   background-repeat: repeat;
   background-attachment: fixed;
   background-position: center;

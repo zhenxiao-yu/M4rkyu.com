@@ -2,17 +2,17 @@ import { motion } from 'framer-motion'
 import { lazy, Suspense } from 'react'
 import styled, { keyframes, ThemeProvider } from 'styled-components'
 
-import { DarkTheme, mediaQueries } from './Themes'
-import astronaut from "../assets/Images/spaceman.png";
-import Loading from '../components/Loading';
+import { DarkTheme, mediaQueries } from '../../theme/Themes'
+import astronaut from "../../assets/Images/spaceman.png";
+import Loading from '../../components/Loading';
 //Components
-const SocialIcons = lazy(() => import('../components/SocialIcons'))
-const HomeButton = lazy(() => import('../components/HomeButton'))
-const LogoComponent = lazy(() => import('../components/LogoComponent'))
+const SocialIcons = lazy(() => import('../../components/SocialIcons'))
+const HomeButton = lazy(() => import('../../components/HomeButton'))
+const LogoComponent = lazy(() => import('../../components/LogoComponent'))
 const ParticlesComponent = lazy(() =>
-  import('../components/ParticlesComponent')
+  import('../../components/ParticlesComponent')
 )
-const BigTitle = lazy(() => import('../components/BigTitle'))
+const BigTitle = lazy(() => import('../../components/BigTitle'))
 
 
 const Box = styled(motion.div)`

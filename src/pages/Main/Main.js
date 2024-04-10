@@ -4,10 +4,10 @@ import { lazy, Suspense, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 
 //Components
-import { CodeCircle } from "../AllSvgs";
-import Intro from "../Intro";
+import { CodeCircle } from "../../assets/svg/AllSvgs";
+import Intro from "../Intro/Intro";
 import Loading from "../../components/Loading";
-import { mediaQueries } from "../Themes";
+import { mediaQueries } from "../../theme/Themes";
 
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
 const LogoComponent = lazy(() => import("../../components/LogoComponent"));
@@ -182,7 +182,8 @@ const Main = () => {
   };
   const mq = window.matchMedia("(max-width: 50em)").matches;
 
-useEffect(() => {
+
+  useEffect(() => {
     const handleResize = () => {
       window.location.reload();
     };
@@ -282,7 +283,7 @@ useEffect(() => {
 
           {/* Blog Link */}
           {mq ? (
-            <BLOG click={+click} onClick={() => setpath("blog")} to="/blog">
+            <BLOG click={+click} onClick={() => setpath("blog")} to="/post">
               <motion.h2
                 initial={{
                   y: -200,
@@ -299,7 +300,7 @@ useEffect(() => {
               </motion.h2>
             </BLOG>
           ) : (
-            <BLOG click={+false} onClick={() => setpath("blog")} to="/blog">
+            <BLOG click={+false} onClick={() => setpath("blog")} to="/post">
               <motion.h2
                 initial={{
                   y: -200,

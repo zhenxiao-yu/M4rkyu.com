@@ -1,19 +1,19 @@
 import { motion } from "framer-motion";
 import styled, { ThemeProvider } from "styled-components";
 import { lazy, Suspense } from "react";
-import { lightTheme, mediaQueries } from "./Themes";
+import { lightTheme, mediaQueries } from "../../theme/Themes";
 
-import { Design, Develope } from "./AllSvgs";
-import Loading from "../components/Loading"; //loading component
+import { Design, Develope } from "../../assets/svg/AllSvgs";
+import Loading from "../../components/Loading"; //loading component
 
 //Components
-const SocialIcons = lazy(() => import("../components/SocialIcons"));
-const HomeButton = lazy(() => import("../components/HomeButton"));
-const LogoComponent = lazy(() => import("../components/LogoComponent"));
+const SocialIcons = lazy(() => import("../../components/SocialIcons"));
+const HomeButton = lazy(() => import("../../components/HomeButton"));
+const LogoComponent = lazy(() => import("../../components/LogoComponent"));
 const ParticlesComponent = lazy(() =>
-  import("../components/ParticlesComponent")
+  import("../../components/ParticlesComponent")
 );
-const BigTitle = lazy(() => import("../components/BigTitle"));
+const BigTitle = lazy(() => import("../../components/BigTitle"));
 
 const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.body};
