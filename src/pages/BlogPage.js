@@ -9,14 +9,14 @@ import { Blogs } from "./BlogData";
 
 
 import BlogComponent from "./BlogComponent";
-import Loading from "../subComponents/Loading";
+import Loading from "../components/Loading";
 import { mediaQueries } from "./Themes";
 
-const AnchorComponent = lazy(() => import("../subComponents/Anchor"));
-const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const HomeButton = lazy(() => import("../subComponents/HomeButton"));
-const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
-const BigTitle = lazy(() => import("../subComponents/BigTitle"));
+const AnchorComponent = lazy(() => import("../components/Anchor"));
+const SocialIcons = lazy(() => import("../components/SocialIcons"));
+const HomeButton = lazy(() => import("../components/HomeButton"));
+const LogoComponent = lazy(() => import("../components/LogoComponent"));
+const BigTitle = lazy(() => import("../components/BigTitle"));
 
 const MainContainer = styled(motion.div)`
   background-image: url(${img});

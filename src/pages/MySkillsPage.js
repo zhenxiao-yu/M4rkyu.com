@@ -4,16 +4,16 @@ import { lazy, Suspense } from "react";
 import { lightTheme, mediaQueries } from "./Themes";
 
 import { Design, Develope } from "./AllSvgs";
-import Loading from "../subComponents/Loading"; //loading component
+import Loading from "../components/Loading"; //loading component
 
 //Components
-const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const HomeButton = lazy(() => import("../subComponents/HomeButton"));
-const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
+const SocialIcons = lazy(() => import("../components/SocialIcons"));
+const HomeButton = lazy(() => import("../components/HomeButton"));
+const LogoComponent = lazy(() => import("../components/LogoComponent"));
 const ParticlesComponent = lazy(() =>
-  import("../subComponents/ParticlesComponent")
+  import("../components/ParticlesComponent")
 );
-const BigTitle = lazy(() => import("../subComponents/BigTitle"));
+const BigTitle = lazy(() => import("../components/BigTitle"));
 
 const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.body};

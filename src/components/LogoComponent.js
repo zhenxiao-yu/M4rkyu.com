@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { DarkTheme, mediaQueries } from "../Pages/Themes";
+import { DarkTheme, mediaQueries } from "../pages/Themes";
 
 const Logo = styled.h1`
   display: inline-block;

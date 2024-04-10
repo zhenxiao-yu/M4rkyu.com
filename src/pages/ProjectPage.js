@@ -7,13 +7,13 @@ import { Spinner } from "./AllSvgs";
 import { Project } from "./ProjectData";
 import { DarkTheme, mediaQueries } from "./Themes";
 
-import Card from "../subComponents/Card";
-import Loading from "../subComponents/Loading";
+import Card from "../components/Card";
+import Loading from "../components/Loading";
 
-const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const HomeButton = lazy(() => import("../subComponents/HomeButton"));
-const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
-const BigTitle = lazy(() => import("../subComponents/BigTitle"));
+const SocialIcons = lazy(() => import("../components/SocialIcons"));
+const HomeButton = lazy(() => import("../components/HomeButton"));
+const LogoComponent = lazy(() => import("../components/LogoComponent"));
+const BigTitle = lazy(() => import("../components/BigTitle"));
 
 const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.body};

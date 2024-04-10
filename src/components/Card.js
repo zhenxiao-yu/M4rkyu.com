@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { Github } from "../components/AllSvgs";
-import { mediaQueries } from "../components/Themes";
+import { Github } from "../pages/AllSvgs";
+import { mediaQueries } from "../pages/Themes";
 
 const Box = styled(motion.li)`
   width: 16rem;

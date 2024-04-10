@@ -3,16 +3,16 @@ import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense } from "react";
 import GlobalStyle from "./globalStyles";
 import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./components/Themes";
-import Loading from "./subComponents/Loading";
+import { lightTheme } from "./pages/Themes";
+import Loading from "./components/Loading";
 
 //Components
-const Main = lazy(() => import("./components/Main"));
-const AboutPage = lazy(() => import("./components/AboutPage"));
-const MySkillsPage = lazy(() => import("./components/MySkillsPage"));
-const BlogPage = lazy(() => import("./components/BlogPage"));
-const ProjectPage = lazy(() => import("./components/ProjectPage"));
-const SoundBar = lazy(() => import("./subComponents/SoundBar"));
+const Main = lazy(() => import("./pages/Main"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const MySkillsPage = lazy(() => import("./pages/MySkillsPage"));
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+const SoundBar = lazy(() => import("./components/SoundBar"));
 
 function App() {
   const location = useLocation();

@@ -1,7 +1,7 @@
-import { Home } from "../components/AllSvgs";
+import { Home } from "../pages/AllSvgs";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { mediaQueries } from "../components/Themes";
+import { mediaQueries } from "../pages/Themes";
 
 const HomeBtn = styled.button`
   position: fixed;

@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 //Components
 import { CodeCircle } from "./AllSvgs";
 import Intro from "./Intro";
-import Loading from "../subComponents/Loading";
+import Loading from "../components/Loading";
 import { mediaQueries } from "./Themes";
 
-const RefreshButton = lazy(() => import("../subComponents/RefreshButton"));
-const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
-const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
+const RefreshButton = lazy(() => import("../components/RefreshButton"));
+const SocialIcons = lazy(() => import("../components/SocialIcons"));
+const LogoComponent = lazy(() => import("../components/LogoComponent"));
 
 const MainContainer = styled(motion.div)`
   background: ${(props) => props.theme.body};

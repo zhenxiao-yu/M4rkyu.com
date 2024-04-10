@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { mediaQueries } from "../components/Themes";
+import { mediaQueries } from "../pages/Themes";
 
 // music file
 import music from "../assets/audio/u-said-it-v13-1167.mp3";
