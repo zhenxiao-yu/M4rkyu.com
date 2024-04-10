@@ -1,17 +1,16 @@
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 
 //Components
-import { CodeCircle } from "./AllSvgs";
-import Intro from "./Intro";
-import Loading from "../components/Loading";
-import { mediaQueries } from "./Themes";
+import { CodeCircle } from "../AllSvgs";
+import Intro from "../Intro";
+import Loading from "../../components/Loading";
+import { mediaQueries } from "../Themes";
 
-const RefreshButton = lazy(() => import("../components/RefreshButton"));
-const SocialIcons = lazy(() => import("../components/SocialIcons"));
-const LogoComponent = lazy(() => import("../components/LogoComponent"));
+const SocialIcons = lazy(() => import("../../components/SocialIcons"));
+const LogoComponent = lazy(() => import("../../components/LogoComponent"));
 
 const MainContainer = styled(motion.div)`
   background: ${(props) => props.theme.body};
@@ -170,6 +169,7 @@ const DarkDiv = styled.div`
   `};
 `;
 
+
 const Main = () => {
   const [click, setClick] = useState(false);
   const [path, setpath] = useState("");
@@ -181,6 +181,21 @@ const Main = () => {
     x: `${path === "project" ? "100%" : "-100%"}`,
   };
   const mq = window.matchMedia("(max-width: 50em)").matches;
+
+useEffect(() => {
+    const handleResize = () => {
+      window.location.reload();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
+
   return (
     <Suspense fallback={<Loading />}>
       <MainContainer
@@ -191,7 +206,6 @@ const Main = () => {
         transition={{ duration: 0.5 }}
       >
         <DarkDiv click={click} />
-        <RefreshButton/>
         <Container>
           <LogoComponent theme={click ? "dark" : "light"} />
           {mq ? (

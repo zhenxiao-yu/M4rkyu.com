@@ -7,7 +7,7 @@ import { lightTheme } from "./pages/Themes";
 import Loading from "./components/Loading";
 
 //Components
-const Main = lazy(() => import("./pages/Main"));
+const Main = lazy(() => import("./pages/Main/Main"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const MySkillsPage = lazy(() => import("./pages/MySkillsPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
