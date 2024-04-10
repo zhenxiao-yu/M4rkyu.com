@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Me from "../../assets/Images/me.png";
 import { mediaQueries } from "../../theme/Themes";
+ import { Canvas } from "@react-three/fiber";
+// import { Experience } from "../../components/Experience";
 
 // outer box
 const Box = styled(motion.div)`
@@ -172,12 +174,12 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h2> Welcome,</h2>
+          <h2>Hello,</h2>
 
           <h3>I am Mark Yu.</h3>
 
           <h6>
-            {/* &lt;div&gt; */}A fullstack developer based in Ontario, CA.
+            {/* &lt;div&gt; */}A fullstack developer from Ontario, CA.
           </h6>
         </Text>
       </SubBox>
@@ -187,7 +189,11 @@ const Intro = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
         >
-          <img className="pic" src={Me} alt="My Pic" />
+          {/* <img className="pic" src={Me} alt="My Pic" /> */}
+            <Canvas shadows camera={{ position: [3, 3, 3], fov: 30 }}>
+              <color attach="background" args={["#ececec"]} />
+                {/* <Experience /> */}
+            </Canvas>
         </motion.div>
       </SubBox>
     </Box>

@@ -51,7 +51,7 @@ const Main = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(0.6rem + 1vw);
+ font-size: calc(0.55rem + 1vw);
  backdrop-filter: blur(4px);
   
   position: absolute;
@@ -110,15 +110,9 @@ const AboutPage = () => {
           <Main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}>
-            I'm a front-end developer located in India. I love to create simple
-            yet beautiful websites with great user experience.
+            Welcome to my corner of the internet! I’m a 22-year-old software engineer and artist residing in Oakville, Canada. 
             <br />
-            <br />
-            I'm interested in the whole frontend stack Like trying new things
-            and building great projects. I'm an independent freelancer and
-            blogger. I love to write blogs and read books. <br />
-            <br />I believe everything is an Art when you put your consciousness
-            in it. You can connect with me via social links.{' '}
+            <br />At the heart of my work, whether it's coding or creating art, lies a commitment to innovation, quality, and continuous learning. I believe in blending aesthetics with functionality to create meaningful and impactful products and experiences.{' '}
           </Main>
           <BigTitle text='ABOUT' top='10%' left='5%' />
         </Box>

@@ -231,8 +231,8 @@ const Main = () => {
               />
             )}
             <h2>
-              <i class="far fa-arrow-alt-circle-up"></i> start here{" "}
-              <i class="far fa-arrow-alt-circle-up"></i>
+              <i className="far fa-arrow-alt-circle-up"></i> start here{" "}
+              <i className="far fa-arrow-alt-circle-up"></i>
             </h2>
           </Center>
 
