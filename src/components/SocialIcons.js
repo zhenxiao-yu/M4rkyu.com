@@ -1,10 +1,10 @@
-import { Github, Instagram, Facebook, YouTube, Linkedin } from "../components/AllSvgs";
+import { Github, Instagram, Facebook, YouTube, Linkedin } from "../Pages/AllSvgs";
 
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
 import { NavLink } from "react-router-dom";
-import { DarkTheme, mediaQueries } from "../components/Themes";
+import { DarkTheme, mediaQueries } from "../Pages/Themes";
 
 // define common style for social media icons
 const Icons = styled.div`

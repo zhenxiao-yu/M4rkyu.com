@@ -10,8 +10,8 @@ import Loading from "../subComponents/Loading";
 import { mediaQueries } from "./Themes";
 
 const RefreshButton = lazy(() => import("../subComponents/RefreshButton"));
-const SocialIcons = lazy(() => import("./../subComponents/SocialIcons"));
-const LogoComponent = lazy(() => import("./../subComponents/LogoComponent"));
+const SocialIcons = lazy(() => import("../subComponents/SocialIcons"));
+const LogoComponent = lazy(() => import("../subComponents/LogoComponent"));
 
 const MainContainer = styled(motion.div)`
   background: ${(props) => props.theme.body};

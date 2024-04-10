@@ -1,7 +1,7 @@
-import { Refresher } from "../components/AllSvgs";
+import { Refresher } from "../Pages/AllSvgs";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { mediaQueries } from "../components/Themes";
+import { mediaQueries } from "../Pages/Themes";
 
 const RefreshBtn = styled.button`
   position: fixed;
