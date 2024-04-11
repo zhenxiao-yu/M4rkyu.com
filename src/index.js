@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import '../node_modules/normalize.css'
+import './theme/normalize.css'
 import { BrowserRouter } from 'react-router-dom'
 
 
