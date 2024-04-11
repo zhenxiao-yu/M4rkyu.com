@@ -190,7 +190,7 @@ const Intro = () => {
           transition={{ duration: 2, delay: 1 }}
         >
           {/* <img className="pic" src={Me} alt="My Pic" /> */}
-            <Canvas className="pic" shadows camera={{ position: [0, 2, 5], fov: 30 }}>
+            <Canvas className="pic" shadows camera={{ position: [0.5, -0.3, 3], fov: 15 }}>
               <color attach="background" args={["#ececec"]} />
                 <Experience />
             </Canvas>
