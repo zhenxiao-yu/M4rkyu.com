@@ -5,7 +5,7 @@ export const Spinner = (props) => {
   return (
     <svg
       t="1641322354008"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +30,7 @@ export const Home = (props) => {
   return (
     <svg
       t="1641246891229"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ export const Instagram = (props) => {
   return (
     <svg
       t="1641248653436"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +96,7 @@ export const Linkedin = (props) => {
   return (
     <svg
       t="1641248742332"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ export const GearLogo = (props) => {
   return (
     <svg
       t="1641323058061"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +188,7 @@ export const CodeCircle = (props) => {
   return (
     <svg
       t="1641264954832"
-      class="icon"
+      className="icon"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +210,7 @@ export const GearCircle = (props) => {
   return (
     <svg
       t="1641266314342"
-      class="icon"
+      className="icon"
       viewBox="0 0 1026 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"

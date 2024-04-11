@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Me from "../../assets/Images/me.png";
 import { mediaQueries } from "../../theme/Themes";
  import { Canvas } from "@react-three/fiber";
-// import { Experience } from "../../components/Experience";
+ import { Experience } from "../../components/Experience";
 
 // outer box
 const Box = styled(motion.div)`
@@ -190,9 +190,9 @@ const Intro = () => {
           transition={{ duration: 2, delay: 1 }}
         >
           {/* <img className="pic" src={Me} alt="My Pic" /> */}
-            <Canvas shadows camera={{ position: [3, 3, 3], fov: 30 }}>
+            <Canvas className="pic" shadows camera={{ position: [3, 3, 3], fov: 30 }}>
               <color attach="background" args={["#ececec"]} />
-                {/* <Experience /> */}
+                <Experience />
             </Canvas>
         </motion.div>
       </SubBox>

@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-   "@react-three/drei": "9.75.0",
+    "@react-three/drei": "9.75.0",
     "@react-three/fiber": "8.13.3",
-    "@types/three": "0.152.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "framer-motion": "^4.1.17",
+    "@types/three": "0.152.1",
+    "framer-motion": "4.1.17",
     "locomotive-scroll": "^4.1.1",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
@@ -46,12 +46,12 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
     "@babel/core": "^7.24.4",
     "@babel/preset-env": "^7.24.4",
-    "prettier": "3.2.5",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
+    "prettier": "3.2.5",
     "vite": "^4.1.0"
   }
 }

@@ -47,7 +47,7 @@ const HomeButton = () => {
   return (
     <RefreshBtn>
       <NavLink to="/">
-        {/* <Refresher width={30} height={30} fill="currentColor" /> */}
+        <Refresher width={30} height={30} fill="currentColor" />
       </NavLink>
     </RefreshBtn>
   );

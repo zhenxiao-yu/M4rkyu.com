@@ -196,7 +196,6 @@ const Main = () => {
   }, []);
 
 
-
   return (
     <Suspense fallback={<Loading />}>
       <MainContainer
@@ -231,8 +230,7 @@ const Main = () => {
               />
             )}
             <h2>
-              <i className="far fa-arrow-alt-circle-up"></i> start here{" "}
-              <i className="far fa-arrow-alt-circle-up"></i>
+              Hello, friend
             </h2>
           </Center>
 
