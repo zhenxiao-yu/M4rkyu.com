@@ -175,9 +175,7 @@ const Intro = () => {
       <SubBox>
         <Text>
           <h2>Hello,</h2>
-
           <h3>I am Mark Yu.</h3>
-
           <h6>
             {/* &lt;div&gt; */}A fullstack developer from Ontario, CA.
           </h6>
@@ -190,7 +188,7 @@ const Intro = () => {
           transition={{ duration: 2, delay: 1 }}
         >
           {/* <img className="pic" src={Me} alt="My Pic" /> */}
-            <Canvas className="pic" shadows camera={{ position: [0.5, -0.3, 3], fov: 15 }}>
+            <Canvas shadows camera={{ position: [0.5, -0.3, 3], fov: 60 }}>
               <color attach="background" args={["#ececec"]} />
                 <Experience />
             </Canvas>

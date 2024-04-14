@@ -16,26 +16,24 @@ export function Avatar(props) {
   });
   const group = useRef();
   const { nodes, materials } = useGLTF("models/me.glb");
-
+  console.log(useFBX("animations/Typing.fbx"));
+console.log()
   const { animations: typingAnimation } = useFBX("animations/Typing.fbx");
-  console.log(typingAnimation)
-  const { animations: standingAnimation } = useFBX(
-    "animations/Standing Idle.fbx"
+  // console.log(typingAnimation)
+  const { animations: standingAnimation } = useFBX("animations/Standing Idle.fbx"
   );
-  const { animations: fallingAnimation } = useFBX(
-    "animations/Falling Idle.fbx"
-  );
+  const { animations: fallingAnimation } = useFBX("animations/Falling Idle.fbx");
 
   typingAnimation[0].name = "Typing";
   standingAnimation[0].name = "Standing";
   fallingAnimation[0].name = "Falling";
 
-  const { actions } = useAnimations(
-    [typingAnimation[0], standingAnimation[0], fallingAnimation[0]],
-    group
-  );
-
-  useFrame((state) => {
+  const { actions } = useAnimations([typingAnimation[0], standingAnimation[0], fallingAnimation[0]], group);
+  console.log(typingAnimation[0]);
+  console.log(standingAnimation[0]);
+   console.log(fallingAnimation[0]);
+   console.log(actions)
+   useFrame((state) => {
     if (headFollow) {
       group.current.getObjectByName("Head").lookAt(state.camera.position);
     }
@@ -59,7 +57,7 @@ export function Avatar(props) {
   }, [wireframe]);
 
   return (
-    <group {...props} dispose={null}>
+    <group {...props} ref={group} dispose={null}>
       <group>
         <group>
           <primitive object={nodes.Hips} />

@@ -8,7 +8,7 @@ import Loading from "./components/Loading";
 //Components
 const Main = lazy(() => import("./pages/Main/Main"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
-const MySkillsPage = lazy(() => import("./pages/SKills/MySkillsPage"));
+const MySkillsPage = lazy(() => import("./pages/Skills/MySkillsPage"));
 const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
 const ProjectPage = lazy(() => import("./pages/Projects/ProjectPage"));
 const SoundBar = lazy(() => import("./components/SoundBar"));
