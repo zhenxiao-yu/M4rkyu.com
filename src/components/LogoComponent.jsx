@@ -11,7 +11,7 @@ const Logo = styled.h1`
   z-index: 3;
   user-select: none;
   ${mediaQueries(40)`
-      font-size:1.5em;
+      font-size:1.8em;
       left:1rem;
       top:2rem;
   `};

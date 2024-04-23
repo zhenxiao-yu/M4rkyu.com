@@ -8,10 +8,9 @@ import music from "../assets/audio/u-said-it-v13-1167.mp3";
 const Box = styled.div`
   display: flex;
   cursor: pointer;
-
   position: fixed;
   left: 8rem;
-  top: 3rem;
+  top: 2.6rem;
   z-index: 10;
 
   & > *:nth-child(1) {
@@ -27,12 +26,24 @@ const Box = styled.div`
     animation-delay: 0.5s;
   }
   & > *:nth-child(5) {
+    animation-delay: 0.6s;
+  }
+  & > *:nth-child(6) {
+    animation-delay: 0.7s;
+  }
+  & > *:nth-child(7) {
     animation-delay: 0.8s;
+  }
+  & > *:nth-child(8) {
+    animation-delay: 0.9s;
+  }
+  & > *:nth-child(9) {
+    animation-delay: 1s;
   }
 
   ${mediaQueries(40)`
       left:1rem;
-      top:10rem;
+      top:6rem;
   `};
 `;
 
@@ -53,12 +64,13 @@ const Line = styled.span`
   animation: ${play} 1s ease infinite;
   animation-play-state: ${(props) => (props.click ? "running" : "paused")};
   height: 1rem;
-  width: 2px;
-  margin: 0 0.1rem;
+  width: 3px;
+  margin: 0 0.15rem;
 
   ${mediaQueries(40)`
       height:0.5rem;
-      width:1px;
+      width: 2px;
+      margin: 0 0.1rem;
   `};
 `;
 
@@ -79,14 +91,11 @@ const SoundBar = () => {
   const ref = useRef(null);
 
   return (
-    <Box onClick={() => handleClick()}>
-      <Line click={click} />
-      <Line click={click} />
-      <Line click={click} />
-      <Line click={click} />
-      <Line click={click} />
-      <Line click={click} />
-      <audio src={music} ref={ref} loop />
+     <Box onClick={() => handleClick()}>
+        {Array.from({ length: 9 }).map((_, index) => (
+            <Line key={index} click={click} />
+        ))}
+        <audio src={music} ref={ref} loop />
     </Box>
   );
 };

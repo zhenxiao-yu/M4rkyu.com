@@ -186,12 +186,13 @@ const Intro = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
+          min-width={{ minWidth:100}}
         >
           {/* <img className="pic" src={Me} alt="My Pic" /> */}
-            <Canvas shadows camera={{ position: [0.5, -0.3, 3], fov: 60 }}>
-              <color attach="background" args={["#ececec"]} />
+            {/* <Canvas shadows  gl={{ alpha: true }} camera={{ position: [0.5, -0.3, 3], fov: 60 }}>
+             <color attach="background" args={["#87D271"]} />
                 <Experience />
-            </Canvas>
+            </Canvas> */}
         </motion.div>
       </SubBox>
     </Box>
