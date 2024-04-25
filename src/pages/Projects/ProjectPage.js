@@ -28,14 +28,12 @@ const Main = styled(motion.ul)`
   left: calc(10rem + 15vw);
   user-select: none;
   height: 40vh;
-  /* height:200vh; */
+  // /* height:200vh; */
   //border:1px solid white;
 
   display: flex;
 
   ${mediaQueries(50)`
-        
-        
         left:calc(8rem + 15vw);
 
   `};
@@ -63,7 +61,7 @@ const Rotate = styled.span`
   display: block;
   position: fixed;
   right: 1rem;
-  bottom: 1rem;
+  top: 1rem;
   width: 85px;
   height: 85px;
 

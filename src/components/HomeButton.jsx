@@ -8,22 +8,24 @@ const HomeBtn = styled.button`
   top: 2rem;
   left: 50%;
   transform: translate(-50%, 0);
-
-  background-color: #87D271;
-  padding: 0.3rem;
+  scale: 1;
+  background-color: var(--body-color-light);
+  padding: 0.5rem;
   border-radius: 50%;
-  border: 2px solid black;
+  border: 3px solid black;
   width: 3rem;
   height: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3;
+  z-index: 20;
   cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
     background-color: rgb(255,224,27,0.7);
     box-shadow: 0 0 7px 6px rgba(255,224,27, 0.3);
+    scale: 1.1;
   }
 
   & > *:first-child {
@@ -32,8 +34,11 @@ const HomeBtn = styled.button`
   }
 
   ${mediaQueries(40)`
-   width: 2rem;
-   height: 2rem;
+   width: 3rem;
+   height: 3rem;
+   position: fixed;
+   top: 92%;
+   left: 90%;
       svg{
         width:20px;
         height:20px;

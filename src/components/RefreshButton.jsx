@@ -9,7 +9,7 @@ const RefreshBtn = styled.button`
   left: 50%;
   transform: translate(-50%, 0);
 
-  background-color: #87d271;
+  background-color: var(--body-color-light);
   padding: 0.3rem;
   border-radius: 50%;
   border: 2px solid black;
