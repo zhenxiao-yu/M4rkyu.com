@@ -5,9 +5,9 @@ import svgrPlugin from 'vite-plugin-svgr';
 
 export default defineConfig({
     plugins: [
-        react(),  // ensures all necessary React and JSX processing
+        react({ include: "pathToAllReactFiles.{jsx,tsx}" }),
         viteTsconfigPaths(),
-        svgrPlugin()
+        svgrPlugin(),
     ],
     server: {
         open: true,
