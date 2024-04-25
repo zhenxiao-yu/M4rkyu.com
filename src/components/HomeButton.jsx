@@ -23,7 +23,7 @@ const HomeBtn = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: rgb(255,224,27,0.7);
+    background-color: rgba(255,224,27,0.7);
     box-shadow: 0 0 7px 6px rgba(255,224,27, 0.3);
     scale: 1.1;
   }

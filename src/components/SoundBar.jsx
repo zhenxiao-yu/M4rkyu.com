@@ -43,7 +43,8 @@ const Box = styled.div`
 
   ${mediaQueries(40)`
       left:1rem;
-      top:6rem;
+      top:5rem;
+      scale:0.9;
   `};
 `;
 

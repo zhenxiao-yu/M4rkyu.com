@@ -27,8 +27,8 @@ height:50vh;
       top;
   background-repeat: no-repeat;
   background-size: 100% 2px;
-  border-left: 5px dashed ${(props) => props.theme.body};
-  border-right: 5px dashed ${(props) => props.theme.text};
+  border-left: 5px solid ${(props) => props.theme.body};
+  border-right: 5px solid ${(props) => props.theme.text};
   z-index: 1;
   position: absolute;
   left: 50%;
@@ -65,8 +65,8 @@ height:50vh;
   @media only screen and (max-width: 50em) {
     background: none;
     border: none;
-    border-top: 5px dashed ${(props) => props.theme.body};
-    border-bottom: 5px dashed ${(props) => props.theme.text};
+    border-top: 5px solid ${(props) => props.theme.body};
+    border-bottom: 5px solid ${(props) => props.theme.text};
     background-image: linear-gradient(
         ${(props) => props.theme.body} 50%,
         ${(props) => props.theme.text} 50%

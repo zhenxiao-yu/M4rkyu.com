@@ -1,6 +1,7 @@
+/* styles.css */
 :root {
-    --body-color-light: #cc1717; 
-    --text-color-light: #101010; 
-    --body-color-dark: #101010;
-    --text-color-dark: #cc1717;
+    --body-color-light: rgb(40, 119, 80);
+    --text-color-light: rgb(16, 16, 16);
+    --body-color-dark: rgb(16, 16, 16);
+    --text-color-dark: rgb(40, 119, 80);
 }
