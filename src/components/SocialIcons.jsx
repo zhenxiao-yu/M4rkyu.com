@@ -1,12 +1,9 @@
 import { Github, Instagram, Facebook, YouTube, Linkedin } from "../assets/svg/AllSvgs";
-
 import styled from "styled-components";
 import { motion } from "framer-motion";
-
 import { NavLink } from "react-router-dom";
 import { DarkTheme, mediaQueries } from "../theme/Themes";
 
-// define common style for social media icons
 const Icons = styled.div`
   display: flex;
   flex-direction: column;
@@ -19,16 +16,14 @@ const Icons = styled.div`
     margin: 0.5rem 0;
     ${mediaQueries(20)`
       margin: 0.3rem 0;
-  `};
+    `};
   }
-
   ${mediaQueries(40)`
-  left: 1rem;
-      svg{
-        width:20px;
-        height:20px
-      }
-
+    left: 1rem;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   `};
 `;
 
@@ -38,121 +33,43 @@ const Line = styled(motion.span)`
   background-color: ${(props) =>
     props.color === "dark" ? DarkTheme.text : DarkTheme.body};
 `;
+
+// Configuration for social media links
+const socialLinks = [
+  { id: "github", Icon: Github, link: "https://github.com/zhenxiao-yu" },
+  { id: "linkedin", Icon: Linkedin, link: "https://www.linkedin.com/in/your-profile" },
+  { id: "instagram", Icon: Instagram, link: "https://www.instagram.com/m4rkyu/" },
+  { id: "facebook", Icon: Facebook, link: "https://www.facebook.com/mark.yu.3762584" },
+  { id: "youtube", Icon: YouTube, link: "https://www.youtube.com/channel/UCUY09EUdbMoyDeWrMBYcUZQ" }
+];
+
 const SocialIcons = (props) => {
   const mq = window.matchMedia("(max-width: 40em)").matches;
 
   return (
     <Icons>
-
-      {/* github */}
-      <motion.div
-        initial={{ transform: "scale(0)" }}
-        animate={{ scale: [0, 1, 1.5, 1] }}
-        transition={{ type: "spring", duration: 1, delay: 1 }}
-      >
-        <NavLink
-          style={{ color: "inherit" }}
-          target="_blank"
-          to={{ pathname: "https://github.com/zhenxiao-yu" }}
+      {socialLinks.map(({ id, Icon, link }, index) => (
+        <motion.div
+          key={id}
+          initial={{ transform: "scale(0)" }}
+          animate={{ scale: [0, 1, 1.5, 1] }}
+          transition={{ type: "spring", duration: 1, delay: 1 + index * 0.2 }}
         >
-          <Github
-            width={25}
-            height={25}
-            fill={
-              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
-            }
-          />
-        </NavLink>
-      </motion.div>
-
-      {/* linkedin */}
-      <motion.div
-        initial={{ transform: "scale(0)" }}
-        animate={{ scale: [0, 1, 1.5, 1] }}
-        transition={{ type: "spring", duration: 1, delay: 1.2 }}
-      >
-        <NavLink
-          style={{ color: "inherit" }}
-          target="_blank"
-          to={{ pathname: "" }}
-        >
-          <Linkedin
-            width={25}
-            height={25}
-            fill={
-              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
-            }
-          />
-        </NavLink>
-      </motion.div>
-
-       {/* instagram */}
-       <motion.div
-        initial={{ transform: "scale(0)" }}
-        animate={{ scale: [0, 1, 1.5, 1] }}
-        transition={{ type: "spring", duration: 1, delay: 1.2 }}
-      >
-        <NavLink
-          style={{ color: "inherit" }}
-          target="_blank"
-          to={{ pathname: "https://www.instagram.com/m4rkyu/" }}
-        >
-          <Instagram
-            width={25}
-            height={25}
-            fill={
-              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
-            }
-          />
-        </NavLink>
-      </motion.div>
-
-      {/* facebook */}
-      <motion.div
-        initial={{ transform: "scale(0)" }}
-        animate={{ scale: [0, 1, 1.5, 1] }}
-        transition={{ type: "spring", duration: 1, delay: 1.4 }}
-      >
-        <NavLink
-          style={{ color: "inherit" }}
-          target="_blank"
-          to={{ pathname: "https://www.facebook.com/mark.yu.3762584" }}
-        >
-          <Facebook
-            width={25}
-            height={25}
-            fill={
-              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
-            }
-          />
-        </NavLink>
-      </motion.div>
-      
-      {/* youtube chanel */}
-      <motion.div
-        initial={{ transform: "scale(0)" }}
-        animate={{ scale: [0, 1, 1.5, 1] }}
-        transition={{ type: "spring", duration: 1, delay: 1.6 }}
-      >
-        <NavLink
-          style={{ color: "inherit" }}
-          target="_blank"
-          to={{
-            pathname:
-              "https://www.youtube.com/channel/UCUY09EUdbMoyDeWrMBYcUZQ",
-          }}
-        >
-          <YouTube
-            width={25}
-            height={25}
-            fill={
-              props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
-            }
-          />
-        </NavLink>
-      </motion.div>
-
-      {/* line decoration */}
+          <NavLink
+            style={{ color: "inherit" }}
+            target="_blank"
+            to={{ pathname: link }}
+          >
+            <Icon
+              width={25}
+              height={25}
+              fill={
+                props.theme === "dark" ? `${DarkTheme.text}` : `${DarkTheme.body}`
+              }
+            />
+          </NavLink>
+        </motion.div>
+      ))}
       <Line
         initial={{ height: 0 }}
         animate={{ height: mq ? "5rem" : "8rem" }}
