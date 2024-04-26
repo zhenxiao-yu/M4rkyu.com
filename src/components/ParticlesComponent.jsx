@@ -39,7 +39,7 @@ const ParticlesComponent = (props) => {
         },
         modes: {
           push: {
-            distance: 250,
+            distance: 150,
             duration: 2,
           },
           grab: {
@@ -47,7 +47,7 @@ const ParticlesComponent = (props) => {
             duration: 0.2
           },
           "repulse": {
-          "distance": 300,
+          "distance": 200,
           "duration": 0.4
           },
         },
@@ -58,9 +58,9 @@ const ParticlesComponent = (props) => {
   },
   links: {
     color: "rgb(40, 119, 80)", // Color of the lines between particles
-    distance: 150, // Maximum distance between linked particles
+    distance: 180, // Maximum distance between linked particles
     enable: true, // Enable linking between particles
-    opacity: 0.2, // Opacity of the links
+    opacity: 0.3, // Opacity of the links
     width: 1, // Width of the links
   },
   move: {
@@ -86,7 +86,7 @@ const ParticlesComponent = (props) => {
     type: "star", // Shape of the particles (circle, edge, triangle, polygon, star, image)
   },
   size: {
-    value: { min: 0.5, max: 0.7 }, // Size range of particles
+    value: { min: 1.3, max: 2.5 }, // Size range of particles
   },
 },
       detectRetina: true,
@@ -105,22 +105,22 @@ const ParticlesComponent = (props) => {
           },
           onHover: {
             enable: true,
-            mode: 'grab',
+            mode: 'push',
           },
           
         },
         modes: {
           push: {
-            distance: 250,
-            duration: 2,
+            distance: 200,
+            duration: 0.3,
           },
           grab: {
             distance: 250,
             duration: 0.2
           },
           "repulse": {
-          "distance": 300,
-          "duration": 0.4
+          "distance": 130,
+          "duration": 2
           },
         },
       },
@@ -130,35 +130,35 @@ const ParticlesComponent = (props) => {
         },
         links: {
           color: "rgb(16, 16, 16)", // Color of the lines between particles
-          distance: 350, // Maximum distance between linked particles
+          distance: 100, // Maximum distance between linked particles
           enable: true, // Enable linking between particles
           opacity: 0.2, // Opacity of the links
-          width: 1, // Width of the links
+          width: 1.5, // Width of the links
         },
         move: {
-          direction: "none", // Direction particles move (none, top, top-right, etc.)
+          direction: "top", // Direction particles move (none, top, top-right, etc.)
           enable: true, // Enable movement
           outModes: {
             default: "bounce", // Behavior when particles reach canvas edge
           },
           random: true, // Movement randomness
-          speed: 3, // Speed of particle movement
-          straight: false, // Movement in a straight line
+          speed: 0.5, // Speed of particle movement
+          straight: true, // Movement in a straight line
         },
         number: {
           density: {
             enable: true, // Enable a density area for particle distribution
           },
-          value: 222, // Number of particles
+          value: 250, // Number of particles
         },
         opacity: {
-          value: 0.5, // Opacity of the particles
+          value: 0.3, // Opacity of the particles
         },
         shape: {
-          type: "star", // Shape of the particles (circle, edge, triangle, polygon, star, image)
+          type: "circle", // Shape of the particles (circle, edge, triangle, polygon, star, image)
         },
         size: {
-          value: { min: 1, max: 1.3 }, // Size range of particles
+          value: { min: 1.5, max: 10}, // Size range of particles
         },
       },
       detectRetina: true,
