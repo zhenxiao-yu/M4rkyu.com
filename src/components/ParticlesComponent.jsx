@@ -54,10 +54,10 @@ const ParticlesComponent = (props) => {
       },
       particles: {
   color: {
-    value: "rgb(40, 119, 80)", // Color of the particles
+    value: "rgb(225, 223, 228)", // Color of the particles
   },
   links: {
-    color: "rgb(40, 119, 80)", // Color of the lines between particles
+    color: "rgb(225, 223, 228)", // Color of the lines between particles
     distance: 180, // Maximum distance between linked particles
     enable: true, // Enable linking between particles
     opacity: 0.3, // Opacity of the links
@@ -70,7 +70,7 @@ const ParticlesComponent = (props) => {
       default: "bounce", // Behavior when particles reach canvas edge
     },
     random: true, // Movement randomness
-    speed: 3, // Speed of particle movement
+    speed: 2.5, // Speed of particle movement
     straight: false, // Movement in a straight line
   },
   number: {
