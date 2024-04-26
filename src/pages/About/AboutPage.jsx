@@ -9,9 +9,7 @@ import Loading from '../../components/Loading';
 const SocialIcons = lazy(() => import('../../components/SocialIcons'))
 const HomeButton = lazy(() => import('../../components/HomeButton'))
 const LogoComponent = lazy(() => import('../../components/LogoComponent'))
-const ParticlesComponent = lazy(() =>
-  import('../../components/ParticlesComponent')
-)
+const ParticlesComponent = lazy(() =>import('../../components/ParticlesComponent'))
 const BigTitle = lazy(() => import('../../components/BigTitle'))
 
 
