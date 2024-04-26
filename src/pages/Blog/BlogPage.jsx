@@ -20,16 +20,24 @@ const BigTitle = lazy(() => import("../../components/BigTitle"));
 
 const MainContainer = styled(motion.div)`
   background-image: url(${img});
-   background-size: cover;
+  background-size: cover;
   background-repeat: repeat;
   background-attachment: fixed;
   background-position: center;
   user-select: none;
 `;
 
+// Utility function to convert hex color to RGBA
+const hexToRgba = (hex, opacity) => {
+  const trimmedHex = hex.replace('#', '');
+  const r = parseInt(trimmedHex.substring(0, 2), 16);
+  const g = parseInt(trimmedHex.substring(2, 4), 16);
+  const b = parseInt(trimmedHex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
 const Container = styled.div`
-  background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
-  //width:100vw;
+  background-color: ${props => props.theme.body};
   width: 100%;
   height: auto;
   position: relative;
@@ -49,7 +57,7 @@ const Center = styled.div`
 const Grid = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(2, minmax(calc(10rem + 15vw), 1fr));
-  grid-gap: calc(1rem + 2vw);
+  grid-gap: calc(0.3rem + 2vw);
   ${mediaQueries(50)`
     grid-template-columns: 100%;
   `};

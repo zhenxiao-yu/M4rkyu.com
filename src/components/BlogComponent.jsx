@@ -60,7 +60,7 @@ const Title = styled.h3`
   color: inherit;
   padding: 0.5rem 0;
   padding-top: 1rem;
-  font-family: "Karla", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 700;
   ${mediaQueries(40)`
     font-size:calc(0.8em + 1vw);

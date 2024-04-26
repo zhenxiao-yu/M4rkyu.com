@@ -9,9 +9,7 @@ import Loading from '../../components/Loading';
 const SocialIcons = lazy(() => import('../../components/SocialIcons'))
 const HomeButton = lazy(() => import('../../components/HomeButton'))
 const LogoComponent = lazy(() => import('../../components/LogoComponent'))
-const ParticlesComponent = lazy(() =>
-  import('../../components/ParticlesComponent')
-)
+const ParticlesComponent = lazy(() =>import('../../components/ParticlesComponent'))
 const BigTitle = lazy(() => import('../../components/BigTitle'))
 
 
@@ -58,7 +56,7 @@ const Main = styled(motion.div)`
   left: calc(5rem + 5vw);
   top: 10rem;
 
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: "Poppins", sans-serif;
   font-style: italic;
 
   ${mediaQueries(40)`

@@ -19,10 +19,9 @@ function App() {
   return (
     <>
       <GlobalStyle />
-
       <ThemeProvider theme={lightTheme}>
         <Suspense fallback={<Loading />}>
-          <SoundBar />
+          <SoundBar/>
             <Switch location={location} key={location.pathname}>
               <Route exact path="/" component={Main} />
               <Route exact path="/about" component={AboutPage} />
