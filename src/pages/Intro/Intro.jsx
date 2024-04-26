@@ -127,19 +127,19 @@ const SubBox = styled.div`
 const Text = styled(motion.div)`
   font-size: calc(1rem + 1.5vw);
   color: ${(props) => props.theme.body};
-  padding: 2rem;
+  padding: 2.5rem;
   cursor: pointer;
   display: flex;
   z-index:2;
   flex-direction: column;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Poppins", sans-serif;
   justify-content: space-evenly;
   letter-spacing: 1px;
   user-select: none;
   & > *:last-child {
     color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
     font-size: calc(0.5rem + 1.5vw);
-    font-weight: 300;
+    font-weight: 600;
 
     ${mediaQueries(40)`
         font-size: calc(0.5rem + 1vw);
@@ -174,8 +174,8 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h2>Hello,</h2>
-          <h3>I am Mark Yu.</h3>
+          <h2>Hi,</h2>
+          <h3>I'm Mark Yu.</h3>
           <h6>
             {/* &lt;div&gt; */}A fullstack developer from Ontario, CA.
           </h6>

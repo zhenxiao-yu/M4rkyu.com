@@ -19,7 +19,7 @@ export const lightTheme = {
     body:"var(--body-color-light)",
     text:"var(--text-color-light)",
     fontFamily:"'Poppins', sans-serif",
-    bodyRgba: "135, 210, 113",
+    bodyRgba: "225, 223, 228",
     textRgba: "16,16,16",
 }
 
@@ -27,7 +27,7 @@ export const DarkTheme = {
     body:"var(--body-color-dark)",
     text:"var(--text-color-dark)",
     fontFamily:"'Poppins', sans-serif",
-    textRgba : "135, 210, 113",
+    textRgba : "225, 223, 228",
     bodyRgba:"16, 16, 16",
 
 }

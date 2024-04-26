@@ -56,7 +56,7 @@ const Main = styled(motion.div)`
   left: calc(5rem + 5vw);
   top: 10rem;
 
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: "Poppins", sans-serif;
   font-style: italic;
 
   ${mediaQueries(40)`

@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 /*
 font-family: 'Source Sans Pro', sans-serif;
 font-family: 'Ubuntu Mono', monospace;
+font-family: "Poppins", sans-serif;
 */
 
 const GlobalStyle = createGlobalStyle`

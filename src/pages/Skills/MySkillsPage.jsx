@@ -61,8 +61,7 @@ const Main = styled(motion.div)`
 
   `};
 
-  font-family: "Ubuntu Mono", monospace;
-
+  font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
