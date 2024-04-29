@@ -8,6 +8,7 @@ import { CgMail } from "react-icons/cg";
 import { CodeCircle } from "../../assets/svg/AllSvgs";
 import Intro from "../Intro/Intro";
 import Loading from "../../components/Loading";
+import Greeting from "../../components/Greeting";
 import { mediaQueries } from "../../theme/Themes";
 
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
@@ -230,9 +231,7 @@ const Main = () => {
                 fill="#101010"
               />
             )}
-            <h2>
-              Hello, friend
-            </h2>
+            <Greeting/>
           </Center>
 
           {/* Contact Link */}
