@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { lazy, Suspense, useState, useEffect} from "react";
 import { motion } from "framer-motion";
+import { CgMail } from "react-icons/cg";
 
 //Components
 import { CodeCircle } from "../../assets/svg/AllSvgs";
@@ -250,10 +251,12 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.3 }}
+                whileHover={{ scale: 1.2, fontWeight: "bold" }}
                 whileTap={{ scale: 0.85 }}
               >
-                Contact
+                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CgMail style={{ marginRight: '8px' }} /> Contact
+                 </div>
               </motion.h2>
             </Contact>
           ) : (
@@ -271,10 +274,12 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.3 }}
+                whileHover={{ scale: 1.2, fontWeight: "bold" }}
                 whileTap={{ scale: 0.85 }}
-              >
-                Email Me
+                >
+               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <CgMail style={{ marginRight: '8px' }} /> Contact
+                </div>
               </motion.h2>
             </Contact>
           )}
@@ -291,10 +296,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ rotate: -90, scale: 1.3 }}
+                whileHover={{ rotate: -90, scale: 1.3, fontWeight: "bold"}}
                 whileTap={{ rotate: -90, scale: 0.85 }}
               >
-                Blog
+                Posts
               </motion.h2>
             </BLOG>
           ) : (
@@ -308,10 +313,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ rotate: -90, scale: 1.3 }}
+                whileHover={{ rotate: -90, scale: 1.2, fontWeight: "bold"}}
                 whileTap={{ rotate: -90, scale: 0.85 }}
               >
-                Blog
+                Posts
               </motion.h2>
             </BLOG>
           )}
@@ -328,8 +333,8 @@ const Main = () => {
                 y: 0,
                 transition: { type: "spring", duration: 1.5, delay: 1 },
               }}
-              whileHover={{ translateY: 25, rotate: 90, scale: 1.3 }}
-              whileTap={{ translateY: 25, rotate: 90, scale: 0.85 }}
+              whileHover={{ translateY: 35,  rotate: 90, scale: 1.2 }}
+              whileTap={{ translateY: 35, rotate: 90, scale: 0.85 }}
             >
               Projects
             </motion.h2>
@@ -352,7 +357,7 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.3 }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
                 About
@@ -372,7 +377,7 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.3 }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
                 Skills
