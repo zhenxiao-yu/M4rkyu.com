@@ -177,7 +177,7 @@ const Intro = () => {
           <h2>Hi,</h2>
           <h3>I'm Mark Yu.</h3>
           <h6>
-            {/* &lt;div&gt; */}A fullstack developer from Ontario, CA.
+            &lt;div&gt; Software Engineer from Ontario, Canada &lt;div&gt;
           </h6>
         </Text>
       </SubBox>

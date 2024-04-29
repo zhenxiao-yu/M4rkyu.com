@@ -16,13 +16,20 @@ const Box = styled(motion.li)`
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid ${(props) => props.theme.body};
-  transition: all 0.2s ease;
+  transition: all 0.5s ease; // Updated transition time
+  background-image: linear-gradient(
+    to right, 
+    ${(props) => props.theme.body} 50%, 
+    ${(props) => props.theme.text} 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+
   &:hover {
-    background-color: ${(props) => props.theme.body};
     color: ${(props) => props.theme.text};
     border: 1px solid ${(props) => props.theme.text};
+    background-color: ${(props) => props.theme.body};
+    background-position: left bottom; // Shifts the gradient to change the background color directionally
   }
-
   ${mediaQueries(50)`
         width:16rem;
         margin-right:6rem;

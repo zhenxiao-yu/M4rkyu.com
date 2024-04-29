@@ -13,7 +13,7 @@ const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
 const ProjectPage = lazy(() => import("./pages/Projects/ProjectPage"));
 const SoundBar = lazy(() => import("./components/SoundBar"));
 
-function App() {
+function Router() {
   const location = useLocation();
 
   return (
@@ -35,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default Router;
