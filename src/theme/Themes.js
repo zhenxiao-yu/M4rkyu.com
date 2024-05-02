@@ -19,16 +19,16 @@ export const lightTheme = {
     body:"var(--body-color-light)",
     text:"var(--text-color-light)",
     fontFamily:"'Poppins', sans-serif",
-    bodyRgba: "91, 186, 36",
-    textRgba: "16,16,16",
+    bodyRgba: "250, 243, 227",
+    textRgba: "8,9,10",
 }
 
 export const DarkTheme = {
     body:"var(--body-color-dark)",
     text:"var(--text-color-dark)",
     fontFamily:"'Poppins', sans-serif",
-    textRgba : "91, 186, 36",
-    bodyRgba:"16, 16, 16",
+    textRgba : "250, 243, 227",
+    bodyRgba:"8, 9, 10",
 
 }
 

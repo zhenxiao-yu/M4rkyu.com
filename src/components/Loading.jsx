@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { DNA } from 'react-loader-spinner';
+import { BallTriangle } from 'react-loader-spinner';
 
 const Box = styled.div`
   width: 100vw;
@@ -17,16 +17,19 @@ const Box = styled.div`
 const Loading = () => {
   return (
     <Box>
-        <DNA
-          visible={true}
-          height="120"
-          width="120"
-          ariaLabel="dna-loading"
+        <BallTriangle
+          height={120}
+          width={120}
+          radius={5}
+          color="#faf3e3"
+          ariaLabel="ball-triangle-loading"
           wrapperStyle={{}}
-          wrapperClass="dna-wrapper"
-        />
-      <br/>
-      <h1>Loading...</h1>
+          wrapperClass=""
+          visible={true}
+          />
+       <br/>
+       <br/>
+      <h2>Loading...</h2>
     </Box>
   );
 };
