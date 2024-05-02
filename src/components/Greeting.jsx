@@ -14,7 +14,7 @@ const Greeting = () => {
   }, [greeting]);
 
   return (
-    <><h2>{greeting}</h2></>
+    <><h2 className="fadeIn is-text-color-light">{greeting}</h2></>
   );
 };
 

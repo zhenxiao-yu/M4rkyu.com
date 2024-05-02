@@ -62,7 +62,8 @@ const NextButton = styled.button`
   top: 2.1rem;
   cursor: pointer;
   background: ${(props) => props.theme.body};
-  border: 4px solid ${(props) => props.theme.text};\
+  color: ${(props) => props.theme.text};
+  border: 4px solid ${(props) => props.theme.text};
   padding: 5px 6px 4px 6px;
   scale: 1.2;
   border-radius: 50%;

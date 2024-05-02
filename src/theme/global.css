@@ -5,3 +5,24 @@
     --body-color-dark: rgb(8, 9, 10);
     --text-color-dark:  rgb(250, 243, 227);
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 3s;
+}
+
+.is-text-color-dark{
+    color: var(--text-color-dark)
+}
+
+.is-text-color-light{
+    color: var(--text-color-light)
+}

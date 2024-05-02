@@ -12,6 +12,7 @@ const HomeBtn = styled.button`
   background-color: var(--body-color-light);
   padding: 0.5rem;
   border-radius: 50%;
+  color: var(--text-color-light);
   border: 3px solid black;
   width: 3rem;
   height: 3rem;
