@@ -14,6 +14,6 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    outDir: 'build' // Change this to your preferred output directory
+    outDir: 'dist'
   }
 });
