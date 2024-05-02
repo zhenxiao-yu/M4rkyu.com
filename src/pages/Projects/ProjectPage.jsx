@@ -35,25 +35,18 @@ const Main = styled(motion.ul)`
 
   ${mediaQueries(50)`
         left:calc(8rem + 15vw);
-
   `};
 
   ${mediaQueries(40)`
-  top: 30%;
-        
+        top: 30%;
         left:calc(6rem + 15vw);
-
   `};
 
   ${mediaQueries(40)`
-        
         left:calc(2rem + 15vw);
-
   `};
   ${mediaQueries(25)`
-        
         left:calc(1rem + 15vw);
-
   `};
 `;
 
