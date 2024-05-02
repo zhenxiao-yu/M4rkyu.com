@@ -45,18 +45,18 @@ height:50vh;
   `};
 
   ${mediaQueries(50)`
-    width: 50vw;
+    width: 70vw;
     background-size: 100% 2px;
     flex-direction:column;
     justify-content:space-between;
   `};
 
   ${mediaQueries(40)`
-    width: 60vw;
+    width: 64vw;
   `};
 
   ${mediaQueries(30)`
-    width: 70vw;
+    width: 64vw;
   `};
   ${mediaQueries(20)`
     width: 60vw;
