@@ -4,13 +4,16 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
 
 export default defineConfig({
-    plugins: [
-        react({ include: "pathToAllReactFiles.{jsx,tsx}" }),
-        viteTsconfigPaths(),
-        svgrPlugin(),
-    ],
-    server: {
-        open: true,
-        port: 3000,
-    },
+  plugins: [
+    react(),
+    viteTsconfigPaths(),
+    svgrPlugin(),
+  ],
+  server: {
+    open: true,
+    port: 3000,
+  },
+  build: {
+    outDir: 'build' // Change this to your preferred output directory
+  }
 });
