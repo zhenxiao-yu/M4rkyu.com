@@ -85,9 +85,9 @@ const SoundBar = () => {
   const songs = [song1, song2, song3, song4];
   const ref = useRef(null);
 
-  useEffect(() => {
-    playSong(currentSongIndex);
-  }, [currentSongIndex]);
+  // useEffect(() => {
+  //   playSong(currentSongIndex);
+  // }, [currentSongIndex]);
 
   const playSong = (index) => {
     ref.current.src = songs[index];

@@ -254,7 +254,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
               >
                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <CgMail style={{ marginRight: '8px' }} /> Contact
+                    <CgMail style={{ marginRight: '3px' }} /> Contact
                  </div>
               </motion.h2>
             </Contact>
@@ -277,7 +277,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
                 >
                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CgMail style={{ marginRight: '8px' }} /> Contact
+                  <CgMail style={{ marginRight: '3px' }} /> Contact
                 </div>
               </motion.h2>
             </Contact>
