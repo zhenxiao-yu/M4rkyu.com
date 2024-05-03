@@ -89,11 +89,26 @@ const SoundBar = () => {
     playSong(currentSongIndex);
   }, [currentSongIndex]);
 
-const playSong = (index) => {
+  useEffect(() => {
+    const audioElement = ref.current;
+    if (audioElement) {
+      // When playback ends, move to the next song
+      const handleEnded = () => {
+        handleNext();
+      };
+      audioElement.addEventListener("ended", handleEnded);
+
+      return () => {
+        audioElement.removeEventListener("ended", handleEnded);
+      };
+    }
+  }, [currentSongIndex]);
+
+  const playSong = (index) => {
     if (ref.current) {
         ref.current.pause(); // Stop any current playback
         ref.current.currentTime = 0; // Reset time to the start
-        ref.current.volume = 0.6; // Set the volume to 80%
+        ref.current.volume = 0.8; // Set the volume to 80%
     }
 
     ref.current.src = songs[index]; // Set the new source
@@ -104,7 +119,7 @@ const playSong = (index) => {
         console.warn("Playback failed:", error);
         setClick(false);
     });
-};
+  };
 
   const handleClick = () => {
     if (!click) {
@@ -127,9 +142,9 @@ const playSong = (index) => {
         {Array.from({ length: 9 }).map((_, index) => (
           <Line key={index} click={click} />
         ))}
-        <audio ref={ref} loop />
+        <audio ref={ref} loop={false} />
         <NextButton onClick={handleNext}>
-          <GiPerspectiveDiceSixFacesRandom /> 
+          <GiPerspectiveDiceSixFacesRandom />
         </NextButton>
       </Box>
     </div>

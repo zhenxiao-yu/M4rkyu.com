@@ -53,13 +53,13 @@ const Main = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Align items to the top */
-  font-size: calc(0.6rem + 0.5vw);
+  font-size: calc(0.75rem + 0.5vw);
   backdrop-filter: blur(6px);
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-family: "karla", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-style: italic;
   font-weight: 400; /* Use bold font weight */
 
@@ -81,22 +81,22 @@ const Main = styled(motion.div)`
   ${mediaQueries(40)`
     width: 60vw;
     max-height: 70vh;
-    font-size: calc(0.7rem + 0.4vw);
+    font-size: calc(0.95rem + 0.4vw);
     backdrop-filter: blur(3px);
   `};
 
   ${mediaQueries(30)`
-    width: 55vw;
+    width: 53vw;
     max-height: 70vh;
     backdrop-filter: none;
-    font-size: calc(0.8rem + 0vw);
+    font-size: calc(0.95rem + 0vw);
     padding: 1.5rem;
     backdrop-filter: blur(3px);
   `};
 
   ${mediaQueries(20)`
     padding: 1rem;
-    font-size: calc(0.7rem + 0.8vw);
+    font-size: calc(0.8rem + 0.8vw);
     backdrop-filter: blur(3px);
   `};
 `;
@@ -129,22 +129,22 @@ const AboutPage = () => {
           <Main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}>
-            Welcome! I'm Mark Yu, a passionate software engineer known for blending technical prowess with artistic flair to create cutting-edge digital solutions. My journey began in China and led me to Saskatchewan, Canada,
-            where my fascination with computer science ignited during my high school years, shaping my path ever since.
+            Thanks for visiting! My name is Mark Yu. As an artist and software engineer based in Ontario, Canada,
+            I enjoy combining my technical expertise with artistic flair to create cutting-edge digital solutions. Originally from China, my journey brought me to Saskatchewan, where my fascination with computer science began in high school and has shaped my path ever since.
             <br />
             <br />
-            I pursued my academic dreams at Western University, graduating in 2024 with a degree in software engineering. During my time there, I immersed myself in meaningful research and internships,
-            establishing a strong foundation for my professional path.
-            I've consistently focused on building resilient systems that excel in performance while emphasizing user-friendliness and aesthetic elegance.
+            I earned a degree in software engineering from Western University in 2024. My time there, filled with research and internships, laid the foundation for my career.
+            Throughout my journey, I’ve consistently developed resilient systems that prioritize performance, user-friendliness, and aesthetic appeal.
             <br />
             <br />
-            Currently, I'm taking a break from conventional employment to explore the world, delve into emerging technologies, and work on personal projects that reignite my innovative spirit.
-            My goal is to craft digital experiences that are both intuitive and visually captivating, redefining how users interact with technology.
+            Currently, I’m taking a break from traditional employment to explore new technologies, travel, and work on personal projects that fuel my creativity.
+            I focus on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.
             <br />
             <br />
-            With a proven track record in managing intricate data systems, developing full-stack web applications, and enhancing user interfaces,
-            I'm eager to leverage my skills and creativity to address real-world challenges with innovative solutions. If you're passionate about collaboration and idea exchange,
-            let's join forces to push the boundaries of technology. Reach out, and let's explore the possibilities together!
+            I’m passionate about leveraging my skills and creativity to address real-world challenges through innovative solutions.
+            My experience spans managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you’re interested in collaboration and exchanging ideas,
+            let’s connect and explore the potential of technology together. Reach out, and let’s create something remarkable!
+
           </Main>
           <BigTitle text='ABOUT' top='10%' left='5%' />
         </Box>
