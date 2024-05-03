@@ -17,7 +17,7 @@ export const Experience = () => {
   return (
     <>
       <OrbitControls />
-      {/* <Sky /> */}
+      <Sky />
       <Environment preset="park" />
       <group position-y={-1}>
         <ContactShadows

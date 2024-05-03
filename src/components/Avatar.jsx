@@ -29,10 +29,10 @@ console.log()
   fallingAnimation[0].name = "Falling";
 
   const { actions } = useAnimations([typingAnimation[0], standingAnimation[0], fallingAnimation[0]], group);
-  console.log(typingAnimation[0]);
-  console.log(standingAnimation[0]);
-   console.log(fallingAnimation[0]);
-   console.log(actions)
+  // console.log(typingAnimation[0]);
+  // console.log(standingAnimation[0]);
+  //  console.log(fallingAnimation[0]);
+  //  console.log(actions)
    useFrame((state) => {
     if (headFollow) {
       group.current.getObjectByName("Head").lookAt(state.camera.position);

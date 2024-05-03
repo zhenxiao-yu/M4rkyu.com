@@ -20,7 +20,7 @@ const ParticlesComponent = (props) => {
     console.log(container);
   };
 
-  console.log(props.theme)
+  //console.log(props.theme)
   const options_dark = useMemo(
     () => ({
       fpsLimit: 120,

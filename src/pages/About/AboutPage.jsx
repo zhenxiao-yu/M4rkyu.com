@@ -5,6 +5,8 @@ import styled, { keyframes, ThemeProvider } from 'styled-components'
 import { DarkTheme, mediaQueries } from '../../theme/Themes'
 import astronaut from "../../assets/Images/spaceman.png";
 import Loading from '../../components/Loading';
+ import { Canvas } from "@react-three/fiber";
+import { Experience } from '../../components/Experience';
 //Components
 const SocialIcons = lazy(() => import('../../components/SocialIcons'))
 const HomeButton = lazy(() => import('../../components/HomeButton'))
@@ -52,12 +54,12 @@ const Main = styled(motion.div)`
   justify-content: center;
   align-items: flex-start; /* Align items to the top */
   font-size: calc(0.6rem + 0.5vw);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-family: "Poppins", sans-serif;
+  font-family: "karla", sans-serif;
   font-style: italic;
   font-weight: 400; /* Use bold font weight */
 
@@ -80,6 +82,7 @@ const Main = styled(motion.div)`
     width: 60vw;
     max-height: 70vh;
     font-size: calc(0.7rem + 0.4vw);
+    backdrop-filter: blur(3px);
   `};
 
   ${mediaQueries(30)`
@@ -88,11 +91,13 @@ const Main = styled(motion.div)`
     backdrop-filter: none;
     font-size: calc(0.8rem + 0vw);
     padding: 1.5rem;
+    backdrop-filter: blur(3px);
   `};
 
   ${mediaQueries(20)`
     padding: 1rem;
     font-size: calc(0.7rem + 0.8vw);
+    backdrop-filter: blur(3px);
   `};
 `;
 
@@ -125,20 +130,21 @@ const AboutPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}>
             Welcome! I'm Mark Yu, a passionate software engineer known for blending technical prowess with artistic flair to create cutting-edge digital solutions. My journey began in China and led me to Saskatchewan, Canada,
-            where my fascination with computer science ignited during my high school years, shaping my career path ever since.
+            where my fascination with computer science ignited during my high school years, shaping my path ever since.
             <br />
             <br />
-            I pursued my academic aspirations at Western University, graduating with a degree in software engineering in 2024.
-            Throughout my studies, I engaged in enriching undergraduate research and internship programs, laying a sturdy foundation for my professional pursuits.
-            My focus has always been on crafting robust systems that not only excel in performance but also prioritize user-friendliness and aesthetic appeal.
+            I pursued my academic dreams at Western University, graduating in 2024 with a degree in software engineering. During my time there, I immersed myself in meaningful research and internships,
+            establishing a strong foundation for my professional path.
+            I've consistently focused on building resilient systems that excel in performance while emphasizing user-friendliness and aesthetic elegance.
             <br />
             <br />
-            Currently, I'm taking a break from formal education / employment to travel the world, immerse myself in emerging technologies, and nurture personal projects that reignite my passion for innovation. 
-            My ultimate ambition is to develop digital experiences that are intuitive and visually captivating, revolutionizing how users interact with technology.
+            Currently, I'm taking a break from conventional employment to explore the world, delve into emerging technologies, and work on personal projects that reignite my innovative spirit.
+            My goal is to craft digital experiences that are both intuitive and visually captivating, redefining how users interact with technology.
             <br />
             <br />
-            With a proven track record in managing intricate data systems, building full-stack web applications and enhancing user interfaces, I'm eager to apply my expertise and creativity to tackle real-world challenges through innovative solutions.
-            If you share a passion for collaboration and idea exchange, let's join forces to push the boundaries of technology together in exciting and novel ways. Get in touch, and let's explore the possibilities!
+            With a proven track record in managing intricate data systems, developing full-stack web applications, and enhancing user interfaces,
+            I'm eager to leverage my skills and creativity to address real-world challenges with innovative solutions. If you're passionate about collaboration and idea exchange,
+            let's join forces to push the boundaries of technology. Reach out, and let's explore the possibilities together!
           </Main>
           <BigTitle text='ABOUT' top='10%' left='5%' />
         </Box>
