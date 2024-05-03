@@ -80,24 +80,31 @@ const NextButton = styled.button`
 `;
 
 const SoundBar = () => {
-  const [click, setClick] = useState(false);
+  const [click, setClick] = useState(true);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const songs = [song1, song2, song3, song4];
   const ref = useRef(null);
 
-  // useEffect(() => {
-  //   playSong(currentSongIndex);
-  // }, [currentSongIndex]);
+  useEffect(() => {
+    playSong(currentSongIndex);
+  }, [currentSongIndex]);
 
-  const playSong = (index) => {
-    ref.current.src = songs[index];
+const playSong = (index) => {
+    if (ref.current) {
+        ref.current.pause(); // Stop any current playback
+        ref.current.currentTime = 0; // Reset time to the start
+        ref.current.volume = 0.6; // Set the volume to 80%
+    }
+
+    ref.current.src = songs[index]; // Set the new source
+
     ref.current.play().then(() => {
-      setClick(true);
+        setClick(true);
     }).catch(error => {
-      console.error("Playback failed:", error);
-      setClick(false);
+        console.warn("Playback failed:", error);
+        setClick(false);
     });
-  };
+};
 
   const handleClick = () => {
     if (!click) {
