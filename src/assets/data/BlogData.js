@@ -42,7 +42,7 @@ export const Blogs = [
     {
         id:6,
         name:"Mastering Kubernetes: A Guide to Container Orchestration",
-        tags:["devops","kubernetes","architecture","container"],
+        tags:["devops","kubernetes","architecture","container","microservice"],
         date:"22 February, 2024",
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fsa2pow1q2tmgy37vkf6d.jpg",
         link:"https://dev.to/markyu/mastering-kubernetes-a-guide-to-container-orchestration-37fe"
@@ -54,6 +54,14 @@ export const Blogs = [
         date:"22 January, 2024",
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F6ppuvkisgdg7a9ievrwb.png",
         link:"https://dev.to/markyu/top-10-must-try-vs-code-themes-in-2024-2efj"
+    },
+    {
+        id:8,
+        name:"Implementing 3D Graphics in React",
+        tags:["three.js","react","3d","react-three"],
+        date:"22 March, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq68zilwxdckwfmvuheho.png",
+        link:"https://dev.to/markyu/implementing-3d-graphics-in-react-9mg"
     },
   
 ] 
