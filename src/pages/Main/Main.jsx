@@ -27,8 +27,8 @@ const MainContainer = styled(motion.div)`
   h4,
   h5,
   h6 {
-    font-family: "Karla", sans-serif;
-    font-weight: 500;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
   }
 
   h2 {
@@ -273,7 +273,7 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ scale: 1.2, fontWeight: "bold" }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
                 >
                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -312,7 +312,7 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ rotate: -90, scale: 1.2, fontWeight: "bold"}}
+                whileHover={{ rotate: -90, scale: 1.2}}
                 whileTap={{ rotate: -90, scale: 0.85 }}
               >
                 Posts
