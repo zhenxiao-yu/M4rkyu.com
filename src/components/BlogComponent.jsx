@@ -84,6 +84,7 @@ const Title = styled.h3`
 
 const HashTags = styled.div`
   padding: 0.5rem 0;
+  
   max-height: 3rem;
   overflow: hidden;
   text-overflow: ellipsis;

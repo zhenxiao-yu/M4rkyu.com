@@ -13,7 +13,7 @@ const Text = styled.h1`
   z-index: 0;
 `;
 
-// 
+// background text component
 const BigTitle = (props) => {
   return (
     <Text top={props.top} left={props.left} right={props.right}>

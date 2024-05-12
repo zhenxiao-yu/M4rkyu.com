@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Github } from "../assets/svg/AllSvgs";
 import { mediaQueries } from "../theme/Themes";
 
+// project container styling
 const Box = styled(motion.li)`
   width: 25rem;
   height: 45vh;
@@ -53,14 +54,14 @@ const Box = styled(motion.li)`
   `};
 `;
 
-// Project title
+// Project title styling
 const Title = styled.h2`
   font-size: calc(0.75em + 0.5vw);
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-// Project Description
+// project description styling 
 const Description = styled.h4`
   font-size: calc(0.75em + 0.3vw);
   font-family: "Karla", sans-serif;
@@ -79,7 +80,7 @@ const Description = styled.h4`
 `;
 
 
-// Project tags (div)
+// tag styling for group of tags
 const Tags = styled.div`
   border-top: 4px solid ${(props) => props.theme.body};
   padding-top: 0.5rem;
@@ -93,7 +94,7 @@ const Tags = styled.div`
   }
 `;
 
-// Project tag (span)
+// tag styling for each single tag
 const Tag = styled.span`
   margin-right: 0.1rem;  // Consistent margin for layout spacing
   font-size: calc(0.5em + 0.2vw);  // Dynamic font size based on viewport width
@@ -119,10 +120,12 @@ const Tag = styled.span`
   `};
 `;
 
+// card footer 
 const Footer = styled.footer`
   display: flex;
   justify-content: space-between;
 `;
+
 
 const Link = styled(NavLink)`
   background-color: ${(props) => props.theme.body};

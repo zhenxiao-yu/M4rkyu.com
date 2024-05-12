@@ -42,7 +42,7 @@ const SpaceMan = styled(motion.div)`
 const Main = styled(motion.div)`
   border: 2px solid ${(props) => props.theme.text};
   color: ${(props) => props.theme.text};
-  padding: 3rem;
+  padding: 2.4rem;
   border-radius: 0.5rem;
   width: 50vw;
   max-height: 55vh;
@@ -59,13 +59,14 @@ const Main = styled(motion.div)`
   top: 50%;
   transform: translate(-50%, -50%);
   font-family: "Poppins", sans-serif;
-  font-style: italic;
-  font-weight: 500;\
+  // font-style: italic;
+  letter-spacing: 1.2px;
+  font-weight: 500;
 
   &:hover {
     //color: #;
     transition: 0.9s ease-in-out;
-    filter: drop-shadow(0 0 2px #733bdb) drop-shadow(0 0 1px #5ac6a5);
+    //filter: drop-shadow(0 0 2px #733bdb) drop-shadow(0 0 1px #5ac6a5);
   }
 
   &::-webkit-scrollbar {

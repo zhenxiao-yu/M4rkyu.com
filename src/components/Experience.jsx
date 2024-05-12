@@ -18,9 +18,9 @@ export const Experience = () => {
     <>
       <OrbitControls />
       <Sky />
-      <Environment preset="park" />
+      {/* <Environment/> */}
       <group position-y={-1}>
-        <ContactShadows
+        {/* <ContactShadows
           opacity={0.42}
           scale={10}
           blur={1}
@@ -39,6 +39,19 @@ export const Experience = () => {
         <mesh scale={5} rotation-x={-Math.PI * 0.4} position-y={-0.001}>
           <planeGeometry />
           <meshStandardMaterial color="#111111" />
+        </mesh> */}
+          <ContactShadows
+            opacity={0.42}
+            scale={10}
+            blur={1}
+            far={10}
+            resolution={256}
+            color="black"
+          />
+          <Avatar rotation-x={-Math.PI * 0.4} animation={animation} />
+          <mesh scale={5} rotation-x={-Math.PI * 0.4} position-y={-0.001}>
+          {/* <planeGeometry /> */}
+          <meshStandardMaterial color="#171717" />
         </mesh>
       </group>
     </>
