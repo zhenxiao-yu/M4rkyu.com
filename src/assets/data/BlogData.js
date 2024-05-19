@@ -63,5 +63,12 @@ export const Blogs = [
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq68zilwxdckwfmvuheho.png",
         link:"https://dev.to/markyu/implementing-3d-graphics-in-react-9mg"
     },
-  
+   {
+        id:9,
+        name:"Navigating the Clouds: A Comprehensive Guide to Modern Cloud Infrastructures",
+        tags:["microservices","cloud","serverless","architecture"],
+        date:"19 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fs2whodrjg4aslmfhq17a.png",
+        link:"https://dev.to/markyu/navigating-the-clouds-a-comprehensive-guide-to-modern-cloud-infrastructures-35b5"
+    },
 ] 
