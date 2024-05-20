@@ -10,7 +10,7 @@ const Icons = styled.div`
   align-items: center;
   position: fixed;
   bottom: 0;
-  left: 2rem;
+  left: 1.5rem;
   z-index: 3;
   & > *:not(:last-child) {
     margin: 0.5rem 0;
@@ -28,8 +28,8 @@ const Icons = styled.div`
 `;
 
 const Line = styled(motion.span)`
-  width: 2px;
-  height: 8rem;
+  width: 3px;
+  height: 4rem;
   background-color: ${(props) =>
     props.color === "dark" ? DarkTheme.text : DarkTheme.body};
 `;
@@ -72,7 +72,7 @@ const SocialIcons = (props) => {
       ))}
       <Line
         initial={{ height: 0 }}
-        animate={{ height: mq ? "5rem" : "8rem" }}
+        animate={{ height: mq ? "8rem" : "5rem" }}
         color={props.theme}
         transition={{ type: "spring", duration: 1, delay: 0.8 }}
       />

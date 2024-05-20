@@ -18,7 +18,7 @@ export const Blogs = [
     {
         id:3,
         name:"Introduction to Docker Containers 🐋📦 [With Commands]",
-        tags:["cloudcomputing","docker","virtualmachine"],
+        tags:["cloudcomputing","docker","virtualmachine", "deployment"],
         date:"05 May, 2024",
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Femf2i4zub5l554rewwdb.jpg",
         link:"https://dev.to/markyu/introduction-to-docker-containers-with-commands-amf"
@@ -63,12 +63,28 @@ export const Blogs = [
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq68zilwxdckwfmvuheho.png",
         link:"https://dev.to/markyu/implementing-3d-graphics-in-react-9mg"
     },
-   {
+    {
         id:9,
         name:"Navigating the Clouds: A Comprehensive Guide to Modern Cloud Infrastructures",
         tags:["microservices","cloud","serverless","architecture"],
-        date:"19 May, 2024",
+        date:"12 May, 2024",
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fs2whodrjg4aslmfhq17a.png",
         link:"https://dev.to/markyu/navigating-the-clouds-a-comprehensive-guide-to-modern-cloud-infrastructures-35b5"
+    },
+    {
+        id:10,
+        name:"Quick Guide To 3D Transformations in CSS3 😎",
+        tags:["webdev","css","3d","frontendchallenge"],
+        date:"14 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Flpdvg6paguubtgg8oc5r.png",
+        link:"https://dev.to/markyu/quick-guide-to-3d-transformations-in-css3-2ki5"
+    },
+    {
+        id:11,
+        name:"MySQL Performance Monitoring and Query Analysis",
+        tags:["database","optimization","mysql","backend"],
+        date:"20 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ff5wwq6mhnihvi823a7aw.png",
+        link:"https://dev.to/markyu/mysql-performance-monitoring-and-query-analysis-2co"
     },
 ] 

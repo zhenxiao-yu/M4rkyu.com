@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { mediaQueries } from "../theme/Themes";
-import { GiPerspectiveDiceSixFacesRandom  } from "react-icons/gi";
+import { FaMusic } from "react-icons/fa6";
 
 // music file
 import song1 from "../assets/audio/Pinegrove - Angelina.mp3";
@@ -59,24 +59,34 @@ const Line = styled.span`
 const NextButton = styled.button`
   position: fixed;
   left: 14.5rem;
-  top: 2.1rem;
+  top: 2rem;
   cursor: pointer;
   background: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
   border: 4px solid ${(props) => props.theme.text};
-  padding: 5px 6px 4px 6px;
-  scale: 1.2;
+  padding: 9px;
+  scale: 1.1;
   border-radius: 50%;
-  &:hover {
-    scale: 1.4;
-    transition: all 0.3s ease-in-out;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // &:hover {
+  //   scale: 1.4;
+  //   transition: all 0.3s ease-in-out;
+  // }
 
   ${mediaQueries(40)`
       left: 0.7rem;
       top: 1.8rem;
       scale: 1.1;
+      padding: 5px;
   `};
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const SoundBar = () => {
@@ -144,7 +154,7 @@ const SoundBar = () => {
         ))}
         <audio ref={ref} loop={false} />
         <NextButton onClick={handleNext}>
-          <GiPerspectiveDiceSixFacesRandom />
+          <FaMusic />
         </NextButton>
       </Box>
     </div>
