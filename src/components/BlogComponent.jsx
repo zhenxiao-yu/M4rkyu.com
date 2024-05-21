@@ -128,7 +128,7 @@ const BlogComponent = (props) => {
   return (
     <Container variants={item}>
       <Box target="_blank" to={{ pathname: `${link}` }}>
-        <Image className="animate__animated animate__flipInX animate__delay-1s" img={imgSrc} />
+        <Image className="animate__animated animate__backInUp animate__delay-1s" img={imgSrc} />
         <Title>{name}</Title>
         <HashTags>
           {tags.map((t, id) => (
