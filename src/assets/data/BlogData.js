@@ -87,4 +87,60 @@ export const Blogs = [
         imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ff5wwq6mhnihvi823a7aw.png",
         link:"https://dev.to/markyu/mysql-performance-monitoring-and-query-analysis-2co"
     },
+    {
+        id:12,
+        name:"In-depth Analysis of JavaScript Memory Model and Lifecycle",
+        tags:["javascript","performance","es6","memory"],
+        date:"22 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fwcl1ootx0fzjg8hzliuh.png",
+        link:"https://dev.to/markyu/in-depth-analysis-of-javascript-memory-model-and-lifecycle-2o55"
+    },
+    {
+        id:13,
+        name:"Understanding the `throw` and `throws` Keywords in Java",
+        tags:["java","beginners","exception","errors"],
+        date:"20 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fn9qjlthot6wzo9xsyrg7.png",
+        link:"https://dev.to/markyu/understanding-the-throw-and-throws-keywords-in-java-5fjd"
+    },
+    {
+        id:14,
+        name:"Create a Heart Shaped Animation with CSS3",
+        tags:["html","css","codepen","animation"],
+        date:"13 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fo2lc73rptkarc78p0q7n.png",
+        link:"https://dev.to/markyu/create-a-heart-shaped-animation-with-html5-css3-and-javascript-1pjh"
+    },
+    {
+        id:15,
+        name:"☕Understanding `final`, `finally`, and `finalize` in Java",
+        tags:["java","learning","keywords","beginners"],
+        date:"24 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fiviv3o5wajcdfmv29vlo.png",
+        link:"https://dev.to/markyu/understanding-final-finally-and-finalize-in-java-3p0h"
+    },
+    {
+        id:16,
+        name:"Key Considerations for Effective Database Table Design",
+        tags:["database","sql","normalization","design"],
+        date:"25 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F76g0cxr7drfrwzqll08y.jpg",
+        link:"https://dev.to/markyu/key-considerations-for-effective-database-table-design-4p44"
+    },
+    {
+        id:17,
+        name:"RedisJSON: Enhancing JSON Data Handling in Redis",
+        tags:["redis","json","cache","data"],
+        date:"26 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fuy8vzr22i3k866qh64un.png",
+        link:"https://dev.to/markyu/redisjson-enhancing-json-data-handling-in-redis-3b5h"
+    },
+     {
+        id:18,
+        name:"Advanced Java: Simplifying Object Property Copy and Manipulation with BeanUtil",
+        tags:["java","javabeans","springframework","objectmapping"],
+        date:"26 May, 2024",
+        imgSrc:"https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Futq5f7kfmtm8pixt6qhy.png",
+        link:"https://dev.to/markyu/advanced-java-simplifying-object-property-copy-and-manipulation-with-beanutil-3l2n"
+    },
 ] 
