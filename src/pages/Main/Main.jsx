@@ -185,17 +185,17 @@ const Main = () => {
   const mq = window.matchMedia("(max-width: 50em)").matches;
 
 
-  useEffect(() => {
-    const handleResize = () => {
-      window.location.reload();
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     window.location.reload();
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
 
   return (
@@ -231,7 +231,7 @@ const Main = () => {
                 fill="#101010"
               />
             )}
-            <Greeting/>
+            {/* <Greeting/> */}
           </Center>
 
           {/* Contact Link */}

@@ -42,7 +42,7 @@ const Box = styled(motion(NavLink))`
 const Image = styled.div`
   background-image: ${(props) => `url(${props.img})`};
   width: 100%;
-  height: 6
+  height: 60%;
   5%;
   border-radius: 0.5rem;
   background-size: cover;
@@ -129,7 +129,7 @@ const BlogComponent = (props) => {
   return (
     <Container variants={item}>
       <Box target="_blank" to={{ pathname: `${link}` }}>
-        <Image className="animate__animated animate__backInUp animate__delay-1s" img={imgSrc} />
+        <Image className="animate__animated animate__bounceIn animate__delay-1s" img={imgSrc} />
         <Title>{name}</Title>
         <HashTags>
           {tags.map((t, id) => (
