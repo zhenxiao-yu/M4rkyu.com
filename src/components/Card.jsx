@@ -56,41 +56,62 @@ const Box = styled(motion.li)`
 
 // Project title styling
 const Title = styled.h2`
-  font-size: calc(0.75em + 0.5vw);
+  font-size: calc(0.85em + 0.5vw);
   overflow: hidden;
+  height: 35px;
   text-overflow: ellipsis;
 `;
 
-// project description styling 
+
 const Description = styled.h4`
   font-size: calc(0.75em + 0.3vw);
   font-family: "Karla", sans-serif;
   font-weight: 500;
-  min-height: 10vh;
-  //max-height: 15vh;
-  overflow: scroll-y;
-  text-overflow: ellipsis;
-  // white-space: nowrap;
+  max-height: 15vh;
+  overflow-y: scroll;
+  text-overflow: ellipsis;\
+  line-height: 1.3rem;
+  border-radius: 10px;
+  padding: 0.3em 1.3em 0.3em 0.3em;
   ${mediaQueries(25)`
     font-size:calc(0.6em + 0.3vw);
   `};
   ${mediaQueries(20)`
     font-size:calc(0.5em + 0.3vw);
   `};
+
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 4px; /* width of the scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${(props) => props.theme.text}; /* color of the scrollbar track */
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.body};; /* color of the scrollbar thumb */
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #404252; /* color of the scrollbar thumb on hover */
+  }
 `;
 
 
 // tag styling for group of tags
 const Tags = styled.div`
-  border-top: 4px solid ${(props) => props.theme.body};
-  padding-top: 0.5rem;
+  border-top: 3px solid ${(props) => props.theme.body};
+  padding-top: 0.8rem;
   display: flex;
   max-height: 5rem;
   gap: 0.5rem;
   // overflow: scroll-y;
   flex-wrap: wrap;
   ${Box}:hover & {
-    border-top: 4px solid ${(props) => props.theme.text};
+    border-top: 3px solid ${(props) => props.theme.text};
   }
 `;
 
@@ -166,8 +187,9 @@ const item = {
   show: { scale: 1, transition: { type: "spring", duration: 0.5 } },
 };
 //const tags = ["react","gsap","javascript"]
+//status = Development / Maintenance / Ready
 const Card = (props) => {
-  const { id, name, description, tags, demo, github } = props.data;
+  const { id, name, description, tags, demo, github, status } = props.data;
   return (
     <Box key={id} variants={item}>
       <Title>{name}</Title>
