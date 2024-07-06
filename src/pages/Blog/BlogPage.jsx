@@ -2,16 +2,17 @@ import styled from "styled-components";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-//background image
+// Background image
 import img from "../../assets/Images/blogBG.png";
-//blog data
+// Blog data
 import { Blogs } from "../../assets/data/BlogData";
 
-
+// Components
 import BlogComponent from "../../components/BlogComponent";
 import Loading from "../../components/Loading";
 import { mediaQueries } from "../../theme/Themes";
 
+// Lazy-loaded components
 const AnchorComponent = lazy(() => import("../../components/Anchor"));
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
 const HomeButton = lazy(() => import("../../components/HomeButton"));
@@ -56,10 +57,19 @@ const Center = styled.div`
 
 const Grid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(2, minmax(calc(10rem + 15vw), 1fr));
+  grid-template-columns: repeat(3, minmax(calc(10rem + 15vw), 1fr));
   grid-gap: calc(0.3rem + 2vw);
+
+  ${mediaQueries(30)`
+    grid-template-columns: repeat(1, 1fr);
+  `};
+
   ${mediaQueries(50)`
-    grid-template-columns: 100%;
+    grid-template-columns: repeat(1, 1fr);
+  `};
+
+  ${mediaQueries(60)`
+    grid-template-columns: repeat(1, 1fr);
   `};
 `;
 
@@ -81,6 +91,10 @@ const BlogPage = () => {
     let num = (window.innerHeight - 70) / 30;
     setNumber(parseInt(num));
   }, []);
+
+  // Sorting Blogs by date
+  const sortedBlogs = Blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
     <Suspense fallback={<Loading />}>
       <MainContainer
@@ -97,7 +111,7 @@ const BlogPage = () => {
 
           <Center>
             <Grid variants={container} initial="hidden" animate="show">
-              {Blogs.map((blog) => (
+              {sortedBlogs.map((blog) => (
                 <BlogComponent key={blog.id} blog={blog} />
               ))}
             </Grid>
