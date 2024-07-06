@@ -220,7 +220,7 @@ const renderDemoLink = (status, demo) => {
   } else if (status === "Development") {
     return <Link2 style={{ border: `3px solid ${borderColor}` }}>Coming Soon</Link2>;
   } else if (status === "Maintenance") {
-    return <Link2 style={{ border: `3px solid ${borderColor}` }}>&#10006; Unavailable</Link2>;
+    return <Link2 style={{ border: `3px solid ${borderColor}` }}>Unavailable</Link2>;
   }
   return null;
 };
