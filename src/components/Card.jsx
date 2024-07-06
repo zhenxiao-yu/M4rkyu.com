@@ -126,7 +126,7 @@ const Tag = styled.span`
   color: ${(props) => props.theme.text};  // Text color from theme
   padding: 0.5em 1em;  // Padding around the text for a better visual presentation
   border-radius: 15px;  // Rounded corners for a modern look
-  transition: all 0.3s ease;  // Smooth transition for hover effects
+  transition: all 0.2s ease;  // Smooth transition for hover effects
 
   &:hover {
     background-color: ${(props) => props.theme.text};  // Changes background on hover
@@ -225,6 +225,12 @@ const renderDemoLink = (status, demo) => {
   return null;
 };
 
+// Function to handle tag click
+const handleTagClick = (tag) => {
+  const url = `https://www.google.com/search?q=${tag}`;
+  window.open(url, "_blank");
+};
+
 const item = {
   hidden: { scale: 0 },
   show: { scale: 1, transition: { type: "spring", duration: 0.5 } },
@@ -239,7 +245,7 @@ const Card = (props) => {
       <Description>{description}</Description>
       <Tags>
         {tags.map((t, id) => (
-          <Tag key={id}>#{t}</Tag>
+          <Tag key={id} onClick={() => handleTagClick(t)}>#{t}</Tag>
         ))}
       </Tags>
       <Footer>

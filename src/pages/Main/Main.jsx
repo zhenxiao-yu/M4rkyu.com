@@ -184,20 +184,6 @@ const Main = () => {
   };
   const mq = window.matchMedia("(max-width: 50em)").matches;
 
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     window.location.reload();
-  //   };
-
-  //   window.addEventListener('resize', handleResize);
-
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
-
-
   return (
     <Suspense fallback={<Loading />}>
       <MainContainer
