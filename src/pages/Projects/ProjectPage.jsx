@@ -71,6 +71,21 @@ const Rotate = styled.span`
   `};
 `;
 
+const Arrow = styled(motion.div)`
+  position: fixed;
+  bottom: 7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  cursor: pointer;
+
+  svg {
+    width: 30px;
+    height: 40px;
+    fill: ${(props) => props.theme.text};
+  }
+`;
+
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -132,6 +147,16 @@ const ProjectPage = () => {
           <Rotate ref={gearlogo}>
             <Spinner width={85} height={85} fill={DarkTheme.text} />
           </Rotate>
+
+          <Arrow
+            initial={{ y: 0 }}
+            animate={{ y: [0, -20, 0] }}
+            transition={{ repeat: Infinity, duration: 1 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 21l-12-18h24z" />
+            </svg>
+          </Arrow>
         </Box>
       </Suspense>
     </ThemeProvider>
