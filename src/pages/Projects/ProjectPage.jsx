@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, lazy, Suspense } from "react";
-
 import styled, { ThemeProvider } from "styled-components";
-
 import { Spinner } from "../../assets/svg/AllSvgs";
 import { Project } from "../../assets/data/ProjectData";
 import { DarkTheme, mediaQueries } from "../../theme/Themes";
-
 import Card from "../../components/Card";
 import Loading from "../../components/Loading";
 
@@ -28,9 +25,6 @@ const Main = styled(motion.ul)`
   left: calc(10rem + 15vw);
   user-select: none;
   height: 40vh;
-  // /* height:200vh; */
-  //border:1px solid white;
-
   display: flex;
 
   ${mediaQueries(50)`
@@ -61,28 +55,26 @@ const Rotate = styled.span`
   z-index: 1;
   ${mediaQueries(40)`
      width:60px;
-         height:60px;   
-       svg{
-         width:60px;
-         height:60px;
-       }
-
+     height:60px;   
+     svg{
+       width:60px;
+       height:60px;
+     }
   `};
   ${mediaQueries(25)`
-        width:50px;
-         height:50px;
-        svg{
-         width:50px;
-         height:50px;
-       }
-
+    width:50px;
+    height:50px;
+    svg{
+      width:50px;
+      height:50px;
+    }
   `};
 `;
+
 const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-
     transition: {
       staggerChildren: 0.5,
       duration: 0.5,
@@ -90,9 +82,14 @@ const container = {
   },
 };
 
+// Sorting function
+const sortProjects = (projects) => {
+  const statusOrder = ["Ready", "Development", "Maintenance"];
+  return projects.sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status));
+};
+
 const ProjectPage = () => {
   const ref = useRef(null);
-
   const gearlogo = useRef(null);
 
   useEffect(() => {
@@ -100,9 +97,7 @@ const ProjectPage = () => {
 
     const rotate = () => {
       element.style.transform = `translateX(${-window.pageYOffset}px)`;
-
-      return (gearlogo.current.style.transform =
-        "rotate(" + -window.pageYOffset + "deg)");
+      return (gearlogo.current.style.transform = "rotate(" + -window.pageYOffset + "deg)");
     };
 
     window.addEventListener("scroll", rotate);
@@ -110,6 +105,8 @@ const ProjectPage = () => {
       window.removeEventListener("scroll", rotate);
     };
   }, []);
+
+  const sortedProjects = sortProjects(Project);
 
   return (
     <ThemeProvider theme={DarkTheme}>
@@ -125,7 +122,7 @@ const ProjectPage = () => {
           <SocialIcons theme="dark" />
 
           <Main ref={ref} variants={container} initial="hidden" animate="show">
-            {Project.map((d) => (
+            {sortedProjects.map((d) => (
               <Card key={d.id} data={d} />
             ))}
           </Main>

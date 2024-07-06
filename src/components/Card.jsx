@@ -56,7 +56,7 @@ const Box = styled(motion.li)`
 
 // Project title styling
 const Title = styled.h2`
-  font-size: calc(0.85em + 0.5vw);
+  font-size: calc(0.8em + 0.5vw);
   overflow: hidden;
   height: 35px;
   text-overflow: ellipsis;
@@ -69,7 +69,7 @@ const Description = styled.h4`
   font-weight: 500;
   max-height: 15vh;
   overflow-y: scroll;
-  text-overflow: ellipsis;\
+  text-overflow: ellipsis;
   line-height: 1.3rem;
   border-radius: 10px;
   padding: 0.3em 1.3em 0.3em 0.3em;
@@ -153,18 +153,22 @@ const Link = styled(NavLink)`
   color: ${(props) => props.theme.text};
   text-decoration: none;
   padding: 0.5rem calc(2rem + 2vw);  // Adjusted to ensure proper vertical alignment
-  border-radius: 0 0 0 50px;
+  border-radius: 0 0 0 30px;
   font-family: "Karla", sans-serif;
-  font-size: calc(0.8em + 0.5vw);
+  font-size: calc(0.85em + 0.5vw);
   text-overflow: ellipsis;  // Adds ellipsis when text overflows
   white-space: nowrap; 
   display: flex;
+  font-weight: bold;
   align-items: center;  // Ensures vertical centering of text
-  height: 2rem;  // Fixed height for consistency
+  height: 1.8rem  // Fixed height for consistency
+  max-width: 15vw; // Fixed width for consistency
 
   ${Box}:hover & {
     background-color: ${(props) => props.theme.text};
     color: ${(props) => props.theme.body};
+    text-decoration: underline;
+    transition: 0.3S ease-in-out;
   }
 `;
 
@@ -173,7 +177,7 @@ const Git = styled(NavLink)`
   text-decoration: none;
   display: flex;
   align-items: center;  // Ensures vertical centering of the icon
-  height: 3rem;  // Same height as the Visit button to maintain consistency
+  height: 2.8rem;  // Same height as the Visit button to maintain consistency
 
   ${Box}:hover & {
     & > * {
@@ -181,6 +185,45 @@ const Git = styled(NavLink)`
     }
   }
 `;
+
+const Link2 = styled.span`
+  background-color: ${(props) => props.theme.body};
+  color: ${(props) => props.theme.text};
+  text-decoration: none;
+  padding: 0.5rem calc(2rem + 2vw);  // Adjusted to ensure proper vertical alignment
+  border-radius: 0 0 0 30px;
+  font-family: "Karla", sans-serif;
+  font-size: calc(0.7em + 0.5vw);
+  font-weight: bold;
+  text-overflow: ellipsis;  // Adds ellipsis when text overflows
+  white-space: nowrap; 
+  display: flex;
+  align-items: center;  // Ensures vertical centering of text
+  height: 1.8rem;  // Fixed height for consistency
+  max-width: 15rem; // Fixed width for consistency
+`;
+
+// Function to render the demo link or status text
+const renderDemoLink = (status, demo) => {
+  let borderColor = "";
+
+  if (status === "Ready") {
+    borderColor = "#74febd";
+  } else if (status === "Development") {
+    borderColor = "#64e9ff";
+  } else if (status === "Maintenance") {
+    borderColor = "#ff4066";
+  }
+
+  if (status === "Ready") {
+    return <Link style={{ border: `3px solid ${borderColor}` }} to={{ pathname: `${demo}` }} target="_blank">View Demo</Link>;
+  } else if (status === "Development") {
+    return <Link2 style={{ border: `3px solid ${borderColor}` }}>Coming Soon</Link2>;
+  } else if (status === "Maintenance") {
+    return <Link2 style={{ border: `3px solid ${borderColor}` }}>&#10006; Unavailable</Link2>;
+  }
+  return null;
+};
 
 const item = {
   hidden: { scale: 0 },
@@ -200,9 +243,7 @@ const Card = (props) => {
         ))}
       </Tags>
       <Footer>
-        <Link to={{ pathname: `${demo}` }} target="_blank">
-          View Demo
-        </Link>
+        {renderDemoLink(status, demo)}
         <Git to={{ pathname: `${github}` }} target="_blank">
            <Github height="100%" />
         </Git>
