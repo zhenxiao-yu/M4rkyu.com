@@ -73,7 +73,6 @@ const Center = styled.button`
   }
   & > *:last-child {
     display: ${(props) => (props.click ? "none" : "inline-block")};
-    padding-top: 1rem;
   }
 
   @media only screen and (max-width: 50em) {
@@ -217,7 +216,7 @@ const Main = () => {
                 fill="#101010"
               />
             )}
-            {/* <Greeting/> */}
+            <Greeting/>
           </Center>
 
           {/* Contact Link */}

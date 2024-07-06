@@ -6,7 +6,7 @@ const Greeting = () => {
   
   useEffect(() => {
     if (hasVisited) {
-      setGreeting('Welcome back...');
+      setGreeting('m4rkyu.com');
     } else {
       setGreeting('Nice to meet you...');
       localStorage.setItem('hasVisited', 'true');

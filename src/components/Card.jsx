@@ -103,15 +103,15 @@ const Description = styled.h4`
 
 // tag styling for group of tags
 const Tags = styled.div`
-  border-top: 3px solid ${(props) => props.theme.body};
-  padding-top: 0.8rem;
-  padding-bottom: 0.8rem;
+  border-top: 4px solid ${(props) => props.theme.body};
+  padding: 0.8rem 1.3rem 0.8rem 1.3rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.2rem;
   overflow: hidden;
   flex-wrap: wrap;
+
   ${Box}:hover & {
-    border-top: 3px solid ${(props) => props.theme.text};
+    border-top: 4px solid ${(props) => props.theme.text};
   }
 `;
 
@@ -241,14 +241,14 @@ const Card = (props) => {
   const { id, name, description, tags, demo, github, status } = props.data;
   return (
     <Box key={id} variants={item}>
-      <Title>{name}</Title>
-      <Description>{description}</Description>
-      <Tags>
+      <Title className ="animate__animated animate__flipInX animate__delay-1s">{name}</Title>
+      <Description className ="animate__animated animate__zoomIn animate__delay-1s">{description}</Description>
+      <Tags className ="animate__animated animate__fadeInUp animate__delay-1s">
         {tags.map((t, id) => (
           <Tag key={id} onClick={() => handleTagClick(t)}>#{t}</Tag>
         ))}
       </Tags>
-      <Footer>
+      <Footer className ="animate__animated animate__fadeInUp animate__delay-1s">
         {renderDemoLink(status, demo)}
         <Git to={{ pathname: `${github}` }} target="_blank">
            <Github height="100%" />
