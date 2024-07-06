@@ -1,10 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../../assets/Images/me.png";
+import Me from "../../assets/Images/file.png";
 import { mediaQueries } from "../../theme/Themes";
- import { Canvas } from "@react-three/fiber";
- import { Experience } from "../../components/Experience";
 
 // outer box
 const Box = styled(motion.div)`
@@ -97,7 +95,7 @@ const SubBox = styled.div`
     height: auto;
   }
   ${mediaQueries(50)`
-      width: 100%;
+    width: 100%;
     height: 50%;
       .pic {
     width: 70%;
@@ -188,11 +186,7 @@ const Intro = () => {
           transition={{ duration: 2, delay: 1 }}
           min-width={{ minWidth:100}}
         >
-          {/* <img className="pic" src={Me} alt="My Pic" /> */}
-            {/* <Canvas shadows  gl={{ alpha: true }} camera={{ position: [0.5, -0.3, 3], fov: 60 }}>
-             <color attach="background" args={["#87D271"]} />
-                <Experience />
-            </Canvas> */}
+           <img className="pic" src={Me} alt="My Pic" /> 
         </motion.div>
       </SubBox>
     </Box>

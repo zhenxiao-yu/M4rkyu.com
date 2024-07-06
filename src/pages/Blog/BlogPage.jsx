@@ -49,6 +49,8 @@ const Center = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 2px solid black;
+
   padding-top: 10rem;
   ${mediaQueries(30)`
     padding-top: 7rem;
