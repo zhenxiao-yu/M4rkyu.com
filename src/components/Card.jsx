@@ -105,10 +105,11 @@ const Description = styled.h4`
 const Tags = styled.div`
   border-top: 3px solid ${(props) => props.theme.body};
   padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
   display: flex;
   max-height: 5rem;
   gap: 0.5rem;
-  // overflow: scroll-y;
+  overflow: hidden;
   flex-wrap: wrap;
   ${Box}:hover & {
     border-top: 3px solid ${(props) => props.theme.text};
