@@ -107,7 +107,6 @@ const Tags = styled.div`
   padding-top: 0.8rem;
   padding-bottom: 0.8rem;
   display: flex;
-  max-height: 5rem;
   gap: 0.5rem;
   overflow: hidden;
   flex-wrap: wrap;
