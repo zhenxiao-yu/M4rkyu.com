@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Me from "../../assets/Images/file2.png";
 import { mediaQueries } from "../../theme/Themes";
+import { Typewriter } from 'react-simple-typewriter'
 
 // outer box
 const Box = styled(motion.div)`
-  /* width: 50vw;
-   height:40vh;
- */
   width: 55vw;
   display: flex;
   background: linear-gradient(
@@ -89,7 +87,7 @@ const SubBox = styled.div`
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 16.2%);
-    width: 100%;
+    width: 110%;
     height: auto;
   }
   ${mediaQueries(50)`
@@ -150,10 +148,10 @@ const Text = styled(motion.div)`
   `};
 `;
 
+
 const Intro = () => {
-  // inner box height
   const [height, setHeight] = useState("55vh");
-  // change width based on platform
+
   useEffect(() => {
     if (window.matchMedia("(max-width: 50em)").matches) {
       setHeight("70vh");
@@ -162,6 +160,7 @@ const Intro = () => {
       setHeight("60vh");
     }
   }, []);
+
   return (
     <Box
       initial={{ height: 0 }}
@@ -170,21 +169,32 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h2>Hi,</h2>
-          <h3>I'm Mark Yu.</h3>
+          <h2>Hello,</h2>
+            <h2> I'm
+              <Typewriter
+                words={[' Mark Yu', ' 于震潇 ']}
+                loop={0}
+                typeSpeed={100}
+                deleteSpeed={80}
+                delaySpeed={2000}
+                cursor
+               />
+            </h2>
+            {/* <ChineseName className="chinese-name">于震潇</ChineseName> */}
           <h6>
-            &lt;div&gt; Software Engineer from Ontario, Canada &lt;div&gt;
+            &lt;div&gt; Software Engineer from Ontario, Canada &lt;/div&gt;
           </h6>
         </Text>
+        
       </SubBox>
       <SubBox>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
-          min-width={{ minWidth:100}}
+          min-width={{ minWidth: 100 }}
         >
-           <img className="pic" src={Me} alt="My Pic" /> 
+          <img className="pic" src={Me} alt="My Pic" />
         </motion.div>
       </SubBox>
     </Box>
