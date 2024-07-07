@@ -99,9 +99,9 @@ const Contact = styled(NavLink)`
 const BLOG = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
-  top: 48%;
-  right: calc(1rem + 2vw);
-  transform: rotate(90deg) translate(-50%, -50%);
+  top: 46%;
+  right: calc(-0.6rem + 2vw);
+  transform: rotate(90deg) translate(-50%, -80%);
   z-index: 1;
   text-decoration: none;
   @media only screen and (max-width: 50em) {
@@ -112,8 +112,8 @@ const BLOG = styled(NavLink)`
 const PROJECT = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   position: absolute;
-  top: 47%;
-  left: calc(1rem + 2vw);
+  top: 42%;
+  left: calc(1.5rem + 2vw);
   transform: translate(-50%, -50%) rotate(-90deg);
   z-index: 1;
   text-decoration: none;
@@ -124,7 +124,7 @@ const PROJECT = styled(NavLink)`
 
 const BottomBar = styled.div`
   position: absolute;
-  bottom: 1rem;
+  bottom: 2rem;
   left: 0;
   right: 0;
   width: 100%;
@@ -136,13 +136,13 @@ const ABOUT = styled(NavLink)`
   color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
   text-decoration: none;
   z-index: 1;
-  bottom: 1.2rem;
+  bottom: 1.5rem;
 `;
 
 const SKILLS = styled(NavLink)`
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  bottom: 1.2rem;
+  bottom: 1.5rem;
 `;
 
 const DarkDiv = styled.div`
@@ -239,7 +239,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
               >
                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <CgMail style={{ marginRight: '3px' }} /> Contact
+                    <CgMail style={{ marginRight: '2px'}} size="1.3em"/> EMAIL ME
                  </div>
               </motion.h2>
             </Contact>
@@ -262,7 +262,7 @@ const Main = () => {
                 whileTap={{ scale: 0.85 }}
                 >
                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CgMail style={{ marginRight: '3px' }} /> Contact
+                  <CgMail style={{ marginRight: '2px' }} size="1.3em"/> EMAIL ME
                 </div>
               </motion.h2>
             </Contact>
@@ -280,10 +280,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ rotate: -90, scale: 1.3, fontWeight: "bold"}}
-                whileTap={{ rotate: -90, scale: 0.85 }}
+                whileHover={{scale: 1.3, fontWeight: "bold"}}
+                whileTap={{scale: 0.85 }}
               >
-                Posts
+                MY POSTS
               </motion.h2>
             </BLOG>
           ) : (
@@ -297,10 +297,10 @@ const Main = () => {
                   y: 0,
                   transition: { type: "spring", duration: 1.5, delay: 1 },
                 }}
-                whileHover={{ rotate: -90, scale: 1.2}}
-                whileTap={{ rotate: -90, scale: 0.85 }}
+                whileHover={{scale: 1.3, fontWeight: "bold"}}
+                whileTap={{scale: 0.85 }}
               >
-                Posts
+                MY POSTS
               </motion.h2>
             </BLOG>
           )}
@@ -317,10 +317,10 @@ const Main = () => {
                 y: 0,
                 transition: { type: "spring", duration: 1.5, delay: 1 },
               }}
-              whileHover={{ translateY: 35,  rotate: 90, scale: 1.2 }}
-              whileTap={{ translateY: 35, rotate: 90, scale: 0.85 }}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.85 }}
             >
-              Projects
+              MY PROJECTS
             </motion.h2>
           </PROJECT>
 
@@ -344,7 +344,7 @@ const Main = () => {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
-                About
+                ABOUT ME
               </motion.h2>
             </ABOUT>
 
@@ -364,7 +364,7 @@ const Main = () => {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
-                Skills
+                WHAT I DO
               </motion.h2>
             </SKILLS>
           </BottomBar>

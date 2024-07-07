@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { mediaQueries } from "../theme/Themes";
+import { MdDateRange } from "react-icons/md";
 
 const Box = styled(motion(NavLink))`
   backdrop-filter: blur(5px);
@@ -10,12 +11,12 @@ const Box = styled(motion(NavLink))`
   border-radius: 1rem;
   width: calc(15rem + 15vw);
   height: 20rem;
-  border: 2px solid ${(props) => props.theme.text};
+  border: 4px solid ${(props) => props.theme.text};
   padding: 1rem;
   color: ${(props) => props.theme.text};
   display: flex;
   flex-direction: column;
-  z-index: 5;
+  z-index: 4;
   cursor: pointer;
 
   &:hover {
@@ -25,7 +26,7 @@ const Box = styled(motion(NavLink))`
   }
 
   ${mediaQueries(50)`
-    width: calc(60vw);
+    width: calc(58vw);
   `};
 
   ${mediaQueries(30)`
@@ -42,12 +43,16 @@ const Box = styled(motion(NavLink))`
 const Image = styled.div`
   background-image: ${(props) => `url(${props.img})`};
   width: 100%;
-  height: 60%;
-  5%;
+  height: 100%;
   border-radius: 0.5rem;
   background-size: cover;
   border: 1px solid transparent;
   background-position: center center;
+
+  ${mediaQueries(50)`
+    height: 40%;
+  `};
+
   ${mediaQueries(25)`
     height: 70%;
   `};
@@ -113,8 +118,9 @@ const Tag = styled.span`
 
 const Date = styled.span`
   padding: 0.5rem 0;
+  font-weight: 500;
   ${mediaQueries(25)`
-    font-size: calc(0.5em + 1vw);
+    font-size: calc(0.7em + 1vw);
   `};
 `;
 
@@ -136,7 +142,7 @@ const BlogComponent = (props) => {
             <Tag key={id}>#{t}</Tag>
           ))}
         </HashTags>
-        <Date>{date}</Date>
+        <Date><MdDateRange size="0.95em" /> {date}</Date>
       </Box>
     </Container>
   );
