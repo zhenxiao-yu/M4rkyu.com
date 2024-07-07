@@ -25,7 +25,8 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow-y: scroll; /* Ensures content does not overflow the container */
+  overflow-y: auto;
+  padding: 2rem 1rem 3rem 1rem;
 
   ${mediaQueries(50)`
     height: auto;
@@ -36,7 +37,6 @@ const Container = styled.div`
 const GridBox = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  
   gap: 2rem;
   width: 80%;
   justify-items: center;
@@ -64,7 +64,6 @@ const FixedComponents = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
-
   ${mediaQueries(50)`
     top: 1rem;
     left: 1rem;
@@ -78,6 +77,8 @@ const Main = styled(motion.div)`
   padding: 2rem;
   width: 100%;
   height: auto;
+  min-height: 20rem;
+
   z-index: 3;
   line-height: 1.5;
   font-family: "Poppins", sans-serif;
@@ -137,7 +138,7 @@ const Title = styled.h2`
 const Description = styled.div`
   color: ${({ theme }) => theme.text};
   font-size: calc(0.4em + 0.7vw);
-  padding: 0.5rem 0;
+  padding: 0.3rem 0;
 
   ${Main}:hover & {
     color: ${({ theme }) => theme.body};
