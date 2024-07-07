@@ -38,7 +38,10 @@ const hexToRgba = (hex, opacity) => {
 };
 
 const Container = styled.div`
-  background-color: ${props => props.theme.body};
+  background-color: #faf3e3;
+  opacity: 1;
+  background-image: radial-gradient(#08090a 1.1px, #faf3e3 1.1px);
+  background-size: 22px 22px;
   width: 100%;
   height: auto;
   position: relative;
@@ -59,6 +62,7 @@ const Center = styled.div`
 
 const Grid = styled(motion.div)`
   display: grid;
+  
   grid-template-columns: repeat(3, minmax(calc(10rem + 15vw), 1fr));
   grid-gap: calc(0.3rem + 2vw);
 
