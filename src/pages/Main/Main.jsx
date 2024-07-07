@@ -58,7 +58,7 @@ from {
 const Center = styled.button`
   position: absolute;
   top: ${(props) => (props.click ? "85%" : "50%")};
-  left: ${(props) => (props.click ? "92%" : "50%")};
+  left: ${(props) => (props.click ? "90%" : "50%")};
   transform: translate(-50%, -50%);
   border: none;
   outline: none;
@@ -78,12 +78,12 @@ const Center = styled.button`
   @media only screen and (max-width: 50em) {
     top: ${(props) => (props.click ? "90%" : "50%")};
     left: ${(props) => (props.click ? "90%" : "50%")};
-    width: ${(props) => (props.click ? "80px" : "150px")};
-    height: ${(props) => (props.click ? "80px" : "150px")};
+    width: ${(props) => (props.click ? "100px" : "150px")};
+    height: ${(props) => (props.click ? "100px" : "150px")};
   }
   @media only screen and (max-width: 30em) {
-    width: ${(props) => (props.click ? "40px" : "150px")};
-    height: ${(props) => (props.click ? "40px" : "150px")};
+    width: ${(props) => (props.click ? "80px" : "150px")};
+    height: ${(props) => (props.click ? "80px" : "150px")};
   }
 `;
 
@@ -204,8 +204,8 @@ const Main = () => {
             {mq ? (
               <CodeCircle
                 onClick={() => handleClick()}
-                width={click ? 80 : 150}
-                height={click ? 80 : 150}
+                width={click ? 100 : 150}
+                height={click ? 100 : 150}
                 fill="#101010"
               />
             ) : (

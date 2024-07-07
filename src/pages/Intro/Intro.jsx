@@ -8,6 +8,7 @@ import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle,
 import { GrLocation } from "react-icons/gr";
 import { PiGraduationCapBold } from "react-icons/pi";
 import { MdOutlineWorkOutline } from "react-icons/md";
+import { Tilt } from 'react-tilt'
 
 // outer box
 const Box = styled(motion.div)`
@@ -224,7 +225,7 @@ const Intro = () => {
   }, []);
 
   return (
-    <Box
+          <Box
       initial={{ height: 0 }}
       animate={{ height: height }}
       transition={{ type: "spring", duration: 2, delay: 1 }}
