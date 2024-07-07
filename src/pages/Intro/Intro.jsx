@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../../assets/Images/file.png";
+import Me from "../../assets/Images/file2.png";
 import { mediaQueries } from "../../theme/Themes";
 
 // outer box
 const Box = styled(motion.div)`
   /* width: 50vw;
-height:50vh;
+   height:40vh;
  */
   width: 55vw;
   display: flex;
@@ -54,7 +54,7 @@ height:50vh;
   `};
 
   ${mediaQueries(30)`
-    width: 64vw;
+     width: 64vw;
   `};
   ${mediaQueries(20)`
     width: 60vw;
@@ -77,8 +77,6 @@ height:50vh;
     background-position: 0 0, 100% 0;
     background-repeat: no-repeat;
   }
-
-  //height:55vh;
 `;
 
 // inside box containing text and picture
@@ -90,8 +88,8 @@ const SubBox = styled.div`
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, 0%);
-    width: 105%;
+    transform: translate(-50%, 16.2%);
+    width: 100%;
     height: auto;
   }
   ${mediaQueries(50)`
@@ -103,14 +101,14 @@ const SubBox = styled.div`
   `};
 
   ${mediaQueries(40)`
-      .pic {
-    width: 80%;
+    .pic {
+      width: 80%;
   }
   `};
 
   ${mediaQueries(30)`
-      .pic {
-    width: 90%;
+    .pic {
+       width: 95%;
   }
 
   `};
