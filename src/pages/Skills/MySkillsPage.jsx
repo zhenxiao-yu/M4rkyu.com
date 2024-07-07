@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { lazy, Suspense } from "react";
 import { lightTheme, mediaQueries } from "../../theme/Themes";
 
-import { Design, Develope } from "../../assets/svg/AllSvgs";
+import { Design, Develope, Game, Datastore} from "../../assets/svg/AllSvgs";
 import Loading from "../../components/Loading"; // Loading component
 
 // Lazy-loaded components
@@ -137,7 +137,7 @@ const Title = styled.h2`
 
 const Description = styled.div`
   color: ${({ theme }) => theme.text};
-  font-size: calc(0.4em + 0.7vw);
+  font-size: calc(0.4em + 0.6vw);
   padding: 0.3rem 0;
 
   ${Main}:hover & {
@@ -184,31 +184,11 @@ const MySkillsPage = () => {
             animate={{ opacity: 1, transition: { duration: 1 } }}
             exit={{ opacity: 0, transition: { duration: 0.5 } }}
           >
-            <Main>
-              <Title>
-                <Design width={SVG_SIZE} height={SVG_SIZE} /> Designer
-              </Title>
-              <Description>
-                I love to create designs that speak, keeping them clean, minimal, and simple.
-              </Description>
-              <Description>
-                <strong>I like to Design</strong> <br />
-                <ul>
-                  <li>Web Design</li>
-                  <li>Mobile Apps</li>
-                </ul>
-              </Description>
-              <Description>
-                <strong>Tools</strong> <br />
-                <ul>
-                  <li>Figma</li>
-                </ul>
-              </Description>
-            </Main>
+            
 
             <Main>
               <Title>
-                <Develope width={SVG_SIZE} height={SVG_SIZE} /> Frontend Developer
+                <Develope width={SVG_SIZE} height={SVG_SIZE} /> Frontend
               </Title>
               <Description>
                 I value the business or brand for which I'm creating, thus I enjoy bringing new ideas to life.
@@ -227,7 +207,7 @@ const MySkillsPage = () => {
 
             <Main>
               <Title>
-                <Develope width={SVG_SIZE} height={SVG_SIZE} /> Backend Developer
+                <Datastore width={SVG_SIZE} height={SVG_SIZE} /> Backend
               </Title>
               <Description>
                 I enjoy building scalable and efficient backend systems that support business objectives.
@@ -246,7 +226,7 @@ const MySkillsPage = () => {
 
             <Main>
               <Title>
-                <Develope width={SVG_SIZE} height={SVG_SIZE} /> Game Developer
+                <Game width={SVG_SIZE} height={SVG_SIZE}/> Game Dev
               </Title>
               <Description>
                 I create engaging and interactive games that provide a captivating user experience.
@@ -260,6 +240,28 @@ const MySkillsPage = () => {
               <Description>
                 <strong>Tools</strong> <br />
                 <p>Blender, Visual Studio, GitHub, etc.</p>
+              </Description>
+            </Main>
+
+            <Main>
+              <Title>
+                <Design width={SVG_SIZE} height={SVG_SIZE} /> Design
+              </Title>
+              <Description>
+                I love to create designs that speak, keeping them clean, minimal, and simple.
+              </Description>
+              <Description>
+                <strong>I like to Design</strong> <br />
+                <ul>
+                  <li>Web Design</li>
+                  <li>Mobile Apps</li>
+                </ul>
+              </Description>
+              <Description>
+                <strong>Tools</strong> <br />
+                <ul>
+                  <li>Figma</li>
+                </ul>
               </Description>
             </Main>
           </GridBox>
