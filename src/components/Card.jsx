@@ -250,7 +250,7 @@ const Card = (props) => {
       </Tags>
       <Footer className ="animate__animated animate__fadeInUp animate__delay-1s">
         {renderDemoLink(status, demo)}
-        <Git to={{ pathname: `${github}` }} target="_blank">
+        <Git to={{ pathname: `${github}` }} className="hvr-grow" target="_blank">
            <Github height="100%" />
         </Git>
       </Footer>

@@ -4,7 +4,10 @@ import styled from "styled-components";
 import Me from "../../assets/Images/file2.png";
 import { mediaQueries } from "../../theme/Themes";
 import { Typewriter } from 'react-simple-typewriter';
-import { BiUserCircle,  BiSolidMessageAltDetail,  BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";
+import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";
+import { GrLocation } from "react-icons/gr";
+import { PiGraduationCapBold } from "react-icons/pi";
+import { MdOutlineWorkOutline } from "react-icons/md";
 
 // outer box
 const Box = styled(motion.div)`
@@ -133,24 +136,42 @@ const Text = styled(motion.div)`
   user-select: none;
   & > *:last-child {
     color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
-    font-size: calc(0.5rem + 1.5vw);
+    font-size: calc(0.3rem + 1.5vw);
     font-weight: 600;
 
-    ${mediaQueries(40)`
+    ${mediaQueries(50)`
         font-size: calc(0.5rem + 1vw);
   `};
   }
 
   ${mediaQueries(40)`
         font-size: calc(1rem + 1.5vw);
+
   `};
   ${mediaQueries(20)`
          padding: 1rem;
   `};
+
+  h2{
+    margin-bottom: 1rem;;
+  }
+
+  h6 {
+    font-size: calc(0.4rem + 0.7vw);
+    font-weight: 300;
+    line-height: 0.3;
+    opacity: 0.9;
+    padding: 0.4rem;
+    
+
+    ${mediaQueries(40)`
+        font-size: calc(0.5rem + 0.6vw);
+    `};
+  }
 `;
 
 const Navbar = styled.div`
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: space-evenly;
   justify-content: center;
@@ -174,7 +195,7 @@ const Navbar = styled.div`
     align-items: center;
     gap: 0.2rem;
     & > a {
-      padding: 0.5rem;
+      padding: 0.6rem;
       width: 100%;
       text-align: center;
       font-size: calc(0.8rem + 0.2vw);
@@ -210,8 +231,8 @@ const Intro = () => {
     >
       <SubBox>
         <Text>
-          <h2>Hello,</h2>
-          <h2>
+          <h2 className="hvr-sink">Hello,</h2>
+          <h2 className="hvr-sink">
             I'm
             <Typewriter
               words={[' Mark Yu', ' 于震潇 ']}
@@ -222,15 +243,21 @@ const Intro = () => {
               cursor
             />
           </h2>
-          <h6>
-            &lt;div&gt; Software Engineer from Ontario, Canada &lt;/div&gt;
+           <h6 className="animate__animated animate__bounceInLeft animate__delay-1s hvr-bounce-to-right">
+            <MdOutlineWorkOutline /> Fullstack Developer
           </h6>
-          <Navbar>
-            <a href="/about"><BiUserCircle/></a>
-            <a href="/post"><BiSolidMessageAltDetail/></a>
-            <a href="/project"><BiSolidBriefcase /></a>
-            <a href="/skills"><BiCheckCircle /></a>
-            <a href="/gallery"><BiImageAlt /></a>
+          <h6 className="animate__animated animate__bounceInLeft animate__delay-2s hvr-bounce-to-right">
+            <GrLocation /> Oakville, Ontario
+          </h6>
+          <h6 className="animate__animated animate__bounceInLeft animate__delay-3s hvr-bounce-to-right">
+            <PiGraduationCapBold /> UWO Engineering '24
+          </h6>
+          <Navbar className="animate__animated animate__bounceInUp animate__delay-4s">
+            <a href="/about" className="hvr-grow"><BiUserCircle/></a>
+            <a href="/post" className="hvr-grow"><BiSolidMessageAltDetail/></a>
+            <a href="/project" className="hvr-grow"><BiSolidBriefcase /></a>
+            <a href="/skills" className="hvr-grow"><BiCheckCircle /></a>
+            <a href="/gallery" className="hvr-grow"><BiImageAlt /></a>
           </Navbar>
         </Text>
       </SubBox>
@@ -241,7 +268,7 @@ const Intro = () => {
           transition={{ duration: 2, delay: 1 }}
           min-width={{ minWidth: 100 }}
         >
-          <img className="pic" src={Me} alt="My Pic" />
+          <img className="animate__animated animate__fadeIn animate__delay-2s pic" src={Me} alt="My Pic" />
         </motion.div>
       </SubBox>
     </Box>
