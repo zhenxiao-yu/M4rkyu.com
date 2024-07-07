@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Me from "../../assets/Images/file2.png";
 import { mediaQueries } from "../../theme/Themes";
-import { Typewriter } from 'react-simple-typewriter'
+import { Typewriter } from 'react-simple-typewriter';
+import { BiUserCircle,  BiSolidMessageAltDetail,  BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";
 
 // outer box
 const Box = styled(motion.div)`
@@ -148,6 +149,46 @@ const Text = styled(motion.div)`
   `};
 `;
 
+const Navbar = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+  justify-content: center;
+  gap: 2rem;
+  font-size: calc(0.5rem + 0.8vw);
+  & > a {
+    color: ${(props) => props.theme.body};
+    text-decoration: none;
+    padding: 0.8rem 1.4rem;
+    width: 2.8rem;
+    border-radius: 15px;
+    transition: background 0.3s ease, color 0.3s ease;
+    &:hover {
+      background: ${(props) => props.theme.body};
+      color: ${(props) => props.theme.text};
+    }
+  }
+
+  ${mediaQueries(50)`
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
+    & > a {
+      padding: 0.5rem;
+      width: 100%;
+      text-align: center;
+      font-size: calc(0.8rem + 0.2vw);
+    }
+  `};
+
+  ${mediaQueries(30)`
+    font-size: calc(0.7rem + 0.2vw);
+  `};
+
+  ${mediaQueries(20)`
+    font-size: calc(0.7rem + 0.2vw);
+  `};
+`;
 
 const Intro = () => {
   const [height, setHeight] = useState("55vh");
@@ -170,22 +211,28 @@ const Intro = () => {
       <SubBox>
         <Text>
           <h2>Hello,</h2>
-            <h2> I'm
-              <Typewriter
-                words={[' Mark Yu', ' 于震潇 ']}
-                loop={0}
-                typeSpeed={100}
-                deleteSpeed={80}
-                delaySpeed={2000}
-                cursor
-               />
-            </h2>
-            {/* <ChineseName className="chinese-name">于震潇</ChineseName> */}
+          <h2>
+            I'm
+            <Typewriter
+              words={[' Mark Yu', ' 于震潇 ']}
+              loop={0}
+              typeSpeed={100}
+              deleteSpeed={80}
+              delaySpeed={2000}
+              cursor
+            />
+          </h2>
           <h6>
             &lt;div&gt; Software Engineer from Ontario, Canada &lt;/div&gt;
           </h6>
+          <Navbar>
+            <a href="/about"><BiUserCircle/></a>
+            <a href="/post"><BiSolidMessageAltDetail/></a>
+            <a href="/project"><BiSolidBriefcase /></a>
+            <a href="/skills"><BiCheckCircle /></a>
+            <a href="/gallery"><BiImageAlt /></a>
+          </Navbar>
         </Text>
-        
       </SubBox>
       <SubBox>
         <motion.div

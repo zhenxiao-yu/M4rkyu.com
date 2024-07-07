@@ -118,7 +118,7 @@ const SoundBar = () => {
     if (ref.current) {
         ref.current.pause(); // Stop any current playback
         ref.current.currentTime = 0; // Reset time to the start
-        ref.current.volume = 0.8; // Set the volume to 80%
+        ref.current.volume = 0.1; // Set the volume to 30%
     }
 
     ref.current.src = songs[index]; // Set the new source
