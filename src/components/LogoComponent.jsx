@@ -10,7 +10,7 @@ const Logo = styled.h1`
   position: fixed; // Fix the position on the screen
   left: 2rem; // Set left margin
   top: 2rem; // Set top margin
-  z-index: 3; // Ensure the logo is above other elements
+  z-index: 10; // Ensure the logo is above other elements
   user-select: none; // Prevent text selection
   // Media query for screens smaller than 40em
   ${mediaQueries(40)`

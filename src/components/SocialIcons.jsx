@@ -25,13 +25,14 @@ const Icons = styled.div`
       height: 20px;
     }
   `};
+
 `;
 
 const Line = styled(motion.span)`
   width: 3px;
-  height: 4rem;
+  height: 3.5rem;
   background-color: ${(props) =>
-    props.color === "dark" ? DarkTheme.text : DarkTheme.body};
+  props.color === "dark" ? DarkTheme.text : DarkTheme.body};
 `;
 
 // Configuration for social media links
