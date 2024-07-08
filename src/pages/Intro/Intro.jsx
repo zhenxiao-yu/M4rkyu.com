@@ -8,7 +8,6 @@ import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle,
 import { GrLocation } from "react-icons/gr";
 import { PiGraduationCapBold } from "react-icons/pi";
 import { MdOutlineWorkOutline } from "react-icons/md";
-import { Tilt } from 'react-tilt'
 
 // outer box
 const Box = styled(motion.div)`
@@ -48,8 +47,8 @@ const Box = styled(motion.div)`
   ${mediaQueries(50)`
     width: 70vw;
     background-size: 100% 2px;
-    flex-direction:column;
-    justify-content:space-between;
+    flex-direction: column;
+    justify-content: space-between;
   `};
 
   ${mediaQueries(40)`
@@ -60,7 +59,7 @@ const Box = styled(motion.div)`
      width: 64vw;
   `};
   ${mediaQueries(20)`
-    width: 60vw;
+    width:60vw;
   `};
 
   @media only screen and (max-width: 50em) {
@@ -95,33 +94,32 @@ const SubBox = styled.div`
     width: 80%;
     height: auto;
     image-rendering: auto;
-
   }
   ${mediaQueries(50)`
     width: 100%;
     height: 50%;
-      .pic {
-    width: 70%;
-  }
+    .pic {
+      width: 70%;
+    }
   `};
 
   ${mediaQueries(40)`
     .pic {
       width: 90%;
-  }
+    }
   `};
 
   ${mediaQueries(30)`
     .pic {
-       width: 100%;
-  }
-
+      width: 100%;
+    }
   `};
+
   ${mediaQueries(20)`
-     .pic {
-   width: 50%;
- }
- `};
+    .pic {
+      width: 50%;
+    }
+  `};
 `;
 
 // Text
@@ -131,32 +129,33 @@ const Text = styled(motion.div)`
   padding: 2.5rem;
   cursor: pointer;
   display: flex;
-  z-index:2;
+  z-index: 2;
   flex-direction: column;
   font-family: "Poppins", sans-serif;
   justify-content: space-evenly;
   letter-spacing: 1px;
   user-select: none;
+
   & > *:last-child {
-    color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
+    color: ${(props) => `rgba(${props.theme.bodyRgba}, 0.6)`};
     font-size: calc(0.3rem + 1.5vw);
     font-weight: 600;
 
     ${mediaQueries(50)`
         font-size: calc(0.5rem + 1vw);
-  `};
+    `};
   }
 
   ${mediaQueries(40)`
-        font-size: calc(1rem + 1.5vw);
-
+    font-size: calc(1rem + 1.5vw);
   `};
+
   ${mediaQueries(20)`
-         padding: 1rem;
+    padding: 1rem;
   `};
 
-  h2{
-    margin-bottom: 1rem;;
+  h2 {
+    margin-bottom: 1rem;
   }
 
   h6 {
@@ -165,10 +164,9 @@ const Text = styled(motion.div)`
     line-height: 0.3;
     opacity: 0.9;
     padding: 0.4rem;
-    
 
     ${mediaQueries(40)`
-        font-size: calc(0.5rem + 0.6vw);
+      font-size: calc(0.5rem + 0.6vw);
     `};
   }
 `;
@@ -179,12 +177,14 @@ const Navbar = styled.div`
   justify-content: space-evenly;
   justify-content: center;
   gap: 2rem;
+  width: 100%:
   font-size: calc(0.5rem + 0.8vw);
   & > a {
     color: ${(props) => props.theme.body};
     text-decoration: none;
     padding: 0.8rem 1.4rem;
-    width: 2.8rem;
+    scale: 80%;
+    //width: 2.5rem;
     border-radius: 15px;
     transition: background 0.3s ease, color 0.3s ease;
     &:hover {
@@ -214,8 +214,30 @@ const Navbar = styled.div`
   `};
 `;
 
+const NavbarTooltip = styled.div`
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  color: ${(props) => props.theme.text};
+  font-size: calc(0.5rem + 0.2vw);
+  transition: 0.3s ease-in-out;
+
+  ${mediaQueries(50)`
+    align-items: center;
+  `};
+
+  ${mediaQueries(30)`
+    font-size: calc(0.4rem + 0.2vw);
+  `};
+
+  ${mediaQueries(20)`
+    font-size: calc(0.2rem + 0.2vw);
+  `};
+`;
+
 const Intro = () => {
   const [height, setHeight] = useState("55vh");
+  const [hoveredIcon, setHoveredIcon] = useState('');
 
   useEffect(() => {
     if (window.matchMedia("(max-width: 50em)").matches) {
@@ -226,8 +248,16 @@ const Intro = () => {
     }
   }, []);
 
+  const handleMouseEnter = (iconName) => {
+    setHoveredIcon(iconName);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIcon('');
+  };
+
   return (
-          <Box
+    <Box
       initial={{ height: 0 }}
       animate={{ height: height }}
       transition={{ type: "spring", duration: 2, delay: 1 }}
@@ -240,13 +270,13 @@ const Intro = () => {
             <Typewriter
               words={[' Mark Yu', ' 于震潇 ']}
               loop={0}
-              typeSpeed={100}
-              deleteSpeed={80}
-              delaySpeed={2000}
+              typeSpeed={60}
+              deleteSpeed={60}
+              delaySpeed={2500}
               cursor
             />
           </h2>
-           <h6 className="animate__animated animate__bounceInLeft animate__delay-1s hvr-bounce-to-right">
+          <h6 className="animate__animated animate__bounceInLeft animate__delay-1s hvr-bounce-to-right">
             <MdOutlineWorkOutline /> Fullstack Developer
           </h6>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-2s hvr-bounce-to-right">
@@ -256,12 +286,45 @@ const Intro = () => {
             <PiGraduationCapBold /> UWO Engineering '24
           </h6>
           <Navbar className="animate__animated animate__bounceInUp animate__delay-4s">
-            <a href="/about" className="hvr-grow"><BiUserCircle/></a>
-            <a href="/post" className="hvr-grow"><BiSolidMessageAltDetail/></a>
-            <a href="/project" className="hvr-grow"><BiSolidBriefcase /></a>
-            <a href="/skills" className="hvr-grow"><BiCheckCircle /></a>
-            <a href="/gallery" className="hvr-grow"><BiImageAlt /></a>
+            <a 
+              href="/about" 
+              onMouseEnter={() => handleMouseEnter('<About />')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <BiUserCircle size="1.2em" />
+            </a>
+            <a 
+              href="/post" 
+              onMouseEnter={() => handleMouseEnter('<Posts />')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <BiSolidMessageAltDetail size="1.2em" />
+            </a>
+            <a 
+              href="/project" 
+              onMouseEnter={() => handleMouseEnter('<Projects />')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <BiSolidBriefcase size="1.2em" />
+            </a>
+            <a 
+              href="/skills" 
+              onMouseEnter={() => handleMouseEnter('<Skills />')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <BiCheckCircle size="1.2em" />
+            </a>
+            <a 
+              href="/gallery" 
+              onMouseEnter={() => handleMouseEnter('<Gallery />')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <BiImageAlt size="1.2em" />
+            </a>
           </Navbar>
+          <NavbarTooltip className="hovered-icon-text">
+            <p>{hoveredIcon ? `${hoveredIcon}` : '</>'}</p>
+          </NavbarTooltip>
         </Text>
       </SubBox>
       <SubBox>
