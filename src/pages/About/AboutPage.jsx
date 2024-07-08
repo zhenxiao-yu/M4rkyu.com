@@ -9,7 +9,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import { MdOutlineWorkOutline, MdOutlineMail, MdOutlineLocalPhone, MdOutlineHouse } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa6";
 import { BsArrowReturnRight } from "react-icons/bs";
-import Me2 from "../../assets/Images/me.jpg";
+import Me2 from "../../assets/Images/pfp2.png";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
@@ -50,7 +50,7 @@ const SpaceMan = styled(motion.div)`
 const Main = styled(motion.div)`
   border: 2px solid ${(props) => props.theme.text};
   color: ${(props) => props.theme.text};
-  padding: 2.4rem;
+  padding: 5rem;
   border-radius: 0.5rem;
   width: 70vw;
   max-height: 68vh;
@@ -69,16 +69,20 @@ const Main = styled(motion.div)`
   transform: translate(-50%, -50%);
   font-family: "Poppins", sans-serif;
   letter-spacing: 1.2px;
-  font-weight: 500;
+  font-weight: 400;
 
   & h2 {
-    font-size: 1.5em;
+    font-size: 1.4em;
     margin-bottom: 1rem;
     color: ${(props) => props.theme.text};
   }
 
   & p {
     margin-bottom: 1.5rem;
+  }
+
+  & a{
+    color: ${(props) => props.theme.text};
   }
 
   &::-webkit-scrollbar {
@@ -133,7 +137,7 @@ const ContactDetails = styled.div`
     display: flex;
     align-items: center;
     margin: 0.3rem 0;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 
   & svg {
@@ -170,6 +174,7 @@ const ExperienceCardTitle = styled.h3`
   color: ${(props) => props.theme.body};
   font-size: 1.3rem;
   font-weight: bold;
+  line-height: 0.9rem;
 
   ${mediaQueries(40)`
     font-size: 16px;
@@ -182,9 +187,27 @@ const ExperienceCardTitle = styled.h3`
   `};
 `;
 
+const ExperienceCardDate = styled.h3`
+  color: ${(props) => props.theme.body};
+  font-size: 1.1rem;
+  margin-top: 0.9rem;
+  font-weight: 400;
+  line-height: 1.3rem;
+
+  ${mediaQueries(40)`
+   font-size: 0.8rem;
+    line-height: 1.1rem;
+  `};
+
+  ${mediaQueries(30)`
+    font-size: 0.75rem;
+    line-height: 0.95rem;
+  `};
+`;
+
 const ExperienceCardCompany = styled.p`
   color: ${(props) => props.theme.body};
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: semi-bold;
   margin: 0;
 `;
@@ -201,7 +224,7 @@ const ExperienceCardList = styled.ul`
 
 const ExperienceCardListItem = styled.li`
   color: ${(props) => props.theme.body};
-  font-size: 11px;
+  font-size: 15px;
   padding-left: 0.25rem;
   letter-spacing: wider;
 
@@ -223,13 +246,14 @@ const ExperienceCard = ({ experience }) => {
         color: 'rgb(8, 9, 10)',
       }}
       contentArrowStyle={{ borderRight: '15px solid rgb(250, 243, 227)' }}
-      date={experience.date}
+      date={""}
       iconStyle={{ background: experience.iconBg }}
       icon={<MdOutlineWorkOutline size={24} />}
     >
       <ExperienceCardContainer>
         <ExperienceCardHeader>
           <ExperienceCardTitle>{experience.title}</ExperienceCardTitle>
+          <ExperienceCardDate>{experience.date}</ExperienceCardDate>
           <ExperienceCardCompany>{experience.company_name}</ExperienceCardCompany>
         </ExperienceCardHeader>
         <ExperienceCardList>
@@ -251,8 +275,8 @@ const experiences = [
     iconBg: "rgb(8, 9, 10)",
     date: "May 2022 - Aug 2023",
     points: [
-      "Developed full-stack systems and gained extensive experience in backend data processing, using tools like Java, MySQL, Spring Boot, Apache Storm, and Apache Camel.",
-      "Managed intricate data systems, developed full-stack web applications, and enhanced user interfaces.",
+      "Designed and developed full-stack systems, specializing in backend data processing using Java, MySQL, Spring Boot, Apache Storm, and Apache Camel.",
+      "Managed and optimized complex data systems, created robust full-stack web applications, and improved user interfaces for enhanced user experience.",
     ],
   },
   {
@@ -261,8 +285,9 @@ const experiences = [
     iconBg: "rgb(8, 9, 10)",
     date: "May 2021 - August 2021",
     points: [
-      "Assisted in various research projects, applying theoretical knowledge to practical problems.",
-      "Collaborated with faculty and other students on data analysis and software development tasks.",
+      "Contributed to the development of Augmented Reality environments for neurosurgical simulation applications using Vuforia and Unity3D.",
+      "Assisted in preparing a grant proposal to re-implement surgical training systems using Unreal Engine for deployment on Magic Leap headsets.",
+      "Developed a software toolkit for creating virtual worlds on the Magic Leap One AR headset, utilizing patient datasets from CT and MRI scans.",
     ],
   },
 ];
@@ -307,12 +332,18 @@ const AboutPage = () => {
               </ContactDetails>
               <ProfilePicture src={Me2} alt="Mark Yu" />
             </ContactSection>
+
             <div className="textDir">
               <h2>Overview</h2>
-              <p>Hey there! I'm Mark Yu, an artist and software engineer based in Ontario, Canada. My journey started in China and took a major turn when I moved to Saskatchewan at 13. In high school, I discovered my passion for computer science, which has been guiding my path ever since.</p>
+              <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. My passion lies in blending design and engineering to create software that is both visually stunning and highly functional.</p>
 
-              <h2>Education</h2>
-              <p>I earned a degree in software engineering from Western University in 2024. My time there, filled with research and internships, laid the foundation for my career. Throughout my journey, I’ve consistently developed resilient systems that prioritize performance, user-friendliness, and aesthetic appeal.</p>
+              <p>I was born in <strong>China</strong> and immigrated to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank">Saskatchewan, Canada</a></u>, in 2013. During high school, a computer science elective sparked my interest in web design and coding. This newfound passion led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank">Western University</a></u> and pursue a career in software development.</p>
+
+              <h2>Professional Skills</h2>
+              <p>As a full-stack web developer, I thrive on building robust, user-friendly applications. My expertise spans a wide range of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. Beyond websites, I also enjoy developing games and working on various creative projects.</p>
+
+              <h2>Personal Interests</h2>
+              <p>When I'm not immersed in the digital world, you'll find me exploring new places and capturing the beauty of the world through my paintings. Travel and art are my greatest inspirations, constantly sparking my creativity and driving my passion for innovation.</p>
 
               <h2>Work Experience</h2>
               <VerticalTimeline>
@@ -323,11 +354,16 @@ const AboutPage = () => {
                   />
                 ))}
               </VerticalTimeline>
+
               <br />
-              <h2>Regarding my page</h2>
-              <p>Currently, I’m taking a break from traditional employment to explore new technologies, travel, and work on personal projects that fuel my creativity. I focus on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.</p>
-              <p>I’m passionate about leveraging my skills and creativity to address real-world challenges through innovative solutions. My experience spans managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you’re interested in collaboration and exchanging ideas, let’s connect and explore the potential of technology together. Reach out, and let’s create something remarkable!</p>
+
+              <h2>Current Focus</h2>
+              <p>Currently, I'm taking a break from traditional employment to delve into new technologies, travel, and work on personal projects that ignite my creativity. My focus is on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.</p>
+              
+              <h2>Passion and Expertise</h2>
+              <p>I am passionate about using my skills and creativity to tackle real-world challenges with innovative solutions. My expertise includes managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you're interested in collaboration and exchanging ideas, let's connect and explore the potential of technology together. Reach out, and let's create something remarkable!</p>
             </div>
+
           </Main>
           <BigTitle text="ABOUT" top="10%" left="5%" />
         </Box>

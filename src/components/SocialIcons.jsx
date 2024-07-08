@@ -38,7 +38,7 @@ const Line = styled(motion.span)`
 // Configuration for social media links
 const socialLinks = [
   { id: "github", Icon: Github, link: "https://github.com/zhenxiao-yu" },
-  { id: "linkedin", Icon: Linkedin, link: "https://www.linkedin.com/in/your-profile" },
+  { id: "linkedin", Icon: Linkedin, link: "https://www.linkedin.com/in/mark-yu-a586a2211/" },
   { id: "instagram", Icon: Instagram, link: "https://www.instagram.com/m4rkyu/" },
   { id: "facebook", Icon: Facebook, link: "https://www.facebook.com/mark.yu.3762584" },
   { id: "youtube", Icon: YouTube, link: "https://www.youtube.com/channel/UCUY09EUdbMoyDeWrMBYcUZQ" }
