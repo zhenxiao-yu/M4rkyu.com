@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-// Background image
-import img from "../../assets/Images/blogBG.png";
 // Blog data
 import { Blogs } from "../../assets/data/BlogData";
 
@@ -20,22 +18,10 @@ const LogoComponent = lazy(() => import("../../components/LogoComponent"));
 const BigTitle = lazy(() => import("../../components/BigTitle"));
 
 const MainContainer = styled(motion.div)`
-  background-image: url(${img});
-  background-size: cover;
-  background-repeat: repeat;
   background-attachment: fixed;
   background-position: center;
   user-select: none;
 `;
-
-// Utility function to convert hex color to RGBA
-const hexToRgba = (hex, opacity) => {
-  const trimmedHex = hex.replace('#', '');
-  const r = parseInt(trimmedHex.substring(0, 2), 16);
-  const g = parseInt(trimmedHex.substring(2, 4), 16);
-  const b = parseInt(trimmedHex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-};
 
 const Container = styled.div`
   background-color: #faf3e3;
@@ -52,7 +38,6 @@ const Center = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  // border: 2px solid black;
 
   padding-top: 10rem;
   ${mediaQueries(30)`

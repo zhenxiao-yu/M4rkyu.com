@@ -11,6 +11,7 @@ const AboutPage = lazy(() => import("./pages/About/AboutPage"));
 const MySkillsPage = lazy(() => import("./pages/Skills/MySkillsPage"));
 const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
 const ProjectPage = lazy(() => import("./pages/Projects/ProjectPage"));
+const GalleryPage = lazy(() => import("./pages/Gallery/GalleryPage"));
 const SoundBar = lazy(() => import("./components/SoundBar"));
 
 function Router() {
@@ -28,6 +29,7 @@ function Router() {
               <Route exact path="/post" component={BlogPage} />
               <Route exact path="/project" component={ProjectPage} />
               <Route exact path="/skills" component={MySkillsPage} />
+              <Route exact path="/gallery" component={GalleryPage} />
             </Switch>
         </Suspense>
       </ThemeProvider>

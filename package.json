@@ -23,6 +23,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-loader-spinner": "^6.1.6",
+    "react-photo-album": "^2.4.1",
+    "react-responsive-masonry": "^2.2.1",
     "react-router-dom": "^5.2.0",
     "react-simple-typewriter": "^5.0.1",
     "react-tilt": "^1.0.2",
