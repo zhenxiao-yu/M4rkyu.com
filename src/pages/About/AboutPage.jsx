@@ -6,8 +6,9 @@ import {
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { MdOutlineWorkOutline } from "react-icons/md";
-
+import { MdOutlineWorkOutline, MdOutlineMail, MdOutlineLocalPhone, MdOutlineHouse } from "react-icons/md";
+import { FaDiscord } from "react-icons/fa6";
+import Me2 from "../../assets/Images/me.jpg";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
@@ -108,9 +109,46 @@ const Main = styled(motion.div)`
   `};
 `;
 
+const ContactSection = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+
+  ${mediaQueries(40)`
+    flex-direction: column;
+    align-items: center;
+  `};
+`;
+
+const ContactDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  & p {
+    margin: 0.5rem 0;
+  }
+`;
+
+const ProfilePicture = styled.img`
+  width: 20vw;
+  height: auto;
+  margin-left: 2rem;
+  border-radius: 50%;
+
+  ${mediaQueries(40)`
+    width: 40vw;
+    margin-left: 0;
+    margin-top: 1rem;
+  `};
+`;
+
 const ExperienceCardContainer = styled.div`
   background: ${(props) => props.theme.text};
-  color: ${(props) => props.theme.text};
+  color: ${(props) => props.theme.body};
 `;
 
 const ExperienceCardHeader = styled.div`
@@ -126,8 +164,8 @@ const ExperienceCardTitle = styled.h3`
 `;
 
 const ExperienceCardCompany = styled.p`
-  color: ${(props) => props.theme.body};;
-  font-size: 2rem;
+  color: ${(props) => props.theme.body};
+  font-size: 1.2rem;
   font-weight: semi-bold;
   margin: 0;
 `;
@@ -143,7 +181,6 @@ const ExperienceCardListItem = styled.li`
   font-size: 14px;
   padding-left: 0.25rem;
   letter-spacing: wider;
-  e
 `;
 
 const ExperienceCard = ({ experience }) => {
@@ -192,7 +229,8 @@ const experiences = [
     iconBg: "rgb(8, 9, 10)",
     date: "May 2021 - August 2021",
     points: [
-      "Working on various projects and gaining valuable industry experience.",
+      "Assisted in various research projects, applying theoretical knowledge to practical problems.",
+      "Collaborated with faculty and other students on data analysis and software development tasks.",
     ],
   },
 ];
@@ -227,6 +265,15 @@ const AboutPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}
           >
+            <ContactSection>
+              <ContactDetails>
+                <p> <FaDiscord size="1.3em" /> DISCORD:  markyu@example.com</p>
+                <p> <MdOutlineMail size="1.3em" /> EMAIL:  markyu@example.com</p>
+                <p> <MdOutlineLocalPhone  size="1.3em"/> CELL: +1 306 581-5556</p>
+                <p> <MdOutlineHouse  size="1.3em"/> MAIL: Ontario, Canada</p>
+              </ContactDetails>
+              <ProfilePicture src={Me2} alt="Mark Yu" />
+            </ContactSection>
             <div className="textDir">
               <h2>Overview</h2>
               <p>Thanks for visiting! My name is Mark Yu. As an artist and software engineer based in Ontario, Canada, I enjoy combining my technical expertise with artistic flair to create cutting-edge digital solutions. Originally from China, my journey brought me to Saskatchewan, where my fascination with computer science began in high school and has shaped my path ever since.</p>
