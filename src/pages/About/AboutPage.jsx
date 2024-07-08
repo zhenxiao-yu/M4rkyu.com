@@ -258,7 +258,7 @@ const ExperienceCard = ({ experience }) => {
         </ExperienceCardHeader>
         <ExperienceCardList>
           {experience.points.map((point, index) => (
-            <ExperienceCardListItem key={`experience-point-${index}`}>
+            <ExperienceCardListItem key={`experience-point-${index}` }>
               {point}
             </ExperienceCardListItem>
           ))}
@@ -322,8 +322,8 @@ const AboutPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}
           >
-            <ContactSection>
-              <ContactDetails>
+            <ContactSection >
+              <ContactDetails className="animate__animated animate__zoomInDown animate__delay-1s">
                 <p> <FaDiscord size="1.3em" /> DISCORD: m4rkyu</p>
                 <p> <MdOutlineMail size="1.3em" /> EMAIL: zyu347@uwo.ca</p>
                 <p> <MdOutlineLocalPhone size="1.3em" /> CELL: +1 306 581-5556</p>
@@ -333,19 +333,19 @@ const AboutPage = () => {
               <ProfilePicture src={Me2} alt="Mark Yu" />
             </ContactSection>
 
-            <div className="textDir">
-              <h2>Overview</h2>
+            <div className="animate__animated animate__slideInUp animate__delay-1s">
+              <h2 className='hvr-skew-forward'>Overview</h2>
               <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. My passion lies in blending design and engineering to create software that is both visually stunning and highly functional.</p>
 
               <p>I was born in <strong>China</strong> and immigrated to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank">Saskatchewan, Canada</a></u>, in 2013. During high school, a computer science elective sparked my interest in web design and coding. This newfound passion led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank">Western University</a></u> and pursue a career in software development.</p>
 
-              <h2>Professional Skills</h2>
+              <h2 className='hvr-skew-forward'>Professional Skills</h2>
               <p>As a full-stack web developer, I thrive on building robust, user-friendly applications. My expertise spans a wide range of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. Beyond websites, I also enjoy developing games and working on various creative projects.</p>
 
-              <h2>Personal Interests</h2>
+              <h2 className='hvr-skew-forward'>Personal Interests</h2>
               <p>When I'm not immersed in the digital world, you'll find me exploring new places and capturing the beauty of the world through my paintings. Travel and art are my greatest inspirations, constantly sparking my creativity and driving my passion for innovation.</p>
 
-              <h2>Work Experience</h2>
+              <h2 className='hvr-skew-forward'>Work Experience</h2>
               <VerticalTimeline>
                 {experiences.map((experience, index) => (
                   <ExperienceCard
@@ -357,10 +357,10 @@ const AboutPage = () => {
 
               <br />
 
-              <h2>Current Focus</h2>
+              <h2 className='hvr-skew-forward'>Current Focus</h2>
               <p>Currently, I'm taking a break from traditional employment to delve into new technologies, travel, and work on personal projects that ignite my creativity. My focus is on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.</p>
               
-              <h2>Passion and Expertise</h2>
+              <h2 className='hvr-skew-forward'>Passion and Expertise</h2>
               <p>I am passionate about using my skills and creativity to tackle real-world challenges with innovative solutions. My expertise includes managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you're interested in collaboration and exchanging ideas, let's connect and explore the potential of technology together. Reach out, and let's create something remarkable!</p>
             </div>
 
