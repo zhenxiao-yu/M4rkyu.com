@@ -142,10 +142,11 @@ const ContactDetails = styled.div`
 `;
 
 const ProfilePicture = styled.img`
-  width: 20vw;
+  width: 17vw;
   height: auto;
   margin-left: 2rem;
   border-radius: 50%;
+  border: 10px solid ${(props) => props.theme.text};
 
   ${mediaQueries(40)`
     width: 40vw;
