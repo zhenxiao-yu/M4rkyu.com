@@ -9,7 +9,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import { MdOutlineWorkOutline, MdOutlineMail, MdOutlineLocalPhone, MdOutlineHouse } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa6";
 import { BsArrowReturnRight } from "react-icons/bs";
-import Me2 from "../../assets/Images/me-pic.jpg";
+import Me2 from "../../assets/Images/me.jpg";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
