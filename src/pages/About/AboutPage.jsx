@@ -8,7 +8,8 @@ import {
 import 'react-vertical-timeline-component/style.min.css';
 import { MdOutlineWorkOutline, MdOutlineMail, MdOutlineLocalPhone, MdOutlineHouse } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa6";
-import Me2 from "../../assets/Images/me.jpg";
+import { BsArrowReturnRight } from "react-icons/bs";
+import Me2 from "../../assets/Images/me-pic.jpg";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
@@ -91,14 +92,14 @@ const Main = styled(motion.div)`
   }
 
   ${mediaQueries(40)`
-    width: 60vw;
+    width: 70vw;
     max-height: 70vh;
     font-size: calc(0.95rem + 0.4vw);
   `};
 
   ${mediaQueries(30)`
-    width: 53vw;
-    max-height: 70vh;
+    width: 65vw;
+    max-height: 78vh;
     font-size: calc(0.95rem + 0vw);
     padding: 1.5rem;
   `};
@@ -129,7 +130,14 @@ const ContactDetails = styled.div`
   align-items: flex-start;
 
   & p {
-    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    margin: 0.3rem 0;
+    font-size: 0.75rem;
+  }
+
+  & svg {
+    margin-right: 0.5rem;
   }
 `;
 
@@ -161,6 +169,16 @@ const ExperienceCardTitle = styled.h3`
   color: ${(props) => props.theme.body};
   font-size: 1.3rem;
   font-weight: bold;
+
+  ${mediaQueries(40)`
+    font-size: 16px;
+    line-height: 0.9rem;
+  `};
+
+  ${mediaQueries(30)`
+    font-size: 14px;
+    line-height: 0.9rem;
+  `};
 `;
 
 const ExperienceCardCompany = styled.p`
@@ -174,13 +192,26 @@ const ExperienceCardList = styled.ul`
   margin-top: 1rem;
   list-style-type: disc;
   margin-left: 1.25rem;
+  ${mediaQueries(30)`
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+  `};
 `;
 
 const ExperienceCardListItem = styled.li`
   color: ${(props) => props.theme.body};
-  font-size: 14px;
+  font-size: 11px;
   padding-left: 0.25rem;
   letter-spacing: wider;
+
+   ${mediaQueries(40)`
+    font-size: 12px;
+    line-height: 0.9rem;
+  `};
+
+  ${mediaQueries(30)`
+    font-size: 10px;
+  `};
 `;
 
 const ExperienceCard = ({ experience }) => {
@@ -267,16 +298,17 @@ const AboutPage = () => {
           >
             <ContactSection>
               <ContactDetails>
-                <p> <FaDiscord size="1.3em" /> DISCORD:  markyu@example.com</p>
-                <p> <MdOutlineMail size="1.3em" /> EMAIL:  markyu@example.com</p>
-                <p> <MdOutlineLocalPhone  size="1.3em"/> CELL: +1 306 581-5556</p>
-                <p> <MdOutlineHouse  size="1.3em"/> MAIL: Ontario, Canada</p>
+                <p> <FaDiscord size="1.3em" /> DISCORD: m4rkyu</p>
+                <p> <MdOutlineMail size="1.3em" /> EMAIL: zyu347@uwo.ca</p>
+                <p> <MdOutlineLocalPhone size="1.3em" /> CELL: +1 306 581-5556</p>
+                <p> <MdOutlineHouse size="1.3em" /> MAIL: 2382 Brairgrove Cir</p>
+                <p > <BsArrowReturnRight  size="1.3em" /> Oakville, ON L6M 5A3</p>
               </ContactDetails>
               <ProfilePicture src={Me2} alt="Mark Yu" />
             </ContactSection>
             <div className="textDir">
               <h2>Overview</h2>
-              <p>Thanks for visiting! My name is Mark Yu. As an artist and software engineer based in Ontario, Canada, I enjoy combining my technical expertise with artistic flair to create cutting-edge digital solutions. Originally from China, my journey brought me to Saskatchewan, where my fascination with computer science began in high school and has shaped my path ever since.</p>
+              <p>Hey there! I'm Mark Yu, an artist and software engineer based in Ontario, Canada. My journey started in China and took a major turn when I moved to Saskatchewan at 13. In high school, I discovered my passion for computer science, which has been guiding my path ever since.</p>
 
               <h2>Education</h2>
               <p>I earned a degree in software engineering from Western University in 2024. My time there, filled with research and internships, laid the foundation for my career. Throughout my journey, I’ve consistently developed resilient systems that prioritize performance, user-friendliness, and aesthetic appeal.</p>
@@ -290,6 +322,8 @@ const AboutPage = () => {
                   />
                 ))}
               </VerticalTimeline>
+              <br />
+              <h2>Regarding my page</h2>
               <p>Currently, I’m taking a break from traditional employment to explore new technologies, travel, and work on personal projects that fuel my creativity. I focus on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.</p>
               <p>I’m passionate about leveraging my skills and creativity to address real-world challenges through innovative solutions. My experience spans managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you’re interested in collaboration and exchanging ideas, let’s connect and explore the potential of technology together. Reach out, and let’s create something remarkable!</p>
             </div>

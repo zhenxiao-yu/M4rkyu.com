@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../../assets/Images/file2.png";
+import Me from "../../assets/Images/file-clean.png";
 import { mediaQueries } from "../../theme/Themes";
 import { Typewriter } from 'react-simple-typewriter';
 import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";
@@ -91,9 +91,11 @@ const SubBox = styled.div`
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, 16.2%);
-    width: 110%;
+    transform: translate(-50%, 0%);
+    width: 80%;
     height: auto;
+    image-rendering: auto;
+
   }
   ${mediaQueries(50)`
     width: 100%;
@@ -105,19 +107,19 @@ const SubBox = styled.div`
 
   ${mediaQueries(40)`
     .pic {
-      width: 80%;
+      width: 90%;
   }
   `};
 
   ${mediaQueries(30)`
     .pic {
-       width: 95%;
+       width: 100%;
   }
 
   `};
   ${mediaQueries(20)`
      .pic {
-   width: 80%;
+   width: 50%;
  }
  `};
 `;
