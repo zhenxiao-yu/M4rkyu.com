@@ -1387,7 +1387,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transform: scaleY(0);
   transform: scaleY(0);
   -webkit-transform-origin: 50% 100%;
@@ -1428,7 +1428,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transform: scaleX(0);
   transform: scaleX(0);
   -webkit-transform-origin: 0 50%;
@@ -1589,7 +1589,7 @@
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
   overflow: hidden;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
@@ -1645,7 +1645,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   border-radius: 100%;
   -webkit-transform: scale(2);
   transform: scale(2);
@@ -1686,7 +1686,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transform: scale(1);
   transform: scale(1);
   -webkit-transition-property: transform;
@@ -1712,7 +1712,7 @@
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
@@ -1766,7 +1766,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transform: scaleX(1);
   transform: scaleX(1);
   -webkit-transform-origin: 50%;
@@ -1794,7 +1794,7 @@
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
@@ -1850,7 +1850,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transform: scaleY(1);
   transform: scaleY(1);
   -webkit-transform-origin: 50%;
@@ -1878,7 +1878,7 @@
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: rgb(250, 243, 227);
+  background: rgb(236, 233, 232);
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
@@ -1924,7 +1924,7 @@
   transition-duration: 0.3s;
   -webkit-transition-property: box-shadow;
   transition-property: box-shadow;
-  box-shadow: inset 0 0 0 4px rgb(250, 243, 227), 0 0 1px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 0 4px rgb(236, 233, 232), 0 0 1px rgba(0, 0, 0, 0);
   /* Hack to improve aliasing on mobile/tablet devices */
 }
 .hvr-border-fade:hover, .hvr-border-fade:focus, .hvr-border-fade:active {
@@ -1943,7 +1943,7 @@
   transition-duration: 0.3s;
   -webkit-transition-property: background;
   transition-property: background;
-  box-shadow: inset 0 0 0 4px rgb(250, 243, 227), 0 0 1px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 0 4px rgb(236, 233, 232), 0 0 1px rgba(0, 0, 0, 0);
   /* Hack to improve aliasing on mobile/tablet devices */
 }
 .hvr-hollow:hover, .hvr-hollow:focus, .hvr-hollow:active {
@@ -2007,7 +2007,7 @@
 .hvr-ripple-out:before {
   content: '';
   position: absolute;
-  border: rgb(250, 243, 227) solid 3px;
+  border: rgb(236, 233, 232) solid 3px;
   top: 0;
   right: 0;
   bottom: 0;
@@ -2050,7 +2050,7 @@
 .hvr-ripple-in:before {
   content: '';
   position: absolute;
-  border: rgb(250, 243, 227) solid 4px;
+  border: rgb(236, 233, 232) solid 4px;
   top: -12px;
   right: -12px;
   bottom: -12px;
@@ -2076,7 +2076,7 @@
 .hvr-outline-out:before {
   content: '';
   position: absolute;
-  border: rgb(250, 243, 227) solid 4px;
+  border: rgb(236, 233, 232) solid 4px;
   top: 0;
   right: 0;
   bottom: 0;
@@ -2106,7 +2106,7 @@
   pointer-events: none;
   content: '';
   position: absolute;
-  border: rgb(250, 243, 227) solid 4px;
+  border: rgb(236, 233, 232) solid 4px;
   top: -16px;
   right: -16px;
   bottom: -16px;
@@ -2613,7 +2613,7 @@
   left: calc(50% - 10px);
   top: 0;
   border-width: 0 10px 10px 10px;
-  border-color: transparent transparent rgb(250, 243, 227) transparent;
+  border-color: transparent transparent rgb(236, 233, 232) transparent;
 }
 .hvr-bubble-top:hover:before, .hvr-bubble-top:focus:before, .hvr-bubble-top:active:before {
   -webkit-transform: translateY(-10px);
@@ -2642,7 +2642,7 @@
   top: calc(50% - 10px);
   right: 0;
   border-width: 10px 0 10px 10px;
-  border-color: transparent transparent transparent rgb(250, 243, 227);
+  border-color: transparent transparent transparent rgb(236, 233, 232);
 }
 .hvr-bubble-right:hover:before, .hvr-bubble-right:focus:before, .hvr-bubble-right:active:before {
   -webkit-transform: translateX(10px);
@@ -2671,7 +2671,7 @@
   left: calc(50% - 10px);
   bottom: 0;
   border-width: 10px 10px 0 10px;
-  border-color: rgb(250, 243, 227) transparent transparent transparent;
+  border-color: rgb(236, 233, 232) transparent transparent transparent;
 }
 .hvr-bubble-bottom:hover:before, .hvr-bubble-bottom:focus:before, .hvr-bubble-bottom:active:before {
   -webkit-transform: translateY(10px);
@@ -2700,7 +2700,7 @@
   top: calc(50% - 10px);
   left: 0;
   border-width: 10px 10px 10px 0;
-  border-color: transparent rgb(250, 243, 227) transparent transparent;
+  border-color: transparent rgb(236, 233, 232) transparent transparent;
 }
 .hvr-bubble-left:hover:before, .hvr-bubble-left:focus:before, .hvr-bubble-left:active:before {
   -webkit-transform: translateX(-10px);
@@ -2728,7 +2728,7 @@
   top: 0;
   border-style: solid;
   border-width: 0 10px 10px 10px;
-  border-color: transparent transparent rgb(250, 243, 227) transparent;
+  border-color: transparent transparent rgb(236, 233, 232) transparent;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   -webkit-transition-property: transform;
@@ -2764,7 +2764,7 @@
   content: '';
   border-style: solid;
   border-width: 10px 0 10px 10px;
-  border-color: transparent transparent transparent rgb(250, 243, 227);
+  border-color: transparent transparent transparent rgb(236, 233, 232);
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   -webkit-transition-property: transform;
@@ -2800,7 +2800,7 @@
   bottom: 0;
   border-style: solid;
   border-width: 10px 10px 0 10px;
-  border-color: rgb(250, 243, 227) transparent transparent transparent;
+  border-color: rgb(236, 233, 232) transparent transparent transparent;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   -webkit-transition-property: transform;
@@ -2836,7 +2836,7 @@
   left: 0;
   border-style: solid;
   border-width: 10px 10px 10px 0;
-  border-color: transparent rgb(250, 243, 227) transparent transparent;
+  border-color: transparent rgb(236, 233, 232) transparent transparent;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   -webkit-transition-property: transform;

@@ -26,7 +26,7 @@ const MainContainer = styled(motion.div)`
 const Container = styled.div`
   background-color: #faf3e3;
   opacity: 1;
-  background-image: radial-gradient(#08090a 1.1px, #faf3e3 1.1px);
+  background-image: radial-gradient(#08090a 1.1px, rgb(236, 233, 232) 1.1px);
   background-size: 22px 22px;
   width: 100%;
   height: auto;

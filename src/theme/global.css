@@ -1,9 +1,9 @@
 /* styles.css */
 :root {
-    --body-color-light: rgb(250, 243, 227);
+    --body-color-light: rgb(236, 233, 232);
     --text-color-light: rgb(8, 9, 10);
     --body-color-dark: rgb(8, 9, 10);
-    --text-color-dark:  rgb(250, 243, 227);
+    --text-color-dark:  rgb(236, 233, 232);
 }
 
 @keyframes fadeIn {
