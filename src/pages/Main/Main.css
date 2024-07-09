@@ -6,4 +6,5 @@ video {
   height: 110%;
   object-fit: cover;
   z-index: 0;
+  user-select: none;
 }
