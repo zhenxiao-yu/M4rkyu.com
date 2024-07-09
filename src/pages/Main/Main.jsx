@@ -189,7 +189,7 @@ const Main = () => {
         exit={path === 'about' || path === 'skills' ? moveY : moveX}
         transition={{ duration: 0.5 }}
       >
-        {!click && <video src={videoBg} autoplay loop muted playsinline className="video-background" />}
+        {!click && <video src={videoBg} autoPlay loop playsInline muted className="video-background" />}
         <DarkDiv click={click} />
         <Container>
           <LogoComponent theme={click ? 'dark' : 'light'} />
