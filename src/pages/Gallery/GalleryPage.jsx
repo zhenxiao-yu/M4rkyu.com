@@ -29,16 +29,16 @@ const GalleryWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 2em;
   padding: 10px;
-  background-color: #faf3e3;
+  background-color: #ece9e8;
   opacity: 1;
-  background-image: radial-gradient(#08090a 1.1px, #faf3e3 1.1px);
+  background-image: radial-gradient(#08090a 1.1px, #ece9e8 1.1px);
   background-size: 22px 22px;
 `;
 
 const Container = styled.div`
-  background-color: #faf3e3;
+  background-color: #ece9e8;
   opacity: 1;
-  background-image: radial-gradient(#08090a 1.1px, #faf3e3 1.1px);
+  background-image: radial-gradient(#08090a 1.1px, #ece9e8 1.1px);
   background-size: 22px 22px;
   width: 100%;
   height: auto;
@@ -50,7 +50,7 @@ const ImageBox = styled(motion.div)`
   overflow: hidden;
   border-radius: 15px;
   cursor: pointer;
-  border: 4px solid #faf3e3;
+  border: 4px solid #ece9e8;
 
   img {
     width: 100%;

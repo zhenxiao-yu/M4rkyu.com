@@ -21,7 +21,7 @@ const Loading = () => {
           height={120}
           width={120}
           radius={5}
-          color="#faf3e3"
+          color="#ece9e8"
           ariaLabel="ball-triangle-loading"
           wrapperStyle={{}}
           wrapperClass=""
