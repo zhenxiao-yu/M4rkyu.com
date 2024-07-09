@@ -1,18 +1,19 @@
-import styled, { keyframes } from "styled-components";
-import { NavLink } from "react-router-dom";
-import { lazy, Suspense, useState, useEffect} from "react";
-import { motion } from "framer-motion";
-import { CgMail } from "react-icons/cg";
+import React, { lazy, Suspense, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { CgMail } from 'react-icons/cg';
+import './Main.css';
 
-//Components
-import { CodeCircle } from "../../assets/svg/AllSvgs";
-import Intro from "../Intro/Intro";
-import Loading from "../../components/Loading";
-import Greeting from "../../components/Greeting";
-import { mediaQueries } from "../../theme/Themes";
-
-const SocialIcons = lazy(() => import("../../components/SocialIcons"));
-const LogoComponent = lazy(() => import("../../components/LogoComponent"));
+// Components
+import { CodeCircle } from '../../assets/svg/AllSvgs';
+import Intro from '../Intro/Intro';
+import Loading from '../../components/Loading';
+import Greeting from '../../components/Greeting';
+import { mediaQueries } from '../../theme/Themes';
+import videoBg from '../../assets/Images/new.mp4'
+const SocialIcons = lazy(() => import('../../components/SocialIcons'));
+const LogoComponent = lazy(() => import('../../components/LogoComponent'));
 
 const MainContainer = styled(motion.div)`
   background: ${(props) => props.theme.body};
@@ -22,23 +23,19 @@ const MainContainer = styled(motion.div)`
   overflow: hidden;
   user-select: none;
 
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Poppins", sans-serif;
+  h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
   }
 
   h2 {
     ${mediaQueries(40)`
-      font-size:1.2em;
-  `};
+      font-size: 1.2em;
+    `};
 
     ${mediaQueries(30)`
-      font-size:1em;
-  `};
+      font-size: 1em;
+    `};
   }
 `;
 
@@ -47,18 +44,18 @@ const Container = styled.div`
 `;
 
 const rotate = keyframes`
-from {
-    transform: rotate(0) ;
+  from {
+    transform: rotate(0);
   }
   to {
-    transform: rotate(360deg) ;
+    transform: rotate(360deg);
   }
 `;
 
 const Center = styled.button`
   position: absolute;
-  top: ${(props) => (props.click ? "85%" : "50%")};
-  left: ${(props) => (props.click ? "90%" : "50%")};
+  top: ${(props) => (props.click ? '85%' : '50%')};
+  left: ${(props) => (props.click ? '90%' : '50%')};
   transform: translate(-50%, -50%);
   border: none;
   outline: none;
@@ -68,22 +65,25 @@ const Center = styled.button`
   flex-direction: column;
   align-items: center;
   transition: all 1s ease;
+
   & > *:first-child {
     animation: ${rotate} infinite 8s linear;
   }
+
   & > *:last-child {
-    display: ${(props) => (props.click ? "none" : "inline-block")};
+    display: ${(props) => (props.click ? 'none' : 'inline-block')};
   }
 
   @media only screen and (max-width: 50em) {
-    top: ${(props) => (props.click ? "90%" : "50%")};
-    left: ${(props) => (props.click ? "90%" : "50%")};
-    width: ${(props) => (props.click ? "100px" : "150px")};
-    height: ${(props) => (props.click ? "100px" : "150px")};
+    top: ${(props) => (props.click ? '90%' : '50%')};
+    left: ${(props) => (props.click ? '90%' : '50%')};
+    width: ${(props) => (props.click ? '100px' : '150px')};
+    height: ${(props) => (props.click ? '100px' : '150px')};
   }
+
   @media only screen and (max-width: 30em) {
-    width: ${(props) => (props.click ? "80px" : "150px")};
-    height: ${(props) => (props.click ? "80px" : "150px")};
+    width: ${(props) => (props.click ? '80px' : '150px')};
+    height: ${(props) => (props.click ? '80px' : '150px')};
   }
 `;
 
@@ -104,8 +104,9 @@ const BLOG = styled(NavLink)`
   transform: rotate(90deg) translate(-50%, -80%);
   z-index: 1;
   text-decoration: none;
+
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? "0 0 3px #101010, 1px 1px 5px #000" : "none")};
+    text-shadow: ${(props) => (props.click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
   }
 `;
 
@@ -117,8 +118,9 @@ const PROJECT = styled(NavLink)`
   transform: translate(-50%, -50%) rotate(-90deg);
   z-index: 1;
   text-decoration: none;
+
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? "0 0 3px #101010, 1px 1px 5px #000" : "none")};
+    text-shadow: ${(props) => (props.click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
   }
 `;
 
@@ -150,38 +152,33 @@ const DarkDiv = styled.div`
   top: 0;
   bottom: 0;
   right: 50%;
-  width: ${(props) => (props.click ? "50%" : "0%")};
+  width: ${(props) => (props.click ? '50%' : '0%')};
   background-color: #101010;
-  height: ${(props) => (props.click ? "100%" : "0%")};
+  height: ${(props) => (props.click ? '100%' : '0%')};
   transition: height 0.5s ease, width 1s ease 0.5s;
   z-index: 1;
+
   ${(props) =>
     props.click
       ? mediaQueries(50)`
-       height: 50%;
-  right:0;
-  width: 100%;
-  transition: width 0.5s ease, height 1s ease 0.5s;
-  `
+          height: 50%;
+          right: 0;
+          width: 100%;
+          transition: width 0.5s ease, height 1s ease 0.5s;
+        `
       : mediaQueries(50)`
-       height: 0;
-  
-  width: 0;
-  `};
+          height: 0;
+          width: 0;
+        `};
 `;
-
 
 const Main = () => {
   const [click, setClick] = useState(false);
-  const [path, setpath] = useState("");
+  const [path, setPath] = useState('');
   const handleClick = () => setClick(!click);
-  const moveY = {
-    y: "-100%",
-  };
-  const moveX = {
-    x: `${path === "project" ? "100%" : "-100%"}`,
-  };
-  const mq = window.matchMedia("(max-width: 50em)").matches;
+  const moveY = { y: '-100%' };
+  const moveX = { x: `${path === 'project' ? '100%' : '-100%'}` };
+  const mq = window.matchMedia('(max-width: 50em)').matches;
 
   return (
     <Suspense fallback={<Loading />}>
@@ -189,16 +186,17 @@ const Main = () => {
         key="modal"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={path === "about" || path === "skills" ? moveY : moveX}
+        exit={path === 'about' || path === 'skills' ? moveY : moveX}
         transition={{ duration: 0.5 }}
       >
+        <video src={videoBg} autoPlay loop muted className="video-background" />
         <DarkDiv click={click} />
         <Container>
-          <LogoComponent theme={click ? "dark" : "light"} />
+          <LogoComponent theme={click ? 'dark' : 'light'} />
           {mq ? (
             <SocialIcons theme="light" />
           ) : (
-            <SocialIcons theme={click ? "dark" : "light"} />
+            <SocialIcons theme={click ? 'dark' : 'light'} />
           )}
           <Center click={click}>
             {mq ? (
@@ -216,106 +214,59 @@ const Main = () => {
                 fill="#101010"
               />
             )}
-            <Greeting/>
+            <Greeting />
           </Center>
 
-          {/* Contact Link */}
-          {mq ? (
-            <Contact
-              click={+click}
-              target="_blank"
-              to={{ pathname: "mailto:zyu347@uwo.ca" }}
-            >
-              <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                whileHover={{ scale: 1.2, fontWeight: "bold" }}
-                whileTap={{ scale: 0.85 }}
-              >
-                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <CgMail style={{ marginRight: '2px'}} size="1.3em"/> EMAIL ME
-                 </div>
-              </motion.h2>
-            </Contact>
-          ) : (
-            <Contact
-              click={+false}
-              target="_blank"
-              to={{ pathname: "mailto:zyu347@uwo.ca" }}
-            >
-              <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.85 }}
-                >
-               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CgMail style={{ marginRight: '2px' }} size="1.3em"/> EMAIL ME
-                </div>
-              </motion.h2>
-            </Contact>
-          )}
-
-          {/* Blog Link */}
-          {mq ? (
-            <BLOG click={+click} onClick={() => setpath("blog")} to="/post">
-              <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                whileHover={{scale: 1.3, fontWeight: "bold"}}
-                whileTap={{scale: 0.85 }}
-              >
-                MY POSTS
-              </motion.h2>
-            </BLOG>
-          ) : (
-            <BLOG click={+false} onClick={() => setpath("blog")} to="/post">
-              <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
-                }}
-                whileHover={{scale: 1.3, fontWeight: "bold"}}
-                whileTap={{scale: 0.85 }}
-              >
-                MY POSTS
-              </motion.h2>
-            </BLOG>
-          )}
-
-          {/* Project Link */}
-          <PROJECT click={+click} to="/project">
+          <Contact
+            click={+click}
+            target="_blank"
+            to={{ pathname: 'mailto:zyu347@uwo.ca' }}
+          >
             <motion.h2
-              onClick={() => setpath("project")}
               initial={{
                 y: -200,
-                transition: { type: "spring", duration: 1.5, delay: 1 },
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
               }}
               animate={{
                 y: 0,
-                transition: { type: "spring", duration: 1.5, delay: 1 },
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
+              }}
+              whileHover={{ scale: 1.2, fontWeight: 'bold' }}
+              whileTap={{ scale: 0.85 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CgMail style={{ marginRight: '2px' }} size="1.3em" /> EMAIL ME
+              </div>
+            </motion.h2>
+          </Contact>
+
+          <BLOG click={+click} onClick={() => setPath('blog')} to="/post">
+            <motion.h2
+              initial={{
+                y: -200,
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
+              }}
+              animate={{
+                y: 0,
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
+              }}
+              whileHover={{ scale: 1.3, fontWeight: 'bold' }}
+              whileTap={{ scale: 0.85 }}
+            >
+              MY POSTS
+            </motion.h2>
+          </BLOG>
+
+          <PROJECT click={+click} to="/project">
+            <motion.h2
+              onClick={() => setPath('project')}
+              initial={{
+                y: -200,
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
+              }}
+              animate={{
+                y: 0,
+                transition: { type: 'spring', duration: 1.5, delay: 1 },
               }}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.85 }}
@@ -324,22 +275,17 @@ const Main = () => {
             </motion.h2>
           </PROJECT>
 
-          {/* About Link */}
           <BottomBar>
-            <ABOUT
-              onClick={() => setClick(false)}
-              click={mq ? +false : +click}
-              to="/about"
-            >
+            <ABOUT onClick={() => setClick(false)} click={mq ? +false : +click} to="/about">
               <motion.h2
-                onClick={() => setpath("about")}
+                onClick={() => setPath('about')}
                 initial={{
                   y: 200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
+                  transition: { type: 'spring', duration: 1.5, delay: 1 },
                 }}
                 animate={{
                   y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
+                  transition: { type: 'spring', duration: 1.5, delay: 1 },
                 }}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
@@ -348,18 +294,16 @@ const Main = () => {
               </motion.h2>
             </ABOUT>
 
-
-            {/* Skills Link */}
             <SKILLS to="/skills">
               <motion.h2
-                onClick={() => setpath("skills")}
+                onClick={() => setPath('skills')}
                 initial={{
                   y: 200,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
+                  transition: { type: 'spring', duration: 1.5, delay: 1 },
                 }}
                 animate={{
                   y: 0,
-                  transition: { type: "spring", duration: 1.5, delay: 1 },
+                  transition: { type: 'spring', duration: 1.5, delay: 1 },
                 }}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
