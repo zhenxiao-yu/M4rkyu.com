@@ -11,10 +11,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AnimatedCursor
         color={"75, 75, 75"}
-        trailingSpeed={7}
-        outerScale={3.5}
-        innerScale={2.7}
+        trailingSpeed={9}
+        outerScale={5.5}
+        innerScale={2}
         outerSize={10}
+        innerSize={8}
+        outerAlpha={0.4}
       />
       <Router />
     </BrowserRouter>
