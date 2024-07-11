@@ -157,13 +157,15 @@ const Text = styled(motion.div)`
   h2 {
     margin-bottom: 1rem;
   }
+    
 
   h6 {
     font-size: calc(0.4rem + 0.7vw);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 0.3;
     opacity: 0.9;
     padding: 0.4rem;
+    font-family: "Karla", sans-serif !important;
 
     ${mediaQueries(40)`
       font-size: calc(0.5rem + 0.6vw);
@@ -184,7 +186,6 @@ const Navbar = styled.div`
     text-decoration: none;
     padding: 0.8rem 1.4rem;
     scale: 80%;
-    //width: 2.5rem;
     border-radius: 15px;
     transition: background 0.3s ease, color 0.3s ease;
     &:hover {

@@ -10,10 +10,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AnimatedCursor
-        color={"8, 9, 10"}
+        color={"75, 75, 75"}
         trailingSpeed={7}
-        outerScale={5.5}
-        innerScale={3.7}
+        outerScale={3.5}
+        innerScale={2.7}
         outerSize={10}
       />
       <Router />

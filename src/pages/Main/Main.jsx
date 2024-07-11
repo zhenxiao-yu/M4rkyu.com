@@ -22,7 +22,7 @@ const MainContainer = styled(motion.div)`
   position: relative;
   overflow: hidden;
   user-select: none;
-
+ 
   h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
