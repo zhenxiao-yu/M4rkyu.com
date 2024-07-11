@@ -88,7 +88,7 @@ const Center = styled.button`
 `;
 
 const Contact = styled(NavLink)`
-  color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.mq ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 2rem;
   right: calc(1rem + 2vw);
@@ -97,7 +97,7 @@ const Contact = styled(NavLink)`
 `;
 
 const BLOG = styled(NavLink)`
-  color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.mq ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 46%;
   right: calc(-0.6rem + 2vw);
@@ -153,7 +153,7 @@ const DarkDiv = styled.div`
   bottom: 0;
   right: 50%;
   width: ${(props) => (props.click ? '50%' : '0%')};
-  background-color: #101010;
+  background-color: rgb(8,9,10);
   height: ${(props) => (props.click ? '100%' : '0%')};
   transition: height 0.5s ease, width 1s ease 0.5s;
   z-index: 1;
@@ -218,7 +218,7 @@ const Main = () => {
           </Center>
 
           <Contact
-            click={+click}
+            click={click && mq}
             target="_blank"
             to={{ pathname: 'mailto:zyu347@uwo.ca' }}
           >
@@ -240,7 +240,7 @@ const Main = () => {
             </motion.h2>
           </Contact>
 
-          <BLOG click={+click} onClick={() => setPath('blog')} to="/post">
+          <BLOG click={click && mq} onClick={() => setPath('blog')} to="/post">
             <motion.h2
               initial={{
                 y: -200,
