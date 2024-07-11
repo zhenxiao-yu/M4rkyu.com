@@ -93,7 +93,6 @@ const SubBox = styled.div`
     transform: translate(-50%, 0%);
     width: 80%;
     height: auto;
-    image-rendering: auto;
   }
   ${mediaQueries(50)`
     width: 100%;
@@ -157,7 +156,6 @@ const Text = styled(motion.div)`
   h2 {
     margin-bottom: 1rem;
   }
-    
 
   h6 {
     font-size: calc(0.4rem + 0.7vw);
@@ -333,9 +331,13 @@ const Intro = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
-          min-width={{ minWidth: 100 }}
         >
-          <img className="animate__animated animate__fadeIn animate__delay-2s pic" src={Me} alt="My Pic" />
+          <img 
+            className="animate__animated animate__fadeIn animate__delay-2s pic" 
+            src={Me} 
+            alt="My Pic" 
+            loading="lazy" 
+          />
         </motion.div>
       </SubBox>
     </Box>
