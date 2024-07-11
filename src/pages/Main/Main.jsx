@@ -12,7 +12,7 @@ import Intro from '../Intro/Intro';
 import Loading from '../../components/Loading';
 import Greeting from '../../components/Greeting';
 import { mediaQueries } from '../../theme/Themes';
-import videoBg from '../../assets/Images/new.mp4';
+import videoBg from '../../assets/Images/new.webm';
 
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
