@@ -10,7 +10,7 @@ import { PiGraduationCapBold } from "react-icons/pi";
 import { MdOutlineWorkOutline } from "react-icons/md";
 
 // outer box
-const Box = styled(motion.div)`
+const Box = styled(motion.section)`
   width: 55vw;
   display: flex;
   background: linear-gradient(
@@ -122,7 +122,7 @@ const SubBox = styled.div`
 `;
 
 // Text
-const Text = styled(motion.div)`
+const Text = styled(motion.article)`
   font-size: calc(1rem + 1.5vw);
   color: ${(props) => props.theme.body};
   padding: 2.5rem;
@@ -171,13 +171,15 @@ const Text = styled(motion.div)`
   }
 `;
 
-const Navbar = styled.div`
+const Navbar = styled.nav`
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-evenly;
-  justify-content: center;
+ justify-content: center;
   gap: 2rem;
-  width: 100%:
+  
+
+  width: 100%;
   font-size: calc(0.5rem + 0.8vw);
   & > a {
     color: ${(props) => props.theme.body};
@@ -260,6 +262,7 @@ const Intro = () => {
       initial={{ height: 0 }}
       animate={{ height: height }}
       transition={{ type: "spring", duration: 2, delay: 1 }}
+      role="main"
     >
       <SubBox>
         <Text>
@@ -273,22 +276,24 @@ const Intro = () => {
               deleteSpeed={60}
               delaySpeed={2500}
               cursor
+              aria-label="Typing names Mark Yu and 于震潇"
             />
           </h2>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-1s hvr-bounce-to-right">
-            <MdOutlineWorkOutline /> Fullstack Developer
+            <MdOutlineWorkOutline aria-hidden="true" /> Fullstack Developer
           </h6>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-2s hvr-bounce-to-right">
-            <GrLocation /> Oakville, Ontario
+            <GrLocation aria-hidden="true" /> Oakville, Ontario
           </h6>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-3s hvr-bounce-to-right">
-            <PiGraduationCapBold /> UWO Engineering '24
+            <PiGraduationCapBold aria-hidden="true" /> UWO Engineering '24
           </h6>
-          <Navbar className="animate__animated animate__bounceInUp animate__delay-4s">
+          <Navbar className="animate__animated animate__bounceInUp animate__delay-4s" role="navigation">
             <a 
               href="/about" 
               onMouseEnter={() => handleMouseEnter('<About />')}
               onMouseLeave={handleMouseLeave}
+              aria-label="About"
             >
               <BiUserCircle size="1.2em" />
             </a>
@@ -296,6 +301,7 @@ const Intro = () => {
               href="/post" 
               onMouseEnter={() => handleMouseEnter('<Posts />')}
               onMouseLeave={handleMouseLeave}
+              aria-label="Posts"
             >
               <BiSolidMessageAltDetail size="1.2em" />
             </a>
@@ -303,6 +309,7 @@ const Intro = () => {
               href="/project" 
               onMouseEnter={() => handleMouseEnter('<Projects />')}
               onMouseLeave={handleMouseLeave}
+              aria-label="Projects"
             >
               <BiSolidBriefcase size="1.2em" />
             </a>
@@ -310,6 +317,7 @@ const Intro = () => {
               href="/skills" 
               onMouseEnter={() => handleMouseEnter('<Skills />')}
               onMouseLeave={handleMouseLeave}
+              aria-label="Skills"
             >
               <BiCheckCircle size="1.2em" />
             </a>
@@ -317,6 +325,7 @@ const Intro = () => {
               href="/gallery" 
               onMouseEnter={() => handleMouseEnter('<Gallery />')}
               onMouseLeave={handleMouseLeave}
+              aria-label="Gallery"
             >
               <BiImageAlt size="1.2em" />
             </a>
@@ -335,8 +344,10 @@ const Intro = () => {
           <img 
             className="animate__animated animate__fadeIn animate__delay-2s pic" 
             src={Me} 
-            alt="My Pic" 
+            alt="Mark Yu" 
             loading="lazy" 
+            width="500"
+            height="500"
           />
         </motion.div>
       </SubBox>
