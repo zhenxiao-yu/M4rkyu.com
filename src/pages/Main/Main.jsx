@@ -2,10 +2,8 @@ import React, { lazy, Suspense, useState, useCallback, useMemo } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CgMail } from 'react-icons/cg';
 import { Helmet } from 'react-helmet';
 import './Main.css';
-
 // Components
 import { CodeCircle } from '../../assets/svg/AllSvgs';
 import Intro from '../Intro/Intro';
@@ -90,7 +88,7 @@ const Center = styled.button`
   }
 `;
 
-const Contact = styled(NavLink)`
+const Gallery = styled(NavLink)`
   color: ${(props) => (props.click || props.mq ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 2rem;
@@ -121,7 +119,7 @@ const PROJECT = styled(NavLink)`
   transform: translate(-50%, -50%) rotate(-90deg);
   z-index: 1;
   text-decoration: none;
-
+  
   @media only screen and (max-width: 50em) {
     text-shadow: ${(props) => (props.click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
   }
@@ -211,7 +209,7 @@ const Main = () => {
               className="video-background"
               loading="lazy"
             />
-          ) : 
+          ) : (
             <video
               src={videoBg2}
               autoPlay
@@ -222,122 +220,72 @@ const Main = () => {
               className="video-background"
               loading="lazy"
             />
-          }
+          )}
           <DarkDiv click={click} />
           <Container>
             <LogoComponent theme={click ? 'dark' : 'light'} />
-            {mq ? (
-              <SocialIcons theme="light" />
-            ) : (
-              <SocialIcons theme={click ? 'dark' : 'light'} />
-            )}
+            <SocialIcons theme={click ? (mq ? 'light' : 'dark') : 'light'} />
             <Center click={click}>
-              {mq ? (
-                <CodeCircle
-                  onClick={handleClick}
-                  width={click ? 100 : 150}
-                  height={click ? 100 : 150}
-                  fill="#101010"
-                />
-              ) : (
-                <CodeCircle
-                  onClick={handleClick}
-                  width={click ? 120 : 200}
-                  height={click ? 120 : 200}
-                  fill="#101010"
-                />
-              )}
+              <CodeCircle
+                onClick={handleClick}
+                width={click ? (mq ? 100 : 120) : (mq ? 150 : 200)}
+                height={click ? (mq ? 100 : 120) : (mq ? 150 : 200)}
+                fill="#101010"
+              />
               <Greeting />
             </Center>
-
-            <Contact
+            <Gallery
               click={click && mq}
               target="_blank"
-              to={{ pathname: 'mailto:zyu347@uwo.ca' }}
+              onClick={() => setPath('gallery')}
+              to="/gallery"
             >
               <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
+                initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
+                animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 whileHover={{ scale: 1.2, fontWeight: 'bold' }}
                 whileTap={{ scale: 0.85 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CgMail style={{ marginRight: '2px' }} size="1.3em" /> EMAIL ME
-                </div>
+                MY PHOTOS
               </motion.h2>
-            </Contact>
-
+            </Gallery>
             <BLOG click={click && mq} onClick={() => setPath('blog')} to="/post">
               <motion.h2
-                initial={{
-                  y: -200,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
+                initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
+                animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 whileHover={{ scale: 1.3, fontWeight: 'bold' }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY POSTS
               </motion.h2>
             </BLOG>
-
             <PROJECT click={+click} to="/project">
               <motion.h2
                 onClick={() => setPath('project')}
-                initial={{
-                  y: -200,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
-                animate={{
-                  y: 0,
-                  transition: { type: 'spring', duration: 1.5, delay: 1 },
-                }}
+                initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
+                animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY PROJECTS
               </motion.h2>
             </PROJECT>
-
             <BottomBar>
               <ABOUT onClick={() => setClick(false)} click={mq ? +false : +click} to="/about">
                 <motion.h2
                   onClick={() => setPath('about')}
-                  initial={{
-                    y: 200,
-                    transition: { type: 'spring', duration: 1.5, delay: 1 },
-                  }}
-                  animate={{
-                    y: 0,
-                    transition: { type: 'spring', duration: 1.5, delay: 1 },
-                  }}
+                  initial={{ y: 200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
+                  animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.85 }}
                 >
                   ABOUT ME
                 </motion.h2>
               </ABOUT>
-
-              <SKILLS to="/skills">
+              <SKILLS onClick={() => setPath('skills')} to="/skills">
                 <motion.h2
-                  onClick={() => setPath('skills')}
-                  initial={{
-                    y: 200,
-                    transition: { type: 'spring', duration: 1.5, delay: 1 },
-                  }}
-                  animate={{
-                    y: 0,
-                    transition: { type: 'spring', duration: 1.5, delay: 1 },
-                  }}
+                  initial={{ y: 200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
+                  animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.85 }}
                 >
@@ -346,8 +294,7 @@ const Main = () => {
               </SKILLS>
             </BottomBar>
           </Container>
-
-          {click ? <Intro click={click} /> : null}
+          {click && <Intro click={click} />}
         </MainContainer>
       </Suspense>
     </>

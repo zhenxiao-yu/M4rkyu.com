@@ -78,6 +78,7 @@ const SearchBar = styled(motion.input)`
   border-radius: 15px;
   font-size: 1.2rem;
   font-family: "Poppins", sans-serif;
+  z-index: 10;
   touch-action: manipulation; // Improves touch handling on mobile devices
 
   &:focus {
