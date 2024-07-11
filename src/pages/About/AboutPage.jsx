@@ -1,10 +1,7 @@
 import { motion } from 'framer-motion';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import styled, { keyframes, ThemeProvider } from 'styled-components';
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from 'react-vertical-timeline-component';
+import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { MdOutlineWorkOutline, MdOutlineMail, MdOutlineLocalPhone, MdOutlineHouse } from "react-icons/md";
 import { FaDiscord } from "react-icons/fa6";
@@ -13,6 +10,7 @@ import Me2 from "../../assets/Images/pfp2.png";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
+import { Helmet } from 'react-helmet';
 
 // Lazy-loaded Components
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -81,7 +79,7 @@ const Main = styled(motion.div)`
     margin-bottom: 1.5rem;
   }
 
-  & a{
+  & a {
     color: ${(props) => props.theme.text};
   }
 
@@ -94,7 +92,6 @@ const Main = styled(motion.div)`
     background-image: linear-gradient(180deg, #733bdb 0%, #5ac6a5 52%, #ffffff 100%);
     border-radius: 2rem;
   }
-    
 
   ${mediaQueries(40)`
     width: 70vw;
@@ -217,6 +214,7 @@ const ExperienceCardList = styled.ul`
   margin-top: 1rem;
   list-style-type: disc;
   margin-left: 1.25rem;
+
   ${mediaQueries(30)`
     margin-left: 1rem;
     margin-top: 0.5rem;
@@ -229,7 +227,7 @@ const ExperienceCardListItem = styled.li`
   padding-left: 0.25rem;
   letter-spacing: wider;
 
-   ${mediaQueries(40)`
+  ${mediaQueries(40)`
     font-size: 12px;
     line-height: 0.9rem;
   `};
@@ -296,9 +294,13 @@ const experiences = [
 const AboutPage = () => {
   return (
     <ThemeProvider theme={DarkTheme}>
+      <Helmet>
+        <title>About Me - Mark Yu</title>
+        <meta name="description" content="Learn more about Mark Yu, a full-stack web developer and artist based in Ontario, Canada." />
+      </Helmet>
       <Suspense fallback={<Loading />}>
         <Box
-          key="skills"
+          key="about"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 0.5 } }}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -316,29 +318,30 @@ const AboutPage = () => {
               transition: { duration: 2, delay: 0.5 },
             }}
           >
-            <img src={astronaut} alt="spaceman" />
+            <img src={astronaut} alt="Spaceman floating" />
           </SpaceMan>
 
           <Main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1, delay: 1 } }}
           >
-            <ContactSection >
+            <ContactSection>
               <ContactDetails className="animate__animated animate__zoomInDown animate__delay-1s">
-                <p> <FaDiscord size="1.3em" /> DISCORD: m4rkyu</p>
-                <p> <MdOutlineMail size="1.3em" /> EMAIL: zyu347@uwo.ca</p>
-                <p> <MdOutlineLocalPhone size="1.3em" /> CELL: +1 306 581-5556</p>
-                <p> <MdOutlineHouse size="1.3em" /> MAIL: 2382 Brairgrove Cir</p>
-                <p > <BsArrowReturnRight  size="1.3em" /> Oakville, ON L6M 5A3</p>
+                <p><FaDiscord size="1.3em" /> DISCORD: m4rkyu</p>
+                <p><MdOutlineMail size="1.3em" /> EMAIL: zyu347@uwo.ca</p>
+                <p><MdOutlineLocalPhone size="1.3em" /> CELL: +1 306 581-5556</p>
+                <p><MdOutlineHouse size="1.3em" /> MAIL: 2382 Brairgrove Cir</p>
+                <p><BsArrowReturnRight size="1.3em" /> Oakville, ON L6M 5A3</p>
               </ContactDetails>
               <ProfilePicture src={Me2} alt="Mark Yu" />
             </ContactSection>
 
-            <div className="animate__animated animate__slideInUp animate__delay-1s">
+            <div>
               <h2 className='hvr-skew-forward'>Overview</h2>
               <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. My passion lies in blending design and engineering to create software that is both visually stunning and highly functional.</p>
 
-              <p>I was born in <strong>China</strong> and immigrated to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank">Saskatchewan, Canada</a></u>, in 2013. During high school, a computer science elective sparked my interest in web design and coding. This newfound passion led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank">Western University</a></u> and pursue a career in software development.</p>
+              <p>I was born in <strong>China</strong> and immigrated to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank" rel="noopener noreferrer">Saskatchewan, Canada</a></u> in 2013.
+                During high school, a computer science elective sparked my interest in web design and coding. This newfound passion led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank" rel="noopener noreferrer">Western University</a></u> and pursue a career in software development.</p>
 
               <h2 className='hvr-skew-forward'>Professional Skills</h2>
               <p>As a full-stack web developer, I thrive on building robust, user-friendly applications. My expertise spans a wide range of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. Beyond websites, I also enjoy developing games and working on various creative projects.</p>
@@ -349,10 +352,7 @@ const AboutPage = () => {
               <h2 className='hvr-skew-forward'>Work Experience</h2>
               <VerticalTimeline>
                 {experiences.map((experience, index) => (
-                  <ExperienceCard
-                    key={`experience-${index}`}
-                    experience={experience}
-                  />
+                  <ExperienceCard key={`experience-${index}`} experience={experience} />
                 ))}
               </VerticalTimeline>
 
