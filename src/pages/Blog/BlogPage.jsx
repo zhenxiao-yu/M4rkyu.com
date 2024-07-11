@@ -86,11 +86,12 @@ const SearchBar = styled(motion.input)`
 
   ${mediaQueries(50)`
     width: 70%;
-    font-size: 1.2rem;
+    font-size: 13px;
   `};
 
   ${mediaQueries(30)`
     width: 70%;
+    font-size: 10px;
   `};
 `;
 
