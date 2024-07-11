@@ -182,6 +182,7 @@ const Navbar = styled.nav`
   justify-content: space-evenly;
   justify-content: center;
   gap: 2rem;
+  z-index: 100;
   
 
   width: 100%;
@@ -281,11 +282,11 @@ const Intro = () => {
               deleteSpeed={60}
               delaySpeed={2500}
               cursor
-              aria-label="Typing names Mark Yu and 于震潇"
+              aria-label=" Mark Yu, ZhenXiao Yu, 于震潇"
             />
           </h2>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-1s hvr-bounce-to-right">
-            <MdOutlineWorkOutline aria-hidden="true" /> Fullstack Developer
+            <MdOutlineWorkOutline aria-hidden="true" /> Developer / Designer
           </h6>
           <h6 className="animate__animated animate__bounceInLeft animate__delay-2s hvr-bounce-to-right">
             <GrLocation aria-hidden="true" /> Oakville, Ontario
@@ -293,7 +294,7 @@ const Intro = () => {
           <h6 className="animate__animated animate__bounceInLeft animate__delay-3s hvr-bounce-to-right">
             <PiGraduationCapBold aria-hidden="true" /> UWO Engineering '24
           </h6>
-          <Navbar className="animate__animated animate__bounceInUp animate__delay-4s" role="navigation">
+          <Navbar className="animate__animated animate__bounceInUp animate__delay-1s" role="navigation">
             <a 
               href="/about" 
               onMouseEnter={() => handleMouseEnter('<About />')}

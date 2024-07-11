@@ -138,6 +138,10 @@ const ContactDetails = styled.div`
     font-size: 0.85rem;
   }
 
+  a{
+    text-decoration: none;
+  }
+
   & svg {
     margin-right: 0.5rem;
   }
@@ -327,11 +331,24 @@ const AboutPage = () => {
           >
             <ContactSection>
               <ContactDetails className="animate__animated animate__zoomInDown animate__delay-1s">
-                <p><FaDiscord size="1.3em" /> DISCORD: m4rkyu</p>
-                <p><MdOutlineMail size="1.3em" /> EMAIL: zyu347@uwo.ca</p>
-                <p><MdOutlineLocalPhone size="1.3em" /> CELL: +1 306 581-5556</p>
-                <p><MdOutlineHouse size="1.3em" /> MAIL: 2382 Brairgrove Cir</p>
-                <p><BsArrowReturnRight size="1.3em" /> Oakville, ON L6M 5A3</p>
+                <p className="hvr-icon-forward">
+                  
+                  
+                  
+                  <FaDiscord className="hvr-icon" size="1.3em" />
+                  <a href="https://discordapp.com/users/m4rkyu" target="_blank" rel="noopener noreferrer">
+                  DISCORD: m4rkyu
+                  </a>
+                </p>
+                <p className="hvr-icon-forward">
+                    <MdOutlineMail size="1.3em" /> 
+                    <a href="mailto:zyu347@uwo.ca">
+                        EMAIL: zyu347@uwo.ca
+                    </a>
+                </p>
+                <p className="hvr-icon-forward"><MdOutlineLocalPhone className="hvr-icon" size="1.3em" /> CELL: +1 306 581-5556</p>
+                <p className="hvr-icon-forward"><MdOutlineHouse className="hvr-icon" size="1.3em" /> MAIL: 2382 Brairgrove Cir</p>
+                <p className="hvr-icon-forward"><BsArrowReturnRight className="hvr-icon" size="1.3em" /> Oakville, ON L6M 5A3</p>
               </ContactDetails>
               <ProfilePicture src={Me2} alt="Mark Yu" />
             </ContactSection>
