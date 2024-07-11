@@ -12,7 +12,7 @@ import Img9 from '../../assets/gallery/img9.jpg';
 import Img10 from '../../assets/gallery/img10.jpg';
 import Img11 from '../../assets/gallery/img11.jpg';
 
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import './GalleryPage.css'
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 import styled from 'styled-components';

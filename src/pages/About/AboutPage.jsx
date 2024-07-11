@@ -94,6 +94,7 @@ const Main = styled(motion.div)`
     background-image: linear-gradient(180deg, #733bdb 0%, #5ac6a5 52%, #ffffff 100%);
     border-radius: 2rem;
   }
+    
 
   ${mediaQueries(40)`
     width: 70vw;
