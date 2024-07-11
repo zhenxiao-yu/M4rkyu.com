@@ -12,7 +12,8 @@ import Intro from '../Intro/Intro';
 import Loading from '../../components/Loading';
 import Greeting from '../../components/Greeting';
 import { mediaQueries } from '../../theme/Themes';
-import videoBg from '../../assets/Images/new.webm';
+import videoBg from '../../assets/Images/videobg.webm';
+import videoBg2 from '../../assets/Images/videobg2.webm';
 
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
@@ -200,7 +201,7 @@ const Main = () => {
           exit={path === 'about' || path === 'skills' ? moveY : moveX}
           transition={{ duration: 0.5 }}
         >
-          {!click && (
+          {!click ? (
             <video
               src={videoBg}
               autoPlay
@@ -210,7 +211,18 @@ const Main = () => {
               className="video-background"
               loading="lazy"
             />
-          )}
+          ) : 
+            <video
+              src={videoBg2}
+              autoPlay
+              loop
+              playsInline
+              muted
+              playbackRate={0.5}
+              className="video-background"
+              loading="lazy"
+            />
+          }
           <DarkDiv click={click} />
           <Container>
             <LogoComponent theme={click ? 'dark' : 'light'} />
