@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, lazy, Suspense } from "react";
-import styled, { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, keyframes } from "styled-components";
 import { Spinner } from "../../assets/svg/AllSvgs";
 import { Project } from "../../assets/data/ProjectData";
 import { DarkTheme, mediaQueries } from "../../theme/Themes";
 import Card from "../../components/Card";
 import Loading from "../../components/Loading";
+import { Helmet } from "react-helmet";
 
+// Lazy-loaded components
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
 const HomeButton = lazy(() => import("../../components/HomeButton"));
 const LogoComponent = lazy(() => import("../../components/LogoComponent"));
@@ -16,7 +18,10 @@ const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.body};
   position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 400vh;
+  overflow: hidden;
 `;
 
 const Main = styled(motion.ul)`
@@ -28,19 +33,20 @@ const Main = styled(motion.ul)`
   display: flex;
 
   ${mediaQueries(50)`
-        left:calc(8rem + 15vw);
+    left: calc(8rem + 15vw);
   `};
 
   ${mediaQueries(40)`
-        top: 30%;
-        left:calc(6rem + 15vw);
+    top: 30%;
+    left: calc(6rem + 15vw);
   `};
 
   ${mediaQueries(40)`
-        left:calc(2rem + 15vw);
+    left: calc(2rem + 15vw);
   `};
+
   ${mediaQueries(25)`
-        left:calc(1rem + 15vw);
+    left: calc(1rem + 15vw);
   `};
 `;
 
@@ -51,24 +57,34 @@ const Rotate = styled.span`
   top: 1rem;
   width: 85px;
   height: 85px;
-
   z-index: 1;
+
   ${mediaQueries(40)`
-     width:60px;
-     height:60px;   
-     svg{
-       width:60px;
-       height:60px;
-     }
-  `};
-  ${mediaQueries(25)`
-    width:50px;
-    height:50px;
-    svg{
-      width:50px;
-      height:50px;
+    width: 60px;
+    height: 60px;
+    svg {
+      width: 60px;
+      height: 60px;
     }
   `};
+
+  ${mediaQueries(25)`
+    width: 50px;
+    height: 50px;
+    svg {
+      width: 50px;
+      height: 50px;
+    }
+  `};
+`;
+
+const bounce = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 `;
 
 const Arrow = styled(motion.div)`
@@ -78,6 +94,7 @@ const Arrow = styled(motion.div)`
   transform: translateX(-50%);
   z-index: 1;
   cursor: pointer;
+  animation: ${bounce} 2s infinite;
 
   svg {
     width: 30px;
@@ -91,7 +108,7 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.5,
+      staggerChildren: 0.2,
       duration: 0.5,
     },
   },
@@ -108,16 +125,22 @@ const ProjectPage = () => {
   const gearlogo = useRef(null);
 
   useEffect(() => {
-    let element = ref.current;
+    const handleScroll = () => {
+      const element = ref.current;
+      const scrollPosition = window.pageYOffset;
 
-    const rotate = () => {
-      element.style.transform = `translateX(${-window.pageYOffset}px)`;
-      return (gearlogo.current.style.transform = "rotate(" + -window.pageYOffset + "deg)");
+      if (element) {
+        element.style.transform = `translateX(${-scrollPosition}px)`;
+      }
+
+      if (gearlogo.current) {
+        gearlogo.current.style.transform = `rotate(${-scrollPosition}deg)`;
+      }
     };
 
-    window.addEventListener("scroll", rotate);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", rotate);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -125,6 +148,10 @@ const ProjectPage = () => {
 
   return (
     <ThemeProvider theme={DarkTheme}>
+      <Helmet>
+        <title>Projects - My Portfolio</title>
+        <meta name="description" content="Projects: Showcasing what I've been working on." />
+      </Helmet>
       <Suspense fallback={<Loading />}>
         <Box
           key="project"
@@ -148,11 +175,7 @@ const ProjectPage = () => {
             <Spinner width={85} height={85} fill={DarkTheme.text} />
           </Rotate>
 
-          <Arrow
-            initial={{ y: 0 }}
-            animate={{ y: [0, -20, 0] }}
-            transition={{ repeat: Infinity, duration: 1 }}
-          >
+          <Arrow>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M12 21l-12-18h24z" />
             </svg>
