@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../../assets/Images/file-clean.png";
+import Me from "../../assets/Images/self-portrait2.png";
 import { mediaQueries } from "../../theme/Themes";
 import { Typewriter } from 'react-simple-typewriter';
 import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";
@@ -65,8 +65,8 @@ const Box = styled(motion.section)`
   @media only screen and (max-width: 50em) {
     background: none;
     border: none;
-    border-top: 5px solid ${(props) => props.theme.body};
-    border-bottom: 5px solid ${(props) => props.theme.text};
+    border-top: 2px solid ${(props) => props.theme.body};
+    border-bottom: 2px solid ${(props) => props.theme.text};
     background-image: linear-gradient(
         ${(props) => props.theme.body} 50%,
         ${(props) => props.theme.text} 50%
@@ -86,19 +86,24 @@ const SubBox = styled.div`
   width: 50%;
   position: relative;
   display: flex;
+  background: rgba(8, 9, 10, 0.2);
+  box-shadow: 3px 4px 2px rgba(8, 9, 10, 0.1);
+  backdrop-filter: blur(3.4px);
+  -webkit-backdrop-filter: blur(3.4px);
+    
   .pic {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 0%);
-    width: 80%;
+    width: 88%;
     height: auto;
   }
   ${mediaQueries(50)`
     width: 100%;
     height: 50%;
     .pic {
-      width: 70%;
+      width: 90%;
     }
   `};
 
@@ -175,7 +180,7 @@ const Navbar = styled.nav`
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-evenly;
- justify-content: center;
+  justify-content: center;
   gap: 2rem;
   
 
