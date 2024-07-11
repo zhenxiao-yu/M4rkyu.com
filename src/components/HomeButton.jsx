@@ -6,7 +6,7 @@ import { mediaQueries } from "../theme/Themes";
 const HomeBtn = styled.button`
   position: fixed;
   top: 2rem;
-  left: 50%;
+  left: 50.6%;
   transform: translate(-50%, 0);
   scale: 1;
   background-color: var(--body-color-light);
@@ -35,11 +35,11 @@ const HomeBtn = styled.button`
   }
 
   ${mediaQueries(40)`
-   width: 3rem;
-   height: 3rem;
+   width: 4rem;
+   height: 4rem;
    position: fixed;
-   top: 92%;
-   left: 90%;
+   top: 88%;
+   left: 88%;
       svg{
         width:20px;
         height:20px;
