@@ -36,7 +36,7 @@ const Container = styled.section`
   min-height: 100vh;
   position: relative;
   padding-bottom: 5rem;
-  overflow: auto;
+  overflow: hidden; // Changed from auto to hidden to prevent unintended;
 `;
 
 const Center = styled.div`
@@ -78,6 +78,7 @@ const SearchBar = styled(motion.input)`
   border-radius: 15px;
   font-size: 1.2rem;
   font-family: "Poppins", sans-serif;
+  touch-action: manipulation; // Improves touch handling on mobile devices
 
   &:focus {
     outline: none;
@@ -85,20 +86,21 @@ const SearchBar = styled(motion.input)`
   }
 
   ${mediaQueries(50)`
-    width: 70%;
-    font-size: 0.9rem;
+    width: 90%; // Increased width for better touch target
+    font-size: 1rem; // Slightly smaller font for better fit on mobile
   `};
 
   ${mediaQueries(30)`
-    width: 70%;
-    font-size: 0.8rem;
+    width: 95%; // Further increased width for smaller screens
+    font-size: 0.9rem; // Adjusted font size for smaller screens
   `};
 `;
 
 const NoResults = styled.div`
   margin-top: 20%;
   font-size: 1.5rem;
-  color: #08090a;
+  font-weight: bold;
+  color: rgb(8,9,10);
 `;
 
 const containerVariants = {
@@ -187,7 +189,7 @@ const BlogPage = () => {
             <Center>
               <SearchBar
                 type="text"
-                placeholder="&#128270; Search blogs by title or tag..."
+                placeholder="&#128270; Search blogs title / tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 initial={{ width: "30%" }}
@@ -210,7 +212,7 @@ const BlogPage = () => {
                   ))}
                 </Grid>
               ) : (
-                <NoResults>No results found</NoResults>
+                <NoResults>Nothing :/ </NoResults>
               )}
             </Center>
             <BigTitle text="Posts" top="5rem" left="5rem" />
