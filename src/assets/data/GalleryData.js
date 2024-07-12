@@ -39,18 +39,18 @@ const data = [
 
 const sections = [
   {
-    header: 'Nature',
-    subheader: 'The beauty of the natural world',
-    images: data.slice(0, 5)
+    header: 'ShangHai',
+    subheader: 'Traveling in 2024',
+    images: data.slice(0, 0)
   },
   {
-    header: 'Architecture',
+    header: 'Black and White',
     subheader: 'Marvels of human engineering',
     images: data.slice(5, 10)
   },
   {
-    header: 'Urban Life',
-    subheader: 'Scenes from bustling cityscapes',
+    header: 'ChangChun',
+    subheader: 'My Hometown',
     images: data.slice(10, 15)
   },
   {

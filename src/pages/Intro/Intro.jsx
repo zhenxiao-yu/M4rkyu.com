@@ -183,20 +183,22 @@ const Navbar = styled.nav`
   justify-content: center;
   gap: 2rem;
   z-index: 100;
-  
-
   width: 100%;
   font-size: calc(0.5rem + 0.8vw);
+  
   & > a {
     color: ${(props) => props.theme.body};
     text-decoration: none;
     padding: 0.8rem 1.4rem;
-    scale: 80%;
     border-radius: 15px;
     transition: background 0.3s ease, color 0.3s ease;
     &:hover {
       background: ${(props) => props.theme.body};
       color: ${(props) => props.theme.text};
+    }
+    &:focus {
+      outline: none;
+      border: 2px solid ${(props) => props.theme.text};
     }
   }
 
