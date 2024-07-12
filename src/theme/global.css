@@ -4,6 +4,8 @@
     --text-color-light: rgb(8, 9, 10);
     --body-color-dark: rgb(8, 9, 10);
     --text-color-dark:  rgb(236, 233, 232);
+
+    --animate-delay: 0.7s;
 }
 
 @keyframes fadeIn {
