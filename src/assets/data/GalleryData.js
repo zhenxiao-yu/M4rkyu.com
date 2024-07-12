@@ -39,30 +39,52 @@ const data = [
 
 const sections = [
   {
-    header: 'ShangHai',
-    subheader: 'Traveling in 2024',
+    header: '<Shanghai>',
+    subheader: '(2024) An In-Depth Exploration of Shanghai in 2024',
     images: data.slice(0, 0)
   },
   {
-    header: 'Black and White',
-    subheader: 'Marvels of human engineering',
+    header: '<Black and White>',
+    subheader: '(2020 - 2024) Timeless Monochrome Wonders of Human Engineering',
     images: data.slice(5, 10)
   },
   {
-    header: 'ChangChun',
-    subheader: 'My Hometown',
+    header: '<ChangChun>',
+    subheader: '(2024) Capturing the Essence of My Hometown',
     images: data.slice(10, 15)
   },
   {
-    header: 'Abstract',
-    subheader: 'Artistic expressions and abstract views',
+    header: '<Los Angeles>',
+    subheader: '(2024) Abstract Elegance and Urban Artistry in LA',
     images: data.slice(15, 20)
   },
   {
-    header: 'Miscellaneous',
-    subheader: 'A mix of different subjects',
+    header: '<Tibet>',
+    subheader: '(2024) Eclectic Beauty and Diverse Traditions',
     images: data.slice(20, 23)
   },
+  {
+    header: '<Beijing>',
+    subheader: '(2024) Return to the City That I Grew Up In After 5 Years',
+    images: data.slice(20, 23)
+  },
+  {
+    header: '<Ontario>',
+    subheader: '(2020 - 2024) The Intersection of Natural Beauty and Urban Life',
+    images: data.slice(20, 23)
+  },
+    {
+    header: '<Artistic Creations>',
+    subheader: '(2024) Personal Creations and Fascinating Finds',
+    images: data.slice(20, 23)
+  },
+  {
+    header: '<Miscellaneous Visual Narratives>',
+    subheader: '(2019-2024) A Diverse Array of Visual Stories and Moments',
+    images: data.slice(20, 23)
+  }
 ];
+
+
 
 export { data, sections };
