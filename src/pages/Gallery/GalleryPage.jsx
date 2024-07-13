@@ -38,7 +38,7 @@ const GalleryPage = () => {
             <h2 className='animate__animated animate__zoomIn animate__delay-1s'>{section.header}</h2>
             <h3 className='animate__animated animate__backInUp animate__delay-1s'>{section.subheader}</h3>
             <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 750: 3, 900: 4 }}
+              columnsCountBreakPoints={{ 350: 1, 750: 4, 900: 6 }}
             >
               <Masonry gutter="20px">
                 {section.images.map((item) => (
@@ -55,7 +55,7 @@ const GalleryPage = () => {
                     <img src={item.imgSrc} alt={`Gallery Image ${item.id}`} loading="lazy" />
                     <div className="image-info">
                       <h4>{item.title}</h4>
-                      <p>{item.subtitle}</p>
+                      <p>{item.date}</p>
                     </div>
                   </motion.div>
                 ))}
