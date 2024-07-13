@@ -109,9 +109,9 @@ const data2 = [
   { id: 17, imgSrc: Img47, title: 'MadeIn Gallery', subtitle: 'Interactive exhibits', date: '2020-06-13' },
   { id: 18, imgSrc: Img48, title: 'Bar No.3', subtitle: 'Park relaxation', date: '2024-05-26' },
   { id: 19, imgSrc: Img49, title: 'HengShan Road', subtitle: 'Historical Road of Shanghai', date: '2024-06-13' },
-  { id: 20, imgSrc: Img50, title: '11:11', subtitle: 'Park relaxation', date: '2023-03-26' },
+  { id: 20, imgSrc: Img50, title: '11:11', subtitle: 'Peace At Last', date: '2023-03-26' },
   { id: 21, imgSrc: Img51, title: 'Old Shanghai', subtitle: 'Park relaxation', date: '2024-06-13' },
-  { id: 22, imgSrc: Img52, title: 'MadeIn Art District', subtitle: 'Park relaxation', date: '2024-06-12' },
+  { id: 22, imgSrc: Img52, title: 'Toronto', subtitle: 'Park relaxation', date: '2024-05-06' },
   { id: 23, imgSrc: Img53, title: 'Lake Ontario', subtitle: 'Park relaxation', date: '2022-06-26' },
   { id: 24, imgSrc: Img54, title: 'JingAn District', subtitle: 'Park relaxation', date: '2024-06-14' },
 ];
@@ -122,46 +122,45 @@ const data2 = [
 const sections = [
   {
     header: '<Shanghai>',
-    subheader: '(2024) An In-Depth Exploration of Shanghai in 2024',
+    subheader: 'Exploring Shanghai: A Journey Through 2024',
     images: data
   },
   {
     header: '<Black and White>',
-    subheader: '(2020 - 2024) Timeless Monochrome Wonders of Human Engineering',
+    subheader: 'Monochrome Moments: 2020 - 2024',
     images: data2
   },
   {
     header: '<ChangChun>',
-    subheader: '(2024) Capturing the Essence of My Hometown',
-    images: data
+    subheader: 'My Hometown ChangChun: Captured in 2024',
+    images: []
   },
   {
     header: '<Los Angeles>',
-    subheader: '(2024) Abstract Elegance and Urban Artistry in LA',
-    images: data
+    subheader: 'Abstract Elegance in LA: Urban Artistry of 2024',
+    images: []
   },
   {
     header: '<Tibet>',
-    subheader: '(2024) Eclectic Beauty and Diverse Traditions',
-    images: data
+    subheader: 'Tibet: Life at 5000M in 2024',
+    images: []
   },
   {
     header: '<Beijing>',
-    subheader: '(2024) Return to the City That I Grew Up In After 5 Years',
-    images: data
+    subheader: 'Beijing Revisited: Returning Home After 5 Years',
+    images: []
   },
   {
     header: '<Ontario>',
-    subheader: '(2020 - 2024) The Intersection of Natural Beauty and Urban Life',
-    images: data
+    subheader: 'Living in Ontario: 2020 - 2024',
+    images: []
   },
-    {
+  {
     header: '<Artistic Creations>',
-    subheader: '(2024) Personal Creations and Fascinating Finds',
-    images: data
+    subheader: 'Creative Expressions: Personal and Discovered Art of 2024',
+    images: []
   }
 ];
-
 
 
 export { data, sections };
