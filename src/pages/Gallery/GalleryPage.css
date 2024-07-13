@@ -1,10 +1,10 @@
+/* General styles */
 body {
   scroll-behavior: smooth;
 }
 
 .container {
   background-color: #ece9e8;
-  opacity: 1;
   background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
   background-size: 34px 34px;
   background-position: 0 0, 17px 17px;
@@ -14,13 +14,57 @@ body {
   padding-bottom: 5rem;
 }
 
+/* Dropdown container styles */
+.dropdown-container {
+  position: fixed;
+  top: 7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: #ece9e8;
+  border: 3px solid #08090a;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.dropdown-container select {
+  padding: 0.5rem 2.5rem;
+  font-size: 1rem;
+  border: none;
+  background-color: transparent;
+  color: #08090a;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-container select:hover {
+  background-color: #dcdcdc;
+}
+
+/* Dropdown icon styling */
+.dropdown-container::after {
+  content: '▼';
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1rem;
+  color: #08090a;
+}
+
+/* Section container styles */
 .section-container {
   padding: 2rem;
   width: 90%;
   margin: 0 auto;
-  background-color: #08090a;
   background-color: #ece9e8;
-  opacity: 1;
   background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
   background-size: 34px 34px;
   background-position: 0 0, 17px 17px;
@@ -29,7 +73,7 @@ body {
 }
 
 .section-container h2:first-of-type {
-  margin-top: 5rem;
+  margin-top: 10rem;
 }
 
 .section-container h2,
@@ -40,13 +84,13 @@ body {
   display: block;
 }
 
-
 .section-container h3 {
   font-size: 1.4rem;
   margin-bottom: 1.5rem;
   color: #555;
 }
 
+/* Image box styling */
 .image-box {
   overflow: hidden;
   border-radius: 15px;
@@ -65,7 +109,7 @@ body {
 
 .image-box img:hover {
   transform: scale(1.1);
-  filter: grayscale(0%) saturate(120%);;
+  filter: grayscale(0%) saturate(120%);
 }
 
 .image-info {
@@ -84,16 +128,16 @@ body {
 .image-info h4 {
   margin-bottom: 0.7rem;
   font-size: 0.9rem;
-  white-space: nowrap;       /* Prevent text from wrapping */
-  overflow: hidden;          /* Hide any overflowing text */
-  text-overflow: ellipsis;   /* Add ellipsis (...) for overflowing text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .image-info p {
   font-size: 0.8rem;
-  white-space: nowrap;       /* Prevent text from wrapping */
-  overflow: hidden;          /* Hide any overflowing text */
-  text-overflow: ellipsis;   /* Add ellipsis (...) for overflowing text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .image-box:hover .image-info {
@@ -126,6 +170,7 @@ body {
     width: 80%;
     padding: 0.25rem;
   }
+
   .section-container h2,
   .section-container h3 {
     text-align: center;
