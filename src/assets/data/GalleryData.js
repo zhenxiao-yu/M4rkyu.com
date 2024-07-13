@@ -53,6 +53,7 @@ import Img50 from '../../assets/gallery/section2/img20.jpg';
 import Img51 from '../../assets/gallery/section2/img21.jpg';
 import Img52 from '../../assets/gallery/section2/img22.jpg';
 import Img53 from '../../assets/gallery/section2/img23.jpg';
+import Img54 from '../../assets/gallery/section2/img24.jpg';
 
 
 const data = [
@@ -89,30 +90,32 @@ const data = [
 ];
 
 const data2 = [
-  { id: 1, imgSrc: Img31, title: 'Nanjing Road', subtitle: 'Shopping spree on Nanjing Road', date: '2024-06-09' },
-  { id: 2, imgSrc: Img32, title: 'China Sculpture Museum', subtitle: 'Exploring the art of sculptures', date: '2024-06-10' },
-  { id: 3, imgSrc: Img33, title: 'The Bund', subtitle: 'Strolling along the Huangpu River', date: '2024-06-11' },
-  { id: 4, imgSrc: Img34, title: 'Yu Garden', subtitle: 'A tranquil garden in the city', date: '2024-06-12' },
-  { id: 5, imgSrc: Img35, title: 'Shanghai Tower', subtitle: 'A view from the top', date: '2024-06-13' },
-  { id: 6, imgSrc: Img36, title: 'Oriental Pearl Tower', subtitle: 'Iconic landmark of Shanghai', date: '2024-06-14' },
-  { id: 7, imgSrc: Img37, title: 'Shanghai Museum', subtitle: 'Discovering ancient artifacts', date: '2024-06-15' },
-  { id: 8, imgSrc: Img38, title: 'Jade Buddha Temple', subtitle: 'A visit to the serene temple', date: '2024-06-16' },
-  { id: 9, imgSrc: Img39, title: 'Tianzifang', subtitle: 'Exploring the artsy alleyways', date: '2024-06-17' },
-  { id: 10, imgSrc: Img40, title: 'Zhujiajiao Water Town', subtitle: 'A glimpse into the past', date: '2024-06-18' },
-  { id: 11, imgSrc: Img41, title: 'Shanghai Disneyland', subtitle: 'A day of magical adventures', date: '2024-06-19' },
-  { id: 12, imgSrc: Img42, title: 'French Concession', subtitle: 'Walking through history', date: '2024-06-20' },
-  { id: 13, imgSrc: Img43, title: 'Longhua Temple', subtitle: 'The oldest temple in Shanghai', date: '2024-06-21' },
-  { id: 14, imgSrc: Img44, title: 'Shanghai World Financial Center', subtitle: 'Sky-high views', date: '2024-06-22' },
-  { id: 15, imgSrc: Img45, title: 'Xintiandi', subtitle: 'Modern shopping and dining', date: '2024-06-23' },
-  { id: 16, imgSrc: Img46, title: 'Shanghai Science and Technology Museum', subtitle: 'Interactive exhibits', date: '2024-06-24' },
-  { id: 17, imgSrc: Img47, title: 'Qibao Ancient Town', subtitle: 'Historical water town', date: '2024-06-25' },
-  { id: 18, imgSrc: Img48, title: 'Fuxing Park', subtitle: 'Relaxing in the park', date: '2024-06-26' },
-  { id: 19, imgSrc: Img49, title: 'Qibao Ancient Town', subtitle: 'Historical water town', date: '2024-06-25' },
-  { id: 20, imgSrc: Img50, title: 'Fuxing Park', subtitle: 'Relaxing in the park', date: '2024-06-26' },
-  { id: 21, imgSrc: Img51, title: 'Fuxing Park', subtitle: 'Relaxing in the park', date: '2024-06-26' },
-  { id: 22, imgSrc: Img52, title: 'Fuxing Park', subtitle: 'Relaxing in the park', date: '2024-06-26' },
-  { id: 23, imgSrc: Img53, title: 'Fuxing Park', subtitle: 'Relaxing in the park', date: '2024-06-26' },
+  { id: 1, imgSrc: Img31, title: 'East Jesus', subtitle: 'Nanjing Road shopping', date: '2024-06-25' },
+  { id: 2, imgSrc: Img32, title: 'French Concession', subtitle: 'Sculpture art exploration', date: '2024-06-10' },
+  { id: 3, imgSrc: Img33, title: 'Lobster Telephone', subtitle: 'Huangpu River stroll', date: '2024-06-12' },
+  { id: 4, imgSrc: Img34, title: 'Museum of Art PuDong', subtitle: 'City garden tranquility', date: '2024-06-12' },
+  { id: 5, imgSrc: Img35, title: 'ChongQing', subtitle: 'Top view', date: '2019-07-13' },
+  { id: 6, imgSrc: Img36, title: 'Hospital Street', subtitle: 'Shanghai landmark', date: '2024-05-11' },
+  { id: 7, imgSrc: Img37, title: 'Ancient Chinese Walls', subtitle: 'Ancient artifacts', date: '2024-06-15' },
+  { id: 8, imgSrc: Img38, title: 'CCTV', subtitle: 'Serene temple visit', date: '2024-06-01' },
+  { id: 9, imgSrc: Img39, title: 'Subway L2', subtitle: 'Artsy alleyways', date: '2024-05-12' },
+  { id: 10, imgSrc: Img40, title: 'Beijing 2019', subtitle: 'Past glimpse', date: '2019-06-30' },
+  { id: 11, imgSrc: Img41, title: '1000 Trees', subtitle: 'Magical adventures', date: '2024-06-13' },
+  { id: 12, imgSrc: Img42, title: 'HEYTEA', subtitle: 'Beverage Place', date: '2020-06-13' },
+  { id: 13, imgSrc: Img43, title: 'Bronte Creek', subtitle: 'Oldest Shanghai temple', date: '2024-7-12' },
+  { id: 14, imgSrc: Img44, title: 'Shanghai Cable Factory', subtitle: 'Sky-high views', date: '2022-06-12' },
+  { id: 15, imgSrc: Img45, title: 'BaiBaoTang', subtitle: 'Shot on an iphone', date: '2024-06-13' },
+  { id: 16, imgSrc: Img46, title: 'My Toddler Pic', subtitle: 'Me at 3', date: '2020-06-24' },
+  { id: 17, imgSrc: Img47, title: 'MadeIn Gallery', subtitle: 'Interactive exhibits', date: '2020-06-13' },
+  { id: 18, imgSrc: Img48, title: 'Bar No.3', subtitle: 'Park relaxation', date: '2024-05-26' },
+  { id: 19, imgSrc: Img49, title: 'HengShan Road', subtitle: 'Historical Road of Shanghai', date: '2024-06-13' },
+  { id: 20, imgSrc: Img50, title: '11:11', subtitle: 'Park relaxation', date: '2023-03-26' },
+  { id: 21, imgSrc: Img51, title: 'Old Shanghai', subtitle: 'Park relaxation', date: '2024-06-13' },
+  { id: 22, imgSrc: Img52, title: 'MadeIn Art District', subtitle: 'Park relaxation', date: '2024-06-12' },
+  { id: 23, imgSrc: Img53, title: 'Lake Ontario', subtitle: 'Park relaxation', date: '2022-06-26' },
+  { id: 24, imgSrc: Img54, title: 'JingAn District', subtitle: 'Park relaxation', date: '2024-06-14' },
 ];
+
 
 
 
