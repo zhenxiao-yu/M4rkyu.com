@@ -40,8 +40,9 @@ const HomeBtn = styled.button`
    position: fixed;
    top: 88%;
    left: 88%;
-      svg{
+      svg{ 
         width:20px;
+        
         height:20px;
       }
 
