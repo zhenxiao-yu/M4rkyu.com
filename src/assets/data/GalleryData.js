@@ -55,6 +55,20 @@ import Img52 from '../../assets/gallery/section2/Img22.jpg';
 import Img53 from '../../assets/gallery/section2/Img23.jpg';
 import Img54 from '../../assets/gallery/section2/Img24.jpg';
 
+import Img55 from '../../assets/gallery/section3/Img1.jpg';
+import Img56 from '../../assets/gallery/section3/Img2.jpg';
+import Img57 from '../../assets/gallery/section3/Img3.jpg';
+import Img58 from '../../assets/gallery/section3/Img4.jpg';
+import Img59 from '../../assets/gallery/section3/Img5.jpg';
+import Img60 from '../../assets/gallery/section3/Img6.jpg';
+import Img61 from '../../assets/gallery/section3/Img7.jpg';
+import Img62 from '../../assets/gallery/section3/Img8.jpg';
+import Img63 from '../../assets/gallery/section3/Img9.jpg';
+import Img64 from '../../assets/gallery/section3/Img10.jpg';
+import Img65 from '../../assets/gallery/section3/Img11.jpg';
+import Img66 from '../../assets/gallery/section3/Img12.jpg';
+import Img67 from '../../assets/gallery/section3/Img13.jpg';
+
 
 const data = [
   { id: 1, imgSrc: Img1, title: 'Nanjing Road', subtitle: 'Shopping spree on Nanjing Road', date: '2024-06-09' },
@@ -116,6 +130,21 @@ const data2 = [
   { id: 24, imgSrc: Img54, title: 'JingAn District', subtitle: 'Park relaxation', date: '2024-06-14' },
 ];
 
+const data3 = [
+  { id: 1, imgSrc: Img55, title: 'Train Station', subtitle: 'Bustling transportation hub', date: '2024-06-25' },
+  { id: 2, imgSrc: Img57, title: 'JingYue Park', subtitle: 'A day of nature and relaxation', date: '2024-06-10' },
+  { id: 3, imgSrc: Img58, title: "Puppet Emperor's Palace", subtitle: 'Historical exploration', date: '2024-06-12' },
+  { id: 4, imgSrc: Img59, title: 'Night Road', subtitle: 'Evening city lights', date: '2024-06-12' },
+  { id: 5, imgSrc: Img60, title: 'Changchun Tram', subtitle: 'Scenic city views', date: '2019-07-13' },
+  { id: 6, imgSrc: Img61, title: 'Subway Vending Machine', subtitle: 'Convenience in the city', date: '2024-05-11' },
+  { id: 7, imgSrc: Img62, title: 'The Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
+  { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
+  { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
+  { id: 10, imgSrc: Img65, title: 'GOKURAKUYU', subtitle: 'Traditional relaxation', date: '2024-05-12' },
+  { id: 11, imgSrc: Img67, title: 'The Night Market', subtitle: 'Vibrant street food and shopping', date: '2024-05-12' },
+  { id: 12, imgSrc: Img66, title: 'Built in 1940', subtitle: 'Historical architecture', date: '2024-05-12' },
+];
+
 
 
 
@@ -133,7 +162,7 @@ const sections = [
   {
     header: '<ChangChun>',
     subheader: 'My Hometown ChangChun: Captured in 2024',
-    images: []
+    images: data3
   },
   {
     header: '<Los Angeles>',

@@ -33,36 +33,48 @@ const GalleryPage = () => {
         <SocialIcons />
         <AnchorComponent number={number} />
         <BigTitle text="Gallery" left="25rem" top="15rem" />
-        {sections.map((section, index) => (
-          <div className="section-container" key={index}>
-            <h2 className='animate__animated animate__zoomIn animate__delay-1s'>{section.header}</h2>
-            <h3 className='animate__animated animate__backInUp animate__delay-1s'>{section.subheader}</h3>
-            <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 750: 4, 900: 6 }}
-            >
-              <Masonry gutter="20px">
-                {section.images.map((item) => (
-                  <motion.div
-                    className="image-box animate__animated animate__bounceInUp animate__delay-2s"
-                    key={item.id}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={imageVariants}
-                    transition={{ duration: 0.5 }}
-                    whileHover={{ scale: 1 }}
-                  >
-                    <img src={item.imgSrc} alt={`Gallery Image ${item.id}`} loading="lazy" />
-                    <div className="image-info">
-                      <h4>{item.title}</h4>
-                      <p>{item.date}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </Masonry>
-            </ResponsiveMasonry>
+        {sections.length === 0 ? (
+          <div className="empty-message">
+            <h2>No sections available in the gallery at the moment.</h2>
           </div>
-        ))}
+        ) : (
+          sections.map((section, index) => (
+            <div className="section-container" key={index}>
+              <h2 className='animate__animated animate__zoomIn animate__delay-1s'>{section.header}</h2>
+              <h3 className='animate__animated animate__backInUp animate__delay-1s'>{section.subheader}</h3>
+              {section.images.length === 0 ? (
+                <div className="empty-message">
+                  <h3>Oops! No images available at the moment</h3>
+                </div>
+              ) : (
+                <ResponsiveMasonry
+                  columnsCountBreakPoints={{ 350: 1, 750: 4, 900: 6 }}
+                >
+                  <Masonry gutter="15px">
+                    {section.images.map((item) => (
+                      <motion.div
+                        className="image-box animate__animated animate__bounceInUp animate__delay-2s"
+                        key={item.id}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={imageVariants}
+                        transition={{ duration: 0.5 }}
+                        whileHover={{ scale: 1 }}
+                      >
+                        <img src={item.imgSrc} alt={`Gallery Image ${item.id}`} loading="lazy" />
+                        <div className="image-info">
+                          <h4>{item.title}</h4>
+                          <p>{item.date}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </Masonry>
+                </ResponsiveMasonry>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </>
   );
