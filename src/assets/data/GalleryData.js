@@ -73,6 +73,27 @@ import Img69 from '../../assets/gallery/section3/Img15.jpg';
 import Img70 from '../../assets/gallery/section3/Img16.jpg';
 import Img71 from '../../assets/gallery/section3/Img17.jpg';
 
+import Img72 from '../../assets/gallery/section4/Img1.jpg';
+import Img73 from '../../assets/gallery/section4/Img2.jpg';
+import Img74 from '../../assets/gallery/section4/Img3.jpg';
+import Img75 from '../../assets/gallery/section4/Img4.jpg';
+import Img76 from '../../assets/gallery/section4/Img5.jpg';
+import Img77 from '../../assets/gallery/section4/Img6.jpg';
+import Img78 from '../../assets/gallery/section4/Img7.jpg';
+import Img79 from '../../assets/gallery/section4/Img8.jpg';
+import Img80 from '../../assets/gallery/section4/Img9.jpg';
+import Img81 from '../../assets/gallery/section4/Img10.jpg';
+import Img82 from '../../assets/gallery/section4/Img11.jpg';
+import Img83 from '../../assets/gallery/section4/Img12.jpg';
+import Img84 from '../../assets/gallery/section4/Img13.jpg';
+import Img85 from '../../assets/gallery/section4/Img14.jpg';
+import Img86 from '../../assets/gallery/section4/Img15.jpg';
+import Img87 from '../../assets/gallery/section4/Img16.jpg';
+import Img88 from '../../assets/gallery/section4/Img17.jpg';
+import Img89 from '../../assets/gallery/section4/Img18.jpg';
+// import Img90 from '../../assets/gallery/section3/Img19.jpg';
+// import Img91 from '../../assets/gallery/section3/Img20.jpg';
+
 const data = [
   { id: 1, imgSrc: Img1, title: 'Nanjing Road', subtitle: 'Shopping spree on Nanjing Road', date: '2024-06-09' },
   { id: 2, imgSrc: Img2, title: 'China Sculpture Museum', subtitle: 'Exploring the art of sculptures', date: '2024-06-10' },
@@ -139,7 +160,7 @@ const data3 = [
   { id: 3, imgSrc: Img58, title: "Puppet Emperor's Palace", subtitle: 'Historical exploration', date: '2024-06-12' },
   { id: 4, imgSrc: Img59, title: 'Night Road', subtitle: 'Evening city lights', date: '2024-06-12' },
   { id: 5, imgSrc: Img60, title: 'Changchun Tram', subtitle: 'Scenic city views', date: '2019-07-13' },
-  { id: 6, imgSrc: Img61, title: 'Subway Vending Machine', subtitle: 'Convenience in the city', date: '2024-05-11' },
+  { id: 6, imgSrc: Img61, title: 'The Alley', subtitle: 'Convenience in the city', date: '2024-05-11' },
   { id: 7, imgSrc: Img62, title: 'The Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
   { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
   { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
@@ -154,23 +175,24 @@ const data3 = [
 ];
 
 const data4 = [
-  { id: 1, imgSrc: Img55, title: 'Train Station', subtitle: 'Bustling transportation hub', date: '2024-06-25' },
-  { id: 2, imgSrc: Img57, title: 'JingYue Park', subtitle: 'A day of nature and relaxation', date: '2024-06-10' },
-  { id: 3, imgSrc: Img58, title: "Puppet Emperor's Palace", subtitle: 'Historical exploration', date: '2024-06-12' },
-  { id: 4, imgSrc: Img59, title: 'Night Road', subtitle: 'Evening city lights', date: '2024-06-12' },
-  { id: 5, imgSrc: Img60, title: 'Changchun Tram', subtitle: 'Scenic city views', date: '2019-07-13' },
-  { id: 6, imgSrc: Img61, title: 'Subway Vending Machine', subtitle: 'Convenience in the city', date: '2024-05-11' },
-  { id: 7, imgSrc: Img62, title: 'The Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
-  { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
-  { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
-  { id: 10, imgSrc: Img65, title: 'GOKURAKUYU', subtitle: 'Traditional relaxation', date: '2024-05-12' },
-  { id: 11, imgSrc: Img66, title: 'Built in 1940', subtitle: 'Historical architecture', date: '2024-05-12' },
-  { id: 12, imgSrc: Img56, title: 'Provincial Library', subtitle: 'Historical architecture', date: '2024-05-12' },
-  { id: 13, imgSrc: Img67, title: 'The Night Market', subtitle: 'Vibrant street food and shopping', date: '2024-05-12' },
-  { id: 14, imgSrc: Img68, title: 'Coca-Cola', subtitle: 'Historical architecture', date: '2024-05-12' },
-  { id: 15, imgSrc: Img69, title: 'Hospital', subtitle: 'Historical architecture', date: '2024-05-12' },
-  { id: 16, imgSrc: Img70, title: 'City Walk', subtitle: 'Historical architecture', date: '2024-05-12' },
-  { id: 17, imgSrc: Img71, title: 'Vintage Poster', subtitle: 'A day of nature and relaxation', date: '2024-06-10' }
+  { id: 1, imgSrc: Img72, title: 'LA Cocktail Bar', subtitle: 'A trendy cocktail bar in Los Angeles', date: '2024-06-25' },
+  { id: 2, imgSrc: Img73, title: 'Santa Monica Park', subtitle: 'A beautiful park in Santa Monica for nature and relaxation', date: '2024-07-04' },
+  { id: 3, imgSrc: Img74, title: "HollyWood Signs", subtitle: 'Iconic signs in Hollywood with historical significance', date: '2024-07-02' },
+  { id: 4, imgSrc: Img75, title: 'To LAX', subtitle: 'A trip to Los Angeles International Airport with evening city lights', date: '2024-06-30' },
+  { id: 5, imgSrc: Img76, title: 'In-N-Out', subtitle: 'Famous burger joint with scenic city views', date: '2024-06-28' },
+  { id: 6, imgSrc: Img77, title: 'Afternoon at the Beach', subtitle: 'Relaxing afternoon spent at a beautiful beach', date: '2024-06-26' },
+  { id: 7, imgSrc: Img78, title: '555 W Temple St', subtitle: 'Modern shopping experience at 555 W Temple St', date: '2024-06-27' },
+  { id: 8, imgSrc: Img79, title: 'LA Beach', subtitle: 'A visit to a unique themed beach in Los Angeles', date: '2024-06-29' },
+  { id: 9, imgSrc: Img80, title: 'Super Mario World', subtitle: 'Family moments at Super Mario World theme park', date: '2024-06-30' },
+  { id: 10, imgSrc: Img81, title: 'Street Art', subtitle: 'Exploring vibrant street art in the city', date: '2024-07-01' },
+  { id: 11, imgSrc: Img82, title: 'Tiki Bar', subtitle: 'A Tiki Bar featuring historical architecture', date: '2024-06-26' },
+  { id: 12, imgSrc: Img83, title: 'Palm Springs', subtitle: 'Exploring the historical architecture of Palm Springs', date: '2024-06-27' },
+  { id: 13, imgSrc: Img84, title: 'The Lighthouse Cafe (Back)', subtitle: 'Enjoying vibrant street food and shopping at The Lighthouse Cafe (Back)', date: '2024-06-28' },
+  { id: 14, imgSrc: Img85, title: 'Griffith Observatory', subtitle: 'Visiting the historical architecture of Griffith Observatory', date: '2024-07-02' },
+  { id: 15, imgSrc: Img86, title: 'The Lighthouse Cafe (Inside)', subtitle: 'Exploring the interior historical architecture of The Lighthouse Cafe', date: '2024-07-03' },
+  { id: 16, imgSrc: Img87, title: 'Lunch by LAX', subtitle: 'Enjoying a meal near Los Angeles International Airport', date: '2024-06-29' },
+  { id: 17, imgSrc: Img88, title: 'LAX', subtitle: 'Experiencing a day of nature and relaxation near Los Angeles International Airport', date: '2024-07-03' },
+  { id: 18, imgSrc: Img89, title: 'By The Airport', subtitle: 'A relaxing day near the airport', date: '2024-07-04' }
 ];
 
 
@@ -194,7 +216,7 @@ const sections = [
   {
     header: '<Los Angeles>',
     subheader: 'Abstract Elegance in LA: Urban Artistry of 2024',
-    images: []
+    images: data4
   },
   {
     header: '<Tibet>',
