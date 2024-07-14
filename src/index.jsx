@@ -4,6 +4,7 @@ import Router from './Router'
 import AnimatedCursor from "react-animated-cursor"
 import './theme/normalize.css'
 import './theme/global.css'
+import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(

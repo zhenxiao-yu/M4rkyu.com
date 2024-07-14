@@ -68,7 +68,10 @@ import Img64 from '../../assets/gallery/section3/Img10.jpg';
 import Img65 from '../../assets/gallery/section3/Img11.jpg';
 import Img66 from '../../assets/gallery/section3/Img12.jpg';
 import Img67 from '../../assets/gallery/section3/Img13.jpg';
-
+import Img68 from '../../assets/gallery/section3/Img14.jpg';
+import Img69 from '../../assets/gallery/section3/Img15.jpg';
+import Img70 from '../../assets/gallery/section3/Img16.jpg';
+import Img71 from '../../assets/gallery/section3/Img17.jpg';
 
 const data = [
   { id: 1, imgSrc: Img1, title: 'Nanjing Road', subtitle: 'Shopping spree on Nanjing Road', date: '2024-06-09' },
@@ -141,10 +144,34 @@ const data3 = [
   { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
   { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
   { id: 10, imgSrc: Img65, title: 'GOKURAKUYU', subtitle: 'Traditional relaxation', date: '2024-05-12' },
-  { id: 11, imgSrc: Img67, title: 'The Night Market', subtitle: 'Vibrant street food and shopping', date: '2024-05-12' },
-  { id: 12, imgSrc: Img66, title: 'Built in 1940', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 11, imgSrc: Img66, title: 'Built in 1940', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 12, imgSrc: Img56, title: 'Provincial Library', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 13, imgSrc: Img67, title: 'The Night Market', subtitle: 'Vibrant street food and shopping', date: '2024-05-12' },
+  { id: 14, imgSrc: Img68, title: 'Coca-Cola', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 15, imgSrc: Img69, title: 'Hospital', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 16, imgSrc: Img70, title: 'City Walk', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 17, imgSrc: Img71, title: 'Vintage Poster', subtitle: 'A day of nature and relaxation', date: '2024-06-10' }
 ];
 
+const data4 = [
+  { id: 1, imgSrc: Img55, title: 'Train Station', subtitle: 'Bustling transportation hub', date: '2024-06-25' },
+  { id: 2, imgSrc: Img57, title: 'JingYue Park', subtitle: 'A day of nature and relaxation', date: '2024-06-10' },
+  { id: 3, imgSrc: Img58, title: "Puppet Emperor's Palace", subtitle: 'Historical exploration', date: '2024-06-12' },
+  { id: 4, imgSrc: Img59, title: 'Night Road', subtitle: 'Evening city lights', date: '2024-06-12' },
+  { id: 5, imgSrc: Img60, title: 'Changchun Tram', subtitle: 'Scenic city views', date: '2019-07-13' },
+  { id: 6, imgSrc: Img61, title: 'Subway Vending Machine', subtitle: 'Convenience in the city', date: '2024-05-11' },
+  { id: 7, imgSrc: Img62, title: 'The Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
+  { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
+  { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
+  { id: 10, imgSrc: Img65, title: 'GOKURAKUYU', subtitle: 'Traditional relaxation', date: '2024-05-12' },
+  { id: 11, imgSrc: Img66, title: 'Built in 1940', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 12, imgSrc: Img56, title: 'Provincial Library', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 13, imgSrc: Img67, title: 'The Night Market', subtitle: 'Vibrant street food and shopping', date: '2024-05-12' },
+  { id: 14, imgSrc: Img68, title: 'Coca-Cola', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 15, imgSrc: Img69, title: 'Hospital', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 16, imgSrc: Img70, title: 'City Walk', subtitle: 'Historical architecture', date: '2024-05-12' },
+  { id: 17, imgSrc: Img71, title: 'Vintage Poster', subtitle: 'A day of nature and relaxation', date: '2024-06-10' }
+];
 
 
 

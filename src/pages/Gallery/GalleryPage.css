@@ -59,6 +59,13 @@ body {
   color: #08090a;
 }
 
+/* Mobile view adjustments */
+@media (max-width: 767px) {
+  .dropdown-container {
+    top: 2rem; /* Adjust the top position as needed for mobile view */
+  }
+}
+
 /* Section container styles */
 .section-container {
   padding: 2rem;
