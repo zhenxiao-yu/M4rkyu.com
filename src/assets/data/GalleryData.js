@@ -218,14 +218,14 @@ const sections = [
     subheader: 'Abstract Elegance in LA: Urban Artistry of 2024',
     images: data4
   },
-  {
-    header: '<Tibet>',
-    subheader: 'Tibet: Life at 5000M in 2024',
+   {
+    header: '<Beijing>',
+    subheader: 'Beijing Revisited: Returning Home After 5 Years',
     images: []
   },
   {
-    header: '<Beijing>',
-    subheader: 'Beijing Revisited: Returning Home After 5 Years',
+    header: '<Tibet>',
+    subheader: 'Tibet: Life at 5000M in 2024',
     images: []
   },
   {
