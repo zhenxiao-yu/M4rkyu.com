@@ -98,7 +98,16 @@ const SubBox = styled.div`
     transform: translate(-50%, 0%);
     width: 88%;
     height: auto;
+    -webkit-filter: brightness(105%) hue-rotate(350deg);
+    filter: grayscale(100%);
+    transition: 0.5s ease-in-out;
   }
+
+  .pic:hover {
+  -webkit-filter: none; /* Remove filter on hover */
+  filter: none;
+  }
+    
   ${mediaQueries(50)`
     width: 100%;
     height: 50%;
@@ -124,6 +133,7 @@ const SubBox = styled.div`
       width: 50%;
     }
   `};
+  
 `;
 
 // Text
