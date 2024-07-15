@@ -332,12 +332,9 @@ const AboutPage = () => {
             <ContactSection>
               <ContactDetails className="animate__animated animate__zoomInDown animate__delay-1s">
                 <p className="hvr-icon-forward">
-                  
-                  
-                  
                   <FaDiscord className="hvr-icon" size="1.3em" />
                   <a href="https://discordapp.com/users/m4rkyu" target="_blank" rel="noopener noreferrer">
-                  DISCORD: m4rkyu
+                    DISCORD: m4rkyu
                   </a>
                 </p>
                 <p className="hvr-icon-forward">

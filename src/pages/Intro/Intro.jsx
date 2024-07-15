@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Me from "../../assets/Images/self-portrait2.png";
+import Me from "../../assets/Images/self-portrait.png";
 import { mediaQueries } from "../../theme/Themes";
 import { Typewriter } from 'react-simple-typewriter';
 import { BiUserCircle, BiSolidMessageAltDetail, BiSolidBriefcase, BiCheckCircle, BiImageAlt } from "react-icons/bi";

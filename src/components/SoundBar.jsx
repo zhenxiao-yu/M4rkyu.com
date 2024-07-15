@@ -1,13 +1,14 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo} from "react";
 import styled, { keyframes } from "styled-components";
 import { mediaQueries } from "../theme/Themes";
 import { FaMusic } from "react-icons/fa6";
 
-// music file
-import song1 from "../assets/audio/Pinegrove - Angelina.mp3";
+// music file imports
+import song1 from "../assets/audio/Human Music.mp3";
 import song2 from "../assets/audio/There Is a Light That Never Goes Out (2011 Remaster).mp3";
 import song3 from "../assets/audio/Out of Tune.mp3";
 import song4 from "../assets/audio/Rick Astley - Never Gonna Give You Up (Official Music Video).mp3";
+import song5 from "../assets/audio/Pinegrove - Angelina.mp3";
 
 const Box = styled.div`
   display: flex;
@@ -28,9 +29,9 @@ const Box = styled.div`
   & > *:nth-child(9) { animation-delay: 1s; }
 
   ${mediaQueries(40)`
-      left:1rem;
-      top:5rem;
-      scale:0.9;
+    left: 1rem;
+    top: 5rem;
+    scale: 0.9;
   `};
 `;
 
@@ -50,9 +51,9 @@ const Line = styled.span`
   margin: 0 0.15rem;
 
   ${mediaQueries(40)`
-      height:0.5rem;
-      width: 2px;
-      margin: 0 0.1rem;
+    height: 0.5rem;
+    width: 2px;
+    margin: 0 0.1rem;
   `};
 `;
 
@@ -71,16 +72,11 @@ const NextButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  // &:hover {
-  //   scale: 1.4;
-  //   transition: all 0.3s ease-in-out;
-  // }
-
   ${mediaQueries(40)`
-      left: 0.7rem;
-      top: 1.8rem;
-      scale: 1.1;
-      padding: 5px;
+    left: 0.7rem;
+    top: 1.8rem;
+    scale: 1.1;
+    padding: 5px;
   `};
 
   svg {
@@ -92,46 +88,43 @@ const NextButton = styled.button`
 const SoundBar = () => {
   const [click, setClick] = useState(true);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const songs = [song1, song2, song3, song4];
   const ref = useRef(null);
+
+  const songs = useMemo(() => [song1, song2, song3, song4, song5], []);
+
+  const playSong = useCallback((index) => {
+    if (ref.current) {
+      ref.current.pause();
+      ref.current.currentTime = 0;
+      ref.current.volume = 0.1;
+      ref.current.src = songs[index];
+
+      ref.current.play().then(() => {
+        setClick(true);
+      }).catch((error) => {
+        console.warn("Playback failed:", error);
+        setClick(false);
+      });
+    }
+  }, [songs]);
 
   useEffect(() => {
     playSong(currentSongIndex);
-  }, [currentSongIndex]);
+  }, [currentSongIndex, playSong]);
 
   useEffect(() => {
     const audioElement = ref.current;
-    if (audioElement) {
-      // When playback ends, move to the next song
-      const handleEnded = () => {
-        handleNext();
-      };
-      audioElement.addEventListener("ended", handleEnded);
+    const handleEnded = () => handleNext();
 
+    if (audioElement) {
+      audioElement.addEventListener("ended", handleEnded);
       return () => {
         audioElement.removeEventListener("ended", handleEnded);
       };
     }
-  }, [currentSongIndex]);
+  }, []);
 
-  const playSong = (index) => {
-    if (ref.current) {
-        ref.current.pause(); // Stop any current playback
-        ref.current.currentTime = 0; // Reset time to the start
-        ref.current.volume = 0.1; // Set the volume to 30%
-    }
-
-    ref.current.src = songs[index]; // Set the new source
-
-    ref.current.play().then(() => {
-        setClick(true);
-    }).catch(error => {
-        console.warn("Playback failed:", error);
-        setClick(false);
-    });
-  };
-
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!click) {
       ref.current.play();
       setClick(true);
@@ -139,12 +132,11 @@ const SoundBar = () => {
       ref.current.pause();
       setClick(false);
     }
-  };
+  }, [click]);
 
-  const handleNext = () => {
-    const nextIndex = (currentSongIndex + 1) % songs.length;
-    setCurrentSongIndex(nextIndex);
-  };
+  const handleNext = useCallback(() => {
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+  }, [songs.length]);
 
   return (
     <div>
