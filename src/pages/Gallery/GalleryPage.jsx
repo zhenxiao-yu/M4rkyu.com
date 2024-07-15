@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
@@ -37,11 +37,13 @@ const GalleryPage = () => {
   return (
     <>
       <div className="container">
-        <LogoComponent />
-        <HomeButton />
-        <SocialIcons />
-        <AnchorComponent number={number} />
-        <BigTitle text="Gallery" left="25rem" top="15rem" />
+        <Suspense fallback={<div>Loading...</div>}>
+          <LogoComponent />
+          <HomeButton />
+          <SocialIcons />
+          <AnchorComponent number={number} />
+          <BigTitle text="Gallery" left="25rem" top="15rem" />
+        </Suspense>
 
         {/* Hero Section */}
         <motion.div
