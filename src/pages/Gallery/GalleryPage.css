@@ -55,7 +55,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #08090a;
 }
 
@@ -102,15 +102,16 @@ body {
   overflow: hidden;
   border-radius: 15px;
   cursor: pointer;
-  border: 4px solid rgb(8, 9, 10);
+  border: 12px double rgb(8, 9, 10);
   position: relative;
 }
 
 .image-box img {
   width: 100%;
   height: auto;
+  scale: 1.1;
   display: block;
-  filter: grayscale(100%) brightness(0.7);
+  filter: grayscale(20%) brightness(0.7);
   transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 
   -webkit-touch-callout: none; /* Disable callout menu on iOS */
@@ -121,7 +122,7 @@ body {
 }
 
 .image-box img:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
   filter: grayscale(0%) saturate(120%);
 }
 
@@ -257,7 +258,7 @@ body {
   z-index: 2;
   text-align: center;
   color: white;
-  /* background: rgba(8, 9, 10, 0.7); */
+  background: rgba(8, 9, 10, 0.7);
   width: 80%;
   max-width: 800px;
   padding: 20px;
