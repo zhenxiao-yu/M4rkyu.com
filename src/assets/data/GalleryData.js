@@ -91,13 +91,35 @@ import Img86 from '../../assets/gallery/section4/Img15.jpg';
 import Img87 from '../../assets/gallery/section4/Img16.jpg';
 import Img88 from '../../assets/gallery/section4/Img17.jpg';
 import Img89 from '../../assets/gallery/section4/Img18.jpg';
-// import Img90 from '../../assets/gallery/section3/Img19.jpg';
-// import Img91 from '../../assets/gallery/section3/Img20.jpg';
+
+
+import Img90 from '../../assets/gallery/section5/Img1.jpg';
+import Img91 from '../../assets/gallery/section5/Img2.jpg';
+import Img92 from '../../assets/gallery/section5/Img3.jpg';
+import Img93 from '../../assets/gallery/section5/Img4.jpg';
+import Img94 from '../../assets/gallery/section5/Img5.jpg';
+import Img95 from '../../assets/gallery/section5/Img6.jpg';
+import Img96 from '../../assets/gallery/section5/Img7.jpg';
+import Img97 from '../../assets/gallery/section5/Img8.jpg';
+import Img98 from '../../assets/gallery/section5/Img9.jpg';
+import Img99 from '../../assets/gallery/section5/Img10.jpg';
+import Img100 from '../../assets/gallery/section5/Img11.jpg';
+import Img101 from '../../assets/gallery/section5/Img12.jpg';
+import Img102 from '../../assets/gallery/section5/Img13.jpg';
+import Img103 from '../../assets/gallery/section5/Img14.jpg';
+import Img104 from '../../assets/gallery/section5/Img15.jpg';
+import Img105 from '../../assets/gallery/section5/Img16.jpg';
+import Img106 from '../../assets/gallery/section5/Img17.jpg';
+import Img107 from '../../assets/gallery/section5/Img18.jpg';
+import Img108 from '../../assets/gallery/section5/Img19.jpg';
+import Img109 from '../../assets/gallery/section5/Img20.jpg';
+import Img110 from '../../assets/gallery/section5/Img21.jpg';
+import Img111 from '../../assets/gallery/section5/Img22.jpg';
 
 const data = [
   { id: 1, imgSrc: Img1, title: 'Nanjing Road', subtitle: 'Shopping spree on Nanjing Road', date: '2024-06-09' },
   { id: 2, imgSrc: Img2, title: 'China Sculpture Museum', subtitle: 'Exploring the art of sculptures', date: '2024-06-10' },
-  { id: 3, imgSrc: Img3, title: 'Yu Garden', subtitle: 'Finding peace in Yu Garden', date: '2024-06-11' },
+  { id: 3, imgSrc: Img3, title: 'Yu Garden at Night', subtitle: 'Finding peace in Yu Garden', date: '2024-06-11' },
   { id: 4, imgSrc: Img4, title: 'Museum of Art PuDong', subtitle: 'Admiring modern masterpieces', date: '2024-06-12' },
   { id: 5, imgSrc: Img5, title: 'Shanghai Bar Life', subtitle: 'Experiencing Shanghai nightlife', date: '2024-06-13' },
   { id: 6, imgSrc: Img6, title: 'SWFC', subtitle: 'Sky-high views from SWFC', date: '2024-06-14' },
@@ -107,7 +129,7 @@ const data = [
   { id: 10, imgSrc: Img10, title: 'Lvhua Town', subtitle: 'Exploring the serene Lvhua Town', date: '2024-06-14' },
   { id: 11, imgSrc: Img11, title: 'MAP Rooftop', subtitle: 'Breathtaking rooftop views', date: '2024-06-12' },
   { id: 12, imgSrc: Img12, title: 'MadeIn Museum', subtitle: 'Discovering contemporary art', date: '2024-06-13' },
-  { id: 13, imgSrc: Img13, title: 'Shanghai Sunset', subtitle: 'Chasing the perfect sunset', date: '2024-06-14' },
+  { id: 13, imgSrc: Img13, title: 'Shanghai Countryside', subtitle: 'Chasing the perfect sunset', date: '2024-06-14' },
   { id: 14, imgSrc: Img14, title: 'ChongMing Street', subtitle: 'Strolling down ChongMing Street', date: '2024-06-15' },
   { id: 15, imgSrc: Img15, title: 'Global Harbor', subtitle: 'Retail therapy at Global Harbor', date: '2024-06-09' },
   { id: 16, imgSrc: Img16, title: 'MASONPRINCE', subtitle: 'A day out at the mall', date: '2024-06-13' },
@@ -124,7 +146,7 @@ const data = [
   { id: 27, imgSrc: Img27, title: 'TianZiFang', subtitle: 'Exploring TianZiFang', date: '2024-06-11' },
   { id: 28, imgSrc: Img28, title: 'JinMao Tower', subtitle: 'Skyscraper visit at JinMao Tower', date: '2024-06-11' },
   { id: 29, imgSrc: Img29, title: 'Books above Clouds', subtitle: 'Reading at Books above Clouds', date: '2024-06-12' },
-  { id: 30, imgSrc: Img30, title: 'Shanghai Cocktail Bar', subtitle: 'Sipping cocktails in Shanghai', date: '2024-06-14' },
+  { id: 30, imgSrc: Img30, title: 'Hidden Cocktail Bar', subtitle: 'Sipping cocktails in Shanghai', date: '2024-06-14' },
 ];
 
 const data2 = [
@@ -157,11 +179,11 @@ const data2 = [
 const data3 = [
   { id: 1, imgSrc: Img55, title: 'Train Station', subtitle: 'Bustling transportation hub', date: '2024-06-25' },
   { id: 2, imgSrc: Img57, title: 'JingYue Park', subtitle: 'A day of nature and relaxation', date: '2024-06-10' },
-  { id: 3, imgSrc: Img58, title: "Puppet Emperor's Palace", subtitle: 'Historical exploration', date: '2024-06-12' },
+  { id: 3, imgSrc: Img58, title: "Store At This Hill", subtitle: 'Historical exploration', date: '2024-06-12' },
   { id: 4, imgSrc: Img59, title: 'Night Road', subtitle: 'Evening city lights', date: '2024-06-12' },
   { id: 5, imgSrc: Img60, title: 'Changchun Tram', subtitle: 'Scenic city views', date: '2019-07-13' },
   { id: 6, imgSrc: Img61, title: 'The Alley', subtitle: 'Convenience in the city', date: '2024-05-11' },
-  { id: 7, imgSrc: Img62, title: 'The Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
+  { id: 7, imgSrc: Img62, title: 'This Hill Shopping Mall', subtitle: 'Modern shopping experience', date: '2024-06-15' },
   { id: 8, imgSrc: Img63, title: 'Anime Elevator', subtitle: 'Unique themed experience', date: '2024-06-01' },
   { id: 9, imgSrc: Img64, title: 'With My Cousin', subtitle: 'Family moments in the city', date: '2024-05-12' },
   { id: 10, imgSrc: Img65, title: 'GOKURAKUYU', subtitle: 'Traditional relaxation', date: '2024-05-12' },
@@ -177,7 +199,7 @@ const data3 = [
 const data4 = [
   { id: 1, imgSrc: Img72, title: 'LA Cocktail Bar', subtitle: 'A trendy cocktail bar in Los Angeles', date: '2024-06-25' },
   { id: 2, imgSrc: Img73, title: 'Santa Monica Park', subtitle: 'A beautiful park in Santa Monica for nature and relaxation', date: '2024-07-04' },
-  { id: 3, imgSrc: Img74, title: "HollyWood Signs", subtitle: 'Iconic signs in Hollywood with historical significance', date: '2024-07-02' },
+  { id: 3, imgSrc: Img74, title: "Once Upon A Time", subtitle: 'Iconic signs in Hollywood with historical significance', date: '2024-07-02' },
   { id: 4, imgSrc: Img75, title: 'To LAX', subtitle: 'A trip to Los Angeles International Airport with evening city lights', date: '2024-06-30' },
   { id: 5, imgSrc: Img76, title: 'In-N-Out', subtitle: 'Famous burger joint with scenic city views', date: '2024-06-28' },
   { id: 6, imgSrc: Img77, title: 'Afternoon at the Beach', subtitle: 'Relaxing afternoon spent at a beautiful beach', date: '2024-06-26' },
@@ -190,9 +212,34 @@ const data4 = [
   { id: 13, imgSrc: Img84, title: 'The Lighthouse Cafe (Back)', subtitle: 'Enjoying vibrant street food and shopping at The Lighthouse Cafe (Back)', date: '2024-06-28' },
   { id: 14, imgSrc: Img85, title: 'Griffith Observatory', subtitle: 'Visiting the historical architecture of Griffith Observatory', date: '2024-07-02' },
   { id: 15, imgSrc: Img86, title: 'The Lighthouse Cafe (Inside)', subtitle: 'Exploring the interior historical architecture of The Lighthouse Cafe', date: '2024-07-03' },
-  { id: 16, imgSrc: Img87, title: 'Lunch by LAX', subtitle: 'Enjoying a meal near Los Angeles International Airport', date: '2024-06-29' },
+  { id: 16, imgSrc: Img87, title: 'Biking around the City', subtitle: 'Enjoying a meal near Los Angeles International Airport', date: '2024-06-29' },
   { id: 17, imgSrc: Img88, title: 'LAX', subtitle: 'Experiencing a day of nature and relaxation near Los Angeles International Airport', date: '2024-07-03' },
-  { id: 18, imgSrc: Img89, title: 'By The Airport', subtitle: 'A relaxing day near the airport', date: '2024-07-04' }
+  { id: 18, imgSrc: Img89, title: 'By The Airport', subtitle: 'A relaxing day near the airport', date: '2024-07-04' },
+];
+
+const data5 = [
+  { id: 1, imgSrc: Img90, title: 'HouHai', subtitle: '', date: '2024-06-25' },
+  { id: 2, imgSrc: Img91, title: 'Lotus Lanterns', subtitle: '', date: '2024-06-26' },
+  { id: 3, imgSrc: Img92, title: 'ZhiHuaSi', subtitle: '', date: '2024-06-27' },
+  { id: 4, imgSrc: Img93, title: 'Chinese Temple', subtitle: '', date: '2024-06-28' },
+  { id: 5, imgSrc: Img94, title: 'Starkbucks In China', subtitle: '', date: '2024-06-29' },
+  { id: 6, imgSrc: Img95, title: 'HouHai Bar Street', subtitle: '', date: '2024-06-30' },
+  { id: 7, imgSrc: Img96, title: 'Temple of Agriculture', subtitle: '', date: '2024-07-01' },
+  { id: 8, imgSrc: Img97, title: 'Beijing Sunset', subtitle: '', date: '2024-07-02' },
+  { id: 9, imgSrc: Img98, title: 'ShangAN Station', subtitle: '', date: '2024-07-03' },
+  { id: 10, imgSrc: Img107, title: 'HouHai #25', subtitle: '', date: '2024-07-04' },
+  { id: 11, imgSrc: Img100, title: 'HouHai Gift Shop', subtitle: '', date: '2024-07-05' },
+  { id: 12, imgSrc: Img101, title: 'TiaoHai Bar', subtitle: '', date: '2024-07-06' },
+  { id: 13, imgSrc: Img102, title: 'HouHai Entrance', subtitle: '', date: '2024-07-07' },
+  { id: 14, imgSrc: Img103, title: 'A Steel Factory in Beijing', subtitle: '', date: '2024-07-08' },
+  { id: 15, imgSrc: Img104, title: 'Ice Cream Shop', subtitle: '', date: '2024-07-09' },
+  { id: 16, imgSrc: Img105, title: 'Between Stairs', subtitle: '', date: '2024-07-10' },
+  { id: 17, imgSrc: Img106, title: 'Beijing Science Museum', subtitle: '', date: '2024-07-11' },
+  { id: 18, imgSrc: Img99, title: 'Dragon Lantern', subtitle: '', date: '2024-07-12' },
+  { id: 19, imgSrc: Img108, title: 'SOLANA ', subtitle: '', date: '2024-07-13' },
+  { id: 20, imgSrc: Img110, title: 'Friend', subtitle: '', date: '2024-07-14' },
+  { id: 21, imgSrc: Img109, title: '798 Art District', subtitle: '', date: '2024-07-15' },
+  { id: 22, imgSrc: Img111, title: 'Tea Shop', subtitle: '', date: '2024-07-16' }
 ];
 
 
@@ -221,7 +268,7 @@ const sections = [
    {
     header: '<Beijing>',
     subheader: 'Beijing Revisited: Returning Home After 5 Years',
-    images: []
+    images: data5
   },
   {
     header: '<Tibet>',
