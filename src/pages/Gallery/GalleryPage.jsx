@@ -4,6 +4,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
 import './GalleryPage.css';
 import WatermarkedImage from '../../components/Watermark/WatermarkedImage';
+import videobg3 from '../../assets/Images/videobg3.webm';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -20,9 +21,9 @@ const GalleryPage = () => {
   }, []);
 
   const imageVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.8 }
+    hidden: { opacity: 0, scale: 0.8, y: 50 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.8, y: -50 }
   };
 
   const handleScrollToSection = (event) => {
@@ -41,6 +42,28 @@ const GalleryPage = () => {
         <SocialIcons />
         <AnchorComponent number={number} />
         <BigTitle text="Gallery" left="25rem" top="15rem" />
+
+        {/* Hero Section */}
+        <motion.div
+          className="hero-section"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <video
+            src={videobg3}
+            autoPlay
+            loop
+            playsInline
+            muted
+            className="video-background"
+            loading="lazy"
+          />
+          <div className="hero-content">
+            <h1 className="hero-title">Welcome to My Gallery</h1>
+            <p className="hero-description">Scroll down to explore collections of my travel photos and artistic creations.</p>
+          </div>
+        </motion.div>
 
         {/* Dropdown for sections */}
         <div className="dropdown-container">
@@ -74,14 +97,15 @@ const GalleryPage = () => {
                   <Masonry gutter="15px">
                     {section.images.map((item) => (
                       <motion.div
-                        className="image-box animate__animated animate__bounceInUp animate__delay-2s"
+                        className="image-box animate__animated animate__zoomInUp animate__delay-1s"
                         key={item.id}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         variants={imageVariants}
                         transition={{ duration: 0.5 }}
-                        whileHover={{ scale: 1 }}
+                        whileInView="visible"
+                        viewport={{ once: true }}
                       >
                         <WatermarkedImage src={item.imgSrc} alt={`Gallery Image ${item.id}`} />
                         <div className="image-info">
