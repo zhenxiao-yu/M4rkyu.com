@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
 import './GalleryPage.css';
+import WatermarkedImage from '../../components/Watermark/WatermarkedImage';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -82,7 +83,7 @@ const GalleryPage = () => {
                         transition={{ duration: 0.5 }}
                         whileHover={{ scale: 1 }}
                       >
-                        <img src={item.imgSrc} alt={`Gallery Image ${item.id}`} loading="lazy" />
+                        <WatermarkedImage src={item.imgSrc} alt={`Gallery Image ${item.id}`} />
                         <div className="image-info">
                           <h4>{item.title}</h4>
                           <p>{item.date}</p>

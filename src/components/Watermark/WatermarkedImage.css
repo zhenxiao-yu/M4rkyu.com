@@ -1,0 +1,21 @@
+.watermarked-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.watermarked-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.watermark {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  z-index: 10;
+}
