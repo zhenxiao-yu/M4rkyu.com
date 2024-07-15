@@ -6,8 +6,8 @@ import { mediaQueries } from "../theme/Themes";
 
 // project container styling
 const Box = styled(motion.li)`
-  width: 25rem;
-  height: 45vh;
+  width: 28rem;
+  height: 50vh;
   background-color: ${(props) => props.theme.text};
   color: ${(props) => props.theme.body};
   padding: 1.5rem 2rem;
@@ -34,12 +34,12 @@ const Box = styled(motion.li)`
   ${mediaQueries(50)`
         width:16rem;
         margin-right:6rem;
-        height:38vh;
+        height:40vh;
   `};
   ${mediaQueries(40)`
         width:14rem;
         margin-right:4rem;
-        height:38vh;
+        height:40vh;
   `};
   ${mediaQueries(25)`
         width:12rem;
@@ -54,14 +54,19 @@ const Box = styled(motion.li)`
   `};
 `;
 
-// Project title styling
 const Title = styled.h2`
-  font-size: calc(0.8em + 0.5vw);
+  font-size: calc(1em + 0.5vw);
   overflow: hidden;
-  height: 35px;
+  height: auto; /* Adjust height to auto to fit content */
   text-overflow: ellipsis;
+  margin: 0; /* Remove default margin */
 `;
 
+const Subtitle = styled.div`
+  font-size: calc(0.7em + 0.2vw);
+  font-weight: 400;
+  margin-top: 5px; /* Add some space between title and subtitle */
+`;
 
 const Description = styled.h4`
   font-size: calc(0.75em + 0.3vw);
@@ -238,10 +243,14 @@ const item = {
 //const tags = ["react","gsap","javascript"]
 //status = Development / Maintenance / Ready
 const Card = (props) => {
-  const { id, name, description, tags, demo, github, status } = props.data;
+  const { id, name, subtitle, description, tags, demo, github, status } = props.data;
   return (
     <Box key={id} variants={item}>
-      <Title className ="animate__animated animate__flipInX animate__delay-1s">{name}</Title>
+      <Title className="animate__animated animate__flipInX animate__delay-1s">{name}
+        <Subtitle>
+          {subtitle}
+        </Subtitle>
+      </Title>
       <Description className ="animate__animated animate__zoomIn animate__delay-1s">{description}</Description>
       <Tags className ="animate__animated animate__fadeInUp animate__delay-1s">
         {tags.map((t, id) => (
