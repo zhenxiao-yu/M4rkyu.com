@@ -1,13 +1,13 @@
 export const Project =[
     {
         "id": 1,
-        "name": "Spring Boot Wiki",
+        "name": "UI Studio",
         "subtitle": "Web APP",
-        "description": "A comprehensive full-stack wiki application combining Spring Boot with Vue 3, featuring a sophisticated management system for document and account handling, secure JWT authentication, and integrated E-charts for dynamic trend visualization.",
-        "tags": ["Spring Boot", "Vue.js", "JWT", "E-charts", "MyBatis", "Java", "TypeScript", "SQL"],
-        "demo": "",
-        "github": "https://github.com/zhenxiao-yu/Spring-Boot-Wiki",
-        "status": "Development"
+        "description": "UI Studio is a streamlined, minimalist web-based application tailored for PC users and offered completely free of charge. Designed to emulate a professional collaborative user interface design environment, UI Studio integrates essential features such as live collaboration, real-time cursor tracking, integrated chat, commenting, and dynamic drawing capabilities. Leveraging cutting-edge technologies like Next.js, TypeScript, and Fabric.js, the application provides a robust platform for exploring and mastering real-time web applications and collaborative design processes. With its intuitive, user-friendly interface, UI Studio ensures a seamless and interactive experience, enabling teams to collaborate effectively and creatively in a virtual workspace. Discover how UI Studio can enhance your design workflow and facilitate efficient team collaboration.",
+        "tags": ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn", "JavaScript", "HTML5 Canvas"],
+        "demo": "https://ui-studio-mu.vercel.app/",
+        "github": "https://github.com/zhenxiao-yu/ui-studio",
+        "status": "Ready"
     },
     {
         "id": 2,
