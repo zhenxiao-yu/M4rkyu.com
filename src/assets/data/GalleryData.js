@@ -273,17 +273,17 @@ const sections = [
   {
     header: '<Tibet>',
     subheader: 'Tibet: Life at 5000M in 2024',
-    images: []
+    images: data
   },
   {
     header: '<Ontario>',
     subheader: 'Living in Ontario: 2020 - 2024',
-    images: []
+    images: data
   },
   {
     header: '<Artistic Creations>',
     subheader: 'Creative Expressions: Personal and Discovered Art of 2024',
-    images: []
+    images: data
   }
 ];
 

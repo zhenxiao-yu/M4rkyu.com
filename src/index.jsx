@@ -8,7 +8,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <AnimatedCursor
         color={"75, 75, 75"}
@@ -21,5 +21,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       />
       <Router />
     </BrowserRouter>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

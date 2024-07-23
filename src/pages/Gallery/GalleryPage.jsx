@@ -1,9 +1,12 @@
 import React, { lazy, Suspense, useEffect, useState, memo } from 'react';
 import { motion } from 'framer-motion';
+import useFirestore from '../../hooks/useFirebase';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
+import Modal from '../../components/Modal';
 import './GalleryPage.css';
 import WatermarkedImage from '../../components/Watermark/WatermarkedImage';
+import UploadForm from '../../components/Uploadform';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -26,7 +29,7 @@ const MemoBigTitle = memo(BigTitle);
 
 const debounce = (func, delay) => {
   let debounceTimer;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
     clearTimeout(debounceTimer);
@@ -36,6 +39,8 @@ const debounce = (func, delay) => {
 
 const GalleryPage = () => {
   const [number, setNumber] = useState(0);
+  const [selectedImg, setSelectedImg] = useState(null);
+  const { docs } = useFirestore('images');
 
   useEffect(() => {
     const handleResize = () => {
@@ -65,6 +70,9 @@ const GalleryPage = () => {
 
   return (
     <>
+      {selectedImg && (
+        <Modal selectedImg={selectedImg} setSelectedImg={setSelectedImg} />
+      )}
       <div className="container">
         <Suspense fallback={<FallbackComponent />}>
           <MemoLogoComponent />
@@ -85,6 +93,8 @@ const GalleryPage = () => {
           </select>
         </div>
 
+        <UploadForm />
+
         {sections.length === 0 ? (
           <div className="empty-message">
             <h2>No sections available in the gallery at the moment.</h2>
@@ -94,17 +104,20 @@ const GalleryPage = () => {
             <div className="section-container" id={`section-${index}`} key={index}>
               <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
               <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
-              {section.images.length === 0 ? (
+              {docs.filter(doc => doc.section === section.header).length === 0 ? (
                 <div className="empty-message">
                   <h3>Oops! No images available at the moment</h3>
                 </div>
               ) : (
                 <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 4, 900: 6 }}>
                   <Masonry gutter="15px">
-                    {section.images.map((item) => (
+                    {docs.filter(doc => doc.section === section.header).map(doc => (
                       <motion.div
                         className="image-box animate__animated animate__zoomInUp"
-                        key={item.id}
+                        key={doc.id}
+                        layout
+                        whileHover={{ opacity: 1 }}
+                        onClick={() => setSelectedImg(doc.url)}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
@@ -113,10 +126,10 @@ const GalleryPage = () => {
                         whileInView="visible"
                         viewport={{ once: true }}
                       >
-                        <MemoWatermarkedImage src={item.imgSrc} alt={`Gallery Image ${item.id}`} />
+                        <MemoWatermarkedImage src={doc.url} alt={`Gallery Image ${doc.id}`} />
                         <div className="image-info">
-                          <h4>{item.title}</h4>
-                          <p>{item.date}</p>
+                          <h4>{doc?.title}</h4>
+                          <p>{doc?.date}</p>
                         </div>
                       </motion.div>
                     ))}
