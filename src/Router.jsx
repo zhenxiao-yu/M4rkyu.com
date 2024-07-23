@@ -4,6 +4,7 @@ import GlobalStyle from "./theme/globalStyles";
 import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./theme/Themes";
 import Loading from "./components/Loading";
+import UploadForm from "./pages/Upload/UploadformPage";
 
 //Components
 const Main = lazy(() => import("./pages/Main/Main"));
@@ -30,6 +31,7 @@ function Router() {
               <Route exact path="/project" component={ProjectPage} />
               <Route exact path="/skills" component={MySkillsPage} />
               <Route exact path="/gallery" component={GalleryPage} />
+              <Route exact path="/gallery/admin" component={UploadForm} />
             </Switch>
         </Suspense>
       </ThemeProvider>

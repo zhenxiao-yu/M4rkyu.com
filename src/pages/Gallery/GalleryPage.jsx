@@ -6,7 +6,6 @@ import { sections } from '../../assets/data/GalleryData';
 import Modal from '../../components/Modal';
 import './GalleryPage.css';
 import WatermarkedImage from '../../components/Watermark/WatermarkedImage';
-import UploadForm from '../../components/Uploadform';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -27,6 +26,7 @@ const MemoSocialIcons = memo(SocialIcons);
 const MemoAnchorComponent = memo(AnchorComponent);
 const MemoBigTitle = memo(BigTitle);
 
+// Debounce function to delay the execution of a function
 const debounce = (func, delay) => {
   let debounceTimer;
   return function () {
@@ -42,6 +42,7 @@ const GalleryPage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const { docs } = useFirestore('images');
 
+  // Effect to handle window resize events
   useEffect(() => {
     const handleResize = () => {
       const num = (window.innerHeight - 70) / 30;
@@ -54,12 +55,14 @@ const GalleryPage = () => {
     return () => window.removeEventListener('resize', debouncedHandleResize);
   }, []);
 
+  // Framer Motion variants for image animations
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.8, y: 50 },
     visible: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.8, y: -50 }
   };
 
+  // Handle scrolling to a specific section
   const handleScrollToSection = (event) => {
     const sectionId = event.target.value;
     const sectionElement = document.getElementById(sectionId);
@@ -92,8 +95,6 @@ const GalleryPage = () => {
             ))}
           </select>
         </div>
-
-        <UploadForm />
 
         {sections.length === 0 ? (
           <div className="empty-message">
