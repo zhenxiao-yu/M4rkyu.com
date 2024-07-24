@@ -1,35 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { projectStorage, projectFirestore, timestamp } from '../firebase/config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { projectStorage, projectFirestore } from '../firebase/config';
+import { collection, addDoc } from 'firebase/firestore';
 
-const useStorage = (file, metadata) => {
+const useStorage = () => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
   const [url, setUrl] = useState(null);
 
-  useEffect(() => {
-    if (!file) return;
+  const uploadFile = useCallback((file, metadata) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(projectStorage, file.name);
+      const collectionRef = collection(projectFirestore, 'images');
 
-    const storageRef = ref(projectStorage, file.name);
-    const collectionRef = collection(projectFirestore, 'images');
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on('state_changed', (snapshot) => {
-      let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setProgress(percentage);
-    }, (err) => {
-      setError(err);
-    }, async () => {
-      const url = await getDownloadURL(uploadTask.snapshot.ref);
-      const createdAt = serverTimestamp();
-      await addDoc(collectionRef, { url, createdAt, ...metadata });
-      setUrl(url);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(percentage);
+        },
+        (err) => {
+          setError(err);
+          reject(err);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(storageRef);
+            const createdAt = timestamp();
+            await addDoc(collectionRef, { url: downloadURL, createdAt, ...metadata });
+            setUrl(downloadURL);
+            resolve(downloadURL);
+          } catch (err) {
+            setError(err);
+            reject(err);
+          }
+        }
+      );
     });
-  }, [file, metadata]);
+  }, []);
 
-  return { progress, url, error };
+  return { progress, url, error, uploadFile };
 };
 
 export default useStorage;

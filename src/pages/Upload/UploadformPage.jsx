@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import useStorage from '../../hooks/useStorage';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { sections } from '../../assets/data/GalleryData';
+import useStorage from '../../hooks/useStorage';
 
 const PageContainer = styled.div`
   display: flex;
@@ -69,21 +71,6 @@ const Error = styled.div`
   color: red;
 `;
 
-const ProgressBar = styled.div`
-  margin-top: 10px;
-  background: #f3f3f3;
-  border-radius: 4px;
-  overflow: hidden;
-  height: 20px;
-`;
-
-const Progress = styled.div`
-  height: 100%;
-  background: #007bff;
-  width: ${(props) => props.progress}%;
-  transition: width 0.3s ease;
-`;
-
 const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [section, setSection] = useState('');
@@ -91,7 +78,9 @@ const UploadForm = () => {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState(null);
-  const { progress, url } = useStorage(file, { section, title, date, description });
+  const [startUpload, setStartUpload] = useState(false);
+  const { progress, url, uploadFile } = useStorage();
+  const history = useHistory();
 
   const types = ['image/png', 'image/jpeg'];
 
@@ -107,11 +96,34 @@ const UploadForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
       setError('Please select a file to upload');
+    } else if (!section || !title || !date || !description) {
+      setError('All fields are required.');
+    } else {
+      setError('');
+      setStartUpload(true);
+      try {
+        await uploadFile(file, { section, title, date, description });
+        history.push('/gallery');
+      } catch (err) {
+        setError('Upload failed, please try again.');
+      } finally {
+        setStartUpload(false);
+      }
     }
+  };
+
+  const clearForm = () => {
+    setFile(null);
+    setSection('');
+    setTitle('');
+    setDate('');
+    setDescription('');
+    setError(null);
+    setStartUpload(false);
   };
 
   return (
@@ -120,7 +132,14 @@ const UploadForm = () => {
         <Form onSubmit={handleSubmit}>
           <Label>
             Section:
-            <Input type="text" value={section} onChange={(e) => setSection(e.target.value)} required />
+            <select value={section} onChange={(e) => setSection(e.target.value)} required>
+              <option value="">Select a section</option>
+              {sections.map((section) => (
+                <option key={section.header} value={section.header}>
+                  {section.header}
+                </option>
+              ))}
+            </select>
           </Label>
           <Label>
             Title:
@@ -141,14 +160,13 @@ const UploadForm = () => {
           <Output>
             {error && <Error>{error}</Error>}
             {file && <div>{file.name}</div>}
-            {progress > 0 && (
-              <ProgressBar>
-                <Progress progress={progress} />
-              </ProgressBar>
-            )}
+            {startUpload && <div>Uploading: {progress}%</div>}
             {url && <div>Uploaded successfully!</div>}
           </Output>
           <Button type="submit">Upload</Button>
+          <Button type="button" onClick={clearForm} style={{ backgroundColor: '#dc3545' }}>
+            Clear
+          </Button>
         </Form>
       </FormContainer>
     </PageContainer>
