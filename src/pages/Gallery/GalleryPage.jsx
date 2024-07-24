@@ -84,7 +84,7 @@ const GalleryPage = () => {
           <MemoAnchorComponent number={number} />
           <MemoBigTitle text="Gallery" left="25rem" top="15rem" />
         </Suspense>
-
+        <a href="/gallery/admin">+++</a>
         <div className="dropdown-container">
           <select onChange={handleScrollToSection}>
             <option value="">Select a section...</option>

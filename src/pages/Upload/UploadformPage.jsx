@@ -160,7 +160,7 @@ const UploadForm = () => {
           <Output>
             {error && <Error>{error}</Error>}
             {file && <div>{file.name}</div>}
-            {startUpload && <div>Uploading: {progress}%</div>}
+            {startUpload && <div>Uploading: {progress.toFixed(2)}%</div>}
             {url && <div>Uploaded successfully!</div>}
           </Output>
           <Button type="submit">Upload</Button>
