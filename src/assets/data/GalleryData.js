@@ -246,8 +246,8 @@ const data5 = [
 
 const sections = [
   {
-    header: '<Shanghai>',
-    subheader: 'Exploring Shanghai: A Journey Through 2024',
+    header: '<Artistic Creations>',
+    subheader: 'Creative Expressions: Personal and Discovered Art of 2024',
     images: data
   },
   {
@@ -259,6 +259,11 @@ const sections = [
     header: '<ChangChun>',
     subheader: 'My Hometown ChangChun: Captured in 2024',
     images: data3
+  },
+  {
+    header: '<Shanghai>',
+    subheader: 'Exploring Shanghai: A Journey Through 2024',
+    images: data
   },
   {
     header: '<Los Angeles>',
@@ -280,11 +285,7 @@ const sections = [
     subheader: 'Living in Ontario: 2020 - 2024',
     images: data
   },
-  {
-    header: '<Artistic Creations>',
-    subheader: 'Creative Expressions: Personal and Discovered Art of 2024',
-    images: data
-  }
+  
 ];
 
 
