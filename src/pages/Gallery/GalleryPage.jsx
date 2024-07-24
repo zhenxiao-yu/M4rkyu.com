@@ -110,8 +110,8 @@ const GalleryPage = () => {
                   <h3>Oops! No images available at the moment</h3>
                 </div>
               ) : (
-                <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 4, 900: 6 }}>
-                  <Masonry gutter="15px">
+                <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
+                  <Masonry gutter="10px">
                     {docs.filter(doc => doc.section === section.header).map(doc => (
                       <motion.div
                         className="image-box animate__animated animate__zoomInUp"
