@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState, memo } from 'react';
+import React, { lazy, Suspense, useEffect, useState, memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import useFirestore from '../../hooks/useFirebase';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
@@ -26,23 +26,12 @@ const MemoSocialIcons = memo(SocialIcons);
 const MemoAnchorComponent = memo(AnchorComponent);
 const MemoBigTitle = memo(BigTitle);
 
-// Debounce function to delay the execution of a function
-const debounce = (func, delay) => {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-};
-
 const GalleryPage = () => {
   const [number, setNumber] = useState(0);
   const [selectedImg, setSelectedImg] = useState(null);
   const { docs } = useFirestore('images');
+  const [loadedSections, setLoadedSections] = useState(sections.slice(0, 1));
 
-  // Effect to handle window resize events
   useEffect(() => {
     const handleResize = () => {
       const num = (window.innerHeight - 70) / 30;
@@ -55,14 +44,12 @@ const GalleryPage = () => {
     return () => window.removeEventListener('resize', debouncedHandleResize);
   }, []);
 
-  // Framer Motion variants for image animations
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.8, y: 50 },
     visible: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.8, y: -50 }
   };
 
-  // Handle scrolling to a specific section
   const handleScrollToSection = (event) => {
     const sectionId = event.target.value;
     const sectionElement = document.getElementById(sectionId);
@@ -70,6 +57,23 @@ const GalleryPage = () => {
       sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const loadMoreSections = useCallback(() => {
+    if (loadedSections.length < sections.length) {
+      setLoadedSections(sections.slice(0, loadedSections.length + 1));
+    }
+  }, [loadedSections]);
+
+  const handleScroll = useCallback(() => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+      loadMoreSections();
+    }
+  }, [loadMoreSections]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <>
@@ -96,12 +100,12 @@ const GalleryPage = () => {
           </select>
         </div>
 
-        {sections.length === 0 ? (
+        {loadedSections.length === 0 ? (
           <div className="empty-message">
             <h2>No sections available in the gallery at the moment.</h2>
           </div>
         ) : (
-          sections.map((section, index) => (
+          loadedSections.map((section, index) => (
             <div className="section-container" id={`section-${index}`} key={index}>
               <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
               <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
@@ -146,3 +150,13 @@ const GalleryPage = () => {
 };
 
 export default GalleryPage;
+
+const debounce = (func, delay) => {
+  let debounceTimer;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  };
+};
