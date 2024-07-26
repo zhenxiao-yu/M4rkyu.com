@@ -11,13 +11,13 @@ export const Project =[
     },
     {
         "id": 2,
-        "name": "Vue Grocery Delivery App",
-        "subtitle": "Web APP",
-        "description": "This streamlined web application is designed for students to effortlessly explore, bookmark, and purchase essentials from nearby grocery stores, enhancing the shopping experience with intuitive navigation and interactive design.",
-        "tags": ["Vue.js", "SASS", "REST API", "Vue CLI", "Vue Router", "Web App","JavaScript",],
-        "demo": "",
-        "github": "https://github.com/zhenxiao-yu/Vue-Grocery-Delivery-App",
-        "status": "Maintenance"
+        "name": "In the Silence of a Brother",
+        "subtitle": "AI Animated Short Film",
+        "description": "“In the Silence of a Brother” is a poignant exploration of childhood in 1980s Beijing under China’s One-Child Policy. Using a blend of physical art, stop motion animation and AI-generated visuals, the film vividly depicts the memories and adventures of a sibling relationship. It delves into the impact of the policy on family dynamics and personal identity, while celebrating the joy and imagination of childhood. This film is the final project for the SA2560 course at Western University and is now available to watch on YouTube.",
+        "tags": ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML", "Film","Video Project",],
+        "demo": "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
+        "github": "https://github.com/zhenxiao-yu/Text-To-Video-AI",
+        "status": "Ready"
     },
     {
         "id": 3,

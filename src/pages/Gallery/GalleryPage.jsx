@@ -85,7 +85,7 @@ const GalleryPage = () => {
           <MemoBigTitle text="Gallery" left="25rem" top="15rem" />
         </Suspense>
         <a href="/gallery/admin">+++</a>
-        <div className="dropdown-container">
+        <div className={`dropdown-container ${selectedImg ? 'hidden' : ''}`}>
           <select onChange={handleScrollToSection}>
             <option value="">Select a section...</option>
             {sections.map((section, index) => (

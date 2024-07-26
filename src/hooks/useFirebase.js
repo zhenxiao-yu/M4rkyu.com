@@ -8,7 +8,7 @@ const useFirestore = (collectionName) => {
 
   useEffect(() => {
     const collectionRef = collection(projectFirestore, collectionName);
-    const q = query(collectionRef, orderBy('createdAt', 'asc'));
+    const q = query(collectionRef, orderBy('date', 'desc'));
 
     const unsub = onSnapshot(q, (snapshot) => {
       let documents = [];
