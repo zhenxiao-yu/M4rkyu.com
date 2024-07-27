@@ -5,12 +5,13 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
 import Modal from '../../components/Modal';
 import './GalleryPage.css';
-
+import { Typewriter } from 'react-simple-typewriter';
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const HomeButton = lazy(() => import('../../components/HomeButton'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
 const BigTitle = lazy(() => import('../../components/BigTitle'));
+import { HiChevronDoubleUp } from "react-icons/hi";
 
 const FallbackComponent = () => (
   <div className="fallback">
@@ -28,6 +29,7 @@ const GalleryPage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const { docs } = useFirestore('images');
   const [loading, setLoading] = useState({});
+  const [selectedSection, setSelectedSection] = useState('');
   const allSectionsLoaded = useRef(false);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ const GalleryPage = () => {
 
   const handleScrollToSection = (event) => {
     const sectionId = event.target.value;
+    setSelectedSection(sectionId);
     if (sectionId && allSectionsLoaded.current) {
       const sectionElement = document.getElementById(sectionId);
       if (sectionElement) {
@@ -76,60 +79,72 @@ const GalleryPage = () => {
           </select>
         </div>
 
-        {sections.length === 0 ? (
-          <div className="empty-message">
-            <h2>No sections available in the gallery at the moment.</h2>
+        {!selectedSection ? (
+          <div className="hero-section">
+            <HiChevronDoubleUp size="3rem"/>
+            <h1>Welcome to My Gallery</h1>
+            <Typewriter
+              words={['<p>Explore various sections to see different collections of images.</p>']}
+              loop={0}
+              typeSpeed={50}
+              deleteSpeed={50}
+              delaySpeed={1500}
+              cursor
+              aria-label="<p>Explore various sections to see different collections of images.</p>"
+            />
           </div>
         ) : (
           sections.map((section, index) => (
-            <div className="section-container" id={`section-${index}`} key={index}>
-              <div className="section-header">
-                <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
-              </div>
-              <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
-              {filterDocs(section.header).length === 0 ? (
-                <div className="empty-message">
-                  <h3>Oops! No images available at the moment</h3>
+            selectedSection === `section-${index}` && (
+              <div className="section-container" id={`section-${index}`} key={index}>
+                <div className="section-header">
+                  <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
                 </div>
-              ) : (
-                <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
-                  <Masonry gutter="10px">
-                    {filterDocs(section.header).map((doc) => (
-                      <motion.div
-                        className="image-box animate__animated animate__zoomInUp"
-                        key={doc.id}
-                        layout
-                        whileHover={{ opacity: 1 }}
-                        onClick={() => setSelectedImg(doc.url)}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={{
-                          hidden: { opacity: 0, scale: 0.8, y: 50 },
-                          visible: { opacity: 1, scale: 1, y: 0 },
-                          exit: { opacity: 0, scale: 0.8, y: -50 },
-                        }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <div className="image-container">
-                          {loading[doc.id] && <div className="loader"></div>}
-                          <img
-                            src={doc.url}
-                            alt={`Gallery Image ${doc.id}`}
-                            onLoad={() => handleImageLoad(doc.id)}
-                            style={{ opacity: loading[doc.id] ? 0 : 1 }}
-                          />
-                        </div>
-                        <div className="image-info">
-                          <h4>{doc?.title}</h4>
-                          <p>{doc?.date}</p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </Masonry>
-                </ResponsiveMasonry>
-              )}
-            </div>
+                <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
+                {filterDocs(section.header).length === 0 ? (
+                  <div className="empty-message">
+                    <h3>Oops! No images available at the moment</h3>
+                  </div>
+                ) : (
+                  <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
+                    <Masonry gutter="10px">
+                      {filterDocs(section.header).map((doc) => (
+                        <motion.div
+                          className="image-box animate__animated animate__zoomInUp"
+                          key={doc.id}
+                          layout
+                          whileHover={{ opacity: 1 }}
+                          onClick={() => setSelectedImg(doc.url)}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          variants={{
+                            hidden: { opacity: 0, scale: 0.8, y: 50 },
+                            visible: { opacity: 1, scale: 1, y: 0 },
+                            exit: { opacity: 0, scale: 0.8, y: -50 },
+                          }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <div className="image-container">
+                            {loading[doc.id] && <div className="loader"></div>}
+                            <img
+                              src={doc.url}
+                              alt={`Gallery Image ${doc.id}`}
+                              onLoad={() => handleImageLoad(doc.id)}
+                              style={{ opacity: loading[doc.id] ? 0 : 1 }}
+                            />
+                          </div>
+                          <div className="image-info">
+                            <h4>{doc?.title}</h4>
+                            <p>{doc?.date}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </Masonry>
+                  </ResponsiveMasonry>
+                )}
+              </div>
+            )
           ))
         )}
       </div>

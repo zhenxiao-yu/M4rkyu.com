@@ -1,8 +1,12 @@
 /* General styles */
 body {
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
+/* Container styles */
 .container {
   background-color: #ece9e8;
   background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
@@ -35,7 +39,6 @@ body {
   border: none;
   background-color: transparent;
   color: #08090a;
-  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   width: 100%;
   appearance: none;
@@ -65,11 +68,9 @@ body {
   }
 }
 
-
-
 /* Section container styles */
 .section-container {
-  padding: 2rem;
+  padding: 1.4rem;
   width: 80%;
   margin: 0 auto;
   background-color: #ece9e8;
@@ -79,6 +80,9 @@ body {
   border-radius: 10px;
   margin-bottom: 2rem;
   text-align: center;
+  height: 100vh;
+  overflow-y: scroll;
+  
 }
 
 .section-container h2 {
@@ -91,13 +95,15 @@ body {
 }
 
 .section-container h3 {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   margin-bottom: 1.5rem;
   color: #555;
   line-height: 1.5rem;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  font-family: "Karla", sans-serif;
+  width: 80%;
 }
 
 @media (max-width: 768px) {
@@ -116,6 +122,7 @@ body {
 
 /* Image box styling */
 .image-box {
+  margin: 0.3rem;
   overflow: hidden;
   border-radius: 15px;
   cursor: pointer;
@@ -256,4 +263,58 @@ body {
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Hero section styles */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5rem 2rem;
+  background-color: #ece9e8;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  height: 100vh;
+  background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
+  background-size: 34px 34px;
+  background-position: 0 0, 17px 17px;
+}
 
+.hero-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: rgb(8, 9, 10); /* Base color of the text */
+  text-shadow: 
+    1px 1px 0 #fff, /* Lighter shadow on top-left */
+    2px 2px 0 #bbb, /* Slightly darker shadow on bottom-right */
+    3px 3px 0 #aaa, /* Even darker shadow for depth */
+    4px 4px 0 #999; /* Darkest shadow for the deepest part */
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+
+/* Scrollbar styling for .section-container */
+.section-container::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.section-container::-webkit-scrollbar-track {
+  background: #ece9e8; /* Background color of the scrollbar track */
+}
+
+.section-container::-webkit-scrollbar-thumb {
+  background-color: #08090a; /* Color of the scrollbar thumb */
+  border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+  border: 3px solid #ece9e8; /* Padding around the scrollbar thumb */
+}
+
+/* Scrollbar styling for Firefox within .section-container */
+.section-container {
+  scrollbar-width: thin; /* Width of the scrollbar */
+  scrollbar-color: #08090a #ece9e8; /* Color of the scrollbar thumb and track */
+}
