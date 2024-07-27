@@ -2,27 +2,32 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { projectFirestore } from '../firebase/config';
 
-
 const useFirestore = (collectionName) => {
   const [docs, setDocs] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const collectionRef = collection(projectFirestore, collectionName);
     const q = query(collectionRef, orderBy('date', 'desc'));
 
-    const unsub = onSnapshot(q, (snapshot) => {
-      let documents = [];
-      snapshot.forEach((doc) => {
-        documents.push({ ...doc.data(), id: doc.id });
-      });
-      setDocs(documents);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const documents = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setDocs(documents);
+      },
+      (err) => {
+        console.error("Error fetching documents: ", err);
+        setError(err.message);
+      }
+    );
 
-    // Cleanup function to unsubscribe from the snapshot listener
-    return () => unsub();
+    return () => {
+      unsubscribe();
+    };
   }, [collectionName]);
 
-  return { docs };
+  return { docs, error };
 };
 
 export default useFirestore;

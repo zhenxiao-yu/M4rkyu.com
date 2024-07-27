@@ -12,27 +12,28 @@ const sections = [
   },
   {
     header: '<ChangChun>',
-    subheader: 'This collection offers a glimpse into the daily life, culture, and beauty of my hometown through my lens in 2024. Born in ChangChun but having moved to Beijing at six, I am now revisiting at 23, capturing the essence of a place that holds my earliest memories.',
+    subheader: 'This collection offers a glimpse into the daily life and culture of my hometown through my lens in 2024. Born in Changchun but moving to Beijing at six, I am now revisiting at 23, capturing the essence of a place that holds my earliest memories.',
     images: []
   },
   {
     header: '<Shanghai>',
-    subheader: 'Exploring Shanghai: A Journey Through 2024',
+    subheader: 'In June 2024, I embarked on a long-awaited journey to Shanghai with an old friend. This vibrant city, a symphony of old-world charm and modern marvels, unfolded before us with unforgettable experiences. Here is a collection of photos capturing our exploration through bustling streets, tranquil gardens, towering skyscrapers, and hidden gems. ',
     images: []
   },
   {
     header: '<Los Angeles>',
-    subheader: 'Abstract Elegance in LA: Urban Artistry of 2024',
+    subheader: 'This collection chronicles my one-week adventure in Los Angeles after flying back from China in 2024. Each photo captures the quirks and charms of the city, from the laid-back vibes of Venice Beach to my attempts at hiking in Griffith Park. Join me as I navigate LA’s iconic spots, chase sunsets, and discover why traffic here really is as legendary as they say.',
     images: []
   },
    {
     header: '<Beijing>',
-    subheader: 'Beijing Revisited: Returning Home After 5 Years',
+    subheader: 'This collection captures my journey back to Beijing after five years away. Through my lens, I document the city\'s blend of old and new, from the quiet hutongs to the modern skyline. Each photo tells a story of rediscovery, capturing everyday life and the timeless spirit of a city that feels both familiar and new.',
     images: []
   },
   {
     header: '<Tibet>',
-    subheader: 'Tibet: Life at 5000M in 2024',
+    subheader: 'In May 2024, I embarked on a memorable road trip along Route 318 to visit the Mount Everest Base Camp. Despite experiencing slight altitude sickness, I captured stunning moments of my journey through Tibet. The breathtaking landscapes, ancient traditions, and resilient spirit of the region are vividly showcased in my photos.'
+,
     images: []
   },
   {
