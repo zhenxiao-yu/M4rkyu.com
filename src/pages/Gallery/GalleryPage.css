@@ -47,7 +47,6 @@ body {
   background-color: #dcdcdc;
 }
 
-/* Dropdown icon styling */
 .dropdown-container::after {
   content: '▼';
   position: absolute;
@@ -59,17 +58,14 @@ body {
   color: #08090a;
 }
 
-.dropdown-container.hidden {
-  display: none;
-}
-
-
 /* Mobile view adjustments */
 @media (max-width: 767px) {
   .dropdown-container {
-    top: 2rem; /* Adjust the top position as needed for mobile view */
+    top: 2rem;
   }
 }
+
+
 
 /* Section container styles */
 .section-container {
@@ -82,42 +78,39 @@ body {
   background-position: 0 0, 17px 17px;
   border-radius: 10px;
   margin-bottom: 2rem;
+  text-align: center;
+}
+
+.section-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .section-container h2:first-of-type {
   margin-top: 10rem;
 }
 
-.section-container h2 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 1rem;
-  display: block;
-}
-
 .section-container h3 {
   font-size: 1.4rem;
   margin-bottom: 1.5rem;
   color: #555;
-  width: 100%;
   line-height: 1.5rem;
-  justify-items: center;
-  text-align: center; /* Ensure the text is centered */
-  margin-left: auto;  /* Center the element horizontally */
-  margin-right: auto; /* Center the element horizontally */
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 768px) {
   .section-container h3 {
     font-size: 1.2rem;
-    width: 75%; /* Adjust width for smaller screens */
+    width: 75%;
   }
 }
 
 @media (max-width: 480px) {
   .section-container h3 {
     font-size: 1rem;
-    width: 92%; /* Adjust width for smaller screens */
+    width: 92%;
   }
 }
 
@@ -126,23 +119,18 @@ body {
   overflow: hidden;
   border-radius: 15px;
   cursor: pointer;
-  border: 12px double rgb(8, 9, 10);
+  border: 12px double #08090a;
   position: relative;
 }
 
 .image-box img {
   width: 100%;
   height: auto;
-  scale: 1.1;
+  transform: scale(1.1);
   display: block;
   filter: grayscale(20%) brightness(0.7);
   transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-
-  -webkit-touch-callout: none; /* Disable callout menu on iOS */
-  -webkit-user-select: none;   /* Disable text selection on iOS */
-  -moz-user-select: none;      /* Disable text selection on Firefox */
-  -ms-user-select: none;       /* Disable text selection on Internet Explorer/Edge */
-  user-select: none;           /* Disable text selection on non-webkit browsers */
+  user-select: none;
 }
 
 .image-box img:hover {
@@ -211,7 +199,7 @@ body {
   }
 
   .image-info h4 {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
   }
 
   .image-info p {
@@ -225,20 +213,47 @@ body {
     padding: 0.25rem;
   }
 
-  .section-container h2,
-  .section-container h3 {
-    text-align: center;
-  }
-
   .image-info {
     padding: 0.5rem;
   }
 
   .image-info h4 {
-    font-size: 0.45rem;
+    font-size: 0.65rem;
   }
 
   .image-info p {
-    font-size: 0.56rem;
+    font-size: 0.55rem;
   }
 }
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  transition: opacity 0.3s ease;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #08090a; /* Black */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+

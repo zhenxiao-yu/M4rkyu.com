@@ -1,11 +1,10 @@
-import React, { lazy, Suspense, useEffect, useState, memo, useCallback } from 'react';
+import React, { lazy, Suspense, useEffect, useState, memo, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import useFirestore from '../../hooks/useFirebase';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { sections } from '../../assets/data/GalleryData';
 import Modal from '../../components/Modal';
 import './GalleryPage.css';
-import WatermarkedImage from '../../components/Watermark/WatermarkedImage';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -19,7 +18,6 @@ const FallbackComponent = () => (
   </div>
 );
 
-const MemoWatermarkedImage = memo(WatermarkedImage);
 const MemoLogoComponent = memo(LogoComponent);
 const MemoHomeButton = memo(HomeButton);
 const MemoSocialIcons = memo(SocialIcons);
@@ -27,68 +25,46 @@ const MemoAnchorComponent = memo(AnchorComponent);
 const MemoBigTitle = memo(BigTitle);
 
 const GalleryPage = () => {
-  const [number, setNumber] = useState(0);
   const [selectedImg, setSelectedImg] = useState(null);
   const { docs } = useFirestore('images');
-  const [loadedSections, setLoadedSections] = useState(sections.slice(0, 1));
+  const [loading, setLoading] = useState({});
+  const allSectionsLoaded = useRef(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      const num = (window.innerHeight - 70) / 30;
-      setNumber(parseInt(num));
-    };
-
-    const debouncedHandleResize = debounce(handleResize, 100);
-    handleResize();
-    window.addEventListener('resize', debouncedHandleResize);
-    return () => window.removeEventListener('resize', debouncedHandleResize);
+    allSectionsLoaded.current = true;
   }, []);
 
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: { opacity: 1, scale: 1, y: 0 },
-    exit: { opacity: 0, scale: 0.8, y: -50 }
+  const handleImageLoad = (id) => {
+    setLoading((prev) => ({ ...prev, [id]: false }));
   };
 
   const handleScrollToSection = (event) => {
     const sectionId = event.target.value;
-    const sectionElement = document.getElementById(sectionId);
-    if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
+    if (sectionId && allSectionsLoaded.current) {
+      const sectionElement = document.getElementById(sectionId);
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
-  const loadMoreSections = useCallback(() => {
-    if (loadedSections.length < sections.length) {
-      setLoadedSections(sections.slice(0, loadedSections.length + 1));
-    }
-  }, [loadedSections]);
-
-  const handleScroll = useCallback(() => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-      loadMoreSections();
-    }
-  }, [loadMoreSections]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  const filterDocs = useCallback(
+    (sectionHeader) => docs.filter((doc) => doc.section === sectionHeader),
+    [docs]
+  );
 
   return (
     <>
-      {selectedImg && (
-        <Modal selectedImg={selectedImg} setSelectedImg={setSelectedImg} />
-      )}
+      {selectedImg && <Modal selectedImg={selectedImg} setSelectedImg={setSelectedImg} />}
       <div className="container">
         <Suspense fallback={<FallbackComponent />}>
           <MemoLogoComponent />
           <MemoHomeButton />
           <MemoSocialIcons />
-          <MemoAnchorComponent number={number} />
+          <MemoAnchorComponent number={0} />
           <MemoBigTitle text="Gallery" left="25rem" top="15rem" />
         </Suspense>
-        <a href="/gallery/admin">+++</a>
+
         <div className={`dropdown-container ${selectedImg ? 'hidden' : ''}`}>
           <select onChange={handleScrollToSection}>
             <option value="">Select a section...</option>
@@ -100,23 +76,25 @@ const GalleryPage = () => {
           </select>
         </div>
 
-        {loadedSections.length === 0 ? (
+        {sections.length === 0 ? (
           <div className="empty-message">
             <h2>No sections available in the gallery at the moment.</h2>
           </div>
         ) : (
-          loadedSections.map((section, index) => (
+          sections.map((section, index) => (
             <div className="section-container" id={`section-${index}`} key={index}>
-              <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
+              <div className="section-header">
+                <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
+              </div>
               <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
-              {docs.filter(doc => doc.section === section.header).length === 0 ? (
+              {filterDocs(section.header).length === 0 ? (
                 <div className="empty-message">
                   <h3>Oops! No images available at the moment</h3>
                 </div>
               ) : (
                 <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
                   <Masonry gutter="10px">
-                    {docs.filter(doc => doc.section === section.header).map(doc => (
+                    {filterDocs(section.header).map((doc) => (
                       <motion.div
                         className="image-box animate__animated animate__zoomInUp"
                         key={doc.id}
@@ -126,12 +104,22 @@ const GalleryPage = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        variants={imageVariants}
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.8, y: 50 },
+                          visible: { opacity: 1, scale: 1, y: 0 },
+                          exit: { opacity: 0, scale: 0.8, y: -50 },
+                        }}
                         transition={{ duration: 0.5 }}
-                        whileInView="visible"
-                        viewport={{ once: true }}
                       >
-                        <MemoWatermarkedImage src={doc.url} alt={`Gallery Image ${doc.id}`} />
+                        <div className="image-container">
+                          {loading[doc.id] && <div className="loader"></div>}
+                          <img
+                            src={doc.url}
+                            alt={`Gallery Image ${doc.id}`}
+                            onLoad={() => handleImageLoad(doc.id)}
+                            style={{ opacity: loading[doc.id] ? 0 : 1 }}
+                          />
+                        </div>
                         <div className="image-info">
                           <h4>{doc?.title}</h4>
                           <p>{doc?.date}</p>
@@ -150,13 +138,3 @@ const GalleryPage = () => {
 };
 
 export default GalleryPage;
-
-const debounce = (func, delay) => {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-};
