@@ -10,17 +10,13 @@ const useFirestore = (collectionName) => {
     const collectionRef = collection(projectFirestore, collectionName);
     const q = query(collectionRef, orderBy('date', 'desc'));
 
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const documents = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        setDocs(documents);
-      },
-      (err) => {
-        console.error("Error fetching documents: ", err);
-        setError(err.message);
-      }
-    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const documents = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setDocs(documents);
+    }, (err) => {
+      console.error("Error fetching documents: ", err);
+      setError(err.message);
+    });
 
     return () => {
       unsubscribe();

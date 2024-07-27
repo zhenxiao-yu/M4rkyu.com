@@ -6,12 +6,13 @@ import { sections } from '../../assets/data/GalleryData';
 import Modal from '../../components/Modal';
 import './GalleryPage.css';
 import { Typewriter } from 'react-simple-typewriter';
+import { HiChevronDoubleUp } from "react-icons/hi";
+
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const HomeButton = lazy(() => import('../../components/HomeButton'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
 const BigTitle = lazy(() => import('../../components/BigTitle'));
-import { HiChevronDoubleUp } from "react-icons/hi";
 
 const FallbackComponent = () => (
   <div className="fallback">
@@ -36,11 +37,11 @@ const GalleryPage = () => {
     allSectionsLoaded.current = true;
   }, []);
 
-  const handleImageLoad = (id) => {
+  const handleImageLoad = useCallback((id) => {
     setLoading((prev) => ({ ...prev, [id]: false }));
-  };
+  }, []);
 
-  const handleScrollToSection = (event) => {
+  const handleScrollToSection = useCallback((event) => {
     const sectionId = event.target.value;
     setSelectedSection(sectionId);
     if (sectionId && allSectionsLoaded.current) {
@@ -49,7 +50,7 @@ const GalleryPage = () => {
         sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
+  }, []);
 
   const filterDocs = useCallback(
     (sectionHeader) => docs.filter((doc) => doc.section === sectionHeader),

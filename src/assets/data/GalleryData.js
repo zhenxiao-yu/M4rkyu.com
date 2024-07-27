@@ -38,7 +38,7 @@ const sections = [
   },
   {
     header: '<Ontario>',
-    subheader: 'Living in Ontario: 2020 - 2024',
+    subheader: 'In Ontario, I completed my degree in software engineering at Western University in London, Ontario. This period was marked by intense academic pursuits, meaningful research, and internships that laid a strong foundation for my career. I also took part in various local events and explored the province\'s scenic landscapes, from the bustling cityscape of Toronto to the tranquil shores of the Great Lakes.',
     images: []
   },
   
