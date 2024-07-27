@@ -236,7 +236,6 @@ const Main = () => {
             </Center>
             <Gallery
               click={click && mq}
-              target="_blank"
               onClick={() => setPath('gallery')}
               to="/gallery"
             >
