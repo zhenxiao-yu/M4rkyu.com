@@ -273,24 +273,6 @@ body {
   transition: opacity 0.3s ease;
 }
 
-.loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #08090a; /* Black */
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
 /* Hero section styles */
 .hero-section {
   display: flex;

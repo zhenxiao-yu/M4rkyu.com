@@ -17,11 +17,33 @@ const Backdrop = styled(motion.div)`
 
 const ModalContent = styled.div`
   position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    max-width: 95%;
+    max-height: 80%;
+    padding: 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    max-width: 100%;
+    max-height: 70%;
+    padding: 0.25rem;
+  }
 `;
 
 const ModalImage = styled(motion.img)`
-  max-width: 90%;
-  max-height: 80%;
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 `;
@@ -30,10 +52,12 @@ const Watermark = styled.div`
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 5px 10px;
-  font-size: 12px;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
   border-radius: 5px;
+  pointer-events: none;
 `;
 
 const Modal = ({ setSelectedImg, selectedImg }) => {
@@ -57,7 +81,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
           initial={{ y: '-100vh' }}
           animate={{ y: 0 }}
         />
-        <Watermark>Watermark Text</Watermark>
+        <Watermark>M4rkyu.com</Watermark>
       </ModalContent>
     </Backdrop>
   );
