@@ -68,16 +68,18 @@ const Subtitle = styled.div`
   font-size: calc(0.7em + 0.2vw);
   font-weight: 400;
   margin-top: 5px;
+  margin-bottom: 10px;
 `;
 
 const Description = styled.h4`
   font-size: calc(0.75em + 0.3vw);
   font-family: "Karla", sans-serif;
-  font-weight: 500;
-  max-height: 15vh;
+  font-weight: 700;
+  max-height: 13vh;
+  margin: 20px 3px;
   overflow-y: scroll;
   text-overflow: ellipsis;
-  line-height: 1.3rem;
+  line-height: 2.1rem;
   border-radius: 10px;
   padding: 0.3em 1.3em 0.3em 0.3em;
 
@@ -128,7 +130,7 @@ const Tag = styled.span`
   white-space: nowrap;
   background-color: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
-  padding: 0.5em 1em;
+  padding: 0.5em 0.5em;
   border-radius: 15px;
   transition: all 0.2s ease;
 
@@ -154,9 +156,9 @@ const Link = styled(NavLink)`
   background-color: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.5rem calc(2rem + 2vw);
+  padding: 0.3rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
-  font-family: "Karla", sans-serif;
+  // font-family: "Karla", sans-serif;
   font-size: calc(0.85em + 0.5vw);
   text-overflow: ellipsis;
   white-space: nowrap;
