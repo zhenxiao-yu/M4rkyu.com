@@ -1,4 +1,4 @@
-import { Github, Instagram, Facebook, YouTube, Linkedin } from "../assets/svg/AllSvgs";
+import { Github, Instagram, Facebook, YouTube, Linkedin, Spotify} from "../assets/svg/AllSvgs";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
@@ -30,15 +30,28 @@ const Icons = styled.div`
 
 const Line = styled(motion.span)`
   width: 3px;
-  height: 3.5rem;
+  height: calc(3.5rem + 1vw);  // Responsive height
   background-color: ${(props) =>
-  props.color === "dark" ? DarkTheme.text : DarkTheme.body};
+    props.color === "dark" ? DarkTheme.text : DarkTheme.body};
+
+  ${mediaQueries(50)`
+    height: calc(3rem + 1vw);  // Adjust height for smaller screens
+  `}
+
+  ${mediaQueries(30)`
+    height: calc(2.5rem + 1vw);  // Further adjustment for even smaller screens
+  `}
+
+  ${mediaQueries(20)`
+    height: calc(2rem + 1vw);  // Further adjustment for the smallest screens
+  `}
 `;
 
 // Configuration for social media links
 const socialLinks = [
-  { id: "github", Icon: Github, link: "https://github.com/zhenxiao-yu" },
   { id: "linkedin", Icon: Linkedin, link: "https://www.linkedin.com/in/mark-yu-a586a2211/" },
+  { id: "github", Icon: Github, link: "https://github.com/zhenxiao-yu" },
+  { id: "spotify", Icon: Spotify, link: "https://open.spotify.com/user/317xma3mkahx2sgwksrv72bvlywm?si=d87d26fee3e84210" },
   { id: "instagram", Icon: Instagram, link: "https://www.instagram.com/m4rkyu/" },
   { id: "facebook", Icon: Facebook, link: "https://www.facebook.com/mark.yu.3762584" },
   { id: "youtube", Icon: YouTube, link: "https://www.youtube.com/channel/UCUY09EUdbMoyDeWrMBYcUZQ" }
