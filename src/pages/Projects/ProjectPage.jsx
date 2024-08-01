@@ -89,7 +89,7 @@ const bounce = keyframes`
 
 const Arrow = styled(motion.div)`
   position: fixed;
-  bottom: 7rem;
+  bottom: 6rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;

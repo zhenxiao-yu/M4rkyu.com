@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Github } from "../assets/svg/AllSvgs";
 import { mediaQueries } from "../theme/Themes";
 
-// project container styling
+// Project container styling
 const Box = styled(motion.li)`
   width: 28rem;
   height: 50vh;
@@ -17,11 +17,12 @@ const Box = styled(motion.li)`
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid ${(props) => props.theme.body};
-  transition: all 0.5s ease; // Updated transition time
+  transition: all 0.5s ease;
   background-image: linear-gradient(
     to right, 
     ${(props) => props.theme.body} 50%, 
-    ${(props) => props.theme.text} 50%);
+    ${(props) => props.theme.text} 50%
+  );
   background-size: 200% 100%;
   background-position: right bottom;
 
@@ -29,43 +30,44 @@ const Box = styled(motion.li)`
     color: ${(props) => props.theme.text};
     border: 1px solid ${(props) => props.theme.text};
     background-color: ${(props) => props.theme.body};
-    background-position: left bottom; // Shifts the gradient to change the background color directionally
+    background-position: left bottom;
   }
+
   ${mediaQueries(50)`
-        width:16rem;
-        margin-right:6rem;
-        height:40vh;
+    width: 16rem;
+    margin-right: 6rem;
+    height: 50vh;
   `};
   ${mediaQueries(40)`
-        width:14rem;
-        margin-right:4rem;
-        height:40vh;
+    width: 14rem;
+    margin-right: 4rem;
+    height: 45vh;
   `};
   ${mediaQueries(25)`
-        width:12rem;
-        margin-right:4rem;
-        height:35vh;
-        padding:1.5rem 1.5rem;
+    width: 12rem;
+    margin-right: 4rem;
+    height: 45vh;
+    padding: 1.5rem 1.5rem;
   `};
   ${mediaQueries(20)`
-        width:10rem;
-        margin-right:4rem;
-        height:40vh;
+    width: 10rem;
+    margin-right: 4rem;
+    height: 40vh;
   `};
 `;
 
 const Title = styled.h2`
   font-size: calc(1em + 0.5vw);
   overflow: hidden;
-  height: auto; /* Adjust height to auto to fit content */
+  height: auto;
   text-overflow: ellipsis;
-  margin: 0; /* Remove default margin */
+  margin: 0;
 `;
 
 const Subtitle = styled.div`
   font-size: calc(0.7em + 0.2vw);
   font-weight: 400;
-  margin-top: 5px; /* Add some space between title and subtitle */
+  margin-top: 5px;
 `;
 
 const Description = styled.h4`
@@ -78,38 +80,36 @@ const Description = styled.h4`
   line-height: 1.3rem;
   border-radius: 10px;
   padding: 0.3em 1.3em 0.3em 0.3em;
+
   ${mediaQueries(25)`
-    font-size:calc(0.6em + 0.3vw);
+    font-size: calc(0.6em + 0.3vw);
   `};
   ${mediaQueries(20)`
-    font-size:calc(0.5em + 0.3vw);
+    font-size: calc(0.5em + 0.3vw);
   `};
 
-  /* Custom scrollbar styles */
   ::-webkit-scrollbar {
-    width: 4px; /* width of the scrollbar */
+    width: 4px;
   }
 
   ::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.text}; /* color of the scrollbar track */
+    background: ${(props) => props.theme.text};
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.body};; /* color of the scrollbar thumb */
+    background: ${(props) => props.theme.body};
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #404252; /* color of the scrollbar thumb on hover */
+    background: #404252;
   }
 `;
 
-
-// tag styling for group of tags
 const Tags = styled.div`
   border-top: 4px solid ${(props) => props.theme.body};
-  padding: 0.8rem 1.3rem 0.8rem 1.3rem;
+  padding: 0.8rem 1.3rem;
   display: flex;
   gap: 0.2rem;
   overflow: hidden;
@@ -120,60 +120,57 @@ const Tags = styled.div`
   }
 `;
 
-// tag styling for each single tag
 const Tag = styled.span`
-  margin-right: 0.1rem;  // Consistent margin for layout spacing
-  font-size: calc(0.5em + 0.2vw);  // Dynamic font size based on viewport width
-  overflow: hidden;  // Prevents overflow of text outside the tag
-  text-overflow: ellipsis;  // Adds ellipsis when text overflows
-  white-space: nowrap;  // Keeps the tag text on one line
-  background-color: ${(props) => props.theme.body};  // Background color from theme
-  color: ${(props) => props.theme.text};  // Text color from theme
-  padding: 0.5em 1em;  // Padding around the text for a better visual presentation
-  border-radius: 15px;  // Rounded corners for a modern look
-  transition: all 0.2s ease;  // Smooth transition for hover effects
+  margin-right: 0.1rem;
+  font-size: calc(0.5em + 0.2vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: ${(props) => props.theme.body};
+  color: ${(props) => props.theme.text};
+  padding: 0.5em 1em;
+  border-radius: 15px;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${(props) => props.theme.text};  // Changes background on hover
-    color: ${(props) => props.theme.body};  // Changes text color on hover
-    transform: scale(1.1);  // Slightly enlarges the tag on hover for emphasis
-    cursor: pointer;  // Changes the cursor to indicate interactivity
+    background-color: ${(props) => props.theme.text};
+    color: ${(props) => props.theme.body};
+    transform: scale(1.1);
+    cursor: pointer;
   }
 
   ${mediaQueries(25)`  
-    font-size:calc(0.7em);
+    font-size: calc(0.7em);
     padding: 0.4em 0.9em;  
   `};
 `;
 
-// card footer 
 const Footer = styled.footer`
   display: flex;
   justify-content: space-between;
 `;
 
-
 const Link = styled(NavLink)`
   background-color: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.5rem calc(2rem + 2vw);  // Adjusted to ensure proper vertical alignment
+  padding: 0.5rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
   font-family: "Karla", sans-serif;
   font-size: calc(0.85em + 0.5vw);
-  text-overflow: ellipsis;  // Adds ellipsis when text overflows
-  white-space: nowrap; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
   display: flex;
   font-weight: bold;
-  align-items: center;  // Ensures vertical centering of text
-  height: 1.8rem  // Fixed height for consistency
-  max-width: 15vw; // Fixed width for consistency
+  align-items: center;
+  height: 1.8rem;
+  max-width: 15vw;
 
   ${Box}:hover & {
     background-color: ${(props) => props.theme.text};
     color: ${(props) => props.theme.body};
     text-decoration: underline;
-    transition: 0.3S ease-in-out;
+    transition: 0.3s ease-in-out;
   }
 `;
 
@@ -181,8 +178,8 @@ const Git = styled(NavLink)`
   color: inherit;
   text-decoration: none;
   display: flex;
-  align-items: center;  // Ensures vertical centering of the icon
-  height: 2.8rem;  // Same height as the Visit button to maintain consistency
+  align-items: center;
+  height: 2.8rem;
 
   ${Box}:hover & {
     & > * {
@@ -195,20 +192,19 @@ const Link2 = styled.span`
   background-color: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.5rem calc(2rem + 2vw);  // Adjusted to ensure proper vertical alignment
+  padding: 0.5rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
   font-family: "Karla", sans-serif;
   font-size: calc(0.7em + 0.5vw);
   font-weight: bold;
-  text-overflow: ellipsis;  // Adds ellipsis when text overflows
-  white-space: nowrap; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
   display: flex;
-  align-items: center;  // Ensures vertical centering of text
-  height: 1.8rem;  // Fixed height for consistency
-  max-width: 15rem; // Fixed width for consistency
+  align-items: center;
+  height: 1.8rem;
+  max-width: 15rem;
 `;
 
-// Function to render the demo link or status text
 const renderDemoLink = (status, demo) => {
   let borderColor = "";
 
@@ -230,7 +226,6 @@ const renderDemoLink = (status, demo) => {
   return null;
 };
 
-// Function to handle tag click
 const handleTagClick = (tag) => {
   const url = `https://www.google.com/search?q=${tag}`;
   window.open(url, "_blank");
@@ -240,27 +235,24 @@ const item = {
   hidden: { scale: 0 },
   show: { scale: 1, transition: { type: "spring", duration: 0.5 } },
 };
-//const tags = ["react","gsap","javascript"]
-//status = Development / Maintenance / Ready
+
 const Card = (props) => {
   const { id, name, subtitle, description, tags, demo, github, status } = props.data;
   return (
     <Box key={id} variants={item}>
       <Title className="animate__animated animate__flipInX animate__delay-1s">{name}
-        <Subtitle>
-          {subtitle}
-        </Subtitle>
+        <Subtitle>{subtitle}</Subtitle>
       </Title>
-      <Description className ="animate__animated animate__zoomIn animate__delay-1s">{description}</Description>
-      <Tags className ="animate__animated animate__fadeInUp animate__delay-1s">
+      <Description className="animate__animated animate__zoomIn animate__delay-1s">{description}</Description>
+      <Tags className="animate__animated animate__fadeInUp animate__delay-1s">
         {tags.map((t, id) => (
           <Tag key={id} onClick={() => handleTagClick(t)}>#{t}</Tag>
         ))}
       </Tags>
-      <Footer className ="animate__animated animate__fadeInUp animate__delay-1s">
+      <Footer className="animate__animated animate__fadeInUp animate__delay-1s">
         {renderDemoLink(status, demo)}
         <Git to={{ pathname: `${github}` }} className="hvr-grow" target="_blank">
-           <Github height="100%" />
+          <Github height="100%" />
         </Git>
       </Footer>
     </Box>

@@ -30,20 +30,20 @@ const Icons = styled.div`
 
 const Line = styled(motion.span)`
   width: 3px;
-  height: calc(3.5rem + 1vw);  // Responsive height
+  height: calc(2.5rem + 1vw);  // Responsive height
   background-color: ${(props) =>
     props.color === "dark" ? DarkTheme.text : DarkTheme.body};
 
   ${mediaQueries(50)`
-    height: calc(3rem + 1vw);  // Adjust height for smaller screens
+    height: calc(2rem + 0.5vw);  // Adjust height for smaller screens
   `}
 
   ${mediaQueries(30)`
-    height: calc(2.5rem + 1vw);  // Further adjustment for even smaller screens
+    height: calc(1.5rem + 0.5vw);  // Further adjustment for even smaller screens
   `}
 
   ${mediaQueries(20)`
-    height: calc(2rem + 1vw);  // Further adjustment for the smallest screens
+    height: calc(1rem + 0.5vw);  // Further adjustment for the smallest screens
   `}
 `;
 
@@ -86,7 +86,7 @@ const SocialIcons = (props) => {
       ))}
       <Line
         initial={{ height: 0 }}
-        animate={{ height: mq ? "8rem" : "5rem" }}
+        animate={{ height: mq ? "6rem" : "3rem" }}
         color={props.theme}
         transition={{ type: "spring", duration: 1, delay: 0.8 }}
       />

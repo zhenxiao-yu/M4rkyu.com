@@ -72,6 +72,7 @@ body {
 .section-container {
   padding: 1.4rem;
   width: 80%;
+  height: 95%;
   margin: 0 auto;
   background-color: #ece9e8;
   background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
@@ -80,7 +81,7 @@ body {
   border-radius: 10px;
   margin-bottom: 2rem;
   text-align: center;
-  height: 100vh;
+  /* height: 100vh; */
   overflow-y: scroll;
 }
 
