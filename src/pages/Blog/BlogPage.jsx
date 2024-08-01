@@ -145,33 +145,34 @@ const BlogPage = () => {
     <>
       <Helmet>
         <title>Blog Page</title>
-        <meta name="description" content="A collection of blogs sorted by date." />
+        <meta name="description" content="A collection of blogs by ZhenXiao Yu sorted by date." />
         <meta name="keywords" content="blog, articles, tech, development" />
-        <link rel="canonical" href="http://yourwebsite.com/blog" />
+        <meta property="og:url" content="https://www.m4rkyu.com/blog" />
+        <link rel="canonical" href="https://www.m4rkyu.com/blog" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Blog",
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": "http://yourwebsite.com/blog"
+              "@id": "https://www.m4rkyu.com/blog"
             },
             "headline": "Blog Page",
             "description": "A collection of blogs sorted by date.",
             "author": {
               "@type": "Person",
-              "name": "Your Name"
+              "name": "ZhenXiao Yu"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Your Website",
+              "name": "m4rkyu.com",
               "logo": {
                 "@type": "ImageObject",
-                "url": "http://yourwebsite.com/logo.jpg"
+                "url": "https://www.m4rkyu.com/gallery"
               }
             },
             "datePublished": "2024-07-10",
-            "image": "http://yourwebsite.com/featured-image.jpg"
+            "image": "https://www.m4rkyu.com/gallery"
           })}
         </script>
       </Helmet>

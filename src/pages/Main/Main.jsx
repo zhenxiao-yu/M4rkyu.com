@@ -188,8 +188,8 @@ const Main = () => {
   return (
     <>
       <Helmet>
-        <title>My Portfolio</title>
-        <meta name="description" content="Welcome to my portfolio website." />
+        <title>▪️◾◼️⬛ M4rkyu ⬛◼️◾▪️</title>
+        <meta name="description" content="Official website of Mark Yu (ZhenXiao Yu), a software engineer specializing in frontend development and game design. Learn more about Zhenxiao Yu's projects and achievements." />
       </Helmet>
       <Suspense fallback={<Loading />}>
         <MainContainer

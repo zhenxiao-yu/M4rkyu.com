@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState, memo, useRef, useCallback } from 'react';
+import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import useFirestore from '../../hooks/useFirebase';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
@@ -59,6 +60,14 @@ const GalleryPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Gallery - Mark Yu</title>
+        <link rel="canonical" href="https://www.yourwebsite.com/gallery" />
+        <meta property="og:title" content="Gallery - Mark Yu" />
+        <meta property="og:description" content="Explore the gallery of Mark Yu, showcasing various sections of images. Discover the creativity and photography skills of Zhenxiao Yu through this visual journey." />
+        <meta property="og:url" content="https://www.m4rkyu.com/gallery" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       {selectedImg && <Modal selectedImg={selectedImg} setSelectedImg={setSelectedImg} />}
       <div className="container">
         <Suspense fallback={<FallbackComponent />}>
@@ -169,15 +178,15 @@ const Section = ({ index, section, filterDocs, setSelectedImg }) => {
                   <img
                     src={doc.url}
                     loading="lazy"
-                    alt={`Gallery Image ${doc.id}`}
+                    alt={`Gallery Image ${doc.title || 'No title'}`}
                     onLoad={() => handleImageLoad(doc.id)}
                     onError={() => handleImageError(doc.id)}
                     style={{ display: loading[doc.id] ? 'none' : 'block' }}
                   />
                 </div>
                 <div className="image-info">
-                  <h4>{doc?.title}</h4>
-                  <p>{doc?.date}</p>
+                  <h4>{doc.title}</h4>
+                  <p>{doc.date}</p>
                 </div>
               </motion.div>
             ))}
