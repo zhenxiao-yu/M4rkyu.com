@@ -4,7 +4,7 @@ export const Project =[
         "name": "UI Studio",
         "subtitle": "Web APP",
         "description": "UI Studio is a streamlined, minimalist web-based application tailored for PC users and offered completely free of charge. Designed to emulate a professional collaborative user interface design environment, UI Studio integrates essential features such as live collaboration, real-time cursor tracking, integrated chat, commenting, and dynamic drawing capabilities. Leveraging cutting-edge technologies like Next.js, TypeScript, and Fabric.js, the application provides a robust platform for exploring and mastering real-time web applications and collaborative design processes. With its intuitive, user-friendly interface, UI Studio ensures a seamless and interactive experience, enabling teams to collaborate effectively and creatively in a virtual workspace. Discover how UI Studio can enhance your design workflow and facilitate efficient team collaboration.",
-        "tags": ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn", "JavaScript", "HTML5 Canvas"],
+        "tags": ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn"],
         "demo": "https://ui-studio-mu.vercel.app/",
         "github": "https://github.com/zhenxiao-yu/ui-studio",
         "status": "Ready"
@@ -14,20 +14,20 @@ export const Project =[
         "name": "In the Silence of a Brother",
         "subtitle": "AI Animated Short Film",
         "description": "“In the Silence of a Brother” is a poignant exploration of childhood in 1980s Beijing under China’s One-Child Policy. Using a blend of physical art, stop motion animation and AI-generated visuals, the film vividly depicts the memories and adventures of a sibling relationship. It delves into the impact of the policy on family dynamics and personal identity, while celebrating the joy and imagination of childhood. This film is the final project for the SA2560 course at Western University and is now available to watch on YouTube.",
-        "tags": ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML", "Film","Video Project",],
+        "tags": ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML"],
         "demo": "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
         "github": "https://github.com/zhenxiao-yu/Text-To-Video-AI",
         "status": "Ready"
     },
-    {
+        {
         "id": 3,
-        "name": "Spring Boot Blog",
+        "name": "BioLoom",
         "subtitle": "Web APP",
-        "description": "A robust full-stack blogging platform built with MySQL and Spring Boot, utilizing Thymeleaf for server-side rendering and Semantic UI for a sleek, user-friendly interface. Features include post categorization by hashtags, categories, and dates.",
-        "tags": ["Spring Boot", "MySQL", "Thymeleaf", "Semantic UI", "CSS", "JavaScript", "Web Development"],
-        "demo": "",
-        "github": "https://github.com/zhenxiao-yu/Spring-Boot-Blog",
-        "status": "Maintenance"
+        "description": "BioLoom is an AI-powered social media bio generator built with Next.js 14. This simple web application leverages the latest AI algorithms to create personalized and compelling bios for various social media profiles. Users simply answer a few questions about themselves, and the AI generates a bio that represents their personality and brand. The platform offers a seamless and user-friendly experience, ensuring that users can quickly and easily create bios that stand out. With BioLoom, crafting the perfect bio for professional networking, personal branding, or social connections has never been easier.",
+        "tags": ["Next.js", "AI", "React", "Vercel", "Tailwind CSS", "JavaScript", "Web Development"],
+        "demo": "https://ai-bio-generator-steel.vercel.app/",
+        "github": "https://github.com/zhenxiao-yu/ai-bio-generator",
+        "status": "Ready"
     },
     {
         "id": 4,

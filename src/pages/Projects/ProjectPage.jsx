@@ -29,7 +29,7 @@ const Main = styled(motion.ul)`
   top: 12rem;
   left: calc(10rem + 15vw);
   user-select: none;
-  height: 40vh;
+  height: 50vh;
   display: flex;
 
   ${mediaQueries(50)`

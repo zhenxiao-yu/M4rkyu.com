@@ -113,9 +113,20 @@ const Tags = styled.div`
   border-top: 4px solid ${(props) => props.theme.body};
   padding: 0.8rem 1.3rem;
   display: flex;
-  gap: 0.2rem;
+  gap: 0.5rem; /* Adjusted gap for better spacing */
   overflow: hidden;
   flex-wrap: wrap;
+  justify-content: center; /* Center align the tags */
+
+  @media (max-width: 768px) {
+    padding: 0.6rem 1rem; /* Adjust padding for smaller screens */
+    gap: 0.4rem; /* Adjust gap for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.4rem 0.8rem; /* Adjust padding for very small screens */
+    gap: 0.3rem; /* Adjust gap for very small screens */
+  }
 
   ${Box}:hover & {
     border-top: 4px solid ${(props) => props.theme.text};
