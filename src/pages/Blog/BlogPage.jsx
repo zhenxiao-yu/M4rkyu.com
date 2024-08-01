@@ -144,7 +144,7 @@ const BlogPage = () => {
   return (
     <>
       <Helmet>
-        <title>Blog Page</title>
+        <title>Posts by Mark Yu</title>
         <meta name="description" content="A collection of blogs by ZhenXiao Yu sorted by date." />
         <meta name="keywords" content="blog, articles, tech, development" />
         <meta property="og:url" content="https://www.m4rkyu.com/blog" />

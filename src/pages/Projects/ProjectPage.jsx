@@ -149,7 +149,7 @@ const ProjectPage = () => {
   return (
     <ThemeProvider theme={DarkTheme}>
       <Helmet>
-        <title>Projects - My Portfolio</title>
+        <title>Projects by Mark Yu</title>
         <meta name="description" content="Projects: Showcasing what I've been working on." />
       </Helmet>
       <Suspense fallback={<Loading />}>

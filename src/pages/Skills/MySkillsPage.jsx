@@ -7,7 +7,7 @@ import { Design, Develope, Game, Datastore } from "../../assets/svg/AllSvgs";
 import Loading from "../../components/Loading"; // Loading component
 import SkillsSection from "../../components/Skills";
 import { skills1, skills2, skills3, skills4} from "../../assets/data/SkillsData";
-
+import { Helmet } from "react-helmet";
 // Lazy-loaded components
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
 const HomeButton = lazy(() => import("../../components/HomeButton"));
@@ -186,6 +186,10 @@ const Description = styled.section`
 const MySkillsPage = () => {
   return (
     <ThemeProvider theme={lightTheme}>
+      <Helmet>
+        <title>Mark's Skills and Expertise</title>
+        <meta name="description" content="Skills, what I like to work with" />
+      </Helmet>
       <Suspense fallback={<Loading />}>
         <Container>
           <FixedComponents>
