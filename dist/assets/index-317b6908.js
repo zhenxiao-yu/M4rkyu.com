@@ -1,0 +1,1 @@
+import{_ as e}from"./index-784aae70.js";async function i(r,o=!0){await r.addParticleUpdater("color",async t=>{const{ColorUpdater:a}=await e(()=>import("./ColorUpdater-669eeaa5.js"),["assets/ColorUpdater-669eeaa5.js","assets/ParticlesComponent-7a47f6d3.js","assets/index-784aae70.js","assets/index-85df3ed2.css"]);return new a(t)},o)}export{i as loadColorUpdater};
