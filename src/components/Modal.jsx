@@ -29,13 +29,13 @@ const ModalContent = styled.div`
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 
   @media (max-width: 768px) {
-    max-width: 95%;
+    max-width: 90%;
     max-height: 80%;
     padding: 0.5rem;
   }
 
   @media (max-width: 480px) {
-    max-width: 100%;
+    max-width: 90%;
     max-height: 70%;
     padding: 0.25rem;
   }
