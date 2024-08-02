@@ -6,12 +6,12 @@ import { mediaQueries } from "../theme/Themes";
 
 // Project container styling
 const Box = styled(motion.li)`
-  width: 28rem;
+  width: 30rem;
   height: 50vh;
   background-color: ${(props) => props.theme.text};
   color: ${(props) => props.theme.body};
   padding: 1.5rem 2rem;
-  margin-right: 8rem;
+  margin-right: 5rem;
   border-radius: 0 50px 0 50px;
   display: flex;
   flex-direction: column;
@@ -35,23 +35,23 @@ const Box = styled(motion.li)`
 
   ${mediaQueries(50)`
     width: 16rem;
-    margin-right: 6rem;
+    margin-right: 5rem;
     height: 50vh;
   `};
   ${mediaQueries(40)`
     width: 14rem;
-    margin-right: 4rem;
+    margin-right: 3rem;
     height: 45vh;
   `};
   ${mediaQueries(25)`
     width: 12rem;
-    margin-right: 4rem;
+    margin-right: 2rem;
     height: 45vh;
     padding: 1.5rem 1.5rem;
   `};
   ${mediaQueries(20)`
     width: 10rem;
-    margin-right: 4rem;
+    margin-right: 1rem;
     height: 40vh;
   `};
 `;
@@ -75,8 +75,8 @@ const Description = styled.h4`
   font-size: calc(0.75em + 0.3vw);
   font-family: "Karla", sans-serif;
   font-weight: 700;
-  max-height: 13vh;
-  margin: 20px 3px;
+  max-height: 20vh;
+  margin: 10px 3px;
   overflow-y: scroll;
   text-overflow: ellipsis;
   line-height: 2.1rem;
@@ -116,6 +116,7 @@ const Tags = styled.div`
   gap: 0.5rem; /* Adjusted gap for better spacing */
   overflow: hidden;
   flex-wrap: wrap;
+  margin-bottom:10px;
   justify-content: center; /* Center align the tags */
 
   @media (max-width: 768px) {
@@ -170,7 +171,7 @@ const Link = styled(NavLink)`
   padding: 0.3rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
   // font-family: "Karla", sans-serif;
-  font-size: calc(0.85em + 0.5vw);
+  font-size: calc(0.65em + 0.5vw);
   text-overflow: ellipsis;
   white-space: nowrap;
   display: flex;
