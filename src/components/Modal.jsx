@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
@@ -15,15 +15,14 @@ const Backdrop = styled(motion.div)`
   z-index: 10;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled(motion.div)`
   position: relative;
-  max-width: 90%;
-  max-height: 90%;
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background:
-      linear-gradient(135deg,#0000 18.75%,#090a0b 0 31.25%,#0000 0),
+  background: linear-gradient(135deg,#0000 18.75%,#090a0b 0 31.25%,#0000 0),
       repeating-linear-gradient(45deg,#090a0b -6.25% 6.25%,#ece9e8 0 18.75%);
   background-size: 20px 20px;
   border-radius: 10px;
@@ -31,23 +30,24 @@ const ModalContent = styled.div`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    width: 90%;
-    height: 80%;
+    width: ${(props) => props.width * 0.9}px;
+    height: ${(props) => props.height * 0.9}px;
   }
 
   @media (max-width: 480px) {
-    width: 90%;
-    height: 70%;
+    width: ${(props) => props.width * 0.8}px;
+    height: ${(props) => props.height * 0.8}px;
   }
 `;
 
 const ImageWrapper = styled.div`
   position: relative;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 `;
 
 const ModalImage = styled(motion.img)`
@@ -71,10 +71,34 @@ const Watermark = styled.div`
 `;
 
 const Modal = ({ setSelectedImg, selectedImg }) => {
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+
   const handleClick = (e) => {
     if (e.target.classList.contains('backdrop')) {
       setSelectedImg(null);
     }
+  };
+
+  const handleImageLoad = (e) => {
+    const { naturalWidth, naturalHeight } = e.target;
+    const maxModalWidth = window.innerWidth * 0.9;
+    const maxModalHeight = window.innerHeight * 0.9;
+    let width = naturalWidth;
+    let height = naturalHeight;
+
+    if (width > maxModalWidth) {
+      const scale = maxModalWidth / width;
+      width = maxModalWidth;
+      height = height * scale;
+    }
+
+    if (height > maxModalHeight) {
+      const scale = maxModalHeight / height;
+      height = maxModalHeight;
+      width = width * scale;
+    }
+
+    setImageDimensions({ width, height });
   };
 
   return (
@@ -84,13 +108,17 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <ModalContent>
+      <ModalContent
+        width={imageDimensions.width}
+        height={imageDimensions.height}
+        initial={{ y: '-150vh' }}
+        animate={{ y: 0 }}
+      >
         <ImageWrapper>
           <ModalImage
             src={selectedImg}
             alt="enlarged pic"
-            initial={{ y: '-150vh' }}
-            animate={{ y: 0 }}
+            onLoad={handleImageLoad}
           />
           <Watermark>M4rkyu.com</Watermark>
         </ImageWrapper>
