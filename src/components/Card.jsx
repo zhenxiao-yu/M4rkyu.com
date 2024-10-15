@@ -79,7 +79,7 @@ const Description = styled.h4`
   margin: 10px 3px;
   overflow-y: scroll;
   text-overflow: ellipsis;
-  line-height: 2.1rem;
+  line-height: 1.5rem;
   border-radius: 10px;
   padding: 0.3em 1.3em 0.3em 0.3em;
 
