@@ -72,24 +72,47 @@ const Subtitle = styled.div`
 `;
 
 const Description = styled.h4`
-  font-size: calc(0.75em + 0.3vw);
+  font-size: calc(0.75em + 0.3vw); /* Normal font size for larger screens */
   font-family: "Karla", sans-serif;
   font-weight: 700;
   max-height: 20vh;
   margin: 10px 3px;
   overflow-y: scroll;
   text-overflow: ellipsis;
-  line-height: 1.5rem;
+  line-height: 1.5rem; /* Standard line-height for larger screens */
   border-radius: 10px;
-  padding: 0.3em 1.3em 0.3em 0.3em;
+  padding: 0.3em 1.3em 0.3em 0.3em; /* Normal padding for larger screens */
 
-  ${mediaQueries(25)`
-    font-size: calc(0.6em + 0.3vw);
-  `};
-  ${mediaQueries(20)`
-    font-size: calc(0.5em + 0.3vw);
+  /* Large tablets or small desktops */
+  ${mediaQueries(40)`  
+    font-size: calc(0.7em + 0.3vw);
+    line-height: 1.4rem;
+    padding: 0.3em 1.1em;
   `};
 
+  /* Tablets */
+  ${mediaQueries(30)`  
+    font-size: calc(0.65em + 0.3vw);
+    line-height: 1.3rem;
+    padding: 0.25em 1em;
+  `};
+
+  /* Large phones */
+  ${mediaQueries(25)`  
+    font-size: calc(0.6em + 0.2vw); /* Smaller font size for phones */
+    line-height: 1.2rem;
+    padding: 0.2em 0.8em;
+  `};
+
+  /* Small phones */
+  ${mediaQueries(20)`  
+    font-size: calc(0.5em + 0.2vw); /* More compact for small phones */
+    line-height: 1.1rem;
+    padding: 0.2em 0.6em;
+    margin: 8px 2px; /* Smaller margin */
+  `};
+
+  /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 4px;
   }
@@ -113,20 +136,47 @@ const Tags = styled.div`
   border-top: 4px solid ${(props) => props.theme.body};
   padding: 0.8rem 1.3rem;
   display: flex;
-  gap: 0.5rem; /* Adjusted gap for better spacing */
+  gap: 0.5rem;
   overflow: hidden;
   flex-wrap: wrap;
-  margin-bottom:10px;
-  justify-content: center; /* Center align the tags */
+  margin-bottom: 10px;
+  justify-content: center;
 
-  @media (max-width: 768px) {
-    padding: 0.6rem 1rem; /* Adjust padding for smaller screens */
-    gap: 0.4rem; /* Adjust gap for smaller screens */
+  /* Large tablets or small desktops */
+  @media (max-width: 1024px) {
+    padding: 0.7rem 1.2rem;
+    gap: 0.45rem;
   }
 
+  /* Tablets */
+  @media (max-width: 768px) {
+    padding: 0.6rem 1rem;
+    gap: 0.4rem;
+  }
+
+  /* Large phones */
+  @media (max-width: 600px) {
+    padding: 0.5rem 0.9rem;
+    gap: 0.35rem;
+  }
+
+  /* Small phones */
   @media (max-width: 480px) {
-    padding: 0.4rem 0.8rem; /* Adjust padding for very small screens */
-    gap: 0.3rem; /* Adjust gap for very small screens */
+    padding: 0.4rem 0.8rem;
+    gap: 0.3rem;
+    justify-content: flex-start;
+  }
+
+  /* Very small screens */
+  @media (max-width: 360px) {
+    padding: 0.3rem 0.6rem;
+    gap: 0.25rem;
+  }
+
+  /* Smallest screens */
+  @media (max-width: 320px) {
+    padding: 0.2rem 0.5rem;
+    gap: 0.2rem;
   }
 
   ${Box}:hover & {
@@ -136,7 +186,7 @@ const Tags = styled.div`
 
 const Tag = styled.span`
   margin-right: 0.1rem;
-  font-size: calc(0.5em + 0.2vw);
+  font-size: calc(0.5em + 0.2vw); /* Responsive font-size */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -153,11 +203,39 @@ const Tag = styled.span`
     cursor: pointer;
   }
 
-  ${mediaQueries(25)`  
-    font-size: calc(0.7em);
-    padding: 0.4em 0.9em;  
-  `};
+  /* Large tablets or small desktops */
+  @media (max-width: 1024px) {
+    font-size: calc(0.45em + 0.2vw);
+  }
+
+  /* Tablets */
+  @media (max-width: 768px) {
+    font-size: calc(0.4em + 0.2vw);
+  }
+
+  /* Large phones */
+  @media (max-width: 600px) {
+    font-size: calc(0.38em + 0.2vw);
+  }
+
+  /* Small phones */
+  @media (max-width: 480px) {
+    font-size: calc(0.35em + 0.2vw);
+  }
+
+  /* Very small screens */
+  @media (max-width: 360px) {
+    font-size: calc(0.32em + 0.2vw);
+    padding: 0.3em 0.4em;
+  }
+
+  /* Smallest screens */
+  @media (max-width: 320px) {
+    font-size: calc(0.3em + 0.2vw);
+    padding: 0.2em 0.3em;
+  }
 `;
+
 
 const Footer = styled.footer`
   display: flex;
