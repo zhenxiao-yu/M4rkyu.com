@@ -37,7 +37,7 @@ const Main = styled(motion.ul)`
   `};
 
   ${mediaQueries(40)`
-    top: 30%;
+    top: 24%;
     left: calc(6rem + 15vw);
   `};
 
