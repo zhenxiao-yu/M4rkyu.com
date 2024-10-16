@@ -90,7 +90,7 @@ const GalleryPage = () => {
                 index={index}
                 section={section}
                 filterDocs={filterDocs}
-                docs={docs}
+                docs={docs}  // Pass docs as a prop to Section
                 setSelectedImg={setSelectedImg}
                 handleImageLoad={handleImageLoad}
                 loading={loading}
@@ -132,16 +132,34 @@ const HeroSection = () => (
   </div>
 );
 
-const Section = ({ index, section, filterDocs, setSelectedImg }) => {
-  const [loading, setLoading] = useState({});
-
-  const handleImageLoad = useCallback((id) => {
-    setLoading((prev) => ({ ...prev, [id]: false }));
-  }, []);
+const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImageLoad, loading }) => {
+  const imgRefs = useRef({}); 
 
   const handleImageError = useCallback((id) => {
     setLoading((prev) => ({ ...prev, [id]: 'error' }));
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            observer.unobserve(img);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const images = Object.values(imgRefs.current);
+    images.forEach((img) => {
+      if (img) observer.observe(img);
+    });
+
+    return () => observer.disconnect();
+  }, [docs]);
 
   return (
     <div className="section-container" id={`section-${index}`}>
@@ -176,8 +194,8 @@ const Section = ({ index, section, filterDocs, setSelectedImg }) => {
                 <div className="image-container">
                   {loading[doc.id] !== false && <div className="loader"></div>}
                   <img
-                    src={doc.url}
-                    loading="lazy"
+                    ref={(el) => (imgRefs.current[doc.id] = el)}  // Assign ref for each image
+                    data-src={doc.url}  // Lazy load using data-src
                     alt={`Gallery Image ${doc.title || 'No title'}`}
                     onLoad={() => handleImageLoad(doc.id)}
                     onError={() => handleImageError(doc.id)}
