@@ -143,4 +143,20 @@ export const Blogs = [
         imgSrc: "https://media.dev.to/cdn-cgi/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Futq5f7kfmtm8pixt6qhy.png",
         link: "https://dev.to/markyu/advanced-java-simplifying-object-property-copy-and-manipulation-with-beanutil-3l2n"
     },
+    {
+        id: 19,
+        name: "How to Determine the Network Address from a Known IP Address",
+        tags: ["ipaddresses", "subnetmask", "networking", "network"],
+        date: "2024-10-15",
+        imgSrc: "https://media.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F12vjk4fmvqtb2tbs1grj.jpg",
+        link: "https://dev.to/markyu/how-to-determine-the-network-address-from-a-known-ip-address-4895"
+    },
+    {
+        id: 20,
+        name: "The True Cost of Poor Data Quality: Why It Matters and How to Improve It",
+        tags: ["database", "datascience", "dataengineering", "management"],
+        date: "2024-10-14",
+        imgSrc: "https://media.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ffa1kqqebwm45cy9xoxbl.png",
+        link: "https://dev.to/markyu/the-true-cost-of-poor-data-quality-why-it-matters-and-how-to-improve-it-2epi"
+    },
 ];
