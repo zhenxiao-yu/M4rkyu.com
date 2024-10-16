@@ -66,7 +66,6 @@ const Main = styled(motion.div)`
   top: 50%;
   transform: translate(-50%, -50%);
   font-family: "Poppins", sans-serif;
-  letter-spacing: 1.2px;
   font-weight: 400;
 
   & h2 {
@@ -96,19 +95,19 @@ const Main = styled(motion.div)`
   ${mediaQueries(40)`
     width: 70vw;
     max-height: 70vh;
-    font-size: calc(0.95rem + 0.4vw);
+    font-size: calc(0.80rem + 0.4vw);
   `};
 
   ${mediaQueries(30)`
     width: 65vw;
     max-height: 78vh;
-    font-size: calc(0.95rem + 0vw);
+    font-size: calc(0.75rem + 0vw);
     padding: 1.5rem;
   `};
 
   ${mediaQueries(20)`
     padding: 1rem;
-    font-size: calc(0.8rem + 0.8vw);
+    font-size: calc(0.7rem + 0.8vw);
   `};
 `;
 
@@ -134,8 +133,8 @@ const ContactDetails = styled.div`
   & p {
     display: flex;
     align-items: center;
-    margin: 0.3rem 0;
-    font-size: 0.85rem;
+    margin: 0.2rem 0;
+    font-size: 0.65rem;
   }
 
   a{
@@ -152,6 +151,7 @@ const ProfilePicture = styled.img`
   height: auto;
   margin-left: 2rem;
   border-radius: 50%;
+  filter: grayscale(100%);
   border: 10px solid ${(props) => props.theme.text};
 
   ${mediaQueries(40)`
