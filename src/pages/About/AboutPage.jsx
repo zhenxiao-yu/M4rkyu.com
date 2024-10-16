@@ -50,9 +50,10 @@ const Main = styled(motion.div)`
   color: ${(props) => props.theme.text};
   padding: 5rem;
   border-radius: 0.5rem;
-  width: 70vw;
-  max-height: 68vh;
+  width: 65vw;
+  max-height: 70vh;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 3;
   line-height: 2.2;
   display: flex;
@@ -93,16 +94,16 @@ const Main = styled(motion.div)`
   }
 
   ${mediaQueries(40)`
-    width: 70vw;
+    width: 66vw;
     max-height: 70vh;
     font-size: calc(0.80rem + 0.4vw);
   `};
 
   ${mediaQueries(30)`
-    width: 65vw;
-    max-height: 78vh;
+    width: 60vw;
+    max-height: 75vh;
     font-size: calc(0.75rem + 0vw);
-    padding: 1.5rem;
+    padding: 1rem;
   `};
 
   ${mediaQueries(20)`
@@ -352,31 +353,29 @@ const AboutPage = () => {
 
             <div>
               <h2 className='hvr-skew-forward'>Overview</h2>
-              <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. My passion lies in blending design and engineering to create software that is both visually stunning and highly functional.</p>
+              <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. I am passionate about merging design and engineering to create software that is both visually captivating and highly functional.</p>
 
-              <p>I was born in <strong>China</strong> and immigrated to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank" rel="noopener noreferrer">Saskatchewan, Canada</a></u> in 2013.
-                During high school, a computer science elective sparked my interest in web design and coding. This newfound passion led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank" rel="noopener noreferrer">Western University</a></u> and pursue a career in software development.</p>
+              <p>Born in <strong>ChangChun, China</strong> in 2001, I moved to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank" rel="noopener noreferrer">Saskatchewan, Canada</a></u> with my parents in 2013. During high school, a computer science elective sparked my interest in web design and coding, ultimately leading me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank" rel="noopener noreferrer">Western University</a></u>. This journey has propelled me into the dynamic and ever-evolving world of software development.</p>
+
+              <p>On this site, you'll find a showcase of my artwork, software projects, and blog posts where I share my thoughts, creative process, and experiences in blending technology with art.</p>
 
               <h2 className='hvr-skew-forward'>Professional Skills</h2>
-              <p>As a full-stack web developer, I thrive on building robust, user-friendly applications. My expertise spans a wide range of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. Beyond websites, I also enjoy developing games and working on various creative projects.</p>
+              <p>As a full-stack web developer, I thrive on building robust, user-friendly applications that solve real-world problems. My expertise encompasses a broad spectrum of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. I have experience developing interactive user interfaces, managing complex data systems, and integrating APIs to create seamless experiences. Beyond web development, I am passionate about creating engaging games and working on various artistic and creative projects.</p>
 
-              <h2 className='hvr-skew-forward'>Personal Interests</h2>
-              <p>When I'm not immersed in the digital world, you'll find me exploring new places and capturing the beauty of the world through my paintings. Travel and art are my greatest inspirations, constantly sparking my creativity and driving my passion for innovation.</p>
-
-              <h2 className='hvr-skew-forward'>Work Experience</h2>
+              <h2 className='hvr-skew-forward'>Work Experiences</h2>
               <VerticalTimeline>
                 {experiences.map((experience, index) => (
                   <ExperienceCard key={`experience-${index}`} experience={experience} />
                 ))}
               </VerticalTimeline>
-
               <br />
 
-              <h2 className='hvr-skew-forward'>Current Focus</h2>
-              <p>Currently, I'm taking a break from traditional employment to delve into new technologies, travel, and work on personal projects that ignite my creativity. My focus is on crafting intuitive and visually captivating digital experiences that redefine user interaction with technology.</p>
-              
-              <h2 className='hvr-skew-forward'>Passion and Expertise</h2>
-              <p>I am passionate about using my skills and creativity to tackle real-world challenges with innovative solutions. My expertise includes managing complex data systems, designing 2D/3D games, developing full-stack web applications, and enhancing user interfaces. If you're interested in collaboration and exchanging ideas, let's connect and explore the potential of technology together. Reach out, and let's create something remarkable!</p>
+              <h2 className='hvr-skew-forward'>Personal Interests</h2>
+              <p>When I'm not immersed in the digital world, I love exploring new places and capturing the beauty I see through my paintings. Travel and art are my greatest sources of inspiration, fueling my creativity and driving my passion for innovation. Whether hiking through scenic landscapes or experimenting with different artistic mediums, I find that these experiences enrich my perspective and influence the work I do as both a developer and an artist.</p>
+
+
+             <h2 className='hvr-skew-forward'>Current Focus</h2>
+              <p>Right now, I'm taking a step back from traditional employment to explore emerging technologies, travel, and work on personal projects that spark my creativity. This break allows me to push boundaries, experiment, and reignite my passion for innovation. If you're interested in collaborating or exchanging ideas, I'd love to connect and explore the endless possibilities that technology offers. Reach out—let's create something extraordinary together!</p>
             </div>
 
           </Main>
