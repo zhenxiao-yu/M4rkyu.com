@@ -253,11 +253,11 @@ const Footer = styled.footer`
 const FooterLinkContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem; /* Add spacing between the link and the Git icon */
+  justify-content: space-between; /* Align link and Git icon at the ends */
+  width: 100%; /* Full width for flexibility */
 
   @media (max-width: 768px) {
     width: 100%; /* Ensure the container takes up full width on smaller screens */
-    justify-content: space-between; /* Distribute the space between link and Git icon */
   }
 `;
 
@@ -274,12 +274,12 @@ const Link = styled(NavLink)`
   font-weight: bold;
   align-items: center;
   height: 1.8rem;
-  max-width: 15vw;
+  max-width: 50%; /* Adjust width to ensure it doesn't overlap with Git icon */
 
   @media (max-width: 768px) {
     padding: 0.3rem 1.5rem;
     font-size: calc(0.6em + 0.4vw);
-    max-width: calc(100% - 3rem); /* Adjust to allow space for the Git icon */
+    max-width: 70%; /* Allow more width for smaller screens */
   }
 
   ${Box}:hover & {
@@ -312,21 +312,21 @@ const Link2 = styled.span`
   background-color: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
   text-decoration: none;
-  padding: 0.5rem calc(2rem + 2vw);
+  padding: 0.3rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
-  font-size: calc(0.7em + 0.5vw);
-  font-weight: bold;
+  font-size: calc(0.65em + 0.5vw);
   text-overflow: ellipsis;
   white-space: nowrap;
   display: flex;
+  font-weight: bold;
   align-items: center;
   height: 1.8rem;
-  max-width: 15rem;
+  max-width: 50%; /* Adjust width to ensure it doesn't overlap with Git icon */
 
   @media (max-width: 768px) {
-    padding: 0.4rem 1.5rem;
+    padding: 0.3rem 1.5rem;
     font-size: calc(0.6em + 0.4vw);
-    max-width: calc(100% - 3rem); /* Adjust to allow space for the Git icon */
+    max-width: 70%; /* Allow more width for smaller screens */
   }
 `;
 
@@ -344,11 +344,11 @@ const renderDemoLink = (status, demo) => {
   }
 
   if (status === "Ready") {
-    return <Link style={{ border: `3px solid ${borderColor}` }} to={{ pathname: `${demo}` }} target="_blank">View Demo</Link>;
+    return <Link style={{ border: `3px solid ${borderColor}` }} to={{ pathname: `${demo}` }} target="_blank">START NOW</Link>;
   } else if (status === "Development") {
     return <Link2 style={{ border: `3px solid ${borderColor}` }}>Coming Soon</Link2>;
   } else if (status === "Maintenance") {
-    return <Link2 style={{ border: `3px solid ${borderColor}` }}>Unavailable</Link2>;
+    return <Link2 style={{ border: `3px solid ${borderColor}` }}>UNAVAILABLE</Link2>;
   }
   return null;
 };
