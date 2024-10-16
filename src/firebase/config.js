@@ -1,4 +1,3 @@
-// firebase/config.js
 import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from "firebase/analytics";
