@@ -240,6 +240,25 @@ const Tag = styled.span`
 const Footer = styled.footer`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+`;
+
+const FooterLinkContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Add spacing between the link and the Git icon */
+
+  @media (max-width: 768px) {
+    width: 100%; /* Ensure the container takes up full width on smaller screens */
+    justify-content: space-between; /* Distribute the space between link and Git icon */
+  }
 `;
 
 const Link = styled(NavLink)`
@@ -248,7 +267,6 @@ const Link = styled(NavLink)`
   text-decoration: none;
   padding: 0.3rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
-  // font-family: "Karla", sans-serif;
   font-size: calc(0.65em + 0.5vw);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -257,6 +275,12 @@ const Link = styled(NavLink)`
   align-items: center;
   height: 1.8rem;
   max-width: 15vw;
+
+  @media (max-width: 768px) {
+    padding: 0.3rem 1.5rem;
+    font-size: calc(0.6em + 0.4vw);
+    max-width: calc(100% - 3rem); /* Adjust to allow space for the Git icon */
+  }
 
   ${Box}:hover & {
     background-color: ${(props) => props.theme.text};
@@ -273,6 +297,10 @@ const Git = styled(NavLink)`
   align-items: center;
   height: 2.8rem;
 
+  @media (max-width: 768px) {
+    height: 2.4rem;
+  }
+
   ${Box}:hover & {
     & > * {
       fill: ${(props) => props.theme.text};
@@ -286,7 +314,6 @@ const Link2 = styled.span`
   text-decoration: none;
   padding: 0.5rem calc(2rem + 2vw);
   border-radius: 0 0 0 30px;
-  font-family: "Karla", sans-serif;
   font-size: calc(0.7em + 0.5vw);
   font-weight: bold;
   text-overflow: ellipsis;
@@ -295,7 +322,15 @@ const Link2 = styled.span`
   align-items: center;
   height: 1.8rem;
   max-width: 15rem;
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 1.5rem;
+    font-size: calc(0.6em + 0.4vw);
+    max-width: calc(100% - 3rem); /* Adjust to allow space for the Git icon */
+  }
 `;
+
+
 
 const renderDemoLink = (status, demo) => {
   let borderColor = "";
@@ -342,10 +377,12 @@ const Card = (props) => {
         ))}
       </Tags>
       <Footer className="animate__animated animate__fadeInUp animate__delay-1s">
+        <FooterLinkContainer>
         {renderDemoLink(status, demo)}
         <Git to={{ pathname: `${github}` }} className="hvr-grow" target="_blank">
           <Github height="100%" />
-        </Git>
+          </Git>
+        </FooterLinkContainer>
       </Footer>
     </Box>
   );
