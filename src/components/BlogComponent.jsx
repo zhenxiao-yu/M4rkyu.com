@@ -11,7 +11,7 @@ const Box = styled(motion(NavLink))`
   border-radius: 1rem;
   width: calc(15rem + 15vw);
   height: 20rem;
-  border: 4px solid ${(props) => props.theme.text};
+  border: 3px groove ${(props) => props.theme.text};
   padding: 1rem;
   color: ${(props) => props.theme.text};
   display: flex;
@@ -31,7 +31,8 @@ const Box = styled(motion(NavLink))`
   `};
 
   ${mediaQueries(30)`
-    height: 18rem;
+    height: 20rem;
+    width: calc(40vw + 6rem);
     padding: 0.8rem;
   `};
 

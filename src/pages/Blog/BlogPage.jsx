@@ -54,7 +54,7 @@ const Center = styled.div`
 const Grid = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(3, minmax(calc(10rem + 15vw), 1fr));
-  grid-gap: calc(0.3rem + 2vw);
+  grid-gap: calc(0.5rem + 2vw);
 
   ${mediaQueries(30)`
     grid-template-columns: repeat(1, 1fr);
