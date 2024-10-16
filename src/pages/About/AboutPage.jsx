@@ -353,16 +353,18 @@ const AboutPage = () => {
 
             <div>
               <h2 className='hvr-skew-forward'>Overview</h2>
-              <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. I am passionate about merging design and engineering to create software that is both visually captivating and highly functional.</p>
+              <p>Welcome to my website! I'm <strong>Mark Yu</strong>, an artist and full-stack web developer based in <u>Ontario, Canada</u>. I am passionate about combining design and engineering to create software that is both visually captivating and functional, focusing on delivering engaging user experiences.</p>
 
-              <p>Born in <strong>ChangChun, China</strong> in 2001, I moved to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank" rel="noopener noreferrer">Saskatchewan, Canada</a></u> with my parents in 2013. During high school, a computer science elective sparked my interest in web design and coding, ultimately leading me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank" rel="noopener noreferrer">Western University</a></u>. This journey has propelled me into the dynamic and ever-evolving world of software development.</p>
+              <p>Born in <strong>ChangChun, China</strong> in 2001, I moved to <u><a className="hvr-sweep-to-top" href="https://en.wikipedia.org/wiki/Saskatchewan" target="_blank" rel="noopener noreferrer">Saskatchewan, Canada</a></u> in 2013. During high school, a computer science elective sparked my interest in coding, which led me to study software engineering at <u><a className="hvr-sweep-to-top" href="https://www.uwo.ca/" target="_blank" rel="noopener noreferrer">Western University</a></u>. This journey laid a strong foundation for my career in software development.</p>
 
-              <p>On this site, you'll find a showcase of my artwork, software projects, and blog posts where I share my thoughts, creative process, and experiences in blending technology with art.</p>
+              <p>On this site, you'll find a blend of my artwork, software projects, and blog posts that explore my creative process at the intersection of art and technology.</p>
+
+
 
               <h2 className='hvr-skew-forward'>Professional Skills</h2>
-              <p>As a full-stack web developer, I thrive on building robust, user-friendly applications that solve real-world problems. My expertise encompasses a broad spectrum of front-end and back-end technologies, including <strong>React</strong>, <strong>MySQL</strong>, <strong>Spring Boot</strong>, <strong>Apache Storm</strong>, and <strong>Node.js</strong>. I have experience developing interactive user interfaces, managing complex data systems, and integrating APIs to create seamless experiences. Beyond web development, I am passionate about creating engaging games and working on various artistic and creative projects.</p>
+            <p>As a full-stack developer, I build robust, user-friendly applications that solve real-world problems. My expertise spans technologies like <strong><a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer">React</a></strong>, <strong><a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer">MySQL</a></strong>, <strong><a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer">Spring Boot</a></strong>, <strong><a href="https://storm.apache.org/" target="_blank" rel="noopener noreferrer">Apache Storm</a></strong>, and <strong><a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js</a></strong>. I have experience creating interactive user interfaces, managing complex data systems, and integrating APIs to deliver seamless experiences. Beyond web development, I enjoy creating games and pursuing creative projects that blend art with technology.</p>
 
-              <h2 className='hvr-skew-forward'>Work Experiences</h2>
+              <h2 className='hvr-skew-forward'>Work Experience</h2>
               <VerticalTimeline>
                 {experiences.map((experience, index) => (
                   <ExperienceCard key={`experience-${index}`} experience={experience} />
@@ -371,12 +373,12 @@ const AboutPage = () => {
               <br />
 
               <h2 className='hvr-skew-forward'>Personal Interests</h2>
-              <p>When I'm not immersed in the digital world, I love exploring new places and capturing the beauty I see through my paintings. Travel and art are my greatest sources of inspiration, fueling my creativity and driving my passion for innovation. Whether hiking through scenic landscapes or experimenting with different artistic mediums, I find that these experiences enrich my perspective and influence the work I do as both a developer and an artist.</p>
+              <p>Outside of coding, I love traveling and capturing the beauty around me through painting. Travel and art are major sources of inspiration that fuel my creativity and influence my work. Whether hiking through landscapes or experimenting with different mediums, these experiences enhance my perspective as both a developer and an artist.</p>
 
-
-             <h2 className='hvr-skew-forward'>Current Focus</h2>
-              <p>Right now, I'm taking a step back from traditional employment to explore emerging technologies, travel, and work on personal projects that spark my creativity. This break allows me to push boundaries, experiment, and reignite my passion for innovation. If you're interested in collaborating or exchanging ideas, I'd love to connect and explore the endless possibilities that technology offers. Reach out—let's create something extraordinary together!</p>
+              <h2 className='hvr-skew-forward'>Current Focus</h2>
+              <p>I am currently taking a break from traditional work to explore emerging technologies, travel, and work on projects that spark my creativity. This period allows me to experiment and push boundaries. If you're interested in collaborating, I'd love to connect—let's create something extraordinary together!</p>
             </div>
+    
 
           </Main>
           <BigTitle text="ABOUT" top="10%" left="5%" />
