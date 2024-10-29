@@ -33,7 +33,7 @@ function Router() {
             <Route exact path="/skills" component={MySkillsPage} />
             <Route exact path="/gallery" component={GalleryPage} />
             <Route path="/gallery/:section" component={GalleryPage} />
-            <Route exact path="/gallery/admin" component={UploadForm} />
+            <Route exact path="/admin" component={UploadForm} />
             <Route component={NotFoundPage} />
           </Switch>
         </Suspense>
