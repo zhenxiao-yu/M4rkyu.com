@@ -365,7 +365,7 @@ const item = {
 const Card = (props) => {
   const { id, name, subtitle, description, tags, demo, github, status, imageUrl } = props.data;
 
-  const [showImage, setShowImage] = useState(false);
+  const [showImage, setShowImage] = useState(true);
 
   // Toggle state function
   const toggleView = () => {

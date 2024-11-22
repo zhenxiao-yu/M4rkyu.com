@@ -3,6 +3,8 @@ import bioloom from "../Images/project2.png";
 import brother from "../Images/project3.png";
 import madness from "../Images/project4.png";
 import uistudio from "../Images/project5.png";
+import resubot from "../Images/project6.png";
+import pubg from "../Images/project7.png";
 import emptyproject from "../Images/project_null.png";
 
 export const Project = [
@@ -62,7 +64,7 @@ export const Project = [
         imageUrl:uistudio
     },
     {
-        id: 6,
+        id: 9,
         name: "Bulma E-Commerce Store",
         subtitle: "Web App",
         description: "Bulma E-Commerce Store is a React-powered online storefront designed with style and functionality in mind. Featuring a JSON Server for backend simulation and a clean aesthetic thanks to Bulma and Node SASS, this project is perfect for small businesses looking to step into the online marketplace. It’s a great example of how modern tools can create a sleek and user-friendly shopping experience.",
@@ -82,5 +84,27 @@ export const Project = [
         github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
         status: "Maintenance",
         imageUrl:emptyproject
+    },
+    {
+        id: 8,
+        name: "Resubot",
+        subtitle: "Web App",
+        description: "ResuBot is an AI-driven web application designed to revolutionize the resume and cover letter creation process, making it personalized, efficient, and accessible. By leveraging OpenAI’s GPT-3.5-turbo, ResuBot aims to address the challenges faced by job seekers in crafting tailored, professional resumes and cover letters while streamlining the overall job application process.",
+        tags: ["React", "Node.js", "OpenAI", "Bulma", "Express", "MySQL", "Web App"],
+        demo: "https://resubot.vercel.app",
+        github: "https://github.com/zhenxiao-yu/resubot",
+        status: "Ready",
+        imageUrl:resubot
+    },
+    {
+        id: 6,
+        name: "PUBG Unreal",
+        subtitle: "3D Game",
+        description: "This ongoing project leverages Unreal Engine 4 (UE4) and its powerful Blueprint visual scripting feature to create a single-player battle royale game inspired by PlayerUnknown's Battlegrounds (PUBG), one of the most well-known multiplayer battle royale games. The primary objective is to replicate key gameplay mechanics, such as dynamic character movement, item interaction, and realistic weapon handling, within a single-player environment. The current version focuses on core functionality and does not yet include multiplayer support.",
+        tags: ["UE4", "C++", "Blueprints", "Blender", "VR", "Game Development", "3dAssets"],
+        demo: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
+        github: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
+        status: "Maintenance",
+        imageUrl:pubg
     },
 ];
