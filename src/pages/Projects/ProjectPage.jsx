@@ -117,8 +117,15 @@ const container = {
 // Sorting function
 const sortProjects = (projects) => {
   const statusOrder = ["Ready", "Development", "Maintenance"];
-  return projects.sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status));
+  return projects.sort((a, b) => {
+    const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+    if (statusComparison !== 0) {
+      return statusComparison; // Sort by status first
+    }
+    return a.id - b.id; // Sort by id as a secondary criterion
+  });
 };
+
 
 const ProjectPage = () => {
   const ref = useRef(null);

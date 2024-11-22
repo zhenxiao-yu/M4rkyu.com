@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { Github } from "../assets/svg/AllSvgs";
 import { mediaQueries } from "../theme/Themes";
+import {useState} from "react";
 
 // Project container styling
 const Box = styled(motion.li)`
@@ -236,7 +237,6 @@ const Tag = styled.span`
   }
 `;
 
-
 const Footer = styled.footer`
   display: flex;
   justify-content: space-between;
@@ -331,7 +331,6 @@ const Link2 = styled.span`
 `;
 
 
-
 const renderDemoLink = (status, demo) => {
   let borderColor = "";
 
@@ -344,7 +343,7 @@ const renderDemoLink = (status, demo) => {
   }
 
   if (status === "Ready") {
-    return <Link style={{ border: `3px solid ${borderColor}` }} to={{ pathname: `${demo}` }} target="_blank">START NOW</Link>;
+    return <Link style={{ border: `3px solid ${borderColor}` }} to={{ pathname: `${demo}` }} target="_blank">PROJECT LINK</Link>;
   } else if (status === "Development") {
     return <Link2 style={{ border: `3px solid ${borderColor}` }}>Coming Soon</Link2>;
   } else if (status === "Maintenance") {
@@ -364,27 +363,68 @@ const item = {
 };
 
 const Card = (props) => {
-  const { id, name, subtitle, description, tags, demo, github, status } = props.data;
+  const { id, name, subtitle, description, tags, demo, github, status, imageUrl } = props.data;
+
+  const [showImage, setShowImage] = useState(false);
+
+  // Toggle state function
+  const toggleView = () => {
+    setShowImage((prev) => !prev);
+  };
+
   return (
-    <Box key={id} variants={item}>
-      <Title className="animate__animated animate__flipInX animate__delay-1s">{name}
-        <Subtitle>{subtitle}</Subtitle>
-      </Title>
-      <Description className="animate__animated animate__zoomIn animate__delay-1s">{description}</Description>
-      <Tags className="animate__animated animate__fadeInUp animate__delay-1s">
-        {tags.map((t, id) => (
-          <Tag key={id} onClick={() => handleTagClick(t)}>#{t}</Tag>
-        ))}
-      </Tags>
-      <Footer className="animate__animated animate__fadeInUp animate__delay-1s">
-        <FooterLinkContainer>
-        {renderDemoLink(status, demo)}
-        <Git to={{ pathname: `${github}` }} className="hvr-grow" target="_blank">
-          <Github height="100%" />
-          </Git>
-        </FooterLinkContainer>
-      </Footer>
-    </Box>
+      <Box key={id} variants={item}>
+        <Title className="animate__animated animate__flipInX animate__delay-1s">
+          {name}
+          <Subtitle>{subtitle}</Subtitle>
+        </Title>
+
+        {/* Toggle between description and image */}
+        {!showImage ? (
+            <Description
+                className="animate__animated animate__flipInX"
+                onClick={toggleView} // Click to show image
+            >
+              {description}
+            </Description>
+        ) : (
+            <motion.img
+                src={imageUrl}
+                className="animate__animated animate__flipX"
+                alt="Related Visual"
+                onClick={toggleView} // Click to show description
+                initial={{opacity: 0, scale: 0.8}}
+                animate={{opacity: 1, scale: 1}}
+                transition={{duration: 0.5}}
+                style={{
+                  width: "100%",
+                  aspectRatio: "16/9", // Maintain a 16:9 aspect ratio
+                  borderRadius: "10px",
+                  marginTop: "10px",
+                  cursor: "pointer",
+                  border: "4px solid #333", // Add a dark border
+                  objectFit: "cover", // Ensures the image fills the container while maintaining aspect ratio
+                }}
+            />
+        )}
+
+        <Tags className="animate__animated animate__fadeInUp animate__delay-1s">
+          {tags.map((t, id) => (
+              <Tag key={id} onClick={() => handleTagClick(t)}>
+                #{t}
+              </Tag>
+          ))}
+        </Tags>
+
+        <Footer className="animate__animated animate__fadeInUp animate__delay-1s">
+          <FooterLinkContainer>
+            {renderDemoLink(status, demo)}
+            <Git to={{pathname: `${github}`}} className="hvr-grow" target="_blank">
+              <Github height="100%"/>
+            </Git>
+          </FooterLinkContainer>
+        </Footer>
+      </Box>
   );
 };
 

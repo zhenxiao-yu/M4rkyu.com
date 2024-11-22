@@ -1,62 +1,86 @@
-export const Project =[
+import nimbus from "../Images/project1.png";
+import bioloom from "../Images/project2.png";
+import brother from "../Images/project3.png";
+import madness from "../Images/project4.png";
+import uistudio from "../Images/project5.png";
+import emptyproject from "../Images/project_null.png";
+
+export const Project = [
     {
-        "id": 1,
-        "name": "UI Studio",
-        "subtitle": "Web APP",
-        "description": "UI Studio is a streamlined, minimalist web-based application tailored for PC users and offered completely free of charge. Designed to emulate a professional collaborative user interface design environment, UI Studio integrates essential features such as live collaboration, real-time cursor tracking, integrated chat, commenting, and dynamic drawing capabilities. Leveraging cutting-edge technologies like Next.js, TypeScript, and Fabric.js, the application provides a robust platform for exploring and mastering real-time web applications and collaborative design processes. With its intuitive, user-friendly interface, UI Studio ensures a seamless and interactive experience, enabling teams to collaborate effectively and creatively in a virtual workspace. Discover how UI Studio can enhance your design workflow and facilitate efficient team collaboration.",
-        "tags": ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn"],
-        "demo": "https://ui-studio-mu.vercel.app/",
-        "github": "https://github.com/zhenxiao-yu/ui-studio",
-        "status": "Ready"
+        id: 1,
+        name: "Nimbus",
+        subtitle: "Web App",
+        description: "Nimbus is a modern file storage and management platform designed to make organizing, sharing, and accessing files simple and efficient. Offering secure uploads, real-time storage insights, and intuitive organization tools, it takes the headache out of file management. Built with React, Next.js, and Appwrite, Nimbus combines sleek design with seamless functionality to provide a responsive and delightful user experience.",
+        tags: ["Cloud", "Appwrite", "TypeScript", "Next.js", "OTP", "Chart.js", "Responsive", "Shadcn"],
+        demo: "https://nimbus-storage-app.vercel.app",
+        github: "https://github.com/zhenxiao-yu/nimbus-storage-app",
+        status: "Ready",
+        imageUrl:nimbus
     },
     {
-        "id": 2,
-        "name": "In the Silence of a Brother",
-        "subtitle": "AI Animated Short Film",
-        "description": "“In the Silence of a Brother” is a poignant exploration of childhood in 1980s Beijing under China’s One-Child Policy. Using a blend of physical art, stop motion animation and AI-generated visuals, the film vividly depicts the memories and adventures of a sibling relationship. It delves into the impact of the policy on family dynamics and personal identity, while celebrating the joy and imagination of childhood. This film is the final project for the SA2560 course at Western University and is now available to watch on YouTube.",
-        "tags": ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML"],
-        "demo": "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
-        "github": "https://github.com/zhenxiao-yu/Text-To-Video-AI",
-        "status": "Ready"
-    },
-        {
-        "id": 3,
-        "name": "BioLoom",
-        "subtitle": "Web APP",
-        "description": "BioLoom is an AI-powered social media bio generator built with Next.js 14. This simple web application leverages the latest AI algorithms to create personalized and compelling bios for various social media profiles. Users simply answer a few questions about themselves, and the AI generates a bio that represents their personality and brand. The platform offers a seamless and user-friendly experience, ensuring that users can quickly and easily create bios that stand out. With BioLoom, crafting the perfect bio for professional networking, personal branding, or social connections has never been easier.",
-        "tags": ["Next.js", "AI", "React", "Vercel", "Tailwind CSS", "JavaScript", "Web Development"],
-        "demo": "https://ai-bio-generator-steel.vercel.app/",
-        "github": "https://github.com/zhenxiao-yu/ai-bio-generator",
-        "status": "Ready"
+        id: 2,
+        name: "BioLoom",
+        subtitle: "Web App",
+        description: "BioLoom is an AI-powered tool for crafting personalized social media bios that are equal parts creative and professional. Whether you're building a personal brand or just want to spice up your profile, BioLoom has got you covered. The app is powered by cutting-edge AI, making bio creation quick, fun, and easy. Simply answer a few questions, and let the AI work its magic to create a bio that truly represents you. Built with Next.js and a sprinkle of Tailwind CSS flair, BioLoom makes finding the perfect words a breeze.",
+        tags: ["Next.js", "AI", "React", "Vercel", "Tailwind CSS", "JavaScript", "Web Development"],
+        demo: "https://ai-bio-generator-steel.vercel.app/",
+        github: "https://github.com/zhenxiao-yu/ai-bio-generator",
+        status: "Ready",
+        imageUrl:bioloom
     },
     {
-        "id": 4,
-        "name": "React E-Commerce Website",
-        "subtitle": "Web APP",
-        "description": "Create a vibrant online storefront with this React.js-powered e-commerce site, featuring a faux backend via JSON Server and stylish aesthetics with Node SASS and Bulma. Ideal for small businesses aiming to establish an online presence.",
-        "tags": ["React", "JSON Server", "SASS", "Bulma", "React Router", "Custom Hooks", "E-commerce"],
-        "demo": "",
-        "github": "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
-        "status": "Maintenance"
+        id: 3,
+        name: "In the Silence of a Brother",
+        subtitle: "AI Animated Short Film",
+        description: "This AI-animated short film explores the profound and emotional bonds between siblings during the One-Child Policy era in 1980s Beijing. Combining physical art, stop motion techniques, and AI-generated visuals, the film is both nostalgic and visually striking. It delves into themes of family, identity, and the bittersweet realities of childhood. The project served as the final assignment for the SA2560 course at Western University and is now available to watch on YouTube.",
+        tags: ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML"],
+        demo: "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
+        github: "https://github.com/zhenxiao-yu/Text-To-Video-AI",
+        status: "Ready",
+        imageUrl:brother
     },
     {
-        "id": 5,
-        "name": "Web3 Ethereum Wallet",
-        "subtitle": "Web APP",
-        "description": "This decentralized application (dApp) leverages blockchain technology to enable users to securely and efficiently send cryptocurrency globally using Ethereum smart contracts. Built with React and TailwindCSS for a responsive user experience.",
-        "tags": ["Web3", "Blockchain", "Solidity", "React", "TailwindCSS", "Crypto Wallet", "Smart Contracts"],
-        "demo": "",
-        "github": "https://github.com/zhenxiao-yu/web3-blockchain-app",
-        "status": "Maintenance"
+        id: 4,
+        name: "Descent Into Madness",
+        subtitle: "PC Game",
+        description: "Descent Into Madness is a spine-chilling 2D roguelike horror shooter that plunges players into the nightmarish world of Karnoxia. Navigate procedurally generated mazes, battle grotesque creatures, and maintain your sanity—if you can. With heart-pounding gameplay, eerie visuals, and a storyline that keeps you on edge, this game promises a unique blend of thrill and challenge. Built with Unity and now available on PC, it’s a perfect pick for those who love adrenaline-packed gaming experiences.",
+        tags: ["Unity", "Game Dev", "2D", "Roguelike", "PC", "C#", "Horror", "PVE"],
+        demo: "https://markyu615.itch.io/descent-into-madness",
+        github: "https://github.com/zhenxiao-yu/Descent-In-To-Madness",
+        status: "Ready",
+        imageUrl:madness
     },
     {
-        "id": 6,
-        "name": "Descent In To Madness",
-        "subtitle": "PC Game",
-        "description": "Enter the twisted realms of Karnoxia, where reality and nightmare blur. In this heart-pounding 2D rogue-like horror shooter, survival depends on more than quick reflexes—your sanity is as fragile as your flesh. Trapped in a maze that reshapes with each playthrough, you'll face monstrous entities challenging both your physical prowess and perception. Now available on PC.",
-        "tags": ["Unity", "Game Dev", "2D", "Roguelike", "PC", "C#","Horror", "PVE", "Procedural Generation", "URP"],
-        "demo": "https://markyu615.itch.io/descent-into-madness",
-        "github": "https://github.com/zhenxiao-yu/Descent-In-To-Madness",
-        "status": "Ready"
-    }
-]
+        id: 5,
+        name: "UI Studio",
+        subtitle: "Web App",
+        description: "UI Studio is a collaborative design platform that brings teams together in real-time for creative projects. Packed with features like real-time drawing, integrated chat, commenting, and cursor tracking, it’s like a playground for designers. Built with Next.js and Fabric.js, the application provides a professional yet user-friendly environment for exploring and mastering collaborative design processes. If you’ve ever wanted a tool that combines fun and productivity, UI Studio is it.",
+        tags: ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn"],
+        demo: "https://ui-studio-mu.vercel.app/",
+        github: "https://github.com/zhenxiao-yu/ui-studio",
+        status: "Ready",
+        imageUrl:uistudio
+    },
+    {
+        id: 6,
+        name: "Bulma E-Commerce Store",
+        subtitle: "Web App",
+        description: "Bulma E-Commerce Store is a React-powered online storefront designed with style and functionality in mind. Featuring a JSON Server for backend simulation and a clean aesthetic thanks to Bulma and Node SASS, this project is perfect for small businesses looking to step into the online marketplace. It’s a great example of how modern tools can create a sleek and user-friendly shopping experience.",
+        tags: ["React", "JSON Server", "SASS", "Bulma", "React Router", "Custom Hooks", "E-commerce"],
+        demo: "",
+        github: "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
+        status: "Maintenance",
+        imageUrl:emptyproject
+    },
+    {
+        id: 7,
+        name: "Web3 Ethereum Wallet",
+        subtitle: "Web App",
+        description: "Web3 Ethereum Wallet is a decentralized application (dApp) that allows users to securely send and manage cryptocurrency using Ethereum smart contracts. With React and TailwindCSS driving the interface, it offers a responsive and efficient way to handle blockchain transactions. Perfect for those exploring the world of decentralized finance, this project showcases the future of secure and decentralized money transfers.",
+        tags: ["Web3", "Blockchain", "Solidity", "React", "TailwindCSS", "Crypto Wallet", "Smart Contracts"],
+        demo: "",
+        github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
+        status: "Maintenance",
+        imageUrl:emptyproject
+    },
+];
