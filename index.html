@@ -1,48 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags -->
+    <!-- Meta Tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#101010" />
     <meta
-        name="description"
-        content="Welcome to the portfolio of Mark Yu, a skilled software engineer, artist, and game developer. Explore a collection of projects that showcase expertise in frontend and backend development, immersive game design, and creative art. Discover how Mark merges technical skills with artistic vision to deliver innovative and impactful solutions."
+            name="description"
+            content="Discover the professional portfolio of Mark Yu, a software engineer, artist, and game developer. Explore innovative projects in full-stack development, game design, and digital art, showcasing expertise in technology and creativity."
     />
     <meta
-        name="keywords"
-        content="Mark Yu, M4rkyu, software engineer, artist, game developer, frontend development, backend development, fullstack development, creative projects, game design, interactive design, web development, art and technology"
+            name="keywords"
+            content="Mark Yu, software engineer portfolio, game developer, digital artist, frontend developer, backend developer, full-stack development, interactive design, creative projects, game design portfolio, web development, art and technology"
     />
     <meta name="author" content="Mark Yu" />
-    <meta property="og:title" content="Mark Yu - Professional Portfolio" />
-    <meta property="og:description" content="Discover the portfolio of Mark Yu, featuring cutting-edge projects in software engineering, game development, and art. See how Mark combines technical proficiency with creative flair." />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Mark Yu - Portfolio of a Software Engineer and Digital Creator" />
+    <meta property="og:description" content="Explore Mark Yu's portfolio featuring cutting-edge projects in software engineering, game development, and digital art. Experience the fusion of technology and creativity." />
     <meta property="og:image" content="https://www.m4rkyu.com/assets/pfp2-262b49f7.png" />
     <meta property="og:url" content="https://www.m4rkyu.com" />
-    <meta name="twitter:title" content="Mark Yu - Professional Portfolio" />
-    <meta name="twitter:description" content="Explore the innovative portfolio of Mark Yu, highlighting his work in software engineering, game development, and artistic projects." />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mark Yu - Software Engineer and Digital Creator Portfolio" />
+    <meta name="twitter:description" content="Showcasing innovative projects in software engineering, immersive game development, and creative digital art by Mark Yu." />
     <meta name="twitter:image" content="https://www.m4rkyu.com/assets/pfp2-262b49f7.png" />
-    <link href="./src/theme/hover.css" rel="stylesheet">
-    <!-- Favicon and manifest -->
+
+    <!-- Robots Meta -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Favicon and Manifest -->
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600&family=Pacifico&family=Source+Sans+Pro:wght@400;600;700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Preload Fonts for Better Performance -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600&family=Pacifico&family=Source+Sans+Pro:wght@400;600;700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600&family=Pacifico&family=Source+Sans+Pro:wght@400;600;700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="./src/theme/hover.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <!-- Title -->
     <title>Mark Yu - Software Engineer, Artist, and Game Developer</title>
 </head>
 <body>
-    <!-- Noscript message -->
-    <noscript>You need to enable JavaScript to run this app.</noscript> 
-    <div id="root"></div>
+<!-- Noscript Fallback -->
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
 
-    <script type="module" src="/src/index.jsx"></script>
+<!-- Load Scripts -->
+<script type="module" src="/src/index.jsx" defer></script>
 </body>
 </html>

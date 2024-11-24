@@ -20,7 +20,7 @@ const Box = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 400vh;
+  height: 500vh;
   overflow: hidden;
 `;
 
@@ -29,9 +29,9 @@ const Main = styled(motion.ul)`
   top: 12rem;
   left: calc(10rem + 15vw);
   user-select: none;
-  height: 50vh;
   display: flex;
-
+  padding-bottom: 2rem;
+  
   ${mediaQueries(50)`
     left: calc(8rem + 15vw);
   `};

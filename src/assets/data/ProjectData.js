@@ -5,6 +5,7 @@ import madness from "../Images/project4.png";
 import uistudio from "../Images/project5.png";
 import resubot from "../Images/project6.png";
 import pubg from "../Images/project7.png";
+import m4rkdown from "../Images/project8.png"
 import emptyproject from "../Images/project_null.png";
 
 export const Project = [
@@ -64,29 +65,18 @@ export const Project = [
         imageUrl:uistudio
     },
     {
-        id: 9,
-        name: "Bulma E-Commerce Store",
-        subtitle: "Web App",
-        description: "Bulma E-Commerce Store is a React-powered online storefront designed with style and functionality in mind. Featuring a JSON Server for backend simulation and a clean aesthetic thanks to Bulma and Node SASS, this project is perfect for small businesses looking to step into the online marketplace. It’s a great example of how modern tools can create a sleek and user-friendly shopping experience.",
-        tags: ["React", "JSON Server", "SASS", "Bulma", "React Router", "Custom Hooks", "E-commerce"],
-        demo: "",
-        github: "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
+        id: 6,
+        name: "PUBG Unreal",
+        subtitle: "3D Game",
+        description: "This ongoing project leverages Unreal Engine 4 (UE4) and its powerful Blueprint visual scripting feature to create a single-player battle royale game inspired by PlayerUnknown's Battlegrounds (PUBG), one of the most well-known multiplayer battle royale games. The primary objective is to replicate key gameplay mechanics, such as dynamic character movement, item interaction, and realistic weapon handling, within a single-player environment. The current version focuses on core functionality and does not yet include multiplayer support.",
+        tags: ["UE4", "C++", "Blueprints", "Blender", "VR", "Game Development", "3dAssets"],
+        demo: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
+        github: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
         status: "Maintenance",
-        imageUrl:emptyproject
+        imageUrl:pubg
     },
     {
         id: 7,
-        name: "Web3 Ethereum Wallet",
-        subtitle: "Web App",
-        description: "Web3 Ethereum Wallet is a decentralized application (dApp) that allows users to securely send and manage cryptocurrency using Ethereum smart contracts. With React and TailwindCSS driving the interface, it offers a responsive and efficient way to handle blockchain transactions. Perfect for those exploring the world of decentralized finance, this project showcases the future of secure and decentralized money transfers.",
-        tags: ["Web3", "Blockchain", "Solidity", "React", "TailwindCSS", "Crypto Wallet", "Smart Contracts"],
-        demo: "",
-        github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
-        status: "Maintenance",
-        imageUrl:emptyproject
-    },
-    {
-        id: 8,
         name: "Resubot",
         subtitle: "Web App",
         description: "ResuBot is an AI-driven web application designed to revolutionize the resume and cover letter creation process, making it personalized, efficient, and accessible. By leveraging OpenAI’s GPT-3.5-turbo, ResuBot aims to address the challenges faced by job seekers in crafting tailored, professional resumes and cover letters while streamlining the overall job application process.",
@@ -97,14 +87,36 @@ export const Project = [
         imageUrl:resubot
     },
     {
-        id: 6,
-        name: "PUBG Unreal",
-        subtitle: "3D Game",
-        description: "This ongoing project leverages Unreal Engine 4 (UE4) and its powerful Blueprint visual scripting feature to create a single-player battle royale game inspired by PlayerUnknown's Battlegrounds (PUBG), one of the most well-known multiplayer battle royale games. The primary objective is to replicate key gameplay mechanics, such as dynamic character movement, item interaction, and realistic weapon handling, within a single-player environment. The current version focuses on core functionality and does not yet include multiplayer support.",
-        tags: ["UE4", "C++", "Blueprints", "Blender", "VR", "Game Development", "3dAssets"],
-        demo: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
-        github: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
+        id: 8,
+        name: "M4rkdown",
+        subtitle: "Web App",
+        description: "A lightweight and modular Markdown parser built with JavaScript/TypeScript, designed to tokenize and render Markdown syntax into structured tokens or HTML. This parser is flexible and extensible, enabling support for additional Markdown features with minimal effort.",
+        tags: ["typescript", "HTML", "Vite", "Markdown", "DOM events", "Utility"],
+        demo: "m4rkdown.vercel.app",
+        github: "https://github.com/zhenxiao-yu/m4rkdown-editor",
+        status: "Ready",
+        imageUrl:m4rkdown
+    },
+    {
+        id: 9,
+        name: "Web3 Ethereum Wallet",
+        subtitle: "Web App",
+        description: "Web3 Ethereum Wallet is a decentralized application (dApp) that allows users to securely send and manage cryptocurrency using Ethereum smart contracts. With React and TailwindCSS driving the interface, it offers a responsive and efficient way to handle blockchain transactions. Perfect for those exploring the world of decentralized finance, this project showcases the future of secure and decentralized money transfers.",
+        tags: ["Web3", "Blockchain", "Solidity", "React", "TailwindCSS", "Crypto Wallet", "Smart Contracts"],
+        demo: "",
+        github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
         status: "Maintenance",
-        imageUrl:pubg
+        imageUrl:emptyproject
+    },
+    {
+        id: 10,
+        name: "Bulma E-Commerce Store",
+        subtitle: "Web App",
+        description: "Bulma E-Commerce Store is a React-powered online storefront designed with style and functionality in mind. Featuring a JSON Server for backend simulation and a clean aesthetic thanks to Bulma and Node SASS, this project is perfect for small businesses looking to step into the online marketplace. It’s a great example of how modern tools can create a sleek and user-friendly shopping experience.",
+        tags: ["React", "JSON Server", "SASS", "Bulma", "React Router", "Custom Hooks", "E-commerce"],
+        demo: "",
+        github: "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
+        status: "Maintenance",
+        imageUrl:emptyproject
     },
 ];
