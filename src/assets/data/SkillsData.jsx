@@ -1,11 +1,16 @@
 import { FaHtml5, FaCss3Alt, FaJsSquare, FaReact, FaVuejs, FaSass, FaJava, FaPython   } from 'react-icons/fa';
-import { TbBrandRedux, TbBrandTailwind, TbBrandBulma, TbBrandNextjs } from 'react-icons/tb';
+import { TbBrandRedux, TbBrandTailwind, TbGoGame, TbBrandBulma, TbBrandNextjs } from 'react-icons/tb';
 import { BiLogoJquery, BiLogoSpringBoot  } from 'react-icons/bi';
 import { SiTypescript, SiRedis, SiExpress, SiCanva, SiAffinitydesigner, SiSketchup , SiAdobephotoshop , SiAdobepremierepro, SiAdobeillustrator,SiMaterialdesignicons , SiMongodb, SiGit, SiApachestorm, SiUnrealengine, SiCsharp, SiCplusplus, SiBlender, SiApachekafka, SiSolidity , SiMysql, SiMicrosoftsqlserver   } from 'react-icons/si';
 import { GiCamel } from "react-icons/gi";
-import { FaUnity, FaFigma  } from "react-icons/fa";
-import { MdZoomOutMap } from "react-icons/md";
+import { FaUnity, FaFigma} from "react-icons/fa";
+import { BsFonts, BsFillGrid3X3GapFill  } from "react-icons/bs";
+import { MdZoomOutMap} from "react-icons/md";
 import { PiVirtualReality } from "react-icons/pi";
+import { MdOutlineAnimation } from "react-icons/md";
+import { LuRotate3D, LuAtom  } from "react-icons/lu";
+import { LuScale3D } from "react-icons/lu";
+import { SiComicfury } from "react-icons/si";
 // Correctly create the array of skills
 export const skills1 = [
   { name: 'HTML5', level: 100, icon: <FaHtml5 />, link: 'https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5' },
@@ -46,8 +51,14 @@ export const skills3 = [
   { name: 'C++', level: 70, icon: <SiCplusplus />, link: 'https://isocpp.org/' },
   { name: 'Procedural Generation', level: 75, icon: <MdZoomOutMap />, link: 'https://en.wikipedia.org/wiki/Procedural_generation' },
   { name: 'Git', level: 100, icon: <SiGit />, link: 'https://git-scm.com/' },
-  { name: 'VR/AR', level: 75, icon: <PiVirtualReality />, link: 'https://en.wikipedia.org/wiki/Virtual_reality' }
+  { name: 'VR/AR', level: 75, icon: <PiVirtualReality />, link: 'https://en.wikipedia.org/wiki/Virtual_reality' },
+  { name: 'Game Physics', level: 80, icon: <LuAtom />, link: 'https://en.wikipedia.org/wiki/Game_physics' },
+  { name: 'Animation', level: 60, icon: <MdOutlineAnimation />, link: 'https://www.blender.org/features/animation/' },
+  { name: 'Level Design', level: 85, icon: <TbGoGame />, link: 'https://en.wikipedia.org/wiki/Level_design' },
+  { name: '3D Modeling', level: 90, icon: <LuRotate3D />, link: 'https://www.blender.org/' },
 ];
+
+
 
 export const skills4 = [
   { name: 'Photoshop', level: 80, icon: <SiAdobephotoshop />, link: 'https://www.adobe.com/products/photoshop.html' },
@@ -56,9 +67,15 @@ export const skills4 = [
   { name: 'SketchUp', level: 90, icon: <SiSketchup />, link: 'https://www.sketchup.com/' },
   { name: 'Premiere Pro', level: 80, icon: <SiAdobepremierepro />, link: 'https://www.adobe.com/products/premiere.html' },
   { name: 'Graphic Design', level: 90, icon: <SiAffinitydesigner />, link: 'https://affinity.serif.com/en-us/designer/' },
-  { name: 'UI/UX', level: 85, icon: <SiMaterialdesignicons />, link: 'https://www.coursera.org/articles/ui-vs-ux-design' },
-  { name: 'Canva', level: 100, icon: <SiCanva />, link: 'https://www.canva.com/' }
+  { name: 'UI/UX', level: 85, icon: <SiMaterialdesignicons />, link: 'https://material.io/design/' },
+  { name: 'Canva', level: 100, icon: <SiCanva />, link: 'https://www.canva.com/' },
+  { name: 'Wireframing', level: 80, icon: <BsFillGrid3X3GapFill />, link: 'https://www.figma.com/' },
+  { name: 'Storyboarding', level: 75, icon: <SiComicfury  />, link: 'https://www.adobe.com/products/photoshop.html' },
+  { name: 'Typography', level: 85, icon: <BsFonts />, link: 'https://material.io/design/' },
+  { name: '3D Art', level: 60, icon: <LuScale3D />, link: 'https://www.sketchup.com/' },
 ];
+
+
 
 
 

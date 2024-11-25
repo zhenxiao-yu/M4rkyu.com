@@ -25,17 +25,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Center content vertically */
   position: relative;
   overflow-y: auto;
-  padding: 4rem 1rem 2rem 1rem;
 
   ${mediaQueries(50)`height: auto; padding: 5rem 0;`};
 `;
 
 const GridBox = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
   width: 90%;
   justify-items: center;
 
@@ -83,8 +83,10 @@ const Title = styled.h2`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(0.6em + 0.4vw);
+  font-size: calc(1.1em + 0.4vw);
   transition: 0.5s ease-in-out;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 
   ${mediaQueries(60)`font-size: calc(0.6em + 0.8vw);`};
   ${mediaQueries(50)`font-size: calc(0.8em + 1.5vw); margin-bottom: 0.5rem;`};
@@ -99,11 +101,10 @@ const Title = styled.h2`
 `;
 
 const Description = styled.section`
-  color: ${({ theme }) => theme.text};
-  font-size: calc(0.5em + 0.3vw);
+  color: ${({theme}) => theme.text};
+  font-size: calc(1em + 0.3vw);
   padding: 0.3rem 0;
-  font-weight: 300;
-  letter-spacing: 0.5px;
+  font-weight: 500;
   font-family: "Karla", sans-serif;
   transition: 0.3s ease-in-out;
 
@@ -113,7 +114,7 @@ const Description = styled.section`
   }
 
   ${Main}:hover & {
-    color: ${({ theme }) => theme.body};
+    color: ${({theme}) => theme.body};
   }
 
   ul, p {
@@ -157,16 +158,6 @@ const MySkillsPage = () => {
                   <strong>Skills:</strong> <br />
                   <SkillsSection skills={skills1} />
                 </Description>
-                <Description>
-                  <strong>Tools:</strong>
-                  <ul>
-                    <li>WebStorm, VS Code</li>
-                    <li>NPM, Yarn</li>
-                    <li>Vercel, Google Cloud Platform</li>
-                    <li>Jest, Cypress</li>
-                    <li>Webpack, Babel</li>
-                  </ul>
-                </Description>
               </Main>
 
               {/* Backend Section */}
@@ -180,16 +171,6 @@ const MySkillsPage = () => {
                 <Description>
                   <strong>Skills:</strong> <br />
                   <SkillsSection skills={skills2} />
-                </Description>
-                <Description>
-                  <strong>Tools:</strong>
-                  <ul>
-                    <li>IntelliJ, Visual Studio</li>
-                    <li>Docker, Kubernetes</li>
-                    <li>JUnit, Postman</li>
-                    <li>Navicat, TablePlus</li>
-                    <li>Git, GitHub, GitLab</li>
-                  </ul>
                 </Description>
               </Main>
 
@@ -220,6 +201,8 @@ const MySkillsPage = () => {
                   <SkillsSection skills={skills4} />
                 </Description>
               </Main>
+
+
             </GridBox>
             <BigTitle text="Skills" top="80%" right="30%" />
           </Container>
