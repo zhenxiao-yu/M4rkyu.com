@@ -66,10 +66,9 @@ const Title = styled.h2`
 `;
 
 const Subtitle = styled.div`
-  font-size: calc(0.7em + 0.2vw);
+  font-size: calc(0.6em + 0.2vw);
   font-weight: 400;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  margin: 0.5rem 0;
 `;
 
 const Description = styled.h4`
@@ -81,7 +80,7 @@ const Description = styled.h4`
   overflow-y: scroll;
   text-overflow: ellipsis;
   line-height: 1.5rem; /* Standard line-height for larger screens */
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 0.3em 1.3em 0.3em 0.3em; /* Normal padding for larger screens */
 
   /* Large tablets or small desktops */
@@ -363,7 +362,7 @@ const item = {
 };
 
 const Card = (props) => {
-  const { id, name, subtitle, description, tags, demo, github, status, imageUrl } = props.data;
+  const { id, name, subtitle, description, tags, demo, github, status, imageUrl, date } = props.data;
 
   const [showImage, setShowImage] = useState(true);
 
@@ -378,7 +377,7 @@ const Card = (props) => {
           {name}
           <Subtitle>{subtitle}</Subtitle>
         </Title>
-
+        <span className="tag">{date}</span>
         {/* Toggle between description and image */}
         {!showImage ? (
             <Description
@@ -388,24 +387,25 @@ const Card = (props) => {
               {description}
             </Description>
         ) : (
-            <motion.img
-                src={imageUrl}
-                className="animate__animated animate__flipX"
-                alt="Related Visual"
-                onClick={toggleView} // Click to show description
-                initial={{opacity: 0, scale: 0.8}}
-                animate={{opacity: 1, scale: 1}}
-                transition={{duration: 0.5}}
-                style={{
-                  width: "100%",
-                  aspectRatio: "16/9", // Maintain a 16:9 aspect ratio
-                  borderRadius: "10px",
-                  marginTop: "10px",
-                  cursor: "pointer",
-                  border: "4px solid #333", // Add a dark border
-                  objectFit: "cover", // Ensures the image fills the container while maintaining aspect ratio
-                }}
-            />
+            <>
+              <motion.img
+                  src={imageUrl}
+                  className="animate__animated animate__flipX"
+                  alt="Related Visual"
+                  onClick={toggleView} // Click to show description
+                  initial={{opacity: 0, scale: 0.8}}
+                  animate={{opacity: 1, scale: 1}}
+                  transition={{duration: 0.5}}
+                  style={{
+                    // width: "100%",
+                    aspectRatio: "3/2", // Maintain a 16:9 aspect ratio
+                    borderRadius: "8px",
+                    padding: "3px",
+                    cursor: "pointer",
+                    objectFit: "cover", // Ensures the image fills the container while maintaining aspect ratio
+                  }}
+              />
+            </>
         )}
 
         <Tags className="animate__animated animate__fadeInUp animate__delay-1s">
