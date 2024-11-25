@@ -290,7 +290,7 @@ const Intro = () => {
             I'm
             <Typewriter
               words={[' Mark Yu', ' 于震潇 ']}
-              loop={0}
+              loop={0}A
               typeSpeed={60}
               deleteSpeed={60}
               delaySpeed={2500}
