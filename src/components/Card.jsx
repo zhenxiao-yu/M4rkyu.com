@@ -377,7 +377,7 @@ const Card = (props) => {
           {name}
           <Subtitle>{subtitle}</Subtitle>
         </Title>
-        <span className="tag">{date}</span>
+       
         {/* Toggle between description and image */}
         {!showImage ? (
             <Description
