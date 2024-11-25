@@ -289,8 +289,8 @@ const Intro = () => {
           <h2 className="hvr-sink">
             I'm
             <Typewriter
-              words={[' Mark Yu', ' 于震潇 ']}
-              loop={0}A
+              words={[' Mark Yu ', ' 于震潇 ']}
+              loop={0}
               typeSpeed={60}
               deleteSpeed={60}
               delaySpeed={2500}
