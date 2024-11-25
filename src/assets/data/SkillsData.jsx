@@ -10,7 +10,6 @@ import { PiVirtualReality } from "react-icons/pi";
 import { MdOutlineAnimation } from "react-icons/md";
 import { LuRotate3D, LuAtom  } from "react-icons/lu";
 import { LuScale3D } from "react-icons/lu";
-import { SiComicfury } from "react-icons/si";
 // Correctly create the array of skills
 export const skills1 = [
   { name: 'HTML5', level: 100, icon: <FaHtml5 />, link: 'https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5' },
@@ -70,7 +69,7 @@ export const skills4 = [
   { name: 'UI/UX', level: 85, icon: <SiMaterialdesignicons />, link: 'https://material.io/design/' },
   { name: 'Canva', level: 100, icon: <SiCanva />, link: 'https://www.canva.com/' },
   { name: 'Wireframing', level: 80, icon: <BsFillGrid3X3GapFill />, link: 'https://www.figma.com/' },
-  { name: 'Storyboarding', level: 75, icon: <SiComicfury  />, link: 'https://www.adobe.com/products/photoshop.html' },
+  { name: 'Storyboarding', level: 75, icon: <SiCanva  />, link: 'https://www.adobe.com/products/photoshop.html' },
   { name: 'Typography', level: 85, icon: <BsFonts />, link: 'https://material.io/design/' },
   { name: '3D Art', level: 60, icon: <LuScale3D />, link: 'https://www.sketchup.com/' },
 ];
