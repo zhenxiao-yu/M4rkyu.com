@@ -5,7 +5,7 @@ import madness from "../Images/project4.png";
 import uistudio from "../Images/project5.png";
 import resubot from "../Images/project6.png";
 import pubg from "../Images/project7.png";
-import m4rkdown from "../Images/project8.png"
+import m4rkdown from "../Images/project8.png";
 import emptyproject from "../Images/project_null.png";
 
 export const Project = [
@@ -18,7 +18,8 @@ export const Project = [
         demo: "https://nimbus-storage-app.vercel.app",
         github: "https://github.com/zhenxiao-yu/nimbus-storage-app",
         status: "Ready",
-        imageUrl:nimbus
+        imageUrl: nimbus,
+        date: "November 2024"
     },
     {
         id: 2,
@@ -29,7 +30,8 @@ export const Project = [
         demo: "https://ai-bio-generator-steel.vercel.app/",
         github: "https://github.com/zhenxiao-yu/ai-bio-generator",
         status: "Ready",
-        imageUrl:bioloom
+        imageUrl: bioloom,
+        date: "October 2024"
     },
     {
         id: 3,
@@ -40,7 +42,8 @@ export const Project = [
         demo: "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
         github: "https://github.com/zhenxiao-yu/Text-To-Video-AI",
         status: "Ready",
-        imageUrl:brother
+        imageUrl: brother,
+        date: "July 2024"
     },
     {
         id: 4,
@@ -51,7 +54,8 @@ export const Project = [
         demo: "https://markyu615.itch.io/descent-into-madness",
         github: "https://github.com/zhenxiao-yu/Descent-In-To-Madness",
         status: "Ready",
-        imageUrl:madness
+        imageUrl: madness,
+        date: "March 2024"
     },
     {
         id: 5,
@@ -62,7 +66,8 @@ export const Project = [
         demo: "https://ui-studio-mu.vercel.app/",
         github: "https://github.com/zhenxiao-yu/ui-studio",
         status: "Ready",
-        imageUrl:uistudio
+        imageUrl: uistudio,
+        date: "February 2024"
     },
     {
         id: 6,
@@ -73,7 +78,8 @@ export const Project = [
         demo: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
         github: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
         status: "Maintenance",
-        imageUrl:pubg
+        imageUrl: pubg,
+        date: "Ongoing"
     },
     {
         id: 7,
@@ -84,18 +90,20 @@ export const Project = [
         demo: "https://resubot.vercel.app",
         github: "https://github.com/zhenxiao-yu/resubot",
         status: "Ready",
-        imageUrl:resubot
+        imageUrl: resubot,
+        date: "May 2024"
     },
     {
         id: 8,
         name: "M4rkdown",
         subtitle: "Web App",
         description: "A lightweight and modular Markdown parser built with JavaScript/TypeScript, designed to tokenize and render Markdown syntax into structured tokens or HTML. This parser is flexible and extensible, enabling support for additional Markdown features with minimal effort.",
-        tags: ["typescript", "HTML", "Vite", "Markdown", "DOM events", "Utility"],
-        demo: "m4rkdown.vercel.app",
+        tags: ["TypeScript", "HTML", "Vite", "Markdown", "DOM events", "Utility"],
+        demo: "https://m4rkdown.vercel.app",
         github: "https://github.com/zhenxiao-yu/m4rkdown-editor",
         status: "Ready",
-        imageUrl:m4rkdown
+        imageUrl: m4rkdown,
+        date: "October 2024"
     },
     {
         id: 9,
@@ -106,7 +114,8 @@ export const Project = [
         demo: "",
         github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
         status: "Maintenance",
-        imageUrl:emptyproject
+        imageUrl: emptyproject,
+        date: "Ongoing"
     },
     {
         id: 10,
@@ -117,6 +126,7 @@ export const Project = [
         demo: "",
         github: "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
         status: "Maintenance",
-        imageUrl:emptyproject
-    },
+        imageUrl: emptyproject,
+        date: "September 2023"
+    }
 ];
