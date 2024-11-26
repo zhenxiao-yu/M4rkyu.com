@@ -6,6 +6,7 @@ import uistudio from "../Images/project5.png";
 import resubot from "../Images/project6.png";
 import pubg from "../Images/project7.png";
 import m4rkdown from "../Images/project8.png";
+import m4rketview from "../Images/project9.png";
 import emptyproject from "../Images/project_null.png";
 
 export const Project = [
@@ -56,6 +57,19 @@ export const Project = [
         status: "Ready",
         imageUrl: madness,
         date: "March 2024"
+    },
+    {
+        id: 5,
+        name: "M4rketView",
+        subtitle: "[PC] Web App",
+        description: "\n" +
+            "M4rketview is a cryptocurrency screener app built for PC, utilizing the React tech stack and real-time data from the CoinGecko API. It provides live market insights, an interactive table view, customizable watchlists, and advanced search tools, all in a clean, responsive design. Perfect for traders and investors to monitor and manage their crypto portfolios with ease.",
+        tags: ["React", "HTML", "Tailwind CSS", "CoinGecko API","CSS","Chart.js", "Cryptocurrency"],
+        demo: "https://m4rket-view.vercel.app",
+        github: "https://github.com/zhenxiao-yu/M4rketView",
+        status: "Ready",
+        imageUrl: m4rketview,
+        date: "November 2024"
     },
     {
         id: 5,
