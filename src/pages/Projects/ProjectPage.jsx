@@ -21,7 +21,7 @@ const Box = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 500vh;
+  height: 700vh;
   overflow: hidden;
 `;
 
@@ -46,15 +46,6 @@ const Rotate = styled.span`
   width: 85px;
   height: 85px;
   z-index: 1;
-
-  ${mediaQueries(40)`
-    width: 60px;
-    height: 60px;
-  `};
-  ${mediaQueries(25)`
-    width: 50px;
-    height: 50px;
-  `};
 `;
 
 const bounce = keyframes`
