@@ -21,27 +21,31 @@ const SVG_SIZE = 30;
 const Container = styled.div`
   background-color: ${({ theme }) => theme.body};
   width: 100vw;
-  height: 100vh;
+  height: 120vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center content vertically */
   position: relative;
-  overflow-y: auto;
+  overflow-y: auto;              
 
-  ${mediaQueries(50)`height: auto; padding: 5rem 0;`};
+  ${mediaQueries(90)`height: auto; padding: 8rem 0;`};
+  ${mediaQueries(70)`padding: 6rem 0;`};
+  ${mediaQueries(50)`padding: 5rem 0;`};
+  ${mediaQueries(30)`padding: 4rem 0;`};
 `;
 
 const GridBox = styled(motion.div)`
+  margin-top: 10rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  width: 90%;
+  gap: 1rem;
+  width: 80%;
   justify-items: center;
 
-  ${mediaQueries(70)`grid-template-columns: 1fr 1fr;`};
-  ${mediaQueries(50)`grid-template-columns: 1fr; width: 90%;`};
-  ${mediaQueries(30)`width: 95%;`};
+  ${mediaQueries(90)`grid-template-columns: repeat(4, 1fr);`};
+  ${mediaQueries(70)`grid-template-columns: repeat(2, 1fr);`};
+  ${mediaQueries(50)`grid-template-columns: 1fr; width: 100%;`};
+  ${mediaQueries(30)`width: 95%; gap: 0.5rem;`};
 `;
 
 const FixedComponents = styled.div`
@@ -55,23 +59,25 @@ const FixedComponents = styled.div`
 `;
 
 const Main = styled(motion.div)`
-  margin-top: 0.5em;
+  margin-top: 1em;
   border: 2px solid ${({ theme }) => theme.text};
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.body};
   padding: 1rem;
-  width: 93%;
+  width: 85%;
   border-radius: 10px;
   min-height: 20rem;
   z-index: 3;
-  line-height: 1.2;
+  line-height: 1.4;
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s ease-in-out;
 
-  ${mediaQueries(50)`width: 60%; line-height: 1.3;`};
+  ${mediaQueries(70)`width: 75%; padding: 1rem; line-height: 1.4;`};
+  ${mediaQueries(50)`width: 70%; padding: 1rem;`};
+  ${mediaQueries(30)`width: 90%; padding: 0.8rem; line-height: 1.3;`};
 
   &:hover {
     color: ${({ theme }) => theme.body};
@@ -87,17 +93,11 @@ const Title = styled.h2`
   transition: 0.5s ease-in-out;
   margin-top: 1rem;
   margin-bottom: 3rem;
+  
 
-  ${mediaQueries(60)`font-size: calc(0.6em + 0.8vw);`};
-  ${mediaQueries(50)`font-size: calc(0.8em + 1.5vw); margin-bottom: 0.5rem;`};
-
-  ${Main}:hover & > * {
-    fill: ${({ theme }) => theme.body};
-  }
-
-  & > *:first-child {
-    margin-right: 0.5rem;
-  }
+  ${mediaQueries(90)`font-size: calc(1em + 0.3vw); margin-bottom: 2rem;`};
+  ${mediaQueries(70)`font-size: calc(0.9em + 0.2vw); margin-bottom: 1.5rem;`};
+  ${mediaQueries(50)`font-size: calc(0.8em + 0.2vw); margin-bottom: 1rem;`};
 `;
 
 const Description = styled.section`
@@ -116,6 +116,11 @@ const Description = styled.section`
   ${Main}:hover & {
     color: ${({theme}) => theme.body};
   }
+
+  ${mediaQueries(90)`font-size: calc(0.9em + 0.2vw);`};
+  ${mediaQueries(70)`font-size: calc(0.8em + 0.2vw);`};
+  ${mediaQueries(50)`font-size: calc(0.7em + 0.2vw);`};
+  ${mediaQueries(30)`font-size: calc(0.6em + 0.1vw);`};
 
   ul, p {
     margin-left: 1.5rem;

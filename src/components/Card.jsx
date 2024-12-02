@@ -170,7 +170,7 @@ const Card = (props) => {
     }
     return (
         <Link
-            style={{ border: `3px solid ${borderColor}` }}
+            style={{ border: `3px solid ${borderColor}` , opacity:`0.5`}}
             to={{ pathname: "/project" }}
         >
           {status === "Development" ? "Coming Soon" : "UNAVAILABLE"}
