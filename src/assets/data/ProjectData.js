@@ -14,7 +14,7 @@ export const Project = [
         id: 1,
         name: "Nimbus",
         subtitle: "Web App",
-        description: "Nimbus is a modern file storage and management platform designed to make organizing, sharing, and accessing files simple and efficient. Offering secure uploads, real-time storage insights, and intuitive organization tools, it takes the headache out of file management. Built with React, Next.js, and Appwrite, Nimbus combines sleek design with seamless functionality to provide a responsive and delightful user experience.",
+        description: "Nimbus is a next-generation file storage and management platform designed to streamline how users organize, share, and access their files.\n\nWith secure uploads, real-time analytics, and intuitive organizational tools, Nimbus redefines efficiency in file management. Developed with React, Next.js, and Appwrite, it delivers a responsive and polished user experience that harmonizes form and function.",
         tags: ["Cloud", "Appwrite", "TypeScript", "Next.js", "OTP", "Chart.js", "Responsive", "Shadcn"],
         demo: "https://nimbus-storage-app.vercel.app",
         github: "https://github.com/zhenxiao-yu/nimbus-storage-app",
@@ -26,7 +26,7 @@ export const Project = [
         id: 2,
         name: "BioLoom",
         subtitle: "Web App",
-        description: "BioLoom is an AI-powered tool for crafting personalized social media bios that are equal parts creative and professional. Whether you're building a personal brand or just want to spice up your profile, BioLoom has got you covered. The app is powered by cutting-edge AI, making bio creation quick, fun, and easy. Simply answer a few questions, and let the AI work its magic to create a bio that truly represents you. Built with Next.js and a sprinkle of Tailwind CSS flair, BioLoom makes finding the perfect words a breeze.",
+        description: "BioLoom is an innovative AI-powered platform designed to craft personalized and professional social media bios with effortless precision.\n\nWhether you're building a personal brand or seeking to stand out online, BioLoom simplifies the process. Powered by cutting-edge AI and built with Next.js and Tailwind CSS, it offers users a seamless experience in creating bios that are both unique and impactful.",
         tags: ["Next.js", "AI", "React", "Vercel", "Tailwind CSS", "JavaScript", "Web Development"],
         demo: "https://ai-bio-generator-steel.vercel.app/",
         github: "https://github.com/zhenxiao-yu/ai-bio-generator",
@@ -38,7 +38,7 @@ export const Project = [
         id: 3,
         name: "In the Silence of a Brother",
         subtitle: "AI Animated Short Film",
-        description: "This AI-animated short film explores the profound and emotional bonds between siblings during the One-Child Policy era in 1980s Beijing. Combining physical art, stop motion techniques, and AI-generated visuals, the film is both nostalgic and visually striking. It delves into themes of family, identity, and the bittersweet realities of childhood. The project served as the final assignment for the SA2560 course at Western University and is now available to watch on YouTube.",
+        description: "This AI-animated short film captures the deep emotional bonds between siblings during the One-Child Policy era in 1980s Beijing.\n\nA blend of physical art, stop-motion techniques, and AI-generated visuals results in a visually stunning and nostalgic journey. Exploring themes of family, identity, and childhood, this poignant film is both a personal and societal reflection.",
         tags: ["CapCut", "Premiere Pro", "Stable-Diffusion", "Pictory", "RunwayML"],
         demo: "https://youtu.be/tttaJabgVMw?si=RcJMkkqryKP6Vpuj",
         github: "https://github.com/zhenxiao-yu/Text-To-Video-AI",
@@ -50,7 +50,7 @@ export const Project = [
         id: 4,
         name: "Descent Into Madness",
         subtitle: "PC Game",
-        description: "Descent Into Madness is a spine-chilling 2D roguelike horror shooter that plunges players into the nightmarish world of Karnoxia. Navigate procedurally generated mazes, battle grotesque creatures, and maintain your sanity—if you can. With heart-pounding gameplay, eerie visuals, and a storyline that keeps you on edge, this game promises a unique blend of thrill and challenge. Built with Unity and now available on PC, it’s a perfect pick for those who love adrenaline-packed gaming experiences.",
+        description: "Descent Into Madness is a gripping 2D roguelike horror shooter that immerses players in the nightmarish world of Karnoxia.\n\nFeaturing procedurally generated levels, grotesque adversaries, and a psychological edge, the game delivers an adrenaline-fueled experience. Built with Unity, it combines thrilling gameplay with a haunting atmosphere.",
         tags: ["Unity", "Game Dev", "2D", "Roguelike", "PC", "C#", "Horror", "PVE"],
         demo: "https://markyu615.itch.io/descent-into-madness",
         github: "https://github.com/zhenxiao-yu/Descent-In-To-Madness",
@@ -62,9 +62,8 @@ export const Project = [
         id: 5,
         name: "M4rketView",
         subtitle: "[PC] Web App",
-        description: "\n" +
-            "M4rketview is a cryptocurrency screener app built for PC, utilizing the React tech stack and real-time data from the CoinGecko API. It provides live market insights, an interactive table view, customizable watchlists, and advanced search tools, all in a clean, responsive design. Perfect for traders and investors to monitor and manage their crypto portfolios with ease.",
-        tags: ["React", "HTML", "Tailwind CSS", "CoinGecko API","CSS","Chart.js", "Cryptocurrency"],
+        description: "M4rketView is a cutting-edge cryptocurrency screener app designed for traders and investors.\n\nLeveraging the React tech stack and CoinGecko API, it provides real-time market insights, interactive table views, customizable watchlists, and advanced search tools—all wrapped in a sleek, responsive design.",
+        tags: ["React", "HTML", "Tailwind CSS", "CoinGecko API", "CSS", "Chart.js", "Cryptocurrency"],
         demo: "https://m4rket-view.vercel.app",
         github: "https://github.com/zhenxiao-yu/M4rketView",
         status: "Ready",
@@ -72,10 +71,10 @@ export const Project = [
         date: "November 2024"
     },
     {
-        id: 5,
+        id: 6,
         name: "UI Studio",
         subtitle: "Web App",
-        description: "UI Studio is a collaborative design platform that brings teams together in real-time for creative projects. Packed with features like real-time drawing, integrated chat, commenting, and cursor tracking, it’s like a playground for designers. Built with Next.js and Fabric.js, the application provides a professional yet user-friendly environment for exploring and mastering collaborative design processes. If you’ve ever wanted a tool that combines fun and productivity, UI Studio is it.",
+        description: "UI Studio reimagines collaborative design by bringing teams together in an engaging, real-time creative workspace.\n\nEquipped with live drawing, integrated chat, and cursor tracking, it’s a professional-grade platform for designers to collaborate effortlessly. Built with Next.js and Fabric.js, UI Studio bridges productivity with creativity.",
         tags: ["Next.js", "TypeScript", "Tailwind CSS", "Fabric.js", "Liveblocks", "Shadcn"],
         demo: "https://ui-studio-mu.vercel.app/",
         github: "https://github.com/zhenxiao-yu/ui-studio",
@@ -84,11 +83,11 @@ export const Project = [
         date: "February 2024"
     },
     {
-        id: 6,
+        id: 7,
         name: "PUBG Unreal",
         subtitle: "3D Game",
-        description: "This ongoing project leverages Unreal Engine 4 (UE4) and its powerful Blueprint visual scripting feature to create a single-player battle royale game inspired by PlayerUnknown's Battlegrounds (PUBG), one of the most well-known multiplayer battle royale games. The primary objective is to replicate key gameplay mechanics, such as dynamic character movement, item interaction, and realistic weapon handling, within a single-player environment. The current version focuses on core functionality and does not yet include multiplayer support.",
-        tags: ["UE4", "C++", "Blueprints", "Blender", "VR", "Game Development", "3dAssets"],
+        description: "PUBG Unreal is a single-player battle royale project built on Unreal Engine 4, inspired by PlayerUnknown's Battlegrounds.\n\nFocusing on dynamic character movement, item interaction, and realistic weapon mechanics, this project demonstrates the power of Blueprint visual scripting and sets the foundation for multiplayer development.",
+        tags: ["UE4", "C++", "Blueprints", "Blender", "VR", "Game Development", "3D Assets"],
         demo: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
         github: "https://github.com/zhenxiao-yu/PUBG-UNREAL",
         status: "Maintenance",
@@ -96,10 +95,10 @@ export const Project = [
         date: "Ongoing"
     },
     {
-        id: 7,
+        id: 8,
         name: "Resubot",
         subtitle: "Web App",
-        description: "ResuBot is an AI-driven web application designed to revolutionize the resume and cover letter creation process, making it personalized, efficient, and accessible. By leveraging OpenAI’s GPT-3.5-turbo, ResuBot aims to address the challenges faced by job seekers in crafting tailored, professional resumes and cover letters while streamlining the overall job application process.",
+        description: "Resubot is an AI-powered resume and cover letter generator designed to make job applications effortless and tailored.\n\nLeveraging OpenAI’s GPT-3.5-turbo, it streamlines the creation of professional, personalized job documents, offering an intuitive and efficient experience for job seekers.",
         tags: ["React", "Node.js", "OpenAI", "Bulma", "Express", "MySQL", "Web App"],
         demo: "https://resubot.vercel.app",
         github: "https://github.com/zhenxiao-yu/resubot",
@@ -108,10 +107,10 @@ export const Project = [
         date: "May 2024"
     },
     {
-        id: 8,
+        id: 9,
         name: "M4rkdown",
         subtitle: "Web App",
-        description: "A lightweight and modular Markdown parser built with JavaScript/TypeScript, designed to tokenize and render Markdown syntax into structured tokens or HTML. This parser is flexible and extensible, enabling support for additional Markdown features with minimal effort.",
+        description: "M4rkdown is a modular and extensible Markdown parser that simplifies the process of converting Markdown syntax into structured tokens or HTML.\n\nBuilt with TypeScript, it offers flexibility for developers seeking a lightweight and customizable parsing tool.",
         tags: ["TypeScript", "HTML", "Vite", "Markdown", "DOM events", "Utility"],
         demo: "https://m4rkdown.vercel.app",
         github: "https://github.com/zhenxiao-yu/m4rkdown-editor",
@@ -120,10 +119,10 @@ export const Project = [
         date: "October 2024"
     },
     {
-        id: 9,
+        id: 10,
         name: "Web3 Ethereum Wallet",
         subtitle: "Web App",
-        description: "Web3 Ethereum Wallet is a decentralized application (dApp) that allows users to securely send and manage cryptocurrency using Ethereum smart contracts. With React and TailwindCSS driving the interface, it offers a responsive and efficient way to handle blockchain transactions. Perfect for those exploring the world of decentralized finance, this project showcases the future of secure and decentralized money transfers.",
+        description: "Web3 Ethereum Wallet empowers users to securely manage cryptocurrency transactions via Ethereum smart contracts.\n\nWith React and TailwindCSS at its core, this decentralized application provides a seamless interface for exploring decentralized finance.",
         tags: ["Web3", "Blockchain", "Solidity", "React", "TailwindCSS", "Crypto Wallet", "Smart Contracts"],
         demo: "",
         github: "https://github.com/zhenxiao-yu/web3-blockchain-app",
@@ -132,10 +131,10 @@ export const Project = [
         date: "Ongoing"
     },
     {
-        id: 10,
+        id: 11,
         name: "Bulma E-Commerce Store",
         subtitle: "Web App",
-        description: "Bulma E-Commerce Store is a React-powered online storefront designed with style and functionality in mind. Featuring a JSON Server for backend simulation and a clean aesthetic thanks to Bulma and Node SASS, this project is perfect for small businesses looking to step into the online marketplace. It’s a great example of how modern tools can create a sleek and user-friendly shopping experience.",
+        description: "Bulma E-Commerce Store is a modern, React-powered online storefront that blends aesthetic appeal with functional design.\n\nFeaturing a JSON server backend simulation and styled with Bulma and Node SASS, it serves as a sleek solution for small businesses entering the digital marketplace.",
         tags: ["React", "JSON Server", "SASS", "Bulma", "React Router", "Custom Hooks", "E-commerce"],
         demo: "",
         github: "https://github.com/zhenxiao-yu/React-Ecommerce-Website",
@@ -144,3 +143,4 @@ export const Project = [
         date: "September 2023"
     }
 ];
+
