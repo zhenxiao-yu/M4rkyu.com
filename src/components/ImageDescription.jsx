@@ -37,7 +37,7 @@ const HoverOverlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
     color: white;
     font-family: "Karla", sans-serif;
     font-weight: bold;
@@ -104,7 +104,7 @@ const ImageDescription = ({ showImage, toggleView, imageUrl, description }) => {
                             damping: 10,
                         }}
                     />
-                    <HoverOverlay>View description</HoverOverlay>
+                    <HoverOverlay>ABOUT THIS PROJECT...</HoverOverlay>
                 </>
             ) : (
                 <StyledDescription
