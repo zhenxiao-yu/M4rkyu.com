@@ -6,8 +6,7 @@ import { Project } from "../../assets/data/ProjectData";
 import { DarkTheme, mediaQueries } from "../../theme/Themes";
 import Card from "../../components/Card";
 import Loading from "../../components/Loading";
-import Seo from "../../components/Seo";
-import AccessibleHeading from "../../components/AccessibleHeading";
+import { Helmet } from "react-helmet";
 
 // Lazy-loaded components for improved performance
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
@@ -112,24 +111,18 @@ const ProjectPage = () => {
   }, []);
 
   const sortedProjects = sortProjects(Project);
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Projects', path: '/projects' }
-  ];
-  const description =
-    "Explore projects by Mark Yu across full-stack engineering, creative technology, and game development.";
 
   return (
       <ThemeProvider theme={DarkTheme}>
-        <AccessibleHeading>Projects by ZhenXiao (Mark) Yu</AccessibleHeading>
-        <Seo
-          title="Projects by Mark Yu | Software & Creative Tech"
-          description={description}
-          path="/projects"
-          breadcrumbs={breadcrumbs}
-          includePerson
-          keywords="Mark Yu projects, Zhenxiao Yu portfolio, creative technology, game development"
-        />
+        <Helmet>
+          <title>Projects by Mark Yu</title>
+          <meta
+              name="description"
+              content="Explore projects by Mark Yu, showcasing innovative web apps, games, and creative solutions using modern technologies."
+          />
+          <meta name="keywords" content="Mark Yu, Projects, Web Apps, Game Development, React, Next.js, Software Engineer" />
+          <meta name="author" content="Mark Yu" />
+        </Helmet>
         <Suspense fallback={<Loading />}>
           <Box
               initial={{ opacity: 0 }}

@@ -6,8 +6,7 @@ import { Design, Develope, Game, Datastore } from "../../assets/svg/AllSvgs";
 import Loading from "../../components/Loading";
 import SkillsSection from "../../components/Skills";
 import { skills1, skills2, skills3, skills4 } from "../../assets/data/SkillsData";
-import Seo from "../../components/Seo";
-import AccessibleHeading from "../../components/AccessibleHeading";
+import { Helmet } from "react-helmet";
 
 // Lazy-loaded components for better performance
 const SocialIcons = lazy(() => import("../../components/SocialIcons"));
@@ -129,23 +128,15 @@ const Description = styled.section`
 `;
 
 const MySkillsPage = () => {
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Skills', path: '/skills' }
-  ];
-  const description =
-    "Explore Mark Yu's skills in frontend, backend, creative technology, and art with the tools and frameworks he uses.";
   return (
       <ThemeProvider theme={lightTheme}>
-        <AccessibleHeading>Skills and expertise of ZhenXiao (Mark) Yu</AccessibleHeading>
-        <Seo
-          title="Skills | Mark Yu"
-          description={description}
-          path="/skills"
-          breadcrumbs={breadcrumbs}
-          includePerson
-          keywords="Mark Yu skills, Zhenxiao Yu engineering, frontend backend creative technology"
-        />
+        <Helmet>
+          <title>Mark's Skills and Expertise</title>
+          <meta
+              name="description"
+              content="Explore Mark Yu's skills in frontend and backend development, game design, and art. Discover the tools and technologies he uses to create innovative and captivating experiences."
+          />
+        </Helmet>
         <Suspense fallback={<Loading />}>
           <Container>
             <FixedComponents>

@@ -21,10 +21,9 @@ display:inline-block;
 
   body {
     margin: 0;
-    padding: 5rem 0 6rem;
+    padding: 0;
     overflow-x:hidden;
     font-family: "Poppins", sans-serif;
-    scroll-behavior: smooth;
   }
 `;
 

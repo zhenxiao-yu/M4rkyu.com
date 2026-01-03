@@ -15,8 +15,6 @@ import useAssetPreloader from '../../hooks/useAssetPreloader';
 import videoBg from '../../assets/Images/videobg.webm';
 import videoBg2 from '../../assets/Images/videobg2.webm';
 import mePortrait from '../../assets/Images/me-pic.jpg';
-import Seo from '../../components/Seo';
-import AccessibleHeading from '../../components/AccessibleHeading';
 
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
@@ -208,13 +206,6 @@ const Main = () => {
     setIsVideoReady(true);
   }, []);
 
-  const breadcrumbs = [
-    { name: 'Home', path: '/' }
-  ];
-
-  const homepageDescription =
-    "Portfolio of ZhenXiao (Mark) Yu: software engineer, creative technologist, and game developer based in Canada.";
-
   const moveY = useMemo(() => ({ y: '-100%' }), []);
   const moveX = useMemo(() => ({ x: `${path === 'project' ? '100%' : '-100%'}` }), [path]);
   const exitAnimation = useMemo(() => (path === 'about' || path === 'skills' ? moveY : moveX), [moveX, moveY, path]);
@@ -234,16 +225,14 @@ const Main = () => {
 
   return (
     <>
-      <AccessibleHeading>Home | ZhenXiao (Mark) Yu portfolio</AccessibleHeading>
-      <Seo
-        title="Mark Yu | Software Engineer & Creative Technologist"
-        description={homepageDescription}
-        path="/"
-        breadcrumbs={breadcrumbs}
-        includePerson
-        keywords="Mark Yu portfolio, Zhenxiao Yu software engineer, creative technologist, game developer"
-      />
       <Helmet>
+        <title>M4rkyu.com</title>
+        <meta
+            name="description"
+            content="Official website of Mark Yu (Zhenxiao Yu), a software engineer working in full-stack development and game design. Learn more about Zhenxiao Yu's projects and achievements."
+        />
+        <meta name="author" content="Mark Yu" />
+        <meta name="keywords" content="Mark Yu, Zhenxiao Yu, Software Engineer, Frontend Development, Game Design" />
         <link rel="preload" href={videoBg} as="video" type="video/webm" />
         <link rel="preload" href={videoBg2} as="video" type="video/webm" />
         <link rel="preload" href={mePortrait} as="image" fetchpriority="high" />

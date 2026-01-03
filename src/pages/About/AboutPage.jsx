@@ -10,8 +10,7 @@ import Me2 from "../../assets/Images/pfp2.png";
 import { DarkTheme, mediaQueries } from '../../theme/Themes';
 import astronaut from '../../assets/Images/spaceman.png';
 import Loading from '../../components/Loading';
-import Seo from '../../components/Seo';
-import AccessibleHeading from '../../components/AccessibleHeading';
+import { Helmet } from 'react-helmet';
 
 // Lazy-loaded Components
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -298,24 +297,12 @@ const experiences = [
 ];
 
 const AboutPage = () => {
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' }
-  ];
-
-  const aboutDescription =
-    'Learn more about ZhenXiao (Mark) Yu, a full-stack engineer and creative technologist based in Ontario, Canada.';
-
   return (
     <ThemeProvider theme={DarkTheme}>
-      <AccessibleHeading>About ZhenXiao (Mark) Yu</AccessibleHeading>
-      <Seo
-        title="About Mark Yu | Software Engineer"
-        description={aboutDescription}
-        path="/about"
-        breadcrumbs={breadcrumbs}
-        includePerson
-      />
+      <Helmet>
+        <title>About Me - Mark Yu</title>
+        <meta name="description" content="Learn more about Mark Yu, a full-stack web developer and artist based in Ontario, Canada." />
+      </Helmet>
       <Suspense fallback={<Loading />}>
         <Box
           key="about"

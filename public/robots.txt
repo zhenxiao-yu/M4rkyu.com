@@ -1,7 +1,3 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /
-Disallow: /admin
-
-Sitemap: https://m4rkyu.com/sitemap.xml
-Host: m4rkyu.com
+Disallow:
