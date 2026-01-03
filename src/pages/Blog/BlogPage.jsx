@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/Seo";
+import AccessibleHeading from "../../components/AccessibleHeading";
 
 // Blog data
 import { Blogs } from "../../assets/data/BlogData";
@@ -141,41 +142,25 @@ const BlogPage = () => {
       blog.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blog' }
+  ];
+
+  const description =
+    'Articles and notes by ZhenXiao (Mark) Yu covering software engineering, creative technology, and project learnings.';
+
   return (
     <>
-      <Helmet>
-        <title>Posts by Mark Yu</title>
-        <meta name="description" content="A collection of blogs by Mark Yu sorted by date." />
-        <meta name="keywords" content="blog, articles, tech, development, Mark Yu" />
-        <meta property="og:url" content="https://www.m4rkyu.com/blog" />
-        <link rel="canonical" href="https://www.m4rkyu.com/blog" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "mainEntityOfPage": {
-              "@type": "WebPage",
-              "@id": "https://www.m4rkyu.com/blog"
-            },
-            "headline": "Blog Page",
-            "description": "A collection of blogs sorted by date.",
-            "author": {
-              "@type": "Person",
-              "name": "ZhenXiao Yu"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "m4rkyu.com",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://www.m4rkyu.com/gallery"
-              }
-            },
-            "datePublished": "2024-07-10",
-            "image": "https://www.m4rkyu.com/gallery"
-          })}
-        </script>
-      </Helmet>
+      <AccessibleHeading>Blog articles by ZhenXiao (Mark) Yu</AccessibleHeading>
+      <Seo
+        title="Blog | Insights by Mark Yu"
+        description={description}
+        path="/blog"
+        breadcrumbs={breadcrumbs}
+        includePerson
+        keywords="Mark Yu blog, software engineering notes, creative technology articles"
+      />
       <Suspense fallback={<Loading />}>
         <MainContainer
           variants={containerVariants}
