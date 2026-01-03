@@ -8,6 +8,8 @@
   object-fit: cover;
   z-index: 0;
   user-select: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 .video-placeholder {
@@ -15,4 +17,12 @@
     radial-gradient(circle at 75% 75%, rgba(8, 9, 10, 0.3), transparent 40%),
     linear-gradient(135deg, rgb(236, 233, 232), rgb(200, 205, 210));
   filter: saturate(0.8);
+}
+
+.video-background.is-visible {
+  opacity: 1;
+}
+
+.video-placeholder {
+  opacity: 1;
 }

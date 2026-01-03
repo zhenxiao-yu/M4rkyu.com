@@ -180,6 +180,7 @@ const Main = () => {
   const [click, setClick] = useState(false);
   const [path, setPath] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const assetPreloadList = useMemo(
@@ -195,6 +196,14 @@ const Main = () => {
 
   const handleClick = useCallback(() => {
     setClick((prevClick) => !prevClick);
+  }, []);
+
+  useEffect(() => {
+    setIsVideoReady(false);
+  }, [click]);
+
+  const handleVideoReady = useCallback(() => {
+    setIsVideoReady(true);
   }, []);
 
   const moveY = useMemo(() => ({ y: '-100%' }), []);
@@ -236,32 +245,36 @@ const Main = () => {
           exit={exitAnimation}
           transition={{ duration: 0.5 }}
         >
-          {prefersReducedMotion ? (
+          {prefersReducedMotion || !isVideoReady ? (
             <div className="video-placeholder" aria-hidden="true" />
-          ) : !click ? (
-            <video
-              src={videoBg}
-              autoPlay
-              loop
-              playsInline
-              muted
-              preload="auto"
-              poster={mePortrait}
-              className="video-background"
-              aria-hidden="true"
-            />
-          ) : (
-            <video
-              src={videoBg2}
-              autoPlay
-              loop
-              playsInline
-              muted
-              preload="auto"
-              playbackRate={0.5}
-              className="video-background"
-              aria-hidden="true"
-            />
+          ) : null}
+          {!prefersReducedMotion && (
+            !click ? (
+              <video
+                src={videoBg}
+                autoPlay
+                loop
+                playsInline
+                muted
+                preload="auto"
+                className={`video-background ${isVideoReady ? 'is-visible' : ''}`}
+                aria-hidden="true"
+                onLoadedData={handleVideoReady}
+              />
+            ) : (
+              <video
+                src={videoBg2}
+                autoPlay
+                loop
+                playsInline
+                muted
+                preload="auto"
+                playbackRate={0.5}
+                className={`video-background ${isVideoReady ? 'is-visible' : ''}`}
+                aria-hidden="true"
+                onLoadedData={handleVideoReady}
+              />
+            )
           )}
           <DarkDiv click={click} />
           <Container>
