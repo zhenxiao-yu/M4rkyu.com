@@ -34,18 +34,51 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
   const { docs } = useFirestore('images');
   const [loading, setLoading] = useState({});
   const [selectedSection, setSelectedSection] = useState(section || '');
-
-  const allSectionsLoaded = useRef(false);
-
-  useEffect(() => {
-    allSectionsLoaded.current = true;
-  }, []);
+  const prefetchedImages = useRef(new Set());
 
   useEffect(() => {
     if (section) {
       setSelectedSection(section);  // Automatically set the section based on the URL parameter
     }
   }, [section]);
+
+  useEffect(() => {
+    if (!docs.length) return;
+
+    setLoading((prev) => {
+      const updated = { ...prev };
+      let hasChange = false;
+
+      docs.forEach((doc) => {
+        if (updated[doc.id] === undefined) {
+          updated[doc.id] = true;
+          hasChange = true;
+        }
+      });
+
+      return hasChange ? updated : prev;
+    });
+
+    const preloadImages = () => {
+      const preloadTargets = docs.slice(0, 24).filter((doc) => !prefetchedImages.current.has(doc.url));
+
+      preloadTargets.forEach((doc) => {
+        const image = new Image();
+        image.decoding = 'async';
+        image.loading = 'eager';
+        image.src = doc.url;
+        prefetchedImages.current.add(doc.url);
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(preloadImages, { timeout: 2000 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = window.setTimeout(preloadImages, 150);
+    return () => window.clearTimeout(timeoutId);
+  }, [docs]);
 
   const handleImageLoad = useCallback((id) => {
     setLoading((prev) => ({ ...prev, [id]: false }));
@@ -152,7 +185,7 @@ const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImage
       ) : (
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
           <Masonry gutter="10px">
-            {filterDocs(section.header).map((doc) => (
+            {filterDocs(section.header).map((doc, docIndex) => (
               <motion.div
                 className="image-box animate__animated animate__zoomInUp"
                 key={doc.id}
@@ -170,15 +203,20 @@ const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImage
                 transition={{ duration: 0.5 }}
               >
                 <div className="image-container">
-                  {loading[doc.id] !== false && <div className="loader"></div>}
+                  {loading[doc.id] === true && <div className="loader"></div>}
                   <img
                     ref={(el) => (imgRefs.current[doc.id] = el)}  // Assign ref for each image
                     data-src={doc.url}  // Lazy load using data-src
                     alt={`Gallery Image ${doc.title || 'No title'}`}
                     onLoad={() => handleImageLoad(doc.id)}
                     onError={() => handleImageError(doc.id)}
-                    style={{ display: loading[doc.id] ? 'none' : 'block' }}
+                    loading="lazy"
+                    decoding="async"
+                    fetchpriority={docIndex < 6 ? 'high' : 'low'}
+                    sizes="(max-width: 900px) 33vw, (max-width: 1200px) 20vw, 15vw"
+                    style={{ display: loading[doc.id] === false ? 'block' : 'none' }}
                   />
+                  {loading[doc.id] === 'error' && <p className="image-fallback">Image failed to load</p>}
                 </div>
                 <div className="image-info">
                   <h4>{doc.title}</h4>
