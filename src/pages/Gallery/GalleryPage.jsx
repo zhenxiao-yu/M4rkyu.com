@@ -34,7 +34,6 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
   const { docs } = useFirestore('images');
   const [loading, setLoading] = useState({});
   const [selectedSection, setSelectedSection] = useState(section || '');
-  const [searchTerm, setSearchTerm] = useState('');
   const prefetchedImages = useRef(new Set());
   const BATCH_SIZE = 12;
 
@@ -96,19 +95,8 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
   }, [history]);
 
   const filterDocs = useCallback(
-    (sectionHeader) => {
-      const needle = searchTerm.toLowerCase();
-      return docs.filter((doc) => {
-        const matchesSection = doc.section === sectionHeader;
-        const matchesSearch = needle
-          ? `${doc.title || ''} ${doc.description || ''} ${(doc.tags || []).join(' ')}`
-              .toLowerCase()
-              .includes(needle)
-          : true;
-        return matchesSection && matchesSearch;
-      });
-    },
-    [docs, searchTerm]
+    (sectionHeader) => docs.filter((doc) => doc.section === sectionHeader),
+    [docs]
   );
 
   return (
@@ -132,20 +120,7 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
         </Suspense>
 
         {/* Dropdown to select sections */}
-        <div className="gallery-controls">
-          <Dropdown selectedImg={selectedImg} handleScrollToSection={handleScrollToSection} />
-          <label className="search" htmlFor="gallerySearch">
-            <span className="sr-only">Search gallery</span>
-            <input
-              id="gallerySearch"
-              type="search"
-              placeholder="Search title, tags, description"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              aria-label="Search images"
-            />
-          </label>
-        </div>
+        <Dropdown selectedImg={selectedImg} handleScrollToSection={handleScrollToSection} />
 
         {!selectedSection ? (
           <HeroSection />
@@ -252,7 +227,7 @@ const Section = ({ index, section, filterDocs, setSelectedImg, handleImageLoad, 
                     key={doc.id}
                     layout
                     whileHover={{ opacity: 1 }}
-                onClick={() => setSelectedImg(doc.imageUrl)}
+                    onClick={() => setSelectedImg(doc.url)}
                     initial="hidden"
                     animate="visible"
                     exit="exit"
@@ -265,32 +240,23 @@ const Section = ({ index, section, filterDocs, setSelectedImg, handleImageLoad, 
                   >
                     <div className="image-container">
                       {showLoader && <div className="loader"></div>}
-                      <div
-                        className="ratio-box"
-                        style={
-                          doc.width && doc.height
-                            ? { paddingBottom: `${(doc.height / doc.width) * 100}%` }
-                            : undefined
-                        }
-                      >
-                        <img
-                          ref={(el) => (imgRefs.current[doc.id] = el)}
-                          data-src={doc.imageUrl}
-                          alt={doc.alt || doc.title || 'Gallery image'}
-                          onLoad={() => handleImageLoad(doc.id)}
-                          onError={() => handleImageError(doc.id)}
-                          loading="lazy"
-                          decoding="async"
-                          fetchpriority={docIndex < 6 ? 'high' : 'low'}
-                          sizes="(max-width: 900px) 33vw, (max-width: 1200px) 20vw, 15vw"
-                          className={`gallery-image ${isLoaded ? 'is-visible' : ''}`}
-                        />
-                      </div>
+                      <img
+                        ref={(el) => (imgRefs.current[doc.id] = el)}
+                        data-src={doc.url}
+                        alt={`Gallery Image ${doc.title || 'No title'}`}
+                        onLoad={() => handleImageLoad(doc.id)}
+                        onError={() => handleImageError(doc.id)}
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority={docIndex < 6 ? 'high' : 'low'}
+                        sizes="(max-width: 900px) 33vw, (max-width: 1200px) 20vw, 15vw"
+                        className={`gallery-image ${isLoaded ? 'is-visible' : ''}`}
+                      />
                       {loading[doc.id] === 'error' && <p className="image-fallback">Image failed to load</p>}
                     </div>
                     <div className="image-info">
                       <h4>{doc.title}</h4>
-                      <p>{doc.dateTaken || doc.date}</p>
+                      <p>{doc.date}</p>
                     </div>
                   </motion.div>
                 );
