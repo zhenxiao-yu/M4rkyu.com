@@ -1,0 +1,300 @@
+.admin-page {
+  padding: 2rem;
+  color: #0f172a;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-header h1 {
+  margin: 0;
+}
+
+.status-message {
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: #fff;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+}
+
+.field textarea {
+  min-height: 120px;
+}
+
+.upload-input input {
+  display: none;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.upload-status {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.status {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.status.progress progress {
+  accent-color: #0ea5e9;
+}
+
+.table {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: 60px 120px 1fr 160px 160px 200px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.table-head {
+  font-weight: 700;
+  color: #475569;
+}
+
+.table-row {
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  cursor: grab;
+}
+
+.table-row.dragging {
+  opacity: 0.7;
+  border-color: #0ea5e9;
+}
+
+.thumbnail img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0ea5e9;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.muted {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.button {
+  background: #0ea5e9;
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.6rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.button.danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.draft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.draft {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1rem;
+}
+
+.draft img {
+  width: 100%;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.draft-fields {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.draft-fields label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  max-width: 720px;
+  width: 95%;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.modal header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1rem;
+}
+
+.modal .preview {
+  width: 100%;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty {
+  padding: 1rem;
+  color: #475569;
+}
+
+.error {
+  color: #ef4444;
+}
+
+@media (max-width: 960px) {
+  .table-head,
+  .table-row {
+    grid-template-columns: 40px 1fr;
+  }
+  .table-head > :not(:first-child),
+  .table-row > :not(:first-child):not(.thumbnail) {
+    display: none;
+  }
+  .thumbnail {
+    grid-row: span 2;
+  }
+  .actions {
+    justify-content: flex-end;
+  }
+  .draft {
+    grid-template-columns: 1fr;
+  }
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+}
