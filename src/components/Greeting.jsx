@@ -54,20 +54,26 @@ const fadeInVariants = {
 
 const Greeting = () => {
   const [greeting, setGreeting] = useState('Nice to meet you...');
-  let hasVisited = localStorage.getItem('hasVisited');
 
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const hasVisited = window.localStorage.getItem('hasVisited');
+
     if (hasVisited) {
       setGreeting('m4rkyu.com');
     } else {
       setGreeting('Nice to meet you...');
-      localStorage.setItem('hasVisited', 'true');
+      window.localStorage.setItem('hasVisited', 'true');
     }
-  }, [hasVisited]);
+
+    return undefined;
+  }, []);
 
   return (
     <GreetingContainer>
       <GreetingText
+        aria-live="polite"
         className="fadeIn"
         initial="hidden"
         animate="visible"

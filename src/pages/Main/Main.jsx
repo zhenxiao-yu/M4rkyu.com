@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useCallback, useMemo } from 'react';
+import React, { lazy, Suspense, useState, useCallback, useMemo, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -10,6 +10,7 @@ import Intro from '../Intro/Intro';
 import Loading from '../../components/Loading';
 import Greeting from '../../components/Greeting';
 import { mediaQueries } from '../../theme/Themes';
+import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion';
 import videoBg from '../../assets/Images/videobg.webm';
 import videoBg2 from '../../assets/Images/videobg2.webm';
 
@@ -89,7 +90,7 @@ const Center = styled.button`
 `;
 
 const Gallery = styled(NavLink)`
-  color: ${(props) => (props.click || props.mq ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 2rem;
   right: calc(1rem + 2vw);
@@ -98,7 +99,7 @@ const Gallery = styled(NavLink)`
 `;
 
 const BLOG = styled(NavLink)`
-  color: ${(props) => (props.click || props.mq ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 46%;
   right: calc(-0.6rem + 2vw);
@@ -176,6 +177,8 @@ const DarkDiv = styled.div`
 const Main = () => {
   const [click, setClick] = useState(false);
   const [path, setPath] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const handleClick = useCallback(() => {
     setClick((prevClick) => !prevClick);
@@ -183,7 +186,20 @@ const Main = () => {
 
   const moveY = useMemo(() => ({ y: '-100%' }), []);
   const moveX = useMemo(() => ({ x: `${path === 'project' ? '100%' : '-100%'}` }), [path]);
-  const mq = useMemo(() => window.matchMedia('(max-width: 50em)').matches, []);
+  const exitAnimation = useMemo(() => (path === 'about' || path === 'skills' ? moveY : moveX), [moveX, moveY, path]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+
+    const mediaQuery = window.matchMedia('(max-width: 50em)');
+    const updateMatch = (event) => setIsMobile(event.matches);
+
+    // Initialize state on mount
+    updateMatch(mediaQuery);
+
+    mediaQuery.addEventListener('change', updateMatch);
+    return () => mediaQuery.removeEventListener('change', updateMatch);
+  }, []);
 
   return (
     <>
@@ -201,18 +217,22 @@ const Main = () => {
           key="modal"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={path === 'about' || path === 'skills' ? moveY : moveX}
+          exit={exitAnimation}
           transition={{ duration: 0.5 }}
         >
-          {!click ? (
+          {prefersReducedMotion ? (
+            <div className="video-placeholder" aria-hidden="true" />
+          ) : !click ? (
             <video
               src={videoBg}
               autoPlay
               loop
               playsInline
               muted
+              preload="metadata"
               className="video-background"
               loading="lazy"
+              aria-hidden="true"
             />
           ) : (
             <video
@@ -221,28 +241,32 @@ const Main = () => {
               loop
               playsInline
               muted
+              preload="metadata"
               playbackRate={0.5}
               className="video-background"
               loading="lazy"
+              aria-hidden="true"
             />
           )}
           <DarkDiv click={click} />
           <Container>
             <LogoComponent theme={click ? 'dark' : 'light'} />
-            <SocialIcons theme={click ? (mq ? 'light' : 'dark') : 'light'} />
-            <Center click={click}>
+            <SocialIcons theme={click ? (isMobile ? 'light' : 'dark') : 'light'} />
+            <Center click={click} type="button" aria-label={click ? 'Pause background animation' : 'Activate interactive mode'}>
               <CodeCircle
                 onClick={handleClick}
-                width={click ? (mq ? 100 : 120) : (mq ? 150 : 200)}
-                height={click ? (mq ? 100 : 120) : (mq ? 150 : 200)}
+                width={click ? (isMobile ? 100 : 120) : (isMobile ? 150 : 200)}
+                height={click ? (isMobile ? 100 : 120) : (isMobile ? 150 : 200)}
                 fill="#101010"
               />
               <Greeting />
             </Center>
             <Gallery
-              click={click && mq}
+              click={click && isMobile}
+              isMobile={isMobile}
               onClick={() => setPath('gallery')}
               to="/gallery"
+              aria-label="View photography gallery"
             >
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
@@ -253,7 +277,13 @@ const Main = () => {
                 MY PHOTOS
               </motion.h2>
             </Gallery>
-            <BLOG click={click && mq} onClick={() => setPath('blog')} to="/post">
+            <BLOG
+              click={click && isMobile}
+              isMobile={isMobile}
+              onClick={() => setPath('blog')}
+              to="/post"
+              aria-label="Read recent posts"
+            >
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
@@ -275,7 +305,12 @@ const Main = () => {
               </motion.h2>
             </PROJECT>
             <BottomBar>
-              <ABOUT onClick={() => setClick(false)} click={mq ? +false : +click} to="/about">
+              <ABOUT
+                onClick={() => setClick(false)}
+                click={isMobile ? +false : +click}
+                to="/about"
+                aria-label="Learn more about Mark"
+              >
                 <motion.h2
                   onClick={() => setPath('about')}
                   initial={{ y: 200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
@@ -286,7 +321,7 @@ const Main = () => {
                   ABOUT ME
                 </motion.h2>
               </ABOUT>
-              <SKILLS onClick={() => setPath('skills')} to="/skills">
+              <SKILLS onClick={() => setPath('skills')} to="/skills" aria-label="See skills and services">
                 <motion.h2
                   initial={{ y: 200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                   animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
