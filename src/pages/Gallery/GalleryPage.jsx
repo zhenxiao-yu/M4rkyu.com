@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState, memo, useRef, useCallback } from 'react';
+import React, { lazy, Suspense, useEffect, useState, memo, useRef, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';  // Import withRouter
 import { motion } from 'framer-motion';
@@ -35,6 +35,7 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
   const [loading, setLoading] = useState({});
   const [selectedSection, setSelectedSection] = useState(section || '');
   const prefetchedImages = useRef(new Set());
+  const BATCH_SIZE = 12;
 
   useEffect(() => {
     if (section) {
@@ -126,15 +127,15 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
         ) : (
           sections.map((section, index) => (
             selectedSection === section.header.toLowerCase() && (
-              <Section 
+              <Section
                 key={index}
                 index={index}
                 section={section}
                 filterDocs={filterDocs}
-                docs={docs}
                 setSelectedImg={setSelectedImg}
                 handleImageLoad={handleImageLoad}
                 loading={loading}
+                batchSize={BATCH_SIZE}
               />
             )
           ))
@@ -143,12 +144,22 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
     </>
   );
 };
-const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImageLoad, loading }) => {
+const Section = ({ index, section, filterDocs, setSelectedImg, handleImageLoad, loading, batchSize }) => {
   const imgRefs = useRef({});
+  const loadMoreRef = useRef(null);
+  const initialBatch = Math.max(batchSize, 18);
+  const [visibleCount, setVisibleCount] = useState(initialBatch);
 
   const handleImageError = useCallback((id) => {
     setLoading((prev) => ({ ...prev, [id]: 'error' }));
   }, []);
+
+  const filteredDocs = useMemo(() => filterDocs(section.header), [filterDocs, section.header]);
+  const visibleDocs = useMemo(() => filteredDocs.slice(0, visibleCount), [filteredDocs, visibleCount]);
+
+  useEffect(() => {
+    setVisibleCount(initialBatch);
+  }, [filteredDocs.length, initialBatch]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -164,13 +175,33 @@ const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImage
       { threshold: 0.1 }
     );
 
-    const images = Object.values(imgRefs.current);
-    images.forEach((img) => {
+    visibleDocs.forEach((doc) => {
+      const img = imgRefs.current[doc.id];
       if (img) observer.observe(img);
     });
 
     return () => observer.disconnect();
-  }, [docs]);
+  }, [visibleDocs]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleCount((prev) => Math.min(prev + batchSize, filteredDocs.length));
+          }
+        });
+      },
+      { rootMargin: '200px 0px' }
+    );
+
+    const currentTarget = loadMoreRef.current;
+    if (currentTarget) observer.observe(currentTarget);
+
+    return () => {
+      if (currentTarget) observer.unobserve(currentTarget);
+    };
+  }, [filteredDocs.length, batchSize]);
 
   return (
     <div className="section-container" id={`section-${index}`}>
@@ -178,54 +209,64 @@ const Section = ({ index, section, filterDocs, docs, setSelectedImg, handleImage
         <h2 className="animate__animated animate__zoomIn">{section.header}</h2>
       </div>
       <h3 className="animate__animated animate__backInUp">{section.subheader}</h3>
-      {filterDocs(section.header).length === 0 ? (
+      {filteredDocs.length === 0 ? (
         <div className="empty-message">
           <h3>Oops! No images available at the moment</h3>
         </div>
       ) : (
-        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
-          <Masonry gutter="10px">
-            {filterDocs(section.header).map((doc, docIndex) => (
-              <motion.div
-                className="image-box animate__animated animate__zoomInUp"
-                key={doc.id}
-                layout
-                whileHover={{ opacity: 1 }}
-                onClick={() => setSelectedImg(doc.url)}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                variants={{
-                  hidden: { opacity: 0, scale: 0.8, y: 50 },
-                  visible: { opacity: 1, scale: 1, y: 0 },
-                  exit: { opacity: 0, scale: 0.8, y: -50 },
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="image-container">
-                  {loading[doc.id] === true && <div className="loader"></div>}
-                  <img
-                    ref={(el) => (imgRefs.current[doc.id] = el)}  // Assign ref for each image
-                    data-src={doc.url}  // Lazy load using data-src
-                    alt={`Gallery Image ${doc.title || 'No title'}`}
-                    onLoad={() => handleImageLoad(doc.id)}
-                    onError={() => handleImageError(doc.id)}
-                    loading="lazy"
-                    decoding="async"
-                    fetchpriority={docIndex < 6 ? 'high' : 'low'}
-                    sizes="(max-width: 900px) 33vw, (max-width: 1200px) 20vw, 15vw"
-                    style={{ display: loading[doc.id] === false ? 'block' : 'none' }}
-                  />
-                  {loading[doc.id] === 'error' && <p className="image-fallback">Image failed to load</p>}
-                </div>
-                <div className="image-info">
-                  <h4>{doc.title}</h4>
-                  <p>{doc.date}</p>
-                </div>
-              </motion.div>
-            ))}
-          </Masonry>
-        </ResponsiveMasonry>
+        <>
+          <ResponsiveMasonry columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}>
+            <Masonry gutter="10px">
+              {visibleDocs.map((doc, docIndex) => {
+                const isLoaded = loading[doc.id] === false;
+                const showLoader = loading[doc.id] !== false;
+
+                return (
+                  <motion.div
+                    className="image-box animate__animated animate__zoomInUp"
+                    key={doc.id}
+                    layout
+                    whileHover={{ opacity: 1 }}
+                    onClick={() => setSelectedImg(doc.url)}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.8, y: 50 },
+                      visible: { opacity: 1, scale: 1, y: 0 },
+                      exit: { opacity: 0, scale: 0.8, y: -50 },
+                    }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <div className="image-container">
+                      {showLoader && <div className="loader"></div>}
+                      <img
+                        ref={(el) => (imgRefs.current[doc.id] = el)}
+                        data-src={doc.url}
+                        alt={`Gallery Image ${doc.title || 'No title'}`}
+                        onLoad={() => handleImageLoad(doc.id)}
+                        onError={() => handleImageError(doc.id)}
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority={docIndex < 6 ? 'high' : 'low'}
+                        sizes="(max-width: 900px) 33vw, (max-width: 1200px) 20vw, 15vw"
+                        className={`gallery-image ${isLoaded ? 'is-visible' : ''}`}
+                      />
+                      {loading[doc.id] === 'error' && <p className="image-fallback">Image failed to load</p>}
+                    </div>
+                    <div className="image-info">
+                      <h4>{doc.title}</h4>
+                      <p>{doc.date}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </Masonry>
+          </ResponsiveMasonry>
+          {visibleDocs.length < filteredDocs.length && (
+            <div className="load-more-trigger" ref={loadMoreRef} aria-hidden="true" />
+          )}
+        </>
       )}
     </div>
   );
