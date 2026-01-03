@@ -1,84 +1,64 @@
-# Mark Yu's Personal Website
+# Mark Yu / ZhenXiao Yu — Portfolio
 
-Welcome to the repository for my personal website! This project is a showcase of my skills and passions as a software engineer, artist, and game developer. It combines advanced web technologies with creative design to present a dynamic portfolio that reflects my professional journey and creative endeavors.
+A personal portfolio for ZhenXiao (Mark) Yu that blends interactive visuals with engineering case studies. The site is built with Vite and React, styled with a mix of custom CSS and third-party animation libraries, and deployed to Vercel for fast global delivery.
 
-## Table of Contents
-
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [Contact](#contact)
+## Live Site
+- **Production:** [https://www.m4rkyu.com](https://www.m4rkyu.com)
 
 ## Project Overview
-
-This personal website serves as a portfolio to display my work in software engineering, game development, and art. Designed with a focus on interactive and responsive design, the site showcases a blend of my technical skills and creative projects, providing a visually engaging experience for visitors.
+- Showcases projects in software engineering, game development, and digital art with responsive layouts and motion.
+- Highlights multilingual and multicultural experience (English/Mandarin, Chinese Canadian background) and academic ties to Western University.
+- Includes gallery, blog, and resume sections powered by reusable components.
 
 ## Key Features
-
-- **Next.js:** Utilizes Next.js for server-side rendering and static site generation, ensuring fast performance and excellent SEO.
-- **Styled Components:** Employs Styled Components for scalable, modular CSS-in-JS styling, enhancing design consistency and maintainability.
-- **Framer Motion:** Integrates Framer Motion to deliver smooth animations and transitions, adding a layer of interactivity and visual appeal.
-- **Responsive Design:** Optimized for various devices and screen sizes to ensure a seamless user experience on mobile, tablet, and desktop.
-- **Portfolio Display:** Features a curated collection of projects, highlighting my work in web development, game design, and artistic creation.
+- **Single-page React experience:** Smooth navigation managed through React Router with animated transitions.
+- **SEO-ready metadata:** Optimized HTML head tags, canonical URL, and Schema.org structured data for the "ZhenXiao Yu" / "Mark Yu" identity.
+- **Interactive visuals:** Framer Motion, tsParticles, and three.js integrations add depth without sacrificing performance.
+- **Responsive design:** Custom breakpoints and utility classes ensure accessibility on mobile, tablet, and desktop.
+- **Analytics:** Vercel Analytics and Speed Insights are available for production deployments.
 
 ## Tech Stack
+- **Core:** Vite, React 18, React Router
+- **Styling & Motion:** styled-components, animate.css, Framer Motion, hover effects
+- **3D/Canvas:** three.js, tsParticles
+- **Utilities:** clsx, react-icons, react-scroll, react-simple-typewriter
+- **Deployment:** Vercel (see `vercel.json` for configuration)
 
-- **Frontend:** Next.js, Styled Components, Framer Motion
-- **Deployment:** Vercel
+## Requirements
+- Node.js 18+ and npm
 
 ## Getting Started
-
-To set up and run this project locally, follow these steps:
-
-1. **Clone the repository:**
-
-   ```
-   bash
-   Copy code
-   git clone https://github.com/zhenxiao-yu/M4rkyu.com.git
-   ```
-
-2. **Navigate to the project directory:**
-
-   ```
-   bash
-   Copy code
-   cd M4rkyu.com
-   ```
-
-3. **Install dependencies:**
-
-   ```
-   bash
-   Copy code
+1. **Install dependencies**
+   ```bash
    npm install
    ```
-
-4. **Start the development server:**
-
+2. **Run the dev server**
+   ```bash
+   npm start
    ```
-   bash
-   Copy code
-   npm run dev
-   ```
+   Visit `http://localhost:5173` (default Vite port) in your browser.
 
-   Your local development server should now be running at `http://localhost:3000`.
+## Available Scripts
+- `npm start` — Launch the Vite development server.
+- `npm run build` — Create an optimized production build in `dist/`.
+- `npm run preview` — Preview the production build locally.
 
-## Usage
+## Project Structure
+- `src/index.jsx` — App entry that mounts the React tree.
+- `src/Router.jsx` — Route definitions for top-level sections (Intro, About, Projects, Gallery, Blog, etc.).
+- `src/pages/` — Page-level components grouped by feature area.
+- `src/components/` — Shared UI pieces (navigation, cards, loaders, tooltips).
+- `src/assets/` — Static assets such as images and icons.
+- `public/` — Public files served at the site root (favicons, manifest).
 
-Once the development server is running, you can explore the website to see the different sections showcasing my work. You can also modify and customize the content, styles, and functionality as needed.
+## Deployment
+1. Build the site with `npm run build`.
+2. Deploy the generated `dist/` directory to Vercel or your preferred static host. The included `vercel.json` is ready for Vercel deployments.
 
 ## Contributing
-
-Contributions are welcome! If you have suggestions, improvements, or bug fixes, please feel free to:
-
-1. Fork the repository.
-2. Create a new branch for your changes.
-3. Submit a pull request with a description of your modifications.
+Contributions are welcome! Please open an issue to discuss changes, then submit a pull request from a feature branch.
 
 ## Contact
-
-For more information, please visit [my personal website](https://www.m4rkyu.com) or reach out to me at [markyu0615@gmail.com].
+- **Website:** [m4rkyu.com](https://www.m4rkyu.com)
+- **Email:** [markyu0615@gmail.com](mailto:markyu0615@gmail.com)
+- **GitHub:** [@zhenxiao-yu](https://github.com/zhenxiao-yu)
