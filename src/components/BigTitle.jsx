@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 // Big title style
-const Text = styled.h1`
+const Text = styled.span`
   position: fixed;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
@@ -16,7 +16,7 @@ const Text = styled.h1`
 // background text component
 const BigTitle = (props) => {
   return (
-    <Text top={props.top} left={props.left} right={props.right}>
+    <Text top={props.top} left={props.left} right={props.right} aria-hidden="true" role="presentation">
       {props.text}
     </Text>
   );

@@ -1,5 +1,4 @@
 import React, { lazy, Suspense, useEffect, useState, memo, useRef, useCallback, useMemo } from 'react';
-import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';  // Import withRouter
 import { motion } from 'framer-motion';
 import useFirestore from '../../hooks/useFirebase';
@@ -9,6 +8,8 @@ import Modal from '../../components/Modal';
 import './GalleryPage.css';
 import { Typewriter } from 'react-simple-typewriter';
 import { HiChevronDoubleUp } from "react-icons/hi";
+import Seo from '../../components/Seo';
+import AccessibleHeading from '../../components/AccessibleHeading';
 
 const AnchorComponent = lazy(() => import('../../components/Anchor'));
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
@@ -99,16 +100,27 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
     [docs]
   );
 
+  const canonicalPath = section ? `/gallery/${section}` : '/gallery';
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Gallery', path: '/gallery' },
+    ...(section ? [{ name: section, path: canonicalPath }] : [])
+  ];
+  const description =
+    'Visual gallery from ZhenXiao (Mark) Yu featuring artwork, photography, and creative experiments across media.';
+  const title = section ? `Gallery - ${section} | Mark Yu` : 'Gallery | Visual Work by Mark Yu';
+
   return (
     <>
-      <Helmet>
-        <title>Gallery - Mark Yu</title>
-        <link rel="canonical" href={`https://www.m4rkyu.com/gallery/${section}`} />
-        <meta property="og:title" content={`Gallery - ${section || 'Mark Yu'}`} />
-        <meta property="og:description" content="Explore the gallery of Mark Yu, showcasing various sections of images." />
-        <meta property="og:url" content={`https://www.m4rkyu.com/gallery/${section}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <AccessibleHeading>{title}</AccessibleHeading>
+      <Seo
+        title={title}
+        description={description}
+        path={canonicalPath}
+        breadcrumbs={breadcrumbs}
+        includePerson
+        keywords="Mark Yu gallery, Zhenxiao Yu art, creative technology visuals"
+      />
       {selectedImg && <Modal selectedImg={selectedImg} setSelectedImg={setSelectedImg} />}
       <div className="container">
         <Suspense fallback={<FallbackComponent />}>
