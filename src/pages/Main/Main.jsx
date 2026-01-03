@@ -11,8 +11,10 @@ import Loading from '../../components/Loading';
 import Greeting from '../../components/Greeting';
 import { mediaQueries } from '../../theme/Themes';
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion';
+import useAssetPreloader from '../../hooks/useAssetPreloader';
 import videoBg from '../../assets/Images/videobg.webm';
 import videoBg2 from '../../assets/Images/videobg2.webm';
+import mePortrait from '../../assets/Images/me-pic.jpg';
 
 const SocialIcons = lazy(() => import('../../components/SocialIcons'));
 const LogoComponent = lazy(() => import('../../components/LogoComponent'));
@@ -180,6 +182,17 @@ const Main = () => {
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
 
+  const assetPreloadList = useMemo(
+    () => [
+      { type: 'video', src: videoBg },
+      { type: 'video', src: videoBg2 },
+      { type: 'image', src: mePortrait },
+    ],
+    []
+  );
+
+  useAssetPreloader(assetPreloadList);
+
   const handleClick = useCallback(() => {
     setClick((prevClick) => !prevClick);
   }, []);
@@ -211,6 +224,9 @@ const Main = () => {
         />
         <meta name="author" content="Mark Yu" />
         <meta name="keywords" content="Mark Yu, Zhenxiao Yu, Software Engineer, Frontend Development, Game Design" />
+        <link rel="preload" href={videoBg} as="video" type="video/webm" />
+        <link rel="preload" href={videoBg2} as="video" type="video/webm" />
+        <link rel="preload" href={mePortrait} as="image" fetchpriority="high" />
       </Helmet>
       <Suspense fallback={<Loading />}>
         <MainContainer
@@ -229,9 +245,8 @@ const Main = () => {
               loop
               playsInline
               muted
-              preload="metadata"
+              preload="auto"
               className="video-background"
-              loading="lazy"
               aria-hidden="true"
             />
           ) : (
@@ -241,10 +256,9 @@ const Main = () => {
               loop
               playsInline
               muted
-              preload="metadata"
+              preload="auto"
               playbackRate={0.5}
               className="video-background"
-              loading="lazy"
               aria-hidden="true"
             />
           )}

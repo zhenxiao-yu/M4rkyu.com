@@ -360,11 +360,13 @@ const Intro = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
         >
-          <img 
-            className="animate__animated animate__fadeIn animate__delay-2s pic" 
-            src={Me} 
-            alt="Mark Yu" 
-            loading="lazy" 
+          <img
+            className="animate__animated animate__fadeIn animate__delay-2s pic"
+            src={Me}
+            alt="Mark Yu"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
             width="500"
             height="500"
           />

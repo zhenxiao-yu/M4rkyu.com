@@ -119,9 +119,10 @@ body {
 
 /* Section container styles */
 .section-container {
-  padding: 1.4rem;
-  width: 80%;
-  height: 95%;
+  padding: clamp(1rem, 2vw, 2rem);
+  width: 85%;
+  max-width: 1400px;
+  min-height: 60vh;
   margin: 0 auto;
   background-color: #ece9e8;
   background-image: radial-gradient(#08090a 0.85px, transparent 0.85px), radial-gradient(#08090a 0.85px, #ece9e8 0.85px);
@@ -131,7 +132,7 @@ body {
   margin-bottom: 2rem;
   text-align: center;
   /* height: 100vh; */
-  overflow-y: scroll;
+  overflow-y: visible;
 }
 
 .section-container h2 {
@@ -156,6 +157,11 @@ body {
 }
 
 @media (max-width: 768px) {
+  .section-container {
+    width: 92%;
+    padding: 1rem;
+  }
+
   .section-container h2 {
     font-size: 1.8rem;
   }
@@ -314,13 +320,51 @@ body {
 .image-container {
   position: relative;
   width: 100%;
-  height: auto;
+  min-height: 160px;
+  background: linear-gradient(135deg, #f4f2f1 0%, #ffffff 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image-container img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 5;
   transition: opacity 0.3s ease;
+}
+
+.image-container img.is-loading {
+  opacity: 0;
+}
+
+.image-container img.is-loaded {
+  opacity: 1;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(8, 9, 10, 0.08);
+  border-top-color: #08090a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.image-fallback {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #8a3d3d;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hero section styles */
