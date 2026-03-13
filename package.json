@@ -4,9 +4,7 @@
   "private": true,
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
+    
     "@tsparticles/all": "^3.3.0",
     "@tsparticles/react": "^3.0.0",
     "@types/three": "0.152.1",
@@ -35,8 +33,7 @@
     "tailwind-merge": "^2.3.0",
     "three": "0.153.0",
     "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^4.3.2",
-    "web-vitals": "^1.1.2"
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "scripts": {
     "start": "vite",

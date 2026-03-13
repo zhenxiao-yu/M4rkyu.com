@@ -3,15 +3,15 @@ import { getStorage } from 'firebase/storage';
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, serverTimestamp } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
+// Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyBCrsDXNRnGzGvQU1QnF4Y8TYnmE17bYcQ",
-  authDomain: "m4rkyu-3f0ec.firebaseapp.com",
-  projectId: "m4rkyu-3f0ec",
-  storageBucket: "m4rkyu-3f0ec.appspot.com",
-  messagingSenderId: "851628630417",
-  appId: "1:851628630417:web:bd9f1b2c876dc38bbcfa30",
-  measurementId: "G-WNTKR7YZVM"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
