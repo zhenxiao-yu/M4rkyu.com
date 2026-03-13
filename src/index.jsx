@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import Router from './Router';
+import ErrorBoundary from './components/ErrorBoundary';
 import './theme/normalize.css';
 import './theme/global.css';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
@@ -35,4 +36,8 @@ const AppRoot = () => {
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<AppRoot />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ErrorBoundary>
+    <AppRoot />
+  </ErrorBoundary>
+);
