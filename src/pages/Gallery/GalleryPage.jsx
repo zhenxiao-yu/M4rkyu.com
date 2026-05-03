@@ -85,6 +85,10 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
     setLoading((prev) => ({ ...prev, [id]: false }));
   }, []);
 
+  const handleImageError = useCallback((id) => {
+    setLoading((prev) => ({ ...prev, [id]: 'error' }));
+  }, []);
+
   // Function to handle the dropdown and change URL
   const handleScrollToSection = useCallback((event) => {
     const selectedSection = event.target.value;
@@ -134,6 +138,7 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
                 filterDocs={filterDocs}
                 setSelectedImg={setSelectedImg}
                 handleImageLoad={handleImageLoad}
+                handleImageError={handleImageError}
                 loading={loading}
                 batchSize={BATCH_SIZE}
               />
@@ -144,15 +149,11 @@ const GalleryPage = ({ match, history }) => {  // Get history from props using w
     </>
   );
 };
-const Section = ({ index, section, filterDocs, setSelectedImg, handleImageLoad, loading, batchSize }) => {
+const Section = ({ index, section, filterDocs, setSelectedImg, handleImageLoad, handleImageError, loading, batchSize }) => {
   const imgRefs = useRef({});
   const loadMoreRef = useRef(null);
   const initialBatch = Math.max(batchSize, 18);
   const [visibleCount, setVisibleCount] = useState(initialBatch);
-
-  const handleImageError = useCallback((id) => {
-    setLoading((prev) => ({ ...prev, [id]: 'error' }));
-  }, []);
 
   const filteredDocs = useMemo(() => filterDocs(section.header), [filterDocs, section.header]);
   const visibleDocs = useMemo(() => filteredDocs.slice(0, visibleCount), [filteredDocs, visibleCount]);
@@ -291,13 +292,13 @@ const HeroSection = () => (
     <HiChevronDoubleUp size="3rem"/>
     <h1>Welcome to My Gallery</h1>
     <Typewriter
-      words={['<p>Explore various sections to see different collections of images.</p>']}
+      words={['Explore various sections to see different collections of images.']}
       loop={0}
       typeSpeed={50}
       deleteSpeed={50}
       delaySpeed={1500}
       cursor
-      aria-label="<p>Explore various sections to see different collections of images.</p>"
+      aria-label="Explore various sections to see different collections of images."
     />
   </div>
 );

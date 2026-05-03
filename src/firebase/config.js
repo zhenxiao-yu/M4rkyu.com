@@ -1,9 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
-import { getAnalytics } from "firebase/analytics";
+import { isSupported, getAnalytics } from "firebase/analytics";
 import { getFirestore, serverTimestamp } from 'firebase/firestore';
 
-// Firebase configuration from environment variables
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -14,11 +13,12 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-// Initialize services
+isSupported().then((supported) => {
+  if (supported && firebaseConfig.projectId) getAnalytics(app);
+});
+
 const projectStorage = getStorage(app);
 const projectFirestore = getFirestore(app);
 const timestamp = serverTimestamp;

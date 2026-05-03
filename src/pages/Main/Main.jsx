@@ -92,7 +92,7 @@ const Center = styled.button`
 `;
 
 const Gallery = styled(NavLink)`
-  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.ismobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 2rem;
   right: calc(1rem + 2vw);
@@ -101,7 +101,7 @@ const Gallery = styled(NavLink)`
 `;
 
 const BLOG = styled(NavLink)`
-  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.click || props.ismobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 46%;
   right: calc(-0.6rem + 2vw);
@@ -233,8 +233,6 @@ const Main = () => {
         />
         <meta name="author" content="Mark Yu" />
         <meta name="keywords" content="Mark Yu, Zhenxiao Yu, Software Engineer, Frontend Development, Game Design" />
-        <link rel="preload" href={videoBg} as="video" type="video/webm" />
-        <link rel="preload" href={videoBg2} as="video" type="video/webm" />
         <link rel="preload" href={mePortrait} as="image" fetchpriority="high" />
       </Helmet>
       <Suspense fallback={<Loading />}>
@@ -269,10 +267,9 @@ const Main = () => {
                 playsInline
                 muted
                 preload="auto"
-                playbackRate={0.5}
                 className={`video-background ${isVideoReady ? 'is-visible' : ''}`}
                 aria-hidden="true"
-                onLoadedData={handleVideoReady}
+                onLoadedData={(e) => { e.target.playbackRate = 0.5; handleVideoReady(); }}
               />
             )
           )}
@@ -290,8 +287,8 @@ const Main = () => {
               <Greeting />
             </Center>
             <Gallery
-              click={click && isMobile}
-              isMobile={isMobile}
+              click={+(click && isMobile)}
+              ismobile={+isMobile}
               onClick={() => setPath('gallery')}
               to="/gallery"
               aria-label="View photography gallery"
@@ -299,15 +296,15 @@ const Main = () => {
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
-                whileHover={{ scale: 1.2, fontWeight: 'bold' }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY PHOTOS
               </motion.h2>
             </Gallery>
             <BLOG
-              click={click && isMobile}
-              isMobile={isMobile}
+              click={+(click && isMobile)}
+              ismobile={+isMobile}
               onClick={() => setPath('blog')}
               to="/post"
               aria-label="Read recent posts"
@@ -315,7 +312,7 @@ const Main = () => {
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
-                whileHover={{ scale: 1.3, fontWeight: 'bold' }}
+                whileHover={{ scale: 1.3 }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY POSTS
