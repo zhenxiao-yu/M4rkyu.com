@@ -1,23 +1,25 @@
-export function SectionHeading({
-  eyebrow,
-  title,
-  description,
-}: {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-}) {
+interface SectionHeadingProps {
+  eyebrow?: string
+  title: string
+  description?: string
+}
+
+export function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
   return (
     <div className="max-w-3xl">
       {eyebrow ? (
-        <p className="font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="mt-3 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-tight">
+      <h2 className="mt-3 text-[clamp(2rem,4vw,3.25rem)] font-[700] leading-[1.05] tracking-[-0.02em]">
         {title}
       </h2>
-      {description ? <p className="mt-4 text-lg leading-8 text-muted-foreground">{description}</p> : null}
+      {description ? (
+        <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
     </div>
-  );
+  )
 }
