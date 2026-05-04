@@ -115,6 +115,33 @@
   --warning: #b9b9b9;
 }
 
+[data-theme="kernel"] {
+  color-scheme: dark;
+  --background: #020402;
+  --foreground: #d7ffe8;
+  --card: #061007;
+  --card-foreground: #d7ffe8;
+  --popover: #061007;
+  --popover-foreground: #d7ffe8;
+  --primary: #d7ffe8;
+  --primary-foreground: #020402;
+  --secondary: #0c1a0f;
+  --secondary-foreground: #d7ffe8;
+  --muted: #08140a;
+  --muted-foreground: #8ccfa6;
+  --accent: #102415;
+  --accent-foreground: #e8fff0;
+  --destructive: #ff6b6b;
+  --border: #1d3f25;
+  --input: #1d3f25;
+  --ring: #5dff9d;
+  --surface-ink: #d7ffe8;
+  --surface-paper: #020402;
+  --signal: #ff6b6b;
+  --success: #5dff9d;
+  --warning: #ffe08a;
+}
+
 * {
   border-color: var(--border);
 }
@@ -124,7 +151,9 @@ html {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--foreground) 9%, transparent), transparent 30rem),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
@@ -156,6 +185,38 @@ body {
     transparent 3px,
     color-mix(in srgb, var(--foreground) 4%, transparent) 4px
   );
+}
+
+.archive-vignette {
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--foreground) 10%, transparent), transparent 28rem),
+    linear-gradient(to bottom, transparent, color-mix(in srgb, var(--background) 86%, transparent));
+}
+
+.placeholder-noise {
+  background-image:
+    linear-gradient(135deg, color-mix(in srgb, var(--foreground) 10%, transparent), transparent 45%),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--foreground) 8%, transparent) 0 1px,
+      transparent 1px 11px
+    );
+}
+
+.contact-sheet {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--foreground) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 16%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-block-size: 600px;
 }
 
 @media (prefers-reduced-motion: reduce) {

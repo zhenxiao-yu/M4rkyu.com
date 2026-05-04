@@ -1,6 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-const routes = ["/en", "/en/projects", "/en/projects/nimbus", "/en/about", "/en/portal"];
+const routes = [
+  "/en",
+  "/zh",
+  "/en/projects",
+  "/en/projects/nimbus",
+  "/en/games",
+  "/en/games/descent-into-madness",
+  "/en/gallery",
+  "/en/gallery/black-white",
+  "/en/blog",
+  "/en/media",
+  "/en/resources",
+  "/en/tools",
+  "/en/about",
+  "/en/contact",
+  "/en/portal",
+];
 
 for (const route of routes) {
   test(`${route} renders without horizontal overflow`, async ({ page }) => {

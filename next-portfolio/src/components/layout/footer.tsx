@@ -23,6 +23,12 @@ export function Footer({ locale }: { locale: Locale }) {
           <Link href="/projects" locale={locale} className="hover:text-foreground">
             Archive
           </Link>
+          <Link href="/games" locale={locale} className="hover:text-foreground">
+            Games
+          </Link>
+          <Link href="/media" locale={locale} className="hover:text-foreground">
+            Media
+          </Link>
         </div>
       </div>
     </footer>

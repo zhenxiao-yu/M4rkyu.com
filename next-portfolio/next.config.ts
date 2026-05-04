@@ -3,7 +3,7 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  distDir: process.env.VERCEL ? ".next" : ".next-node22",
+  distDir: process.env.NEXT_DIST_DIR ?? (process.env.VERCEL ? ".next" : ".next-node22"),
   outputFileTracingRoot: process.cwd(),
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {

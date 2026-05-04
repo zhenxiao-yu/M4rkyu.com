@@ -22,6 +22,17 @@
 - Storybook and Playwright scaffolding.
 - SEO foundation: metadata, static robots/sitemap, canonical-ready localized routes.
 
+## Phase II Prototype Implemented
+
+- Full visual prototype layer added across homepage, projects, project detail, games, gallery, blog/devlog, media, resources, tools, about, contact, and portal.
+- Structured placeholder datasets now exist for projects, gallery items, posts, games, media, services, resources, and profile content.
+- Placeholder content is explicitly marked with `TBD`, `Placeholder`, `Draft`, `Coming soon`, or `Replace with final content`.
+- Added reusable placeholder primitives: `PlaceholderImage`, `PlaceholderVideo`, `PlaceholderCard`, `DraftBadge`, `ComingSoonBlock`, `EmptyArchiveState`, `MediaFrame`, and `ContentPendingLabel`.
+- Added `/games`, `/games/[slug]`, and `/media` as lightweight static prototype routes.
+- Expanded Storybook coverage for placeholder states and archive cards.
+- Expanded Playwright smoke coverage across 96 route/viewport checks.
+- No fake metrics, clients, awards, private phone number, or home address were introduced.
+
 ## Launch Gates
 
 - `npm run build` passes in `next-portfolio`.
@@ -37,14 +48,19 @@
 - `npm run typecheck` passes in `next-portfolio`.
 - `npm run build`, `npm run build-storybook`, and `npm run test:e2e` pass from a clean C: temp copy at `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-build`.
 - Playwright smoke coverage currently checks `/en`, `/en/projects`, `/en/projects/nimbus`, `/en/about`, `/en/portal`, theme controls, language controls, and horizontal overflow at 360, 390, 768, 1280, 1920, and desktop Chromium widths.
+- Phase II verification also passed from `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-phase2`: `npm run build`, `npm run build-storybook`, and `npm run test:e2e` with 96/96 Playwright checks.
+- Phase II smoke coverage includes `/en`, `/zh`, `/en/projects`, `/en/projects/nimbus`, `/en/games`, `/en/games/descent-into-madness`, `/en/gallery`, `/en/gallery/black-white`, `/en/blog`, `/en/media`, `/en/resources`, `/en/tools`, `/en/about`, `/en/contact`, `/en/portal`, theme controls, language controls, and horizontal overflow at 360, 390, 768, 1280, 1920, and desktop Chromium widths.
 - The H: workspace currently has Windows filesystem lock/readlink issues against generated directories such as `.next-node22` and `storybook-static`; keep generated output ignored and verify builds from C: or CI until the drive state is cleaned.
+- Local dev can avoid the locked default output by setting `NEXT_DIST_DIR`, for example `NEXT_DIST_DIR=.next-dev-3000 npm run dev -- --hostname 127.0.0.1 --port 3000`.
+- The C: temp verification path can also leave native Node module files locked briefly after build/test runs; use a fresh temp folder or CI for repeated clean-copy verification if Windows refuses cleanup.
+- After adding configurable `NEXT_DIST_DIR`, a clean-copy `npm run build` pass was verified again from `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-configcheck-*`.
 - `npm ci` reports 2 moderate audit findings in the current dependency tree; review before release, but do not use forced breaking upgrades inside Milestone 1.
 
 ## Next Batches
 
-- Polish homepage art direction and mobile details.
-- Expand project content into full case studies.
-- Replace SVG placeholders with optimized real screenshots/art assets.
+- Replace placeholder project copy with approved case-study writing.
+- Replace SVG/placeholders with optimized real screenshots, artwork, video posters, and captions.
 - Add gallery lightbox and thumbnail pipeline.
 - Add MDX posts and Pagefind indexing.
 - Add contact form provider once content and launch flow are stable.
+- Run Lighthouse and accessibility review on a Vercel preview.

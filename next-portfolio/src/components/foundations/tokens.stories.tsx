@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 function Tokens() {
-  const swatches = ["background", "foreground", "card", "muted", "accent", "ring", "signal"];
+  const swatches = [
+    "background",
+    "foreground",
+    "card",
+    "muted",
+    "accent",
+    "ring",
+    "signal",
+    "success",
+    "warning",
+  ];
   return (
     <div className="grid gap-6">
       <div>

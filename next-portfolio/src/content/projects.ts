@@ -1,4 +1,7 @@
-import { projectSchema, type Project } from "./schemas";
+import type { z } from "zod";
+import { projectSchema } from "./schemas";
+
+type ProjectInput = z.input<typeof projectSchema>;
 
 const projects = [
   {
@@ -149,7 +152,152 @@ const projects = [
       },
     },
   },
-] satisfies Project[];
+  {
+    title: "In the Silence of a Brother",
+    slug: "in-the-silence-of-a-brother",
+    shortPitch:
+      "Draft case-study summary: a cinematic art/film project lane reserved for final production notes.",
+    category: "art-film",
+    year: "TBD",
+    status: "draft",
+    contentStatus: "placeholder",
+    featured: false,
+    problem: "TBD: replace with final creative problem statement and context.",
+    solution: "Placeholder: describe the visual approach, production method, and final format when ready.",
+    role: "TBD: final role breakdown pending.",
+    stack: ["Visual direction TBD", "Editing TBD", "Archive content pending"],
+    features: ["Placeholder still sequence", "Draft mood archive", "Coming soon production notes"],
+    architectureNotes: [
+      "Placeholder: final media pipeline will use optimized posters and lazy-loaded stills.",
+      "TBD: replace with real production workflow.",
+    ],
+    challenges: ["TBD: final challenge notes after project content review."],
+    screenshots: [],
+    outcome: "TBD: final project outcome.",
+    lessonsLearned: ["TBD: final lessons learned."],
+    nextSteps: ["Replace placeholder stills", "Add final synopsis", "Add optimized media"],
+    seo: {
+      title: "In the Silence of a Brother draft case study",
+      description: "Draft placeholder case-study page for In the Silence of a Brother.",
+    },
+  },
+  {
+    title: "Descent Into Madness",
+    slug: "descent-into-madness",
+    shortPitch:
+      "Draft game-development archive page for systems, atmosphere, and playable prototype notes.",
+    category: "game-dev",
+    year: "TBD",
+    status: "draft",
+    contentStatus: "placeholder",
+    featured: false,
+    problem: "TBD: replace with final gameplay problem and design constraints.",
+    solution: "Placeholder: describe prototype loop, level structure, and technical approach when ready.",
+    role: "TBD: final gameplay, engineering, and art role details pending.",
+    stack: ["Engine TBD", "Gameplay systems TBD", "Art pipeline TBD"],
+    features: ["Draft gameplay loop", "Placeholder enemy/system notes", "Coming soon media capture"],
+    architectureNotes: [
+      "Placeholder: route will support gameplay clips, design notes, and build notes.",
+      "TBD: replace with final engine and system architecture.",
+    ],
+    challenges: ["TBD: replace with actual gameplay or technical challenges."],
+    screenshots: [],
+    outcome: "TBD: final project outcome.",
+    lessonsLearned: ["TBD: final lessons learned."],
+    nextSteps: ["Add gameplay capture", "Add system diagrams", "Write final case study"],
+    seo: {
+      title: "Descent Into Madness draft case study",
+      description: "Draft placeholder case-study page for Descent Into Madness.",
+    },
+  },
+  {
+    title: "UI Studio",
+    slug: "ui-studio",
+    shortPitch:
+      "Placeholder product-system case study for interface experiments, layout studies, and reusable components.",
+    category: "experiment",
+    year: "TBD",
+    status: "draft",
+    contentStatus: "placeholder",
+    featured: false,
+    problem: "TBD: define the final design-system problem this archive should document.",
+    solution: "Placeholder: frame selected UI experiments as reusable patterns once final examples are chosen.",
+    role: "TBD: final ownership and design notes pending.",
+    stack: ["React", "Tailwind CSS", "Radix UI", "Design tokens"],
+    features: ["Draft component gallery", "Placeholder interaction studies", "Coming soon design notes"],
+    architectureNotes: [
+      "Placeholder: reusable components will be documented in Storybook first.",
+      "TBD: replace with final component API decisions.",
+    ],
+    challenges: ["TBD: final design-system tradeoffs."],
+    screenshots: [],
+    outcome: "TBD: final project outcome.",
+    lessonsLearned: ["TBD: final lessons learned."],
+    nextSteps: ["Select final UI studies", "Add screenshots", "Write technical notes"],
+    seo: {
+      title: "UI Studio draft case study",
+      description: "Draft placeholder case-study page for UI Studio.",
+    },
+  },
+  {
+    title: "Resubot",
+    slug: "resubot",
+    shortPitch:
+      "Draft AI/tooling case study lane for automation workflows and assistant-style product thinking.",
+    category: "ai-tool",
+    year: "TBD",
+    status: "draft",
+    contentStatus: "placeholder",
+    featured: false,
+    problem: "TBD: replace with final workflow problem and user scenario.",
+    solution: "Placeholder: describe assistant behavior, constraints, and safety posture after content review.",
+    role: "TBD: final engineering role pending.",
+    stack: ["Automation TBD", "AI workflow TBD", "Interface TBD"],
+    features: ["Placeholder workflow map", "Draft command surface", "Coming soon implementation notes"],
+    architectureNotes: [
+      "Placeholder: final notes should separate automation logic from UI surface.",
+      "TBD: replace with real integrations and guardrails.",
+    ],
+    challenges: ["TBD: final automation and safety challenges."],
+    screenshots: [],
+    outcome: "TBD: final project outcome.",
+    lessonsLearned: ["TBD: final lessons learned."],
+    nextSteps: ["Confirm project scope", "Add final diagrams", "Write implementation notes"],
+    seo: {
+      title: "Resubot draft case study",
+      description: "Draft placeholder case-study page for Resubot.",
+    },
+  },
+  {
+    title: "M4rkdown",
+    slug: "m4rkdown",
+    shortPitch:
+      "Draft editor/tooling case study for writing workflows, markdown surfaces, and export-oriented UX.",
+    category: "web-app",
+    year: "TBD",
+    status: "draft",
+    contentStatus: "placeholder",
+    featured: false,
+    problem: "TBD: replace with final writing-tool problem statement.",
+    solution: "Placeholder: describe editor behavior, preview model, and export flow when ready.",
+    role: "TBD: final frontend/tooling role pending.",
+    stack: ["Markdown", "Editor UX TBD", "Export pipeline TBD"],
+    features: ["Draft editor frame", "Placeholder preview mode", "Coming soon export notes"],
+    architectureNotes: [
+      "Placeholder: final architecture should clarify parsing, preview, and persistence.",
+      "TBD: replace with final implementation details.",
+    ],
+    challenges: ["TBD: final editor state and parsing notes."],
+    screenshots: [],
+    outcome: "TBD: final project outcome.",
+    lessonsLearned: ["TBD: final lessons learned."],
+    nextSteps: ["Add final screenshots", "Confirm editor scope", "Write case study"],
+    seo: {
+      title: "M4rkdown draft case study",
+      description: "Draft placeholder case-study page for M4rkdown.",
+    },
+  },
+] satisfies ProjectInput[];
 
 export const allProjects = projects.map((project) => projectSchema.parse(project));
 export const featuredProjects = allProjects.filter((project) => project.featured);

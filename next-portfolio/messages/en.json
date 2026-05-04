@@ -2,8 +2,10 @@
   "Navigation": {
     "home": "Home",
     "projects": "Projects",
+    "games": "Games",
     "gallery": "Gallery",
     "blog": "Writing",
+    "media": "Media",
     "resources": "Resources",
     "tools": "Tools",
     "about": "About",
@@ -31,7 +33,9 @@
     "featured": "Featured case studies",
     "latest": "Latest archive",
     "gallery": "Gallery signal",
-    "collab": "Collaboration frame"
+    "collab": "Collaboration frame",
+    "systems": "Identity systems",
+    "media": "Media placeholders"
   },
   "Projects": {
     "title": "Project Archive",

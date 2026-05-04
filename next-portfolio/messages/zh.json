@@ -2,8 +2,10 @@
   "Navigation": {
     "home": "首页",
     "projects": "项目",
+    "games": "游戏",
     "gallery": "影像",
     "blog": "写作",
+    "media": "媒体",
     "resources": "资源",
     "tools": "工具",
     "about": "关于",
@@ -31,7 +33,9 @@
     "featured": "精选案例",
     "latest": "最新归档",
     "gallery": "视觉信号",
-    "collab": "合作方向"
+    "collab": "合作方向",
+    "systems": "身份系统",
+    "media": "媒体占位"
   },
   "Projects": {
     "title": "项目档案",

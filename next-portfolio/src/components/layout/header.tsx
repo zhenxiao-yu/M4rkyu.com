@@ -7,10 +7,11 @@ import { MobileNav } from "./mobile-nav";
 
 const navItems = [
   ["projects", "/projects"],
+  ["games", "/games"],
   ["gallery", "/gallery"],
   ["blog", "/blog"],
+  ["media", "/media"],
   ["resources", "/resources"],
-  ["tools", "/tools"],
   ["about", "/about"],
   ["contact", "/contact"],
 ] as const;
@@ -27,14 +28,14 @@ export async function Header({ locale }: { locale: Locale }) {
           </span>
           <span className="hidden sm:inline">M4rkyu.com</span>
         </Link>
-        <nav className="hidden items-center gap-5 text-sm text-muted-foreground lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-4 text-sm text-muted-foreground xl:flex" aria-label="Main navigation">
           {navItems.map(([key, href]) => (
             <Link key={key} href={href} locale={locale} className="transition-colors hover:text-foreground">
               {t(key)}
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           <ThemeSwitcher />
           <LanguageSwitcher />
           <Link

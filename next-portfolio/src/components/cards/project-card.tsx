@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DraftBadge } from "@/components/placeholders/draft-badge";
+import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
@@ -19,21 +21,29 @@ export async function ProjectCard({
   const t = await getTranslations({ locale, namespace: "Projects" });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
+  const isDraft = project.contentStatus !== "ready";
 
   return (
     <Card className="group overflow-hidden rounded-lg bg-card/80 transition-colors hover:border-ring">
       <div className="relative aspect-[16/10] overflow-hidden border-b bg-muted">
-        <Image
-          src={cover.src}
-          alt={cover.alt}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover grayscale transition duration-500 group-hover:grayscale-0"
-        />
+        {cover ? (
+          <Image
+            src={cover.src}
+            alt={cover.alt}
+            fill
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-cover grayscale transition duration-500 group-hover:grayscale-0"
+          />
+        ) : (
+          <PlaceholderImage label="PROJECT MEDIA TBD" aspect="h-full" className="rounded-none border-0" />
+        )}
       </div>
       <CardHeader>
         <div className="flex items-center justify-between gap-3">
-          <Badge variant={project.featured ? "success" : "outline"}>{project.status}</Badge>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant={project.featured ? "success" : "outline"}>{project.status}</Badge>
+            {isDraft ? <DraftBadge label={project.contentStatus} /> : null}
+          </div>
           <span className="font-mono text-xs text-muted-foreground">{project.year}</span>
         </div>
         <CardTitle>{localized.title}</CardTitle>

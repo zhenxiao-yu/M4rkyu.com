@@ -17,8 +17,10 @@ import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 
 const navItems = [
   ["projects", "/projects"],
+  ["games", "/games"],
   ["gallery", "/gallery"],
   ["blog", "/blog"],
+  ["media", "/media"],
   ["resources", "/resources"],
   ["tools", "/tools"],
   ["about", "/about"],
@@ -31,7 +33,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="lg:hidden" aria-label={t("menu")}>
+        <Button variant="outline" size="icon" className="xl:hidden" aria-label={t("menu")}>
           <Menu className="size-4" />
         </Button>
       </SheetTrigger>

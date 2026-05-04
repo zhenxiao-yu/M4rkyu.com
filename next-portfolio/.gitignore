@@ -24,6 +24,7 @@
 /.next-pass/
 /.next-done/
 /.next-node22/
+/.next-dev-*/
 /out/
 
 # production
