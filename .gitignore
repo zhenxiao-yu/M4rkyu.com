@@ -4,8 +4,10 @@ node_modules/
 # Build output
 dist/
 build/
+.next/
 .next-*/
 .dist-*/
+next-env.d.ts
 
 # Environment variables
 .env
