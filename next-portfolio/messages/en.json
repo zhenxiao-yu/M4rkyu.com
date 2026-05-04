@@ -1,0 +1,66 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "projects": "Projects",
+    "gallery": "Gallery",
+    "blog": "Writing",
+    "resources": "Resources",
+    "tools": "Tools",
+    "about": "About",
+    "contact": "Contact",
+    "portal": "Portal",
+    "menu": "Open menu"
+  },
+  "Theme": {
+    "label": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "monochrome": "Mono"
+  },
+  "Language": {
+    "label": "Language",
+    "en": "English",
+    "zh": "中文"
+  },
+  "Home": {
+    "eyebrow": "M4rkyu.com / 2027 remake",
+    "title": "ZhenXiao Mark Yu",
+    "subtitle": "Software engineer, frontend systems builder, game developer, and digital artist building precise interfaces with cinematic restraint.",
+    "primaryCta": "View projects",
+    "portalCta": "Enter portal",
+    "featured": "Featured case studies",
+    "latest": "Latest archive",
+    "gallery": "Gallery signal",
+    "collab": "Collaboration frame"
+  },
+  "Projects": {
+    "title": "Project Archive",
+    "intro": "A serious archive of web applications, game systems, AI tools, and creative engineering experiments.",
+    "caseStudy": "Case study",
+    "live": "Live",
+    "source": "Source",
+    "quickFacts": "Quick facts",
+    "problem": "Problem",
+    "solution": "Solution",
+    "role": "Role",
+    "stack": "Stack",
+    "features": "Features",
+    "architecture": "Architecture notes",
+    "outcome": "Outcome",
+    "lessons": "Lessons learned",
+    "next": "Next steps"
+  },
+  "About": {
+    "title": "About Mark",
+    "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."
+  },
+  "Portal": {
+    "title": "Portal locked",
+    "intro": "An opt-in interactive mode is being assembled. For now, the terminal stays light, fast, and quiet."
+  },
+  "Common": {
+    "comingSoon": "Coming soon",
+    "readMore": "Read more",
+    "status": "Status"
+  }
+}

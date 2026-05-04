@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Nimbus monochrome cover</title>
+  <desc id="desc">Abstract black and white file storage interface grid.</desc>
+  <rect width="1200" height="750" fill="#050505"/>
+  <g stroke="#f2f0ea" stroke-width="2" opacity=".45">
+    <path d="M120 120h960v510H120z"/>
+    <path d="M120 230h960M360 120v510M600 120v510M840 120v510"/>
+  </g>
+  <g fill="#f2f0ea">
+    <rect x="170" y="170" width="140" height="28"/>
+    <rect x="410" y="288" width="140" height="28"/>
+    <rect x="650" y="407" width="140" height="28"/>
+    <rect x="890" y="526" width="140" height="28"/>
+  </g>
+  <circle cx="960" cy="190" r="76" fill="none" stroke="#67e8f9" stroke-width="6" opacity=".7"/>
+</svg>
