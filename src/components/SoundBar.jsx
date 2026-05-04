@@ -45,7 +45,7 @@ const Line = styled.span`
   background: ${(props) => props.theme.text};
   border: 1px solid ${(props) => props.theme.body};
   animation: ${play} 1s ease infinite;
-  animation-play-state: ${(props) => (props.click ? "running" : "paused")};
+  animation-play-state: ${(props) => (props.$click ? "running" : "paused")};
   height: 1rem;
   width: 3px;
   margin: 0 0.15rem;
@@ -86,49 +86,51 @@ const NextButton = styled.button`
 `;
 
 const SoundBar = () => {
-  const [click, setClick] = useState(true);
+  const [click, setClick] = useState(false);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const ref = useRef(null);
+  const shouldPlayRef = useRef(false);
 
   const songs = useMemo(() => [song1, song2, song3, song4, song5], []);
 
-  const playSong = useCallback((index) => {
-    if (ref.current) {
-      ref.current.pause();
-      ref.current.currentTime = 0;
-      ref.current.volume = 0.1;
-      ref.current.src = songs[index];
+  // Load song src on index change; play only if user has already started playback
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.pause();
+    ref.current.currentTime = 0;
+    ref.current.volume = 0.1;
+    ref.current.src = songs[currentSongIndex];
 
-      ref.current.play().then(() => {
-        setClick(true);
-      }).catch((error) => {
+    if (shouldPlayRef.current) {
+      ref.current.play().catch((error) => {
         console.warn("Playback failed:", error);
+        shouldPlayRef.current = false;
         setClick(false);
       });
     }
-  }, [songs]);
-
-  useEffect(() => {
-    playSong(currentSongIndex);
-  }, [currentSongIndex, playSong]);
+  }, [currentSongIndex, songs]);
 
   useEffect(() => {
     const audioElement = ref.current;
-    const handleEnded = () => handleNext();
+    const handleEnded = () => setCurrentSongIndex((prev) => (prev + 1) % songs.length);
 
     if (audioElement) {
       audioElement.addEventListener("ended", handleEnded);
-      return () => {
-        audioElement.removeEventListener("ended", handleEnded);
-      };
+      return () => audioElement.removeEventListener("ended", handleEnded);
     }
-  }, []);
+  }, [songs.length]);
 
   const handleClick = useCallback(() => {
     if (!click) {
-      ref.current.play();
+      shouldPlayRef.current = true;
+      ref.current.play().catch((error) => {
+        console.warn("Playback failed:", error);
+        shouldPlayRef.current = false;
+        setClick(false);
+      });
       setClick(true);
     } else {
+      shouldPlayRef.current = false;
       ref.current.pause();
       setClick(false);
     }
@@ -140,13 +142,22 @@ const SoundBar = () => {
 
   return (
     <div>
-      <Box onClick={handleClick}>
+      <Box
+        onClick={handleClick}
+        role="button"
+        aria-label={click ? "Pause music" : "Play music"}
+        tabIndex={0}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleClick()}
+      >
         {Array.from({ length: 9 }).map((_, index) => (
-          <Line key={index} click={click} />
+          <Line key={index} $click={click} aria-hidden="true" />
         ))}
         <audio ref={ref} loop={false} />
-        <NextButton onClick={handleNext}>
-          <FaMusic />
+        <NextButton
+          onClick={(e) => { e.stopPropagation(); handleNext(); }}
+          aria-label="Next song"
+        >
+          <FaMusic aria-hidden="true" />
         </NextButton>
       </Box>
     </div>

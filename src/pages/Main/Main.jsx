@@ -58,8 +58,8 @@ const rotate = keyframes`
 
 const Center = styled.button`
   position: absolute;
-  top: ${(props) => (props.click ? '85%' : '50%')};
-  left: ${(props) => (props.click ? '90%' : '50%')};
+  top: ${(props) => (props.$click ? '85%' : '50%')};
+  left: ${(props) => (props.$click ? '90%' : '50%')};
   transform: translate(-50%, -50%);
   border: none;
   outline: none;
@@ -75,24 +75,24 @@ const Center = styled.button`
   }
 
   & > *:last-child {
-    display: ${(props) => (props.click ? 'none' : 'inline-block')};
+    display: ${(props) => (props.$click ? 'none' : 'inline-block')};
   }
 
   @media only screen and (max-width: 50em) {
-    top: ${(props) => (props.click ? '90%' : '50%')};
-    left: ${(props) => (props.click ? '90%' : '50%')};
-    width: ${(props) => (props.click ? '100px' : '150px')};
-    height: ${(props) => (props.click ? '100px' : '150px')};
+    top: ${(props) => (props.$click ? '90%' : '50%')};
+    left: ${(props) => (props.$click ? '90%' : '50%')};
+    width: ${(props) => (props.$click ? '100px' : '150px')};
+    height: ${(props) => (props.$click ? '100px' : '150px')};
   }
 
   @media only screen and (max-width: 30em) {
-    width: ${(props) => (props.click ? '80px' : '150px')};
-    height: ${(props) => (props.click ? '80px' : '150px')};
+    width: ${(props) => (props.$click ? '80px' : '150px')};
+    height: ${(props) => (props.$click ? '80px' : '150px')};
   }
 `;
 
 const Gallery = styled(NavLink)`
-  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.$click || props.$isMobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 2rem;
   right: calc(1rem + 2vw);
@@ -101,7 +101,7 @@ const Gallery = styled(NavLink)`
 `;
 
 const BLOG = styled(NavLink)`
-  color: ${(props) => (props.click || props.isMobile ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.$click || props.$isMobile ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 46%;
   right: calc(-0.6rem + 2vw);
@@ -110,21 +110,21 @@ const BLOG = styled(NavLink)`
   text-decoration: none;
 
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
+    text-shadow: ${(props) => (props.$click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
   }
 `;
 
 const PROJECT = styled(NavLink)`
-  color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.$click ? props.theme.body : props.theme.text)};
   position: absolute;
   top: 42%;
   left: calc(1.5rem + 2vw);
   transform: translate(-50%, -50%) rotate(-90deg);
   z-index: 1;
   text-decoration: none;
-  
+
   @media only screen and (max-width: 50em) {
-    text-shadow: ${(props) => (props.click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
+    text-shadow: ${(props) => (props.$click ? '0 0 3px #101010, 1px 1px 5px #000' : 'none')};
   }
 `;
 
@@ -139,7 +139,7 @@ const BottomBar = styled.div`
 `;
 
 const ABOUT = styled(NavLink)`
-  color: ${(props) => (props.click ? props.theme.body : props.theme.text)};
+  color: ${(props) => (props.$click ? props.theme.body : props.theme.text)};
   text-decoration: none;
   z-index: 1;
   bottom: 1.5rem;
@@ -156,14 +156,14 @@ const DarkDiv = styled.div`
   top: 0;
   bottom: 0;
   right: 50%;
-  width: ${(props) => (props.click ? '50%' : '0%')};
+  width: ${(props) => (props.$click ? '50%' : '0%')};
   background-color: rgb(8,9,10);
-  height: ${(props) => (props.click ? '100%' : '0%')};
+  height: ${(props) => (props.$click ? '100%' : '0%')};
   transition: height 0.5s ease, width 1s ease 0.5s;
   z-index: 1;
 
   ${(props) =>
-    props.click
+    props.$click
       ? mediaQueries(50)`
           height: 50%;
           right: 0;
@@ -276,11 +276,11 @@ const Main = () => {
               />
             )
           )}
-          <DarkDiv click={click} />
+          <DarkDiv $click={click} />
           <Container>
             <LogoComponent theme={click ? 'dark' : 'light'} />
             <SocialIcons theme={click ? (isMobile ? 'light' : 'dark') : 'light'} />
-            <Center click={click} type="button" aria-label={click ? 'Pause background animation' : 'Activate interactive mode'}>
+            <Center $click={click} type="button" aria-label={click ? 'Pause background animation' : 'Activate interactive mode'}>
               <CodeCircle
                 onClick={handleClick}
                 width={click ? (isMobile ? 100 : 120) : (isMobile ? 150 : 200)}
@@ -290,8 +290,8 @@ const Main = () => {
               <Greeting />
             </Center>
             <Gallery
-              click={click && isMobile}
-              isMobile={isMobile}
+              $click={click && isMobile}
+              $isMobile={isMobile}
               onClick={() => setPath('gallery')}
               to="/gallery"
               aria-label="View photography gallery"
@@ -306,8 +306,8 @@ const Main = () => {
               </motion.h2>
             </Gallery>
             <BLOG
-              click={click && isMobile}
-              isMobile={isMobile}
+              $click={click && isMobile}
+              $isMobile={isMobile}
               onClick={() => setPath('blog')}
               to="/post"
               aria-label="Read recent posts"
@@ -321,7 +321,7 @@ const Main = () => {
                 MY POSTS
               </motion.h2>
             </BLOG>
-            <PROJECT click={+click} to="/project">
+            <PROJECT $click={click} to="/project">
               <motion.h2
                 onClick={() => setPath('project')}
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
@@ -335,7 +335,7 @@ const Main = () => {
             <BottomBar>
               <ABOUT
                 onClick={() => setClick(false)}
-                click={isMobile ? +false : +click}
+                $click={!isMobile && click}
                 to="/about"
                 aria-label="Learn more about Mark"
               >
