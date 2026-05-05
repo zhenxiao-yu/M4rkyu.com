@@ -1,0 +1,62 @@
+name: Next Portfolio CI
+
+on:
+  pull_request:
+    paths:
+      - "next-portfolio/**"
+      - ".github/workflows/next-portfolio-ci.yml"
+  push:
+    branches:
+      - main
+      - remake/nextjs-2027
+    paths:
+      - "next-portfolio/**"
+      - ".github/workflows/next-portfolio-ci.yml"
+
+defaults:
+  run:
+    working-directory: next-portfolio
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    name: Verify Next Portfolio
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: next-portfolio/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Audit Dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build App
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Install Playwright Browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Smoke Tests
+        run: npm run test:e2e

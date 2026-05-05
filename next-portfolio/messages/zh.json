@@ -1,0 +1,70 @@
+{
+  "Navigation": {
+    "home": "首页",
+    "projects": "项目",
+    "games": "游戏",
+    "gallery": "影像",
+    "blog": "写作",
+    "media": "媒体",
+    "resources": "资源",
+    "tools": "工具",
+    "about": "关于",
+    "contact": "联系",
+    "portal": "入口",
+    "menu": "打开菜单"
+  },
+  "Theme": {
+    "label": "主题",
+    "dark": "暗色",
+    "light": "亮色",
+    "monochrome": "黑白"
+  },
+  "Language": {
+    "label": "语言",
+    "en": "English",
+    "zh": "中文"
+  },
+  "Home": {
+    "eyebrow": "M4rkyu.com / 2027 重制",
+    "title": "ZhenXiao Mark Yu",
+    "subtitle": "软件工程师、前端系统构建者、游戏开发者与数字艺术创作者。用克制的电影感，打磨清晰、可靠、有质感的界面。",
+    "primaryCta": "查看项目",
+    "portalCta": "进入 Portal",
+    "featured": "精选案例",
+    "latest": "最新归档",
+    "gallery": "视觉信号",
+    "collab": "合作方向",
+    "systems": "身份系统",
+    "media": "媒体占位"
+  },
+  "Projects": {
+    "title": "项目档案",
+    "intro": "这里整理 Web 应用、游戏系统、AI 工具和创意工程实验，不只是卡片，而是可阅读的案例。",
+    "caseStudy": "案例",
+    "live": "在线",
+    "source": "源码",
+    "quickFacts": "关键信息",
+    "problem": "问题",
+    "solution": "方案",
+    "role": "角色",
+    "stack": "技术栈",
+    "features": "功能",
+    "architecture": "架构笔记",
+    "outcome": "结果",
+    "lessons": "复盘",
+    "next": "下一步"
+  },
+  "About": {
+    "title": "关于 Mark",
+    "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
+  },
+  "Portal": {
+    "title": "Portal 已锁定",
+    "intro": "沉浸式交互模式正在构建中。当前版本保持轻量、快速、安静。"
+  },
+  "Common": {
+    "comingSoon": "即将开放",
+    "readMore": "继续阅读",
+    "status": "状态"
+  }
+}

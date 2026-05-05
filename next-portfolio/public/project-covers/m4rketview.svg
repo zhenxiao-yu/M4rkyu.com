@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">M4rketView monochrome cover</title>
+  <desc id="desc">Abstract financial table and market signal chart.</desc>
+  <rect width="1200" height="750" fill="#060606"/>
+  <g stroke="#f5f3ee" stroke-width="2" opacity=".38">
+    <path d="M110 140h980M110 230h980M110 320h980M110 410h980M110 500h980M110 590h980"/>
+    <path d="M260 100v540M510 100v540M760 100v540M1010 100v540"/>
+  </g>
+  <path d="M150 570 310 390l150 70 170-230 160 120 230-190" fill="none" stroke="#67e8f9" stroke-width="8"/>
+  <g fill="#f5f3ee">
+    <rect x="150" y="155" width="80" height="18"/>
+    <rect x="150" y="245" width="120" height="18"/>
+    <rect x="150" y="335" width="96" height="18"/>
+    <rect x="150" y="425" width="140" height="18"/>
+  </g>
+</svg>
