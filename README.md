@@ -28,20 +28,52 @@ A personal portfolio for ZhenXiao (Mark) Yu that blends interactive visuals with
 - Node.js 18+ and npm
 
 ## Getting Started
-1. **Install dependencies**
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/zhenxiao-yu/M4rkyu.com.git
+   cd M4rkyu.com
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your Firebase configuration
+   ```
+
+3. **Install dependencies**
    ```bash
    npm install
    ```
-2. **Run the dev server**
+
+4. **Run the dev server**
    ```bash
    npm start
    ```
-   Visit `http://localhost:5173` (default Vite port) in your browser.
+   Visit `http://localhost:3000` in your browser.
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_FIREBASE_API_KEY` | Firebase API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+| `VITE_FIREBASE_MEASUREMENT_ID` | Firebase analytics measurement ID |
 
 ## Available Scripts
-- `npm start` — Launch the Vite development server.
-- `npm run build` — Create an optimized production build in `dist/`.
-- `npm run preview` — Preview the production build locally.
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Launch the Vite development server (port 3000) |
+| `npm run build` | Create an optimized production build in `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint to check code quality |
 
 ## Project Structure
 - `src/index.jsx` — App entry that mounts the React tree.

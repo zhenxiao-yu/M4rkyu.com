@@ -292,13 +292,13 @@ const HeroSection = () => (
     <HiChevronDoubleUp size="3rem"/>
     <h1>Welcome to My Gallery</h1>
     <Typewriter
-      words={['<p>Explore various sections to see different collections of images.</p>']}
+      words={['Explore various sections to see different collections of images.']}
       loop={0}
       typeSpeed={50}
       deleteSpeed={50}
       delaySpeed={1500}
       cursor
-      aria-label="<p>Explore various sections to see different collections of images.</p>"
+      aria-label="Explore various sections to see different collections of images."
     />
   </div>
 );

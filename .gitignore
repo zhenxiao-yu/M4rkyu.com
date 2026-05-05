@@ -4,11 +4,16 @@ node_modules/
 # Build output
 dist/
 build/
+.next/
+.next-*/
+.dist-*/
+next-env.d.ts
 
 # Environment variables
 .env
 .env.local
 .env.*.local
+.vercel/
 
 # Logs
 *.log
@@ -18,6 +23,7 @@ npm-debug.log*
 # Editor
 .vscode/
 .idea/
+.claude/
 *.iml
 *.swp
 *.swo
@@ -27,7 +33,9 @@ npm-debug.log*
 # OS
 .DS_Store
 DS_STORE
+.DS_STORE
 Thumbs.db
 
 # Vite
+*.local
 vite.config.js.timestamp-*

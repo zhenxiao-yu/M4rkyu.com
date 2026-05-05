@@ -233,8 +233,6 @@ const Main = () => {
         />
         <meta name="author" content="Mark Yu" />
         <meta name="keywords" content="Mark Yu, Zhenxiao Yu, Software Engineer, Frontend Development, Game Design" />
-        <link rel="preload" href={videoBg} as="video" type="video/webm" />
-        <link rel="preload" href={videoBg2} as="video" type="video/webm" />
         <link rel="preload" href={mePortrait} as="image" fetchpriority="high" />
       </Helmet>
       <Suspense fallback={<Loading />}>
@@ -269,10 +267,9 @@ const Main = () => {
                 playsInline
                 muted
                 preload="auto"
-                playbackRate={0.5}
                 className={`video-background ${isVideoReady ? 'is-visible' : ''}`}
                 aria-hidden="true"
-                onLoadedData={handleVideoReady}
+                onLoadedData={(e) => { e.target.playbackRate = 0.5; handleVideoReady(); }}
               />
             )
           )}
@@ -299,7 +296,7 @@ const Main = () => {
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
-                whileHover={{ scale: 1.2, fontWeight: 'bold' }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY PHOTOS
@@ -315,7 +312,7 @@ const Main = () => {
               <motion.h2
                 initial={{ y: -200, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
                 animate={{ y: 0, transition: { type: 'spring', duration: 1.5, delay: 1 } }}
-                whileHover={{ scale: 1.3, fontWeight: 'bold' }}
+                whileHover={{ scale: 1.3 }}
                 whileTap={{ scale: 0.85 }}
               >
                 MY POSTS

@@ -98,7 +98,7 @@ const ProjectPage = () => {
   // Scroll effect for animations
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.pageYOffset;
+      const scrollPosition = window.scrollY;
 
       if (ref.current) ref.current.style.transform = `translateX(${-scrollPosition}px)`;
       if (gearlogo.current) gearlogo.current.style.transform = `rotate(${-scrollPosition}deg)`;

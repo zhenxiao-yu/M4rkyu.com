@@ -132,7 +132,7 @@ const BlogPage = () => {
   }, []);
 
   // Sorting Blogs by date
-  const sortedBlogs = Blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortedBlogs = [...Blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // Filtering Blogs by search query
   const filteredBlogs = sortedBlogs.filter(
