@@ -68,7 +68,7 @@ export function HeroSection({ locale }: { locale: Locale }) {
             </span>
           </motion.div>
 
-          <h1 className="text-[clamp(3.75rem,9.5vw,8rem)] font-[800] leading-[0.86] tracking-[-0.025em]">
+          <h1 className="text-[3.2rem] font-[800] leading-[0.9] tracking-normal sm:text-7xl lg:text-8xl">
             {headlineLines.map(({ text, dim }, i) => (
               <span key={text} className="block overflow-hidden">
                 <motion.span

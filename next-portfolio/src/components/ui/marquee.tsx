@@ -22,9 +22,9 @@ export function Marquee({
   const text = items.join(` ${separator} `) + ` ${separator} `
 
   return (
-    <div className={cn("group overflow-hidden", className)} aria-hidden="true">
+    <div className={cn("group max-w-full overflow-x-clip", className)} aria-hidden="true">
       <div
-        className="flex w-max group-hover:[animation-play-state:paused]"
+        className="flex w-max will-change-transform group-hover:[animation-play-state:paused]"
         style={{ animation: `marquee ${speeds[speed]} linear infinite` }}
       >
         <span className="whitespace-nowrap">{text}</span>

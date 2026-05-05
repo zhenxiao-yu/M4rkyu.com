@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils"
 const directionOffset = {
   up:    { y: 24, x: 0 },
   down:  { y: -24, x: 0 },
-  left:  { y: 0, x: 24 },
-  right: { y: 0, x: -24 },
+  left:  { y: 24, x: 0 },
+  right: { y: 24, x: 0 },
   none:  { y: 0, x: 0 },
 }
 

@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# M4rkyu.com Next Portfolio
 
-## Getting Started
+The isolated Next.js remake of M4rkyu.com. The legacy Vite app remains at the
+repository root; this app is the migration target for the 2027 portfolio refresh.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router with locale routes for `/en` and `/zh`.
+- Tailwind CSS 4 with owned shadcn/Radix-style UI primitives.
+- `next-intl` for routing/messages.
+- Motion helpers with reduced-motion safety and no mobile horizontal overflow.
+- Storybook for component states and Playwright for route smoke coverage.
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If the H: workspace hits Windows `.next` filesystem locks, run dev with an
+isolated output directory:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+$env:NEXT_DIST_DIR=".next-dev-3000"; npm run dev -- --hostname 127.0.0.1 --port 3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Verification
 
-## Learn More
+```bash
+npm audit --audit-level=moderate
+npm run lint
+npm run typecheck
+npm run build
+npm run build-storybook
+npm run test:e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+`npm run test:e2e` starts a Next dev server with `NEXT_DIST_DIR=.next-playwright`
+and checks the current route matrix across 360, 390, 768, 1280, 1920, and desktop
+Chromium widths.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Migration Focus
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The current phase turns the prototype shell into a usable portfolio surface:
 
-## Deploy on Vercel
+- URL-aware project/resource filters.
+- Gallery lightbox with keyboard navigation and shareable `?frame=` state.
+- Contact form that validates input and opens a prefilled email until a server
+  provider is selected.
+- CI gate for audit, lint, typecheck, app build, Storybook build, and smoke tests.
+- Vercel project config pins `npm ci`, `npm run build`, and Node 22 through
+  `package.json` engines.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Keep private phone/address details out of this app. Replace placeholder copy and
+media only after final content review.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+Do not repoint production automatically. Create a Vercel preview from this app
+first, run Lighthouse/accessibility review, then switch routing only after the
+launch gates in `../MIGRATION.md` are satisfied.

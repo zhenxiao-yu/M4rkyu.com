@@ -1,8 +1,11 @@
 "use client"
 
 import { motion, useInView } from "motion/react"
+import type { Variants } from "motion/react"
 import { useRef } from "react"
 import { cn } from "@/lib/utils"
+
+const ease = [0.2, 0.7, 0.2, 1] as const
 
 const container = {
   hidden: { opacity: 0 },
@@ -15,12 +18,12 @@ const container = {
   }),
 }
 
-const item = {
+const item: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.2, 0.7, 0.2, 1] },
+    transition: { duration: 0.5, ease },
   },
 }
 

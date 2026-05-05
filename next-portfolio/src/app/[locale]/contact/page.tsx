@@ -1,14 +1,12 @@
-import { Mail, Send } from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { ContentPendingLabel } from "@/components/placeholders/content-pending-label";
 import { services } from "@/content/services";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
+import { ContactForm } from "./_contact-form";
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -22,7 +20,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <SectionHeading
             eyebrow="collaboration"
             title="Contact"
-            description="Complete collaboration funnel layout with safe placeholder copy. Form provider is TBD, so email remains the production-safe path for now."
+            description="A production-safe project inquiry flow with a mailto fallback now, ready for a server-side form provider later."
           />
         </div>
       </section>
@@ -58,45 +56,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <CardTitle>Project inquiry</CardTitle>
           </CardHeader>
           <CardContent>
-            <form className="grid gap-5" aria-describedby="contact-form-note">
-              <label className="grid gap-2 text-sm font-medium">
-                Name
-                <Input name="name" placeholder="Your name" autoComplete="name" />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Email
-                <Input name="email" type="email" placeholder="you@example.com" autoComplete="email" />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Project type
-                <Input name="projectType" placeholder="Frontend system, app prototype, game UI..." />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Message
-                <textarea
-                  name="message"
-                  rows={7}
-                  className="min-h-36 rounded-md border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-                  placeholder="Draft form: replace with final provider integration before launch."
-                />
-              </label>
-              <p id="contact-form-note" className="text-sm leading-6 text-muted-foreground">
-                Placeholder: this form is not wired to a backend yet. Use email until Resend, Tally,
-                or Formspree is selected.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button type="button" disabled>
-                  <Send className="size-4" />
-                  Submit TBD
-                </Button>
-                <Button asChild variant="outline">
-                  <a href={`mailto:${profile.email}`}>
-                    <Mail className="size-4" />
-                    {profile.email}
-                  </a>
-                </Button>
-              </div>
-            </form>
+            <ContactForm email={profile.email} />
           </CardContent>
         </Card>
       </section>
