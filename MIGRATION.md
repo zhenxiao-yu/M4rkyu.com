@@ -33,6 +33,20 @@
 - Expanded Playwright smoke coverage across 96 route/viewport checks.
 - No fake metrics, clients, awards, private phone number, or home address were introduced.
 
+## Phase III Interaction and Pipeline Implemented
+
+- Completed current UI polish pass in the Next remake using the owned shadcn/Radix-style primitives already in the app.
+- Project archive now has URL-aware category and search filters via `?category=` and `?q=`.
+- Resource library now has URL-aware category and search filters rather than a placeholder search field.
+- Gallery grid now opens a keyboard-navigable dialog with shareable `?frame=` state.
+- Contact page now validates fields and opens a prefilled mailto flow, keeping email as the production-safe path until a server provider is selected.
+- Fixed motion-related mobile horizontal overflow by removing horizontal entrance transforms from shared reveal animations.
+- Tightened hero and section heading type scale to avoid viewport-scaled typography overflow.
+- Hardened the marquee strip against mobile scroll-width expansion.
+- Added a narrow npm `overrides` entry for `postcss@8.5.10`, clearing the current moderate npm audit finding without using the unsafe forced downgrade suggested by `npm audit fix --force`.
+- Added root GitHub Actions workflow `.github/workflows/next-portfolio-ci.yml` scoped to `next-portfolio/**`.
+- Playwright now uses `NEXT_DIST_DIR=.next-playwright` to isolate test dev-server artifacts from production build output.
+
 ## Launch Gates
 
 - `npm run build` passes in `next-portfolio`.
@@ -46,6 +60,7 @@
 
 - `npm run lint` passes in `next-portfolio`.
 - `npm run typecheck` passes in `next-portfolio`.
+- `npm audit --audit-level=moderate` passes in `next-portfolio`.
 - `npm run build`, `npm run build-storybook`, and `npm run test:e2e` pass from a clean C: temp copy at `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-build`.
 - Playwright smoke coverage currently checks `/en`, `/en/projects`, `/en/projects/nimbus`, `/en/about`, `/en/portal`, theme controls, language controls, and horizontal overflow at 360, 390, 768, 1280, 1920, and desktop Chromium widths.
 - Phase II verification also passed from `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-phase2`: `npm run build`, `npm run build-storybook`, and `npm run test:e2e` with 96/96 Playwright checks.
@@ -54,13 +69,15 @@
 - Local dev can avoid the locked default output by setting `NEXT_DIST_DIR`, for example `NEXT_DIST_DIR=.next-dev-3000 npm run dev -- --hostname 127.0.0.1 --port 3000`.
 - The C: temp verification path can also leave native Node module files locked briefly after build/test runs; use a fresh temp folder or CI for repeated clean-copy verification if Windows refuses cleanup.
 - After adding configurable `NEXT_DIST_DIR`, a clean-copy `npm run build` pass was verified again from `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-configcheck-*`.
-- `npm ci` reports 2 moderate audit findings in the current dependency tree; review before release, but do not use forced breaking upgrades inside Milestone 1.
+- Phase III verification passed locally in the workspace for `npm audit --audit-level=moderate`, `npm run lint`, and `npm run typecheck`.
+- Phase III clean-copy verification passed from `C:\Users\YZX06\AppData\Local\Temp\m4rkyu-next-portfolio-codex-20260504213305`: `npm ci`, `npm run build`, `npm run build-storybook`, and `npm run test:e2e` with 96/96 checks.
+- Direct `npm run build` on H: can still hit the documented Windows `readlink` issue; clean C: copies and CI remain the reliable verification path until the drive state is cleaned.
 
 ## Next Batches
 
-- Replace placeholder project copy with approved case-study writing.
-- Replace SVG/placeholders with optimized real screenshots, artwork, video posters, and captions.
-- Add gallery lightbox and thumbnail pipeline.
-- Add MDX posts and Pagefind indexing.
-- Add contact form provider once content and launch flow are stable.
-- Run Lighthouse and accessibility review on a Vercel preview.
+- Content lock: replace placeholder project copy with approved case-study writing, prioritizing Nimbus, BioLoom, and M4rketView.
+- Media lock: replace SVG/placeholders with optimized real screenshots, artwork, video posters, and captions; define image naming, alt text, dimensions, and compression budgets.
+- Gallery pipeline: add final thumbnail generation, EXIF-safe metadata stripping, real collection covers, and collection-level metadata.
+- Writing/search: add MDX posts, then Pagefind indexing once the content set is stable.
+- Contact provider: select Resend, Tally, Formspree, or a Vercel-backed route handler after launch flow and spam policy are decided.
+- Preview review: deploy a Vercel preview, run Lighthouse/accessibility review, check metadata/social cards, then decide whether to repoint production.

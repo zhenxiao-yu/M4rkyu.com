@@ -1,10 +1,15 @@
-import { ArrowUpRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DraftBadge } from "@/components/placeholders/draft-badge";
-import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
-import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
+"use client"
+
+import { ArrowUpRight } from "lucide-react"
+import { motion } from "motion/react"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { DraftBadge } from "@/components/placeholders/draft-badge"
+import { PlaceholderImage } from "@/components/placeholders/placeholder-image"
+import { Link } from "@/i18n/navigation"
+import type { Locale } from "@/i18n/routing"
+
+const ease = [0.2, 0.7, 0.2, 1] as const
 
 export function ArchiveCard({
   title,
@@ -15,17 +20,21 @@ export function ArchiveCard({
   locale,
   mediaLabel = "MEDIA TBD",
 }: {
-  title: string;
-  description: string;
-  eyebrow?: string;
-  status?: "ready" | "draft" | "placeholder" | "coming-soon";
-  href?: string;
-  locale?: Locale;
-  mediaLabel?: string;
+  title: string
+  description: string
+  eyebrow?: string
+  status?: "ready" | "draft" | "placeholder" | "coming-soon"
+  href?: string
+  locale?: Locale
+  mediaLabel?: string
 }) {
   const content = (
-    <Card className="group h-full overflow-hidden bg-card/80 transition-colors hover:border-ring">
-      <PlaceholderImage label={mediaLabel} aspect="aspect-[4/3]" className="rounded-none border-0 border-b" />
+    <Card className="group h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 hover:border-ring hover:shadow-md">
+      <PlaceholderImage
+        label={mediaLabel}
+        aspect="aspect-[4/3]"
+        className="rounded-none border-0 border-b"
+      />
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
           {eyebrow ? <Badge variant="outline">{eyebrow}</Badge> : null}
@@ -43,15 +52,21 @@ export function ArchiveCard({
         ) : null}
       </CardContent>
     </Card>
-  );
+  )
 
-  if (href && locale) {
-    return (
-      <Link href={href} locale={locale} className="block h-full">
-        {content}
-      </Link>
-    );
-  }
-
-  return content;
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease }}
+      className="h-full"
+    >
+      {href && locale ? (
+        <Link href={href} locale={locale} className="block h-full">
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
+    </motion.div>
+  )
 }

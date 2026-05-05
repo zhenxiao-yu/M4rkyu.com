@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm ci *)",
+      "Bash(NEXT_DIST_DIR=.next-build npm run build)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

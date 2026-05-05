@@ -25,6 +25,7 @@
 /.next-done/
 /.next-node22/
 /.next-dev-*/
+/.next-playwright/
 /out/
 
 # production
