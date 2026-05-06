@@ -49,6 +49,8 @@ The current phase turns the prototype shell into a usable portfolio surface:
 - Contact form that validates input and opens a prefilled email until a server
   provider is selected.
 - CI gate for audit, lint, typecheck, app build, Storybook build, and smoke tests.
+- Vercel project config pins `npm ci`, `npm run build`, and Node 22 through
+  `package.json` engines.
 
 Keep private phone/address details out of this app. Replace placeholder copy and
 media only after final content review.
