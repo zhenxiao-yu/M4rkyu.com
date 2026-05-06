@@ -1,96 +1,113 @@
-# Mark Yu / ZhenXiao Yu — Portfolio
+# M4rkyu.com Portfolio
 
-A personal portfolio for ZhenXiao (Mark) Yu that blends interactive visuals with engineering case studies. The site is built with Vite and React, styled with a mix of custom CSS and third-party animation libraries, and deployed to Vercel for fast global delivery.
+This repository currently contains two portfolio applications with different
+roles. Treat this file as the source-of-truth map before making changes.
 
-## Live Site
-- **Production:** [https://www.m4rkyu.com](https://www.m4rkyu.com)
+## Source Of Truth
 
-## Project Overview
-- Showcases projects in software engineering, game development, and digital art with responsive layouts and motion.
-- Highlights multilingual and multicultural experience (English/Mandarin, Chinese Canadian background) and academic ties to Western University.
-- Includes gallery, blog, and resume sections powered by reusable components.
+- **Repository root:** legacy production Vite + React portfolio. This is the app
+  currently serving the existing production site.
+- **`next-portfolio/`:** active Next.js remake. This is the preferred target for
+  new portfolio features, content improvements, design work, and migration tasks.
 
-## Key Features
-- **Single-page React experience:** Smooth navigation managed through React Router with animated transitions.
-- **SEO-ready metadata:** Optimized HTML head tags, canonical URL, and Schema.org structured data for the "ZhenXiao Yu" / "Mark Yu" identity.
-- **Interactive visuals:** Framer Motion, tsParticles, and three.js integrations add depth without sacrificing performance.
-- **Responsive design:** Custom breakpoints and utility classes ensure accessibility on mobile, tablet, and desktop.
-- **Analytics:** Vercel Analytics and Speed Insights are available for production deployments.
+Do not delete the legacy root app. Do not repoint production as part of routine
+development. The cutover should happen only after the launch gates in
+`MIGRATION.md` are satisfied and explicitly approved.
 
-## Tech Stack
-- **Core:** Vite, React 18, React Router
-- **Styling & Motion:** styled-components, animate.css, Framer Motion, hover effects
-- **3D/Canvas:** three.js, tsParticles
-- **Utilities:** clsx, react-icons, react-scroll, react-simple-typewriter
-- **Deployment:** Vercel (see `vercel.json` for configuration)
+## Which App Should I Edit?
 
-## Requirements
-- Node.js 18+ and npm
+- For future portfolio improvements, edit **`next-portfolio/`**.
+- For legacy production fixes that must ship before cutover, edit the **root
+  Vite app** only as narrowly as needed.
+- Do not apply root Vite conventions to the Next remake.
+- Do not apply Next.js or TypeScript migration conventions to the legacy root app.
+- Keep private phone number and home address details out of source, fixtures,
+  placeholder content, screenshots, and production copy.
 
-## Getting Started
+## Root Legacy Vite App
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/zhenxiao-yu/M4rkyu.com.git
-   cd M4rkyu.com
-   ```
+The root app is a Vite + React portfolio styled with custom CSS and legacy
+animation libraries. It remains preserved for production safety while the remake
+continues in `next-portfolio/`.
 
-2. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your Firebase configuration
-   ```
+### Root Commands
 
-3. **Install dependencies**
-   ```bash
-   npm install
-   ```
+Run these from the repository root:
 
-4. **Run the dev server**
-   ```bash
-   npm start
-   ```
-   Visit `http://localhost:3000` in your browser.
+```bash
+npm install
+npm start
+npm run build
+npm run preview
+```
 
-## Environment Variables
+- `npm start` launches the Vite development server.
+- `npm run build` creates the legacy production build in `dist/`.
+- `npm run preview` previews the legacy production build locally.
 
-Create a `.env` file in the root directory with the following variables:
+### Root Environment
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_FIREBASE_API_KEY` | Firebase API key |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
-| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
-| `VITE_FIREBASE_APP_ID` | Firebase app ID |
-| `VITE_FIREBASE_MEASUREMENT_ID` | Firebase analytics measurement ID |
+Copy `.env.example` to `.env` and fill the Firebase values when working on the
+legacy app:
 
-## Available Scripts
+```bash
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
+```
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Launch the Vite development server (port 3000) |
-| `npm run build` | Create an optimized production build in `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint to check code quality |
+### Root Structure
 
-## Project Structure
-- `src/index.jsx` — App entry that mounts the React tree.
-- `src/Router.jsx` — Route definitions for top-level sections (Intro, About, Projects, Gallery, Blog, etc.).
-- `src/pages/` — Page-level components grouped by feature area.
-- `src/components/` — Shared UI pieces (navigation, cards, loaders, tooltips).
-- `src/assets/` — Static assets such as images and icons.
-- `public/` — Public files served at the site root (favicons, manifest).
+- `src/index.jsx` mounts the legacy React tree.
+- `src/Router.jsx` defines legacy React Router v5 routes.
+- `src/assets/data/` contains legacy projects, blog posts, gallery, and skills
+  content.
+- `src/pages/`, `src/components/`, and `src/assets/` contain legacy UI and
+  assets.
+- `public/` contains static files served by the legacy site.
+- `vercel.json` at the root belongs to the current production deployment setup.
 
-## Deployment
-1. Build the site with `npm run build`.
-2. Deploy the generated `dist/` directory to Vercel or your preferred static host. The included `vercel.json` is ready for Vercel deployments.
+## Next.js Remake
 
-## Contributing
-Contributions are welcome! Please open an issue to discuss changes, then submit a pull request from a feature branch.
+`next-portfolio/` is the active migration target for the new portfolio. It uses
+Next.js App Router, TypeScript, `next-intl` locale routes, Tailwind CSS 4,
+owned shadcn/Radix-style primitives, Zod-backed content schemas, Storybook, and
+Playwright.
 
-## Contact
-- **Website:** [m4rkyu.com](https://www.m4rkyu.com)
-- **Email:** [markyu0615@gmail.com](mailto:markyu0615@gmail.com)
-- **GitHub:** [@zhenxiao-yu](https://github.com/zhenxiao-yu)
+### Next Commands
+
+Run these from `next-portfolio/`:
+
+```bash
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+npm run build-storybook
+npm run test:e2e
+```
+
+- `npm run dev` launches the Next development server.
+- `npm run lint` and `npm run typecheck` verify source quality.
+- `npm run build` creates the Next production build.
+- `npm run build-storybook` verifies component documentation.
+- `npm run test:e2e` runs Playwright smoke coverage.
+
+If the H: workspace hits Windows `.next` filesystem locks, use an isolated Next
+output directory as documented in `next-portfolio/README.md`.
+
+## Deployment And Cutover Safety
+
+- Production currently remains on the legacy root Vite app.
+- `next-portfolio/` should be deployed to preview first.
+- Do not point `m4rkyu.com` or `www.m4rkyu.com` at the Next remake until launch
+  gates are complete and the cutover is intentionally approved.
+- Keep both apps available until after a successful cutover and rollback plan.
+
+See `MIGRATION.md` for current migration status, verification notes, and launch
+gates.

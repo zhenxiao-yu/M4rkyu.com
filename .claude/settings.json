@@ -9,11 +9,14 @@
       "Bash(npm run lint -- *)",
       "Bash(npm install)",
       "Bash(npm install *)",
+      "Bash(npm ci *)",
+      "Bash(NEXT_DIST_DIR=.next-build npm run build)",
       "Bash(git status)",
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(git add *)",
       "Bash(git commit *)",
+      "Bash(git commit -m ' *)",
       "Bash(git branch *)",
       "Bash(git stash *)"
     ]

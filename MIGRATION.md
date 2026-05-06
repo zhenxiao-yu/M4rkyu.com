@@ -3,7 +3,7 @@
 ## Current Safety State
 
 - Active remake branch: `remake/nextjs-2027`.
-- Legacy production is preserved in the existing root mixed Vite/partial Next app.
+- Legacy production is preserved in the existing root Vite + React app.
 - The new app lives in `next-portfolio`.
 - Primary local workspace moved to `E:\Github\M4rkyu.com` after H: filesystem locks caused unreliable local Next build output.
 - No production deployment rewrite has been made.
