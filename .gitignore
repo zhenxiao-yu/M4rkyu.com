@@ -8,19 +8,25 @@ build/
 .next-*/
 .dist-*/
 next-env.d.ts
+storybook-static/
 
-# Environment variables
+# Testing
+test-results/
+playwright-report/
+coverage/
+
+# Environment variables and deployment state
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.sample
 .vercel/
 
 # Logs
 *.log
-*.log*
 npm-debug.log*
 
-# Editor
+# Editor and local workspace noise
 .vscode/
 .idea/
 .claude/
@@ -29,13 +35,25 @@ npm-debug.log*
 *.swo
 *.sublime-project
 *.sublime-workspace
+*.code-workspace
 
-# OS
+# OS files
 .DS_Store
 DS_STORE
 .DS_STORE
 Thumbs.db
 
-# Vite
+# Local AI / agent state
+.codex/
+.cursor/
+.windsurf/
+.continue/
+.aider*
+transcripts/
+chat-exports/
+session-logs/
+scratch/
+
+# Vite cache helpers
 *.local
 vite.config.js.timestamp-*
