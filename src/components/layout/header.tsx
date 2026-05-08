@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
+import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { NavLink } from "./nav-link";
 import { MobileNav } from "./mobile-nav";
 
@@ -39,6 +40,7 @@ export async function Header({ locale }: { locale: Locale }) {
         </nav>
 
         <div className="hidden items-center gap-2 xl:flex">
+          <CommandPaletteTrigger />
           <ThemeSwitcher />
           <LanguageSwitcher />
           <Link

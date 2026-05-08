@@ -196,5 +196,22 @@
     "comingSoon": "Coming soon",
     "readMore": "Read more",
     "status": "Status"
+  },
+  "CommandPalette": {
+    "title": "Command palette",
+    "description": "Jump to a page, frame, or setting.",
+    "trigger": "Search…",
+    "searchPlaceholder": "Search pages, frames, settings…",
+    "pagesGroup": "Pages",
+    "recentGroup": "Recent frames",
+    "settingsGroup": "Settings",
+    "themeLight": "Light theme",
+    "themeDark": "Dark theme",
+    "themeMono": "Monochrome theme",
+    "toggleLocale": "Switch language",
+    "noResults": "No matches.",
+    "hintNavigate": "Navigate",
+    "hintSelect": "Select",
+    "hintClose": "Close"
   }
 }

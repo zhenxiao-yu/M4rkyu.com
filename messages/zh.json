@@ -196,5 +196,22 @@
     "comingSoon": "即将开放",
     "readMore": "继续阅读",
     "status": "状态"
+  },
+  "CommandPalette": {
+    "title": "命令面板",
+    "description": "快速跳转到页面、影像或设置。",
+    "trigger": "搜索…",
+    "searchPlaceholder": "搜索页面、影像或设置…",
+    "pagesGroup": "页面",
+    "recentGroup": "最近影像",
+    "settingsGroup": "设置",
+    "themeLight": "亮色主题",
+    "themeDark": "暗色主题",
+    "themeMono": "黑白主题",
+    "toggleLocale": "切换语言",
+    "noResults": "没有匹配项。",
+    "hintNavigate": "导航",
+    "hintSelect": "选择",
+    "hintClose": "关闭"
   }
 }
