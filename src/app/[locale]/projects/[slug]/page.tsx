@@ -64,11 +64,25 @@ export default async function ProjectDetailPage({
 
   // Adjacent navigation in archive order — predictable, no clever sort.
   const projectIndex = allProjects.findIndex((p) => p.slug === project.slug);
-  const prev = projectIndex > 0 ? allProjects[projectIndex - 1] : undefined;
-  const next =
+  const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : undefined;
+  const nextProject =
     projectIndex < allProjects.length - 1
       ? allProjects[projectIndex + 1]
       : undefined;
+  const prev = prevProject
+    ? {
+        href: `/projects/${prevProject.slug}`,
+        title: prevProject.title,
+        pitch: prevProject.shortPitch,
+      }
+    : undefined;
+  const next = nextProject
+    ? {
+        href: `/projects/${nextProject.slug}`,
+        title: nextProject.title,
+        pitch: nextProject.shortPitch,
+      }
+    : undefined;
 
   const related = allProjects
     .filter(
@@ -251,7 +265,7 @@ export default async function ProjectDetailPage({
           </section>
         ) : null}
 
-        <CaseStudyFooter prev={prev} next={next} />
+        <CaseStudyFooter prev={prev} next={next} archiveHref="/projects" />
       </article>
     </PageShell>
   );

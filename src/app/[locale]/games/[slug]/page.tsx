@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
-import { MediaFrame } from "@/components/placeholders/media-frame";
-import { PlaceholderVideo } from "@/components/placeholders/placeholder-video";
-import { DraftBadge } from "@/components/placeholders/draft-badge";
+import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
+import { BlurFade } from "@/components/ui/magic/blur-fade";
+import { GameDetailHeader } from "@/components/case-study/game-detail-header";
+import {
+  CaseStudyList,
+  CaseStudySection,
+} from "@/components/case-study/case-study-section";
+import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
+import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { games } from "@/content/games";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -21,13 +25,15 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: Locale; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const game = games.find((item) => item.slug === slug);
+  if (!game) return {};
   return {
-    title: game ? game.title : "Game",
-    description: game ? game.pitch : "Draft game archive page.",
+    title: game.title,
+    description: game.pitch,
+    alternates: { canonical: `/${locale}/games/${slug}` },
   };
 }
 
@@ -40,45 +46,111 @@ export default async function GameDetailPage({
   const game = games.find((item) => item.slug === slug);
   if (!game) notFound();
 
+  const tGame = await getTranslations({ locale, namespace: "Game" });
+  const tCase = await getTranslations({ locale, namespace: "CaseStudy" });
+
+  // Adjacent navigation in archive order — predictable, no clever sort.
+  const gameIndex = games.findIndex((g) => g.slug === game.slug);
+  const prevGame = gameIndex > 0 ? games[gameIndex - 1] : undefined;
+  const nextGame =
+    gameIndex < games.length - 1 ? games[gameIndex + 1] : undefined;
+  const prev = prevGame
+    ? {
+        href: `/games/${prevGame.slug}`,
+        title: prevGame.title,
+        pitch: prevGame.pitch,
+      }
+    : undefined;
+  const next = nextGame
+    ? {
+        href: `/games/${nextGame.slug}`,
+        title: nextGame.title,
+        pitch: nextGame.pitch,
+      }
+    : undefined;
+
   return (
     <PageShell locale={locale}>
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Link href="/games" locale={locale} className="text-sm text-muted-foreground hover:text-foreground">
-          / games
-        </Link>
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_24rem]">
-          <SectionHeading eyebrow="game archive" title={game.title} description={game.pitch} />
-          <Card className="bg-card/80">
-            <CardHeader>
-              <DraftBadge label={game.status} />
-              <CardTitle>Build facts</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3 text-sm text-muted-foreground">
-              <p>Engine: {game.engine}</p>
-              <p>Year: {game.year}</p>
-              <p>Role: {game.role}</p>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <MediaFrame eyebrow="gameplay" label="CAPTURE TBD">
-            <PlaceholderVideo label="GAMEPLAY VIDEO TBD" />
-          </MediaFrame>
-          <Card className="bg-card/80">
-            <CardHeader>
-              <Badge variant="outline">Design notes</Badge>
-              <CardTitle>Content pending</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="grid gap-3 text-sm leading-6 text-muted-foreground">
-                {game.notes.map((note) => (
-                  <li key={note}>{note}</li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      <article>
+        <GameDetailHeader game={game} />
+
+        <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <BlurFade>
+            <figure className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-muted">
+              {game.cover ? (
+                <Image
+                  src={game.cover.src}
+                  alt={game.cover.alt}
+                  fill
+                  priority
+                  sizes="(min-width: 1280px) 1100px, 100vw"
+                  className="object-cover"
+                />
+              ) : (
+                <PlaceholderImage
+                  label={tGame("coverTbd")}
+                  aspect="h-full"
+                  className="rounded-none border-0"
+                />
+              )}
+            </figure>
+          </BlurFade>
+        </section>
+
+        {game.pillars.length > 0 ? (
+          <section className="border-y bg-muted/20">
+            <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+              <BlurFade>
+                <CaseStudySection
+                  eyebrow={tGame("pillarsEyebrow")}
+                  title={tGame("pillarsTitle")}
+                >
+                  <CaseStudyList items={game.pillars} numbered />
+                </CaseStudySection>
+              </BlurFade>
+            </div>
+          </section>
+        ) : null}
+
+        {game.outcome ? (
+          <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <BlurFade>
+              <PullQuoteBlock
+                eyebrow={tCase("outcomeEyebrow")}
+                quote={game.outcome}
+              />
+            </BlurFade>
+          </section>
+        ) : null}
+
+        {game.postmortem ? (
+          <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <BlurFade>
+              <CaseStudySection
+                eyebrow={tGame("postmortemEyebrow")}
+                title={tGame("postmortemTitle")}
+              >
+                <p>{game.postmortem}</p>
+              </CaseStudySection>
+            </BlurFade>
+          </section>
+        ) : null}
+
+        {game.notes.length > 0 ? (
+          <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <BlurFade>
+              <CaseStudySection
+                eyebrow={tGame("notesEyebrow")}
+                title={tGame("notesTitle")}
+              >
+                <CaseStudyList items={game.notes} />
+              </CaseStudySection>
+            </BlurFade>
+          </section>
+        ) : null}
+
+        <CaseStudyFooter prev={prev} next={next} archiveHref="/games" />
+      </article>
     </PageShell>
   );
 }

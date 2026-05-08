@@ -122,6 +122,25 @@
     "lessons": "复盘",
     "next": "下一步"
   },
+  "Game": {
+    "gamesIndex": "游戏档案",
+    "eyebrow": "游戏系统",
+    "intro": "面向原型、引擎研究与未来交互作品的游戏开发档案。",
+    "metaDescription": "于震潇的游戏开发档案。",
+    "platforms": "平台",
+    "buildLinks": "构建链接",
+    "pillarsEyebrow": "设计支柱",
+    "pillarsTitle": "这款游戏的核心",
+    "postmortemEyebrow": "复盘",
+    "postmortemTitle": "构建之后的笔记",
+    "notesEyebrow": "设计笔记",
+    "notesTitle": "工作记录",
+    "archiveStatus": "档案状态",
+    "production": "已上线条目",
+    "draft": "开发中或计划中",
+    "noClaims": "不包含虚构的平台、奖项或构建声明。",
+    "coverTbd": "游戏封面待定"
+  },
   "Categories": {
     "web-app": "Web 应用",
     "game-dev": "游戏开发",
@@ -143,8 +162,8 @@
     "nextEyebrow": "下一步",
     "relatedWork": "相关案例",
     "moreFromCategory": "更多同类案例即将上线。",
-    "previous": "上一个项目",
-    "next": "下一个项目",
+    "previous": "上一篇",
+    "next": "下一篇",
     "backToArchive": "返回档案"
   },
   "About": {
