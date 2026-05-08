@@ -1,4 +1,6 @@
 import type { Preview } from "@storybook/nextjs-vite";
+import { NextIntlClientProvider } from "next-intl";
+import enMessages from "../messages/en.json";
 import "../src/app/globals.css";
 
 const preview: Preview = {
@@ -24,9 +26,11 @@ const preview: Preview = {
     (Story, context) => {
       const theme = (context.globals.theme as string) || "dark";
       return (
-        <div data-theme={theme} className="min-h-screen bg-background p-6 text-foreground">
-          <Story />
-        </div>
+        <NextIntlClientProvider locale="en" messages={enMessages}>
+          <div data-theme={theme} className="min-h-screen bg-background p-6 text-foreground">
+            <Story />
+          </div>
+        </NextIntlClientProvider>
       );
     },
   ],
