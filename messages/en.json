@@ -175,6 +175,15 @@
     "next": "Next",
     "backToArchive": "Back to archive"
   },
+  "Blog": {
+    "eyebrow": "field notes",
+    "title": "Writing & Devlog",
+    "description": "Short, dated, opinionated. Engineering notes, devlog entries, and process essays — added as content ships.",
+    "metaDescription": "Writing and devlog from ZhenXiao Mark Yu — engineering notes, design process, and game development.",
+    "tagAll": "All",
+    "pinnedEyebrow": "Pinned",
+    "noMatches": "No posts match this tag."
+  },
   "About": {
     "title": "About Mark",
     "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."

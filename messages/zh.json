@@ -175,6 +175,15 @@
     "next": "下一篇",
     "backToArchive": "返回档案"
   },
+  "Blog": {
+    "eyebrow": "随笔",
+    "title": "写作与开发日志",
+    "description": "短、有日期、有观点。工程随笔、开发日志与过程文章，随内容上线持续更新。",
+    "metaDescription": "于震潇的写作与开发日志：工程随笔、设计过程与游戏开发。",
+    "tagAll": "全部",
+    "pinnedEyebrow": "置顶",
+    "noMatches": "没有匹配此标签的文章。"
+  },
   "About": {
     "title": "关于 Mark",
     "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
