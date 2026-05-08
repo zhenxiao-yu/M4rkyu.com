@@ -1,92 +1,148 @@
-"use client"
+"use client";
 
-import { useMemo, useState, useTransition } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Search } from "lucide-react"
-import { ProjectCard } from "@/components/cards/project-card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Stagger, StaggerItem } from "@/components/motion/stagger"
-import type { Project } from "@/content/schemas"
-import type { Locale } from "@/i18n/routing"
+import { useMemo, useState, useTransition } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { ProjectCard } from "@/components/cards/project-card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Stagger, StaggerItem } from "@/components/motion/stagger";
+import type { Project } from "@/content/schemas";
+import type { Locale } from "@/i18n/routing";
 
-const FILTERS: { label: string; value: Project["category"] | null }[] = [
-  { label: "All", value: null },
-  { label: "Web Apps", value: "web-app" },
-  { label: "Game Dev", value: "game-dev" },
-  { label: "AI Tools", value: "ai-tool" },
-  { label: "Art/Film", value: "art-film" },
-  { label: "Experiments", value: "experiment" },
-]
+const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
+  { labelKey: "all", value: null },
+  { labelKey: "web-app", value: "web-app" },
+  { labelKey: "game-dev", value: "game-dev" },
+  { labelKey: "ai-tool", value: "ai-tool" },
+  { labelKey: "art-film", value: "art-film" },
+  { labelKey: "experiment", value: "experiment" },
+];
 
-const categories = new Set(FILTERS.map((filter) => filter.value).filter(Boolean))
+const CATEGORY_VALUES = new Set(
+  FILTERS.map((filter) => filter.value).filter(Boolean) as Project["category"][],
+);
 
-export function ProjectsClient({ projects, locale }: { projects: Project[]; locale: Locale }) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const [, startTransition] = useTransition()
-  const categoryParam = searchParams.get("category")
-  const active = categories.has(categoryParam as Project["category"])
+const ALL_YEARS = "__all__";
+
+export function ProjectsClient({
+  projects,
+  locale,
+}: {
+  projects: Project[];
+  locale: Locale;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+  const t = useTranslations("Projects");
+  const tCategories = useTranslations("Categories");
+
+  const categoryParam = searchParams.get("category");
+  const activeCategory = CATEGORY_VALUES.has(
+    categoryParam as Project["category"],
+  )
     ? (categoryParam as Project["category"])
-    : null
-  const [query, setQuery] = useState(searchParams.get("q") ?? "")
+    : null;
+  const yearParam = searchParams.get("year");
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
-  function updateUrl(next: { category?: Project["category"] | null; q?: string }) {
-    const params = new URLSearchParams(searchParams)
+  const yearOptions = useMemo(
+    () =>
+      Array.from(new Set(projects.map((p) => p.year))).sort((a, b) =>
+        b.localeCompare(a),
+      ),
+    [projects],
+  );
+  const activeYear = yearOptions.includes(yearParam ?? "")
+    ? (yearParam as string)
+    : ALL_YEARS;
+
+  function updateUrl(next: {
+    category?: Project["category"] | null;
+    year?: string | null;
+    q?: string;
+  }) {
+    const params = new URLSearchParams(searchParams);
     if ("category" in next) {
-      if (next.category) params.set("category", next.category)
-      else params.delete("category")
+      if (next.category) params.set("category", next.category);
+      else params.delete("category");
+    }
+    if ("year" in next) {
+      if (next.year && next.year !== ALL_YEARS) params.set("year", next.year);
+      else params.delete("year");
     }
     if ("q" in next) {
-      const value = next.q?.trim()
-      if (value) params.set("q", value)
-      else params.delete("q")
+      const value = next.q?.trim();
+      if (value) params.set("q", value);
+      else params.delete("q");
     }
-
     startTransition(() => {
-      const nextQuery = params.toString()
-      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false })
-    })
+      const nextQuery = params.toString();
+      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+        scroll: false,
+      });
+    });
   }
 
   const filtered = useMemo(() => {
-    let result = projects
-    if (active !== null) {
-      result = result.filter((p) => p.category === active)
+    let result = projects;
+    if (activeCategory !== null) {
+      result = result.filter((p) => p.category === activeCategory);
+    }
+    if (activeYear !== ALL_YEARS) {
+      result = result.filter((p) => p.year === activeYear);
     }
     if (query.trim()) {
-      const q = query.toLowerCase()
+      const q = query.toLowerCase();
       result = result.filter(
         (p) =>
-            p.title.toLowerCase().includes(q) ||
+          p.title.toLowerCase().includes(q) ||
           p.shortPitch.toLowerCase().includes(q) ||
-          p.stack.some((s) => s.toLowerCase().includes(q))
-      )
+          p.stack.some((s) => s.toLowerCase().includes(q)),
+      );
     }
-    return result
-  }, [projects, active, query])
+    return result;
+  }, [projects, activeCategory, activeYear, query]);
+
+  const production = useMemo(
+    () => filtered.filter((p) => p.contentStatus === "ready"),
+    [filtered],
+  );
+  const drafts = useMemo(
+    () => filtered.filter((p) => p.contentStatus !== "ready"),
+    [filtered],
+  );
 
   return (
     <>
-      <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
         <div className="flex flex-wrap items-center gap-2">
-          {FILTERS.map(({ label, value }) => (
+          {FILTERS.map(({ labelKey, value }) => (
             <Button
-              key={label}
+              key={labelKey}
               onClick={() => updateUrl({ category: value })}
               type="button"
               variant="ghost"
               size="sm"
               className="h-auto p-0 hover:bg-transparent"
-              aria-pressed={active === value}
+              aria-pressed={activeCategory === value}
             >
               <Badge
-                variant={active === value ? "success" : "outline"}
+                variant={activeCategory === value ? "success" : "outline"}
                 className="cursor-pointer transition-colors"
               >
-                {label}
+                {value === null ? t("filterAll") : tCategories(value)}
               </Badge>
             </Button>
           ))}
@@ -94,41 +150,117 @@ export function ProjectsClient({ projects, locale }: { projects: Project[]; loca
             {filtered.length} / {projects.length}
           </span>
         </div>
-        <label className="grid gap-2 text-sm text-muted-foreground">
-          Search
-          <span className="relative">
-            <Search
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2"
-              aria-hidden="true"
-            />
-            <Input
-              className="pl-9"
-              name="project-search"
-              autoComplete="off"
-              placeholder="Filter by name or stack…"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value)
-                updateUrl({ q: e.target.value })
-              }}
-            />
-          </span>
-        </label>
+
+        <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
+          <label className="grid gap-1.5 text-xs text-muted-foreground">
+            <span className="font-mono uppercase tracking-[0.18em]">
+              {t("yearLabel")}
+            </span>
+            <Select
+              value={activeYear}
+              onValueChange={(value) => updateUrl({ year: value })}
+            >
+              <SelectTrigger aria-label={t("yearLabel")}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_YEARS}>{t("yearAll")}</SelectItem>
+                {yearOptions.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </label>
+
+          <label className="grid gap-1.5 text-xs text-muted-foreground">
+            <span className="font-mono uppercase tracking-[0.18em]">
+              {t("searchLabel")}
+            </span>
+            <span className="relative">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2"
+                aria-hidden="true"
+              />
+              <Input
+                className="pl-9"
+                name="project-search"
+                autoComplete="off"
+                placeholder={t("searchPlaceholder")}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  updateUrl({ q: e.target.value });
+                }}
+              />
+            </span>
+          </label>
+        </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {production.length === 0 && drafts.length === 0 ? (
         <p className="mt-16 text-center font-mono text-sm text-muted-foreground">
-          No projects match this filter.
+          {t("noMatches")}
         </p>
-      ) : (
-        <Stagger className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3" delay={0.05}>
-          {filtered.map((project) => (
+      ) : null}
+
+      {production.length > 0 ? (
+        <Stagger
+          className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+          delay={0.05}
+        >
+          {production.map((project) => (
             <StaggerItem key={project.slug}>
               <ProjectCard project={project} locale={locale} />
             </StaggerItem>
           ))}
         </Stagger>
-      )}
+      ) : null}
+
+      {production.length === 0 && drafts.length > 0 ? (
+        <p className="mt-10 text-sm text-muted-foreground">
+          {t("noProductionMatches", { count: drafts.length })}
+        </p>
+      ) : null}
+
+      {drafts.length > 0 ? (
+        <details className="mt-12 group rounded-lg border border-dashed border-border bg-muted/20">
+          <summary className="flex cursor-pointer items-center justify-between gap-3 p-5 font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <span className="flex items-center gap-3">
+              <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                {t("draftsHeading")}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {t("draftsCount", { count: drafts.length })}
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className="font-mono text-xs text-muted-foreground group-open:hidden"
+            >
+              +
+            </span>
+            <span
+              aria-hidden="true"
+              className="hidden font-mono text-xs text-muted-foreground group-open:inline"
+            >
+              −
+            </span>
+          </summary>
+          <div className="border-t p-5">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {drafts.map((project) => (
+                <ProjectCard
+                  key={project.slug}
+                  project={project}
+                  locale={locale}
+                />
+              ))}
+            </div>
+          </div>
+        </details>
+      ) : null}
     </>
-  )
+  );
 }

@@ -120,7 +120,16 @@
     "architecture": "Architecture notes",
     "outcome": "Outcome",
     "lessons": "Lessons learned",
-    "next": "Next steps"
+    "next": "Next steps",
+    "filterAll": "All",
+    "yearLabel": "Year",
+    "yearAll": "All years",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Filter by name or stack…",
+    "noMatches": "No projects match this filter.",
+    "draftsHeading": "Drafts in development",
+    "draftsCount": "{count, plural, =0 {no drafts} one {# draft hidden} other {# drafts hidden}}",
+    "noProductionMatches": "{count, plural, =0 {No matches.} one {No production projects match — # draft hidden below.} other {No production projects match — # drafts hidden below.}}"
   },
   "Game": {
     "gamesIndex": "games",

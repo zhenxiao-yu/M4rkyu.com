@@ -120,7 +120,16 @@
     "architecture": "架构笔记",
     "outcome": "结果",
     "lessons": "复盘",
-    "next": "下一步"
+    "next": "下一步",
+    "filterAll": "全部",
+    "yearLabel": "年份",
+    "yearAll": "全部年份",
+    "searchLabel": "搜索",
+    "searchPlaceholder": "按名称或技术栈过滤…",
+    "noMatches": "没有匹配此筛选的项目。",
+    "draftsHeading": "开发中的草稿",
+    "draftsCount": "{count, plural, =0 {没有草稿} other {隐藏 # 个草稿}}",
+    "noProductionMatches": "{count, plural, =0 {没有匹配。} other {没有匹配的上线项目 — 下方隐藏了 # 个草稿。}}"
   },
   "Game": {
     "gamesIndex": "游戏档案",
