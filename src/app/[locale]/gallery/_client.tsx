@@ -1,134 +1,137 @@
-"use client"
+"use client";
 
-import { useEffect, useCallback } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { PlaceholderImage } from "@/components/placeholders/placeholder-image"
-import type { GalleryItem } from "@/content/schemas"
+import Image from "next/image";
+import { useCallback, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
+import { GalleryLightbox } from "@/components/gallery/gallery-lightbox";
+import type { GalleryItem } from "@/content/schemas";
+import { cn } from "@/lib/utils";
 
-export function GalleryGrid({ items }: { items: GalleryItem[] }) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const frame = searchParams.get("frame")
-  const openIndex = frame ? items.findIndex((item) => item.slug === frame) : -1
-  const hasOpenFrame = openIndex >= 0
+interface GalleryGridProps {
+  items: GalleryItem[];
+  locale: string;
+}
 
-  const setOpenIndex = useCallback(
-    (index: number | null) => {
-      const nextParams = new URLSearchParams(searchParams)
-      if (index === null) {
-        nextParams.delete("frame")
+export function GalleryGrid({ items, locale }: GalleryGridProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const frame = searchParams.get("frame");
+  const t = useTranslations("Gallery");
+
+  const orderedItems = useMemo(() => {
+    return [...items].sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      if (a.featured !== b.featured) return a.featured ? -1 : 1;
+      return 0;
+    });
+  }, [items]);
+
+  const setOpenSlug = useCallback(
+    (slug: string | null) => {
+      const nextParams = new URLSearchParams(searchParams);
+      if (slug === null) {
+        nextParams.delete("frame");
       } else {
-        nextParams.set("frame", items[index].slug)
+        nextParams.set("frame", slug);
       }
-      const query = nextParams.toString()
-      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+      const query = nextParams.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      });
     },
-    [items, pathname, router, searchParams],
-  )
-
-  const prev = useCallback(() => {
-    if (!hasOpenFrame) return
-    setOpenIndex((openIndex - 1 + items.length) % items.length)
-  }, [hasOpenFrame, items.length, openIndex, setOpenIndex])
-
-  const next = useCallback(() => {
-    if (!hasOpenFrame) return
-    setOpenIndex((openIndex + 1) % items.length)
-  }, [hasOpenFrame, items.length, openIndex, setOpenIndex])
-
-  useEffect(() => {
-    if (!hasOpenFrame) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") prev()
-      if (e.key === "ArrowRight") next()
-    }
-    window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
-  }, [hasOpenFrame, prev, next])
+    [pathname, router, searchParams],
+  );
 
   return (
     <>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item, index) => (
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        {orderedItems.map((item) => (
           <button
             key={item.slug}
-            onClick={() => setOpenIndex(index)}
-            className="group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => setOpenSlug(item.slug)}
+            className="group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
             type="button"
-            aria-label={`Open ${item.title}`}
+            aria-label={t("openFrame", { title: item.title })}
           >
             <Card className="overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 group-hover:border-ring group-hover:shadow-md">
-              <PlaceholderImage
-                label={index % 2 === 0 ? "GALLERY IMAGE TBD" : "CONTACT SHEET TBD"}
-                aspect="aspect-[4/5]"
-                className="rounded-none border-0 border-b"
-              />
+              <FrameThumb item={item} frameTbdLabel={t("frameTbd")} />
               <CardHeader>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{item.type}</Badge>
+                  {item.featured ? (
+                    <Badge variant="signal" className="text-[0.6rem]">
+                      {t("featured")}
+                    </Badge>
+                  ) : null}
                 </div>
-                <CardTitle className="text-base leading-tight">{item.title}</CardTitle>
+                <CardTitle className="text-base leading-tight">
+                  {item.title}
+                </CardTitle>
               </CardHeader>
             </Card>
           </button>
         ))}
       </div>
 
-      <Dialog open={hasOpenFrame} onOpenChange={(open) => !open && setOpenIndex(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>
-              {hasOpenFrame ? items[openIndex]?.title : ""}
-            </DialogTitle>
-            <DialogDescription>
-              {hasOpenFrame ? `${openIndex + 1} / ${items.length}` : ""}
-            </DialogDescription>
-          </DialogHeader>
-          {hasOpenFrame && (
-            <>
-              <PlaceholderImage label="LIGHTBOX MEDIA TBD" aspect="aspect-[4/3]" />
-              <p className="text-sm leading-6 text-muted-foreground">
-                {items[openIndex]?.caption}
-              </p>
-              <div className="flex items-center justify-between pt-1">
-                <Button
-                  onClick={prev}
-                  aria-label="Previous image"
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                >
-                  <ChevronLeft className="size-4" />
-                </Button>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {openIndex + 1} / {items.length}
-                </span>
-                <Button
-                  onClick={next}
-                  aria-label="Next image"
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <GalleryLightbox
+        items={orderedItems}
+        openSlug={frame}
+        locale={locale}
+        onChange={setOpenSlug}
+      />
     </>
-  )
+  );
+}
+
+function FrameThumb({
+  item,
+  frameTbdLabel,
+}: {
+  item: GalleryItem;
+  frameTbdLabel: string;
+}) {
+  const aspect = aspectClass(item.aspect);
+  if (item.src) {
+    return (
+      <div className={cn("relative overflow-hidden border-b bg-muted", aspect)}>
+        <Image
+          src={item.src.src}
+          alt={item.src.alt}
+          fill
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          className="object-cover grayscale transition duration-500 group-hover:scale-[1.02] group-hover:grayscale-0"
+        />
+      </div>
+    );
+  }
+  return (
+    <PlaceholderImage
+      label={frameTbdLabel}
+      aspect={aspect}
+      className="rounded-none border-0 border-b"
+    />
+  );
+}
+
+function aspectClass(aspect: GalleryItem["aspect"]): string {
+  switch (aspect) {
+    case "1/1":
+      return "aspect-square";
+    case "3/4":
+      return "aspect-[3/4]";
+    case "2/3":
+      return "aspect-[2/3]";
+    case "16/9":
+      return "aspect-[16/9]";
+    case "21/9":
+      return "aspect-[21/9]";
+    case "4/5":
+    default:
+      return "aspect-[4/5]";
+  }
 }
