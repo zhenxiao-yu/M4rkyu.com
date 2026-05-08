@@ -61,13 +61,29 @@ export const profileSchema = z.object({
   values: z.array(z.string()),
 });
 
+export const galleryAspectSchema = z.enum([
+  "1/1",
+  "4/5",
+  "3/4",
+  "2/3",
+  "16/9",
+  "21/9",
+]);
+
 export const galleryCollectionSchema = z.object({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
-  cover: imageSchema,
+  cover: imageSchema.extend({
+    focal: z.enum(["top", "center", "bottom"]).default("center"),
+  }),
   count: z.number(),
   status: contentStatusSchema.default("placeholder"),
+  intro: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  mood: z.array(z.string()).default([]),
+  featured: z.boolean().default(false),
 });
 
 export const galleryItemSchema = z.object({
@@ -77,6 +93,15 @@ export const galleryItemSchema = z.object({
   type: z.enum(["image", "contact-sheet", "process"]),
   status: contentStatusSchema,
   caption: z.string(),
+  src: imageSchema.optional(),
+  aspect: galleryAspectSchema.default("4/5"),
+  capturedAt: z.string().optional(),
+  location: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  mood: z.array(z.string()).default([]),
+  featured: z.boolean().default(false),
+  pinned: z.boolean().default(false),
+  related: z.array(z.string()).default([]),
 });
 
 export const resourceSchema = z.object({

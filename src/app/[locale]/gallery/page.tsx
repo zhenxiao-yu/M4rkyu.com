@@ -62,7 +62,7 @@ export default async function GalleryPage({ params }: { params: Promise<{ locale
           />
         </FadeIn>
         <div className="mt-8">
-          <GalleryGrid items={galleryItems} />
+          <GalleryGrid items={galleryItems} locale={locale} />
         </div>
       </section>
     </PageShell>
