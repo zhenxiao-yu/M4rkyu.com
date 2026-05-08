@@ -1,60 +1,44 @@
 # Agent Guidance
 
-This repository has two portfolio apps. Read this before changing files.
+The Next.js portfolio for m4rkyu.com. Single-app repo at the root.
 
-## Default Work Target
+<!-- BEGIN:nextjs-agent-rules -->
+## This is NOT the Next.js you know
 
-- Default future development should happen in `next-portfolio/`.
-- The repository root is the legacy production Vite + React app.
-- Touch the root Vite app only for narrow legacy production fixes.
-- Do not delete the legacy app.
-- Do not repoint production unless the user explicitly asks for a cutover task.
+This version has breaking changes — APIs, conventions, and file structure may
+all differ from your training data. Read the relevant guide in
+`node_modules/next/dist/docs/` before writing any code. Heed deprecation
+notices.
+<!-- END:nextjs-agent-rules -->
 
-## Stack Boundaries
+## Stack Rules
 
-- Root app conventions: Vite, React 18, JavaScript/JSX, React Router v5,
-  custom CSS, styled-components, Firebase 10, and legacy animation libraries.
-- Next remake conventions: Next.js App Router, TypeScript, `next-intl`,
-  Tailwind CSS 4, owned shadcn/Radix-style primitives, Zod content schemas,
-  Storybook, and Playwright.
-- Do not apply root Vite conventions to the Next app.
-- Do not apply Next.js or TypeScript conventions to the legacy root app.
-- Keep package versions, build config, and runtime code unchanged unless the task
-  explicitly calls for those changes.
+- Next.js App Router patterns under `src/app`.
+- TypeScript for source files.
+- Localized routes under the `next-intl` structure, currently `/en` and `/zh`.
+- Tailwind CSS 4 conventions already present in `src/app/globals.css` and
+  component classes.
+- Owned shadcn/Radix-style primitives from `src/components/ui` — do not
+  introduce a separate UI system.
+- Structured portfolio content stays data-driven under `src/content`, validated
+  by the Zod schemas in `src/content/schemas.ts`.
 
-## Legacy Root Notes
+## Content Rules
 
-- The root app is JSX/JavaScript only. Do not create `.tsx` or `.ts` files for
-  legacy production fixes.
-- React Router is v5. Use `<Switch>`, `<Route>`, `useHistory`, `useLocation`,
-  and `NavLink`; do not convert the root app to React Router v6 conventions.
-- Root content lives primarily in `src/assets/data/`.
-- Firebase config is read from `VITE_FIREBASE_*` environment variables.
-- `dist/` is generated output. Do not edit it directly.
+- Prefer editing data in `src/content` over hardcoding page copy directly in
+  routes or components.
+- Keep placeholder content out of production routes unless it is intentionally
+  marked draft, pending, coming soon, or otherwise explicit.
+- Do not add fake metrics, fake clients, fake awards, private phone numbers, or
+  home address details. Use approved public contact channels only.
 
-## Content Safety
+## Verification
 
-- Keep private phone number and home address information out of source,
-  fixtures, public content, placeholder text, screenshots, and generated assets.
-- If contact information is needed, prefer approved public channels already used
-  by the project.
-
-## Commands
-
-Run root legacy commands from the repository root:
+- Use Storybook for component states and visual primitives.
+- Use Playwright for route-level smoke and interaction checks.
+- For meaningful UI, content, or routing changes, prefer:
 
 ```bash
-npm install
-npm start
-npm run build
-npm run preview
-```
-
-Run Next remake commands from `next-portfolio/`:
-
-```bash
-npm install
-npm run dev
 npm run lint
 npm run typecheck
 npm run build
@@ -62,5 +46,14 @@ npm run build-storybook
 npm run test:e2e
 ```
 
-No build is required for documentation-only changes unless markdown tooling is
-available and relevant.
+If the H: workspace hits Windows `.next` filesystem locks, set `NEXT_DIST_DIR`
+to an ignored output directory for local dev or verification, as described in
+[README.md](README.md).
+
+## Boundaries
+
+- The legacy Vite app has moved to
+  [zhenxiao-yu/m4rkyu-archive](https://github.com/zhenxiao-yu/m4rkyu-archive).
+  Do not import or reference legacy code from this repo.
+- Do not change package versions, build config, or runtime code unless the task
+  explicitly requires it.

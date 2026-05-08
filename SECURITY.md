@@ -12,6 +12,7 @@
 Please do **not** open a public GitHub issue for security vulnerabilities.
 
 Report vulnerabilities privately by email to **markyu0615@gmail.com** with:
+
 - a description of the issue and impact
 - reproduction steps or proof of concept
 - any suggested remediation if available
@@ -20,17 +21,21 @@ You should receive an acknowledgement within 72 hours for valid reports.
 
 ## Scope
 
-This repository includes a legacy portfolio app and a Next.js remake. The most relevant areas are:
+This repository is the Next.js portfolio for m4rkyu.com. The most relevant
+areas are:
+
 - accidental exposure of personal or contact information
-- secret leakage through Firebase, deployment, or environment configuration
+- secret leakage through deployment or environment configuration
 - unsafe rendering of user-facing content or externally sourced assets
-- deployment or routing mistakes that expose unfinished remake work as production
+- routing or middleware mistakes that expose unfinished work as production
 
 ## Out of Scope
 
 - social engineering or harassment not tied to a software vulnerability
-- third-party provider issues entirely inside Vercel, Firebase, or other external services
+- third-party provider issues entirely inside Vercel or other external services
 
 ## Disclosure Guidance
 
-Please allow time for investigation and remediation before public disclosure. Confirmed fixes should be reflected in release notes and the changelog when appropriate.
+Please allow time for investigation and remediation before public disclosure.
+Confirmed fixes should be reflected in release notes and the changelog when
+appropriate.

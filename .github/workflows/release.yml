@@ -9,33 +9,16 @@ permissions:
   contents: write
 
 jobs:
-  validate-legacy:
-    name: Validate legacy app
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
-
-  validate-next:
-    name: Validate next-portfolio
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: next-portfolio
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: next-portfolio/package-lock.json
-      - run: npm install
+      - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
@@ -44,7 +27,7 @@ jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [validate-legacy, validate-next]
+    needs: [validate]
     steps:
       - uses: actions/checkout@v4
       - name: Create release
@@ -55,6 +38,6 @@ jobs:
           body: |
             ## M4rkyu.com ${{ github.ref_name }}
 
-            Portfolio monorepo containing the live legacy site and the actively developed Next.js remake.
+            Next.js portfolio for m4rkyu.com.
 
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for curated release notes.
