@@ -125,6 +125,19 @@ export const postSchema = z.object({
   readingTime: z.string(),
   tags: z.array(z.string()),
   status: contentStatusSchema,
+  // Phase 1.5 additions
+  pinned: z.boolean().default(false),
+});
+
+// Build-time invariant: at most one post may be pinned site-wide.
+export const postsArraySchema = z.array(postSchema).superRefine((arr, ctx) => {
+  const pinnedCount = arr.filter((p) => p.pinned).length;
+  if (pinnedCount > 1) {
+    ctx.addIssue({
+      code: "custom",
+      message: `Only one post may be pinned at a time (found ${pinnedCount}).`,
+    });
+  }
 });
 
 export const gameSchema = z.object({

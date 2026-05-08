@@ -1,6 +1,6 @@
-import { postSchema } from "./schemas";
+import { postsArraySchema } from "./schemas";
 
-export const posts = [
+export const posts = postsArraySchema.parse([
   {
     title: "Draft: Rebuilding M4rkyu.com as a black-and-white archive",
     slug: "rebuilding-m4rkyu-archive",
@@ -34,4 +34,4 @@ export const posts = [
     tags: ["games", "systems"],
     status: "placeholder",
   },
-].map((post) => postSchema.parse(post));
+]);
