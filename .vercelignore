@@ -1,0 +1,45 @@
+# Exclude legacy root Vite app from Next preview deploys.
+# This file controls what the Vercel CLI uploads from repo root.
+# The Next project's Root Directory is `next-portfolio`, so legacy files
+# at this level are never used for the build.
+
+# Legacy Vite app source and build outputs (anchored to repo root only)
+/src/
+/public/
+/dist/
+/build/
+/index.html
+/vite.config.js
+/vite-plugin-error-logger.js
+/package.json
+/package-lock.json
+/node_modules/
+
+# Repo-wide cruft
+/.git/
+/.github/
+/.claude/
+/.vscode/
+/.idea/
+*.log
+/runtime-errors.log
+
+# Legacy build artifacts at repo root
+/.next/
+/.next-*/
+/.dist-*/
+/storybook-static/
+/test-results/
+/playwright-report/
+/coverage/
+/*.tsbuildinfo
+
+# Large per-app node_modules in the remake (Vercel installs fresh)
+next-portfolio/node_modules/
+next-portfolio/.next/
+next-portfolio/.next-*/
+next-portfolio/storybook-static/
+next-portfolio/test-results/
+next-portfolio/playwright-report/
+next-portfolio/coverage/
+next-portfolio/*.tsbuildinfo
