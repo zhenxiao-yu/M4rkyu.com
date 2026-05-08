@@ -122,6 +122,25 @@
     "lessons": "Lessons learned",
     "next": "Next steps"
   },
+  "Game": {
+    "gamesIndex": "games",
+    "eyebrow": "game systems",
+    "intro": "Game-development archive for prototypes, engine studies, and future interactive work.",
+    "metaDescription": "Game-development archive by ZhenXiao Mark Yu.",
+    "platforms": "Platforms",
+    "buildLinks": "Build links",
+    "pillarsEyebrow": "Design pillars",
+    "pillarsTitle": "What this game is about",
+    "postmortemEyebrow": "Postmortem",
+    "postmortemTitle": "Notes after the build",
+    "notesEyebrow": "Design notes",
+    "notesTitle": "Working notes",
+    "archiveStatus": "Archive status",
+    "production": "production entries",
+    "draft": "in development or planned",
+    "noClaims": "No fabricated platforms, awards, or build claims included.",
+    "coverTbd": "GAME COVER TBD"
+  },
   "Categories": {
     "web-app": "Web app",
     "game-dev": "Game development",
@@ -143,8 +162,8 @@
     "nextEyebrow": "Next steps",
     "relatedWork": "Related work",
     "moreFromCategory": "More case studies from this category coming soon.",
-    "previous": "Previous project",
-    "next": "Next project",
+    "previous": "Previous",
+    "next": "Next",
     "backToArchive": "Back to archive"
   },
   "About": {

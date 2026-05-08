@@ -136,6 +136,16 @@ export const gameSchema = z.object({
   pitch: z.string(),
   role: z.string(),
   notes: z.array(z.string()),
+  // Phase 1.3 additions — all optional / defaulted so existing content validates.
+  cover: imageSchema.optional(),
+  trailerUrl: z.string().url().optional(),
+  platforms: z.array(z.string()).default([]),
+  pillars: z.array(z.string()).default([]),
+  postmortem: z.string().optional(),
+  outcome: z.string().optional(),
+  buildLinks: z
+    .array(z.object({ label: z.string(), url: z.string().url() }))
+    .default([]),
 });
 
 export const mediaItemSchema = z.object({
