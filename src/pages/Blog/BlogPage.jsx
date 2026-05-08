@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
@@ -131,15 +131,16 @@ const BlogPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Sorting Blogs by date
-  const sortedBlogs = [...Blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  // Filtering Blogs by search query
-  const filteredBlogs = sortedBlogs.filter(
-    (blog) =>
-      blog.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      blog.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredBlogs = useMemo(() => {
+    const sorted = [...Blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const q = searchQuery.toLowerCase();
+    if (!q) return sorted;
+    return sorted.filter(
+      (blog) =>
+        blog.name.toLowerCase().includes(q) ||
+        blog.tags.some((tag) => tag.toLowerCase().includes(q))
+    );
+  }, [searchQuery]);
 
   return (
     <>

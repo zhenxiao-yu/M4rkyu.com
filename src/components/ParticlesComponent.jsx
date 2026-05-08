@@ -16,11 +16,6 @@ const ParticlesComponent = (props) => {
     });
   }, []);
 
-  const particlesLoaded = (container) => {
-    console.log(container);
-  };
-
-  //console.log(props.theme)
   const options_dark = useMemo(
     () => ({
       fpsLimit: 120,
@@ -166,7 +161,7 @@ const ParticlesComponent = (props) => {
     [],
   );
 
-  return <Particles id={props.id} init={particlesLoaded} options={props.theme === "dark" ? options_dark : options_light} />; 
+  return <Particles id={props.id} options={props.theme === "dark" ? options_dark : options_light} />;
 };
 
 export default ParticlesComponent;

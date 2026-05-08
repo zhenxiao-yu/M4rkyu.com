@@ -289,17 +289,18 @@ const Dropdown = ({ selectedImg, handleScrollToSection }) => (
 
 const HeroSection = () => (
   <div className="hero-section">
-    <HiChevronDoubleUp size="3rem"/>
+    <HiChevronDoubleUp size="3rem" aria-hidden="true" />
     <h1>Welcome to My Gallery</h1>
-    <Typewriter
-      words={['Explore various sections to see different collections of images.']}
-      loop={0}
-      typeSpeed={50}
-      deleteSpeed={50}
-      delaySpeed={1500}
-      cursor
-      aria-label="Explore various sections to see different collections of images."
-    />
+    <p aria-live="polite">
+      <Typewriter
+        words={['Explore various sections to see different collections of images.']}
+        loop={0}
+        typeSpeed={50}
+        deleteSpeed={50}
+        delaySpeed={1500}
+        cursor
+      />
+    </p>
   </div>
 );
 
