@@ -122,6 +122,31 @@
     "lessons": "Lessons learned",
     "next": "Next steps"
   },
+  "Categories": {
+    "web-app": "Web app",
+    "game-dev": "Game development",
+    "ai-tool": "AI tool",
+    "art-film": "Art / film",
+    "experiment": "Experiment",
+    "maintenance": "Maintenance"
+  },
+  "CaseStudy": {
+    "projectsIndex": "projects",
+    "links": "Links",
+    "context": "Context",
+    "approach": "Approach",
+    "engineering": "Engineering",
+    "challenges": "Challenges",
+    "process": "Process",
+    "outcomeEyebrow": "Outcome",
+    "lessonsEyebrow": "What I learned",
+    "nextEyebrow": "Next steps",
+    "relatedWork": "Related work",
+    "moreFromCategory": "More case studies from this category coming soon.",
+    "previous": "Previous project",
+    "next": "Next project",
+    "backToArchive": "Back to archive"
+  },
   "About": {
     "title": "About Mark",
     "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."

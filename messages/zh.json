@@ -122,6 +122,31 @@
     "lessons": "复盘",
     "next": "下一步"
   },
+  "Categories": {
+    "web-app": "Web 应用",
+    "game-dev": "游戏开发",
+    "ai-tool": "AI 工具",
+    "art-film": "艺术 / 影像",
+    "experiment": "实验",
+    "maintenance": "维护"
+  },
+  "CaseStudy": {
+    "projectsIndex": "项目档案",
+    "links": "链接",
+    "context": "背景",
+    "approach": "方法",
+    "engineering": "工程实现",
+    "challenges": "挑战",
+    "process": "过程",
+    "outcomeEyebrow": "结果",
+    "lessonsEyebrow": "学到的东西",
+    "nextEyebrow": "下一步",
+    "relatedWork": "相关案例",
+    "moreFromCategory": "更多同类案例即将上线。",
+    "previous": "上一个项目",
+    "next": "下一个项目",
+    "backToArchive": "返回档案"
+  },
   "About": {
     "title": "关于 Mark",
     "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
