@@ -2,6 +2,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { routing, type Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -25,7 +26,9 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider>
+        <CommandPaletteProvider>{children}</CommandPaletteProvider>
+      </ThemeProvider>
     </NextIntlClientProvider>
   );
 }
