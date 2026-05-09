@@ -21,7 +21,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.8fr] lg:px-8">
           <FadeIn>
-            <SectionHeading title={t("title")} description={t("intro")} />
+            <SectionHeading as="h1" title={t("title")} description={t("intro")} />
           </FadeIn>
           <FadeIn direction="left" delay={0.1}>
             <PlaceholderImage label="PORTRAIT OR STUDIO IMAGE TBD" aspect="aspect-[4/5]" />

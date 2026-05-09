@@ -14,8 +14,9 @@ const monoMeta =
 
 /**
  * Single timeline row for /blog. The whole row is one Link — no
- * nested interactive elements. Mono date column on md+, stacks on
- * mobile. Hover lifts background subtly; no scale, no shadow.
+ * nested interactive elements. Mono date column on md+; on mobile,
+ * date and reading time co-locate on a single meta line above the
+ * title. Hover lifts background subtly; no scale, no shadow.
  */
 export function PostListItem({ post }: PostListItemProps) {
   const isDraft = post.status !== "ready";
@@ -30,7 +31,23 @@ export function PostListItem({ post }: PostListItemProps) {
           "md:grid-cols-[8rem_1fr_auto] md:items-baseline md:gap-6",
         )}
       >
-        <span className={monoMeta}>{post.date}</span>
+        {/* Mobile-only meta line: date · reading time */}
+        <div
+          className={cn(
+            "flex flex-wrap items-center gap-x-3 gap-y-1",
+            "md:hidden",
+          )}
+        >
+          <span className={monoMeta}>{post.date}</span>
+          <span aria-hidden="true" className="text-muted-foreground/40">
+            ·
+          </span>
+          <span className={monoMeta}>{post.readingTime}</span>
+        </div>
+
+        {/* Desktop-only: standalone date column */}
+        <span className={cn(monoMeta, "hidden md:inline")}>{post.date}</span>
+
         <div className="grid gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className={monoMeta}>{post.category}</span>
@@ -60,12 +77,9 @@ export function PostListItem({ post }: PostListItemProps) {
             </div>
           ) : null}
         </div>
-        <span
-          className={cn(
-            monoMeta,
-            "shrink-0 md:text-right",
-          )}
-        >
+
+        {/* Desktop-only: reading time, right-aligned */}
+        <span className={cn(monoMeta, "hidden shrink-0 md:inline md:text-right")}>
           {post.readingTime}
         </span>
       </Link>

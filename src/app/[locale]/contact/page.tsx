@@ -18,6 +18,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHeading
+            as="h1"
             eyebrow="collaboration"
             title="Contact"
             description="A production-safe project inquiry flow with a mailto fallback now, ready for a server-side form provider later."

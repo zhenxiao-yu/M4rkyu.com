@@ -24,6 +24,7 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
           <SectionHeading
+            as="h1"
             eyebrow="video / process"
             title="Media"
             description="A lightweight media archive layout with still posters and no autoplay. Final clips, posters, and captions can replace the placeholder frames later."

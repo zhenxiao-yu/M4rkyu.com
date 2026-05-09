@@ -17,6 +17,7 @@ export default async function ToolsPage({ params }: { params: Promise<{ locale: 
     <PageShell locale={locale}>
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <SectionHeading
+          as="h1"
           eyebrow="utility index"
           title="Tools"
           description="Placeholder utility directory for small tools, implementation notes, and creative systems. Final tool pages can be added without changing the shell."
