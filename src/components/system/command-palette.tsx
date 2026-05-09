@@ -103,13 +103,15 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hideCloseButton
-        className="max-w-xl gap-0 overflow-hidden p-0"
+        // Below md: bottom-anchored sheet (full-width, top-rounded only).
+        // md+: keep the centered modal layout from DialogContent's defaults.
+        className="max-w-xl gap-0 overflow-hidden p-0 max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:top-auto max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none"
       >
         <VisuallyHidden>
           <DialogTitle>{tPalette("title")}</DialogTitle>
           <DialogDescription>{tPalette("description")}</DialogDescription>
         </VisuallyHidden>
-        <Command label={tPalette("title")} className="rounded-md">
+        <Command label={tPalette("title")} className="rounded-md max-md:rounded-b-none">
           <CommandInput placeholder={tPalette("searchPlaceholder")} />
           <CommandList>
             <CommandEmpty>{tPalette("noResults")}</CommandEmpty>
@@ -192,7 +194,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             </CommandGroup>
           </CommandList>
 
-          <div className="flex items-center justify-end gap-2 border-t px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+          {/* Keyboard hint strip — hidden on touch / small screens since
+              the kbd shortcuts don't apply there. */}
+          <div className="hidden items-center justify-end gap-2 border-t px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground md:flex">
             <span>{tPalette("hintNavigate")}</span>
             <kbd className="rounded border px-1.5 py-0.5">↑↓</kbd>
             <span>{tPalette("hintSelect")}</span>
