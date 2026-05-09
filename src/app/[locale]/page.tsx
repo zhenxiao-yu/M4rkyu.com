@@ -109,9 +109,13 @@ export default async function HomePage({
           </div>
         </FadeIn>
         <Stagger className="mt-10 grid gap-5 md:grid-cols-3" delay={0.1}>
-          {featuredProjects.slice(0, 3).map((project) => (
+          {featuredProjects.slice(0, 3).map((project, index) => (
             <StaggerItem key={project.slug}>
-              <ProjectCard project={project} locale={locale} />
+              <ProjectCard
+                project={project}
+                locale={locale}
+                highlighted={index === 0}
+              />
             </StaggerItem>
           ))}
         </Stagger>
