@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FadeIn } from "@/components/motion/fade-in"
 import { allProjects } from "@/content/projects"
 import type { Locale } from "@/i18n/routing"
+import { buildAlternates } from "@/lib/seo/alternates"
 import { ProjectsClient } from "./_client"
 
 export async function generateMetadata({
@@ -18,7 +19,7 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("intro"),
-    alternates: { canonical: `/${locale}/projects` },
+    alternates: buildAlternates(locale, "/projects"),
   }
 }
 

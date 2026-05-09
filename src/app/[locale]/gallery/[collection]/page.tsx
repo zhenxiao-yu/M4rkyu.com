@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,12 +8,28 @@ import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { galleryCollections, galleryItems } from "@/content/gallery";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return galleryCollections.flatMap((collection) => [
     { locale: "en", collection: collection.slug },
     { locale: "zh", collection: collection.slug },
   ]);
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale; collection: string }>;
+}): Promise<Metadata> {
+  const { locale, collection } = await params;
+  const item = galleryCollections.find((entry) => entry.slug === collection);
+  if (!item) return {};
+  return {
+    title: item.title,
+    description: item.description,
+    alternates: buildAlternates(locale, `/gallery/${collection}`),
+  };
 }
 
 export default async function GalleryCollectionPage({

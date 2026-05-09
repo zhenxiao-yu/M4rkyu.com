@@ -30,6 +30,19 @@ import { games } from "@/content/games";
 import { mediaItems } from "@/content/media";
 import { profile } from "@/content/profile";
 import { localize } from "@/lib/content/localize";
+import { buildAlternates } from "@/lib/seo/alternates";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    alternates: buildAlternates(locale, ""),
+  };
+}
 
 export default async function HomePage({
   params,

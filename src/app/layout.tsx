@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Syne } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SmoothScroll } from "@/providers/smooth-scroll";
+import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,7 +23,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.m4rkyu.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "M4rkyu.com 2027",
     template: "%s | ZhenXiao Mark Yu",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     title: "M4rkyu.com 2027",
     description:
       "Software engineering, game development, and digital art case studies by ZhenXiao Mark Yu.",
-    url: "https://www.m4rkyu.com",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",

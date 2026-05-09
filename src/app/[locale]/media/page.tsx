@@ -8,11 +8,20 @@ import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { MediaFrame } from "@/components/placeholders/media-frame";
 import { mediaItems } from "@/content/media";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
-  title: "Media",
-  description: "Draft media and video archive for M4rkyu.com.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "Media",
+    description: "Video and process archive — draft frames hold the layout while final clips and posters land.",
+    alternates: buildAlternates(locale, "/media"),
+  };
+}
 
 export default async function MediaPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
