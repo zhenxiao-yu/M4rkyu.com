@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
+import { LinkPreview } from "@/components/system/link-preview";
 import { Link } from "@/i18n/navigation";
 
 export interface CaseStudyAdjacentEntry {
@@ -73,25 +74,43 @@ function CaseStudyAdjacent({
   const isNext = direction === "next";
 
   return (
-    <Link
-      href={entry.href}
-      className={`group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-        isNext ? "lg:text-right" : ""
-      }`}
+    <LinkPreview
+      title={entry.title}
+      lede={entry.pitch}
+      placeholderLabel="ADJACENT MEDIA TBD"
+      side={isNext ? "left" : "right"}
+      align="start"
     >
-      <span
-        className={`flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground ${
-          isNext ? "lg:justify-end" : ""
+      <Link
+        href={entry.href}
+        className={`group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+          isNext ? "lg:text-right" : ""
         }`}
       >
-        {!isNext ? <ArrowLeft aria-hidden="true" className="size-3" /> : null}
-        {label}
-        {isNext ? <ArrowRight aria-hidden="true" className="size-3" /> : null}
-      </span>
-      <span className="text-lg font-semibold leading-snug">{entry.title}</span>
-      <span className="line-clamp-2 text-sm leading-6 text-muted-foreground">
-        {entry.pitch}
-      </span>
-    </Link>
+        <span
+          className={`flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground ${
+            isNext ? "lg:justify-end" : ""
+          }`}
+        >
+          {!isNext ? (
+            <ArrowLeft
+              aria-hidden="true"
+              className="size-3 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:-translate-x-0.5 group-focus-visible:-translate-x-0.5"
+            />
+          ) : null}
+          {label}
+          {isNext ? (
+            <ArrowRight
+              aria-hidden="true"
+              className="size-3 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5"
+            />
+          ) : null}
+        </span>
+        <span className="text-lg font-semibold leading-snug">{entry.title}</span>
+        <span className="line-clamp-2 text-sm leading-6 text-muted-foreground">
+          {entry.pitch}
+        </span>
+      </Link>
+    </LinkPreview>
   );
 }

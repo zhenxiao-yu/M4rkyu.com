@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { Locale } from "@/i18n/routing";
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { PageFade } from "@/components/motion/page-fade";
 
 export async function PageShell({
   locale,
@@ -20,7 +21,7 @@ export async function PageShell({
       </a>
       <Header locale={locale} />
       <main id="main-content" className="flex-1">
-        {children}
+        <PageFade>{children}</PageFade>
       </main>
       <Footer locale={locale} />
     </div>
