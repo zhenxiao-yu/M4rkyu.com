@@ -3,6 +3,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { routing, type Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -27,7 +28,9 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
-        <CommandPaletteProvider>{children}</CommandPaletteProvider>
+        <TooltipProvider delayDuration={400} skipDelayDuration={150}>
+          <CommandPaletteProvider>{children}</CommandPaletteProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </NextIntlClientProvider>
   );

@@ -29,7 +29,7 @@ export function ArchiveCard({
   mediaLabel?: string
 }) {
   const content = (
-    <Card className="group h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 hover:border-ring hover:shadow-md">
+    <Card className="group h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/60 hover:shadow-md hover:shadow-ring/5">
       <PlaceholderImage
         label={mediaLabel}
         aspect="aspect-4/3"
