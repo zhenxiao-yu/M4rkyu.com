@@ -76,7 +76,7 @@ export default async function GameDetailPage({
 
         <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <BlurFade>
-            <figure className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-muted">
+            <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
               {game.cover ? (
                 <Image
                   src={game.cover.src}

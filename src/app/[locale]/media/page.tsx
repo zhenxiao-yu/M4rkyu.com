@@ -62,7 +62,7 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
         <MediaFrame eyebrow="poster system" label="REPLACE WITH FINAL CONTENT">
           <div className="grid gap-4 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, index) => (
-              <PlaceholderImage key={index} label="POSTER TBD" aspect="aspect-[3/4]" />
+              <PlaceholderImage key={index} label="POSTER TBD" aspect="aspect-3/4" />
             ))}
           </div>
         </MediaFrame>

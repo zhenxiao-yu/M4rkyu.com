@@ -25,7 +25,7 @@ export function PostListItem({ post }: PostListItemProps) {
       <Link
         href={`/blog/${post.slug}`}
         className={cn(
-          "group grid gap-3 rounded-lg border border-transparent px-4 py-5 transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)]",
+          "group grid gap-3 rounded-lg border border-transparent px-4 py-5 transition-colors duration-(--motion-fast) ease-(--ease-premium)",
           "hover:border-border hover:bg-muted/30",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "md:grid-cols-[8rem_1fr_auto] md:items-baseline md:gap-6",
@@ -57,7 +57,7 @@ export function PostListItem({ post }: PostListItemProps) {
             {post.title}
             <ArrowUpRight
               aria-hidden="true"
-              className="ml-1 inline size-4 -translate-y-0.5 text-muted-foreground transition-transform duration-[var(--motion-fast)] group-hover:-translate-y-1.5 group-hover:translate-x-0.5 group-hover:text-foreground"
+              className="ml-1 inline size-4 -translate-y-0.5 text-muted-foreground transition-transform duration-(--motion-fast) group-hover:-translate-y-1.5 group-hover:translate-x-0.5 group-hover:text-foreground"
             />
           </h3>
           <p className="mt-1.5 text-sm leading-6 text-muted-foreground">

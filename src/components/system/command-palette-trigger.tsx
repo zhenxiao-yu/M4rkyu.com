@@ -18,7 +18,7 @@ export function CommandPaletteTrigger() {
       type="button"
       onClick={() => setOpen(true)}
       aria-label={t("title")}
-      className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-xs text-muted-foreground transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-xs text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Search aria-hidden="true" className="size-3.5" />
       <span>{t("trigger")}</span>

@@ -102,7 +102,7 @@ export default async function ProjectDetailPage({
 
         <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <BlurFade>
-            <figure className="relative aspect-[16/10] overflow-hidden rounded-lg border bg-muted">
+            <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
               {cover ? (
                 <Image
                   src={cover.src}
@@ -187,7 +187,7 @@ export default async function ProjectDetailPage({
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {processShots.map((shot, index) => (
                 <BlurFade key={`${index}-${shot.src}`} delay={0.05 * index}>
-                  <figure className="relative aspect-[4/3] overflow-hidden rounded-md border bg-muted">
+                  <figure className="relative aspect-4/3 overflow-hidden rounded-md border bg-muted">
                     <Image
                       src={shot.src}
                       alt={shot.alt}
@@ -247,7 +247,7 @@ export default async function ProjectDetailPage({
                   <Link
                     key={item.slug}
                     href={`/projects/${item.slug}`}
-                    className="group rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="group rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
                       {tCategories(item.category)}

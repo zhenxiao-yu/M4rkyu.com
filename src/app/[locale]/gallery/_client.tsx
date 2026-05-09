@@ -123,15 +123,15 @@ function aspectClass(aspect: GalleryItem["aspect"]): string {
     case "1/1":
       return "aspect-square";
     case "3/4":
-      return "aspect-[3/4]";
+      return "aspect-3/4";
     case "2/3":
-      return "aspect-[2/3]";
+      return "aspect-2/3";
     case "16/9":
-      return "aspect-[16/9]";
+      return "aspect-16/9";
     case "21/9":
-      return "aspect-[21/9]";
+      return "aspect-21/9";
     case "4/5":
     default:
-      return "aspect-[4/5]";
+      return "aspect-4/5";
   }
 }

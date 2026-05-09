@@ -44,7 +44,7 @@ export function BentoCard({ children, className, span }: BentoCardProps) {
   return (
     <div
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50",
+        "group relative flex flex-col overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
         span,
         className,
       )}

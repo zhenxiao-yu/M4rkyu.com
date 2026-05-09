@@ -24,7 +24,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <SectionHeading as="h1" title={t("title")} description={t("intro")} />
           </FadeIn>
           <FadeIn direction="left" delay={0.1}>
-            <PlaceholderImage label="PORTRAIT OR STUDIO IMAGE TBD" aspect="aspect-[4/5]" />
+            <PlaceholderImage label="PORTRAIT OR STUDIO IMAGE TBD" aspect="aspect-4/5" />
           </FadeIn>
         </div>
       </section>

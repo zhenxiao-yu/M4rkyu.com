@@ -134,7 +134,7 @@ function FrameThumb({
 }) {
   if (item.src) {
     return (
-      <div className="relative aspect-[4/5] overflow-hidden border-b bg-muted">
+      <div className="relative aspect-4/5 overflow-hidden border-b bg-muted">
         <Image
           src={item.src.src}
           alt={item.src.alt}
@@ -148,7 +148,7 @@ function FrameThumb({
   return (
     <PlaceholderImage
       label={frameTbdLabel}
-      aspect="aspect-[4/5]"
+      aspect="aspect-4/5"
       className="rounded-none border-0 border-b"
     />
   );
