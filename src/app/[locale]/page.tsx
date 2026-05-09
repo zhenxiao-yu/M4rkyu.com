@@ -8,9 +8,10 @@ import { ResourcePreviewCard } from "@/components/cards/resource-preview-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { BentoGrid } from "@/components/ui/magic/bento-grid";
+import { GalleryBentoTile } from "@/components/gallery/gallery-bento-tile";
 import { PageShell } from "@/components/layout/page-shell";
 import { PlaceholderVideo } from "@/components/placeholders/placeholder-video";
-import { ContentPendingLabel } from "@/components/placeholders/content-pending-label";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import {
@@ -22,7 +23,7 @@ import { ClosingCTAStrip } from "@/components/sections/closing-cta-strip";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { featuredProjects } from "@/content/projects";
-import { galleryCollections } from "@/content/gallery";
+import { galleryCollections, galleryItems } from "@/content/gallery";
 import { resources } from "@/content/resources";
 import { posts } from "@/content/posts";
 import { games } from "@/content/games";
@@ -72,6 +73,8 @@ export default async function HomePage({
     p.category.toLowerCase().includes("devlog"),
   );
   const featuredResources = resources.slice(0, 3);
+  const readyFrames = galleryItems.filter((item) => item.status === "ready");
+  const bentoFrames = readyFrames.length >= 4 ? readyFrames.slice(0, 4) : null;
 
   return (
     <PageShell locale={locale}>
@@ -176,29 +179,42 @@ export default async function HomePage({
             </Button>
           </FadeIn>
           <FadeIn direction="left" delay={0.1}>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {galleryCollections.slice(0, 2).map((collection) => (
-                <ArchiveCard
-                  key={collection.slug}
-                  title={collection.title}
-                  description={collection.description}
-                  eyebrow={`${collection.count} frames`}
-                  status={collection.status}
-                  href={`/gallery/${collection.slug}`}
-                  locale={locale}
-                  mediaLabel="GALLERY MEDIA TBD"
-                />
-              ))}
-              <Card className="bg-card/80 sm:col-span-2">
-                <CardHeader>
-                  <ContentPendingLabel label="CONTACT SHEET PLACEHOLDER" />
-                  <CardTitle className="text-base">{t("openGallery")}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm leading-6 text-muted-foreground">
-                  {t("contactSheetPlaceholder")}
-                </CardContent>
-              </Card>
-            </div>
+            {bentoFrames ? (
+              <BentoGrid className="lg:auto-rows-[12rem] lg:grid-cols-2">
+                {bentoFrames.map((item, index) => (
+                  <GalleryBentoTile
+                    key={item.slug}
+                    item={item}
+                    span={index === 0 ? "sm:row-span-2" : undefined}
+                  />
+                ))}
+              </BentoGrid>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {galleryCollections.slice(0, 2).map((collection) => (
+                  <ArchiveCard
+                    key={collection.slug}
+                    title={collection.title}
+                    description={collection.description}
+                    eyebrow={`${collection.count} frames`}
+                    status={collection.status}
+                    href={`/gallery/${collection.slug}`}
+                    locale={locale}
+                    mediaLabel="GALLERY MEDIA TBD"
+                  />
+                ))}
+                <Card className="bg-card/80 sm:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="text-base">
+                      {t("openGallery")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm leading-6 text-muted-foreground">
+                    {t("contactSheetPlaceholder")}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </FadeIn>
         </div>
       </section>
