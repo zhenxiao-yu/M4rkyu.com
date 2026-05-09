@@ -7,22 +7,22 @@
     "blog": "写作",
     "media": "媒体",
     "resources": "资源",
-    "tools": "工具",
     "about": "关于",
     "contact": "联系",
     "portal": "入口",
-    "menu": "打开菜单"
+    "menu": "打开菜单",
+    "navigateLabel": "导航"
   },
   "Theme": {
     "label": "主题",
     "dark": "暗色",
-    "light": "亮色",
-    "monochrome": "黑白"
+    "light": "亮色"
   },
   "Language": {
     "label": "语言",
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "switchTo": "切换到 {target}"
   },
   "Home": {
     "eyebrow": "M4rkyu.com / 2027 重制",
@@ -217,7 +217,6 @@
     "settingsGroup": "设置",
     "themeLight": "亮色主题",
     "themeDark": "暗色主题",
-    "themeMono": "黑白主题",
     "toggleLocale": "切换语言",
     "noResults": "没有匹配项。",
     "hintNavigate": "导航",

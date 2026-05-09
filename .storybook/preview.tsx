@@ -41,7 +41,7 @@ const preview: Preview = {
       toolbar: {
         title: "Theme",
         icon: "circlehollow",
-        items: ["dark", "light", "monochrome"],
+        items: ["dark", "light"],
         dynamicTitle: true,
       },
     },

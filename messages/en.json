@@ -7,22 +7,22 @@
     "blog": "Writing",
     "media": "Media",
     "resources": "Resources",
-    "tools": "Tools",
     "about": "About",
     "contact": "Contact",
     "portal": "Portal",
-    "menu": "Open menu"
+    "menu": "Open menu",
+    "navigateLabel": "navigate"
   },
   "Theme": {
     "label": "Theme",
     "dark": "Dark",
-    "light": "Light",
-    "monochrome": "Mono"
+    "light": "Light"
   },
   "Language": {
     "label": "Language",
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "switchTo": "Switch to {target}"
   },
   "Home": {
     "eyebrow": "M4rkyu.com / 2027 remake",
@@ -217,7 +217,6 @@
     "settingsGroup": "Settings",
     "themeLight": "Light theme",
     "themeDark": "Dark theme",
-    "themeMono": "Monochrome theme",
     "toggleLocale": "Switch language",
     "noResults": "No matches.",
     "hintNavigate": "Navigate",

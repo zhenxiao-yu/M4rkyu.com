@@ -16,7 +16,7 @@ function Tokens() {
     <div className="grid gap-6">
       <div>
         <h1 className="text-4xl font-semibold">M4rkyu Design Tokens</h1>
-        <p className="mt-2 text-muted-foreground">Dark, light, and monochrome theme variables.</p>
+        <p className="mt-2 text-muted-foreground">Dark and light theme variables.</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
         {swatches.map((name) => (

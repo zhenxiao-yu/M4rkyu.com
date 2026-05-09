@@ -1,43 +1,50 @@
 "use client";
 
-import { Moon, Sun, CircleDot } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const themes = [
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "light", label: "Light", icon: Sun },
-  { value: "monochrome", label: "Mono", icon: CircleDot },
-];
-
+/**
+ * Single-icon dark ↔ light toggle. Both icons are rendered; the
+ * Tailwind `dark:` variant hides whichever isn't current. This
+ * avoids the JS-side `mounted` dance and any hydration mismatch —
+ * the SSR markup matches the client, then `next-themes` flips the
+ * `data-theme` attribute which the CSS selectors respond to.
+ *
+ * Clicking always lands the visitor on the *opposite* of the
+ * currently-active resolved theme.
+ */
 export function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+
+  function toggle() {
+    // Read at click time so we always flip from the current resolved
+    // value, not from a stale render.
+    const next = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(next);
+  }
 
   return (
-    <div className="flex items-center gap-1 rounded-md border bg-background/70 p-1 backdrop-blur">
-      {themes.map((item) => {
-        const Icon = item.icon;
-        const active = theme === item.value;
-        return (
-          <Tooltip key={item.value}>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant={active ? "secondary" : "ghost"}
-                size="icon"
-                aria-label={`Use ${item.label} theme`}
-                aria-pressed={active}
-                data-testid={`theme-${item.value}`}
-                onClick={() => setTheme(item.value)}
-              >
-                <Icon className="size-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{item.label}</TooltipContent>
-          </Tooltip>
-        );
-      })}
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          aria-label="Toggle theme"
+          data-testid="theme-toggle"
+          onClick={toggle}
+          className="h-9 w-9 border-border bg-background/70 p-0 text-muted-foreground hover:border-ring/50 hover:bg-background/70 hover:text-foreground"
+        >
+          <Sun className="size-4 hidden dark:block" aria-hidden="true" />
+          <Moon className="size-4 block dark:hidden" aria-hidden="true" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Toggle theme</TooltipContent>
+    </Tooltip>
   );
 }

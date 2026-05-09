@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* next-themes writes data-theme="dark" on <html>; bridge that to
+ * Tailwind 4's `dark:` variant so component-level dark utilities
+ * (icons, color tweaks) just work. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   color-scheme: light;
   --background: #f5f3ee;
@@ -87,60 +92,6 @@
   --ring: #67e8f9;
   --surface-ink: #f2f0ea;
   --surface-paper: #070707;
-}
-
-[data-theme="monochrome"] {
-  color-scheme: dark;
-  --background: #030303;
-  --foreground: #f7f7f7;
-  --card: #0b0b0b;
-  --card-foreground: #f7f7f7;
-  --popover: #080808;
-  --popover-foreground: #f7f7f7;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --secondary: #151515;
-  --secondary-foreground: #f2f2f2;
-  --muted: #111111;
-  --muted-foreground: #bdbdbd;
-  --accent: #242424;
-  --accent-foreground: #ffffff;
-  --destructive: #ffffff;
-  --border: #333333;
-  --input: #333333;
-  --ring: #ffffff;
-  --surface-ink: #ffffff;
-  --surface-paper: #030303;
-  --signal: #ffffff;
-  --success: #d7d7d7;
-  --warning: #b9b9b9;
-}
-
-[data-theme="kernel"] {
-  color-scheme: dark;
-  --background: #020402;
-  --foreground: #d7ffe8;
-  --card: #061007;
-  --card-foreground: #d7ffe8;
-  --popover: #061007;
-  --popover-foreground: #d7ffe8;
-  --primary: #d7ffe8;
-  --primary-foreground: #020402;
-  --secondary: #0c1a0f;
-  --secondary-foreground: #d7ffe8;
-  --muted: #08140a;
-  --muted-foreground: #8ccfa6;
-  --accent: #102415;
-  --accent-foreground: #e8fff0;
-  --destructive: #ff6b6b;
-  --border: #1d3f25;
-  --input: #1d3f25;
-  --ring: #5dff9d;
-  --surface-ink: #d7ffe8;
-  --surface-paper: #020402;
-  --signal: #ff6b6b;
-  --success: #5dff9d;
-  --warning: #ffe08a;
 }
 
 * {
