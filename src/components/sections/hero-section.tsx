@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl"
 import { ArrowRight, Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Marquee } from "@/components/ui/marquee"
+import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern"
 import { Link } from "@/i18n/navigation"
 import type { Locale } from "@/i18n/routing"
 
@@ -44,7 +45,13 @@ export function HeroSection({ locale }: { locale: Locale }) {
   return (
     <section className="relative overflow-hidden border-b">
       {/* atmospheric layers */}
-      <div className="absolute inset-0 bg-cyber-grid opacity-40" aria-hidden="true" />
+      <AnimatedGridPattern
+        numSquares={28}
+        maxOpacity={0.18}
+        duration={5}
+        repeatDelay={0.8}
+        className="text-foreground/40"
+      />
       <div className="noise-layer absolute inset-0" aria-hidden="true" />
       <div className="scanline-layer absolute inset-0 opacity-35" aria-hidden="true" />
 
