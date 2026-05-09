@@ -6,6 +6,7 @@ import { ArrowRight, Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Marquee } from "@/components/ui/marquee"
 import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern"
+import { PointerSpotlight } from "@/components/ui/magic/pointer-spotlight"
 import { Link } from "@/i18n/navigation"
 import type { Locale } from "@/i18n/routing"
 
@@ -54,6 +55,7 @@ export function HeroSection({ locale }: { locale: Locale }) {
       />
       <div className="noise-layer absolute inset-0" aria-hidden="true" />
       <div className="scanline-layer absolute inset-0 opacity-35" aria-hidden="true" />
+      <PointerSpotlight radius={420} intensity={0.14} />
 
       {/* main grid */}
       <div className="relative mx-auto grid min-h-[calc(100dvh-4rem-2.75rem)] w-full max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_400px] lg:gap-16 lg:px-8">
