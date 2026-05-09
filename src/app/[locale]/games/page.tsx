@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { games } from "@/content/games";
 import type { Locale } from "@/i18n/routing";
+import { localize } from "@/lib/content/localize";
 
 export async function generateMetadata({
   params,
@@ -72,19 +73,22 @@ export default async function GamesPage({
 
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3" delay={0.05}>
-          {games.map((game) => (
-            <StaggerItem key={game.slug}>
-              <ArchiveCard
-                title={game.title}
-                description={game.pitch}
-                eyebrow={game.engine}
-                status={game.status}
-                href={`/games/${game.slug}`}
-                locale={locale}
-                mediaLabel={tGame("coverTbd")}
-              />
-            </StaggerItem>
-          ))}
+          {games.map((game) => {
+            const localized = localize(game, locale);
+            return (
+              <StaggerItem key={game.slug}>
+                <ArchiveCard
+                  title={localized.title}
+                  description={localized.pitch as string}
+                  eyebrow={game.engine}
+                  status={game.status}
+                  href={`/games/${game.slug}`}
+                  locale={locale}
+                  mediaLabel={tGame("coverTbd")}
+                />
+              </StaggerItem>
+            );
+          })}
         </Stagger>
       </section>
     </PageShell>
