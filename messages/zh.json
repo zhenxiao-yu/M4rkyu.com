@@ -189,8 +189,18 @@
     "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
   },
   "Portal": {
-    "title": "Portal 已锁定",
-    "intro": "沉浸式交互模式正在构建中。当前版本保持轻量、快速、安静。"
+    "title": "Portal",
+    "intro": "可选的交互式路由。当前保持轻量、快速、安静 —— 仅有氛围层。",
+    "shellTitle": "prototype-shell",
+    "shellSubtitle": "纯客户端 · 无遥测",
+    "shellStatus": "待机",
+    "shellSlotStatus": "排队中",
+    "shellSlot": {
+      "caseStudies": "案例",
+      "gallery": "影像",
+      "media": "媒体"
+    },
+    "shellFootnote": "交互模式将随真实游戏与影像内容一起上线。这里不会运行重量级 WebGL。"
   },
   "Common": {
     "comingSoon": "即将开放",

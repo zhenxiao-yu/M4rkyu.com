@@ -189,8 +189,18 @@
     "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."
   },
   "Portal": {
-    "title": "Portal locked",
-    "intro": "An opt-in interactive mode is being assembled. For now, the terminal stays light, fast, and quiet."
+    "title": "Portal",
+    "intro": "An opt-in interactive route. For now, the terminal stays light, fast, and quiet — atmosphere only.",
+    "shellTitle": "prototype-shell",
+    "shellSubtitle": "client-only · no telemetry",
+    "shellStatus": "STANDBY",
+    "shellSlotStatus": "QUEUED",
+    "shellSlot": {
+      "caseStudies": "case-studies",
+      "gallery": "gallery",
+      "media": "media"
+    },
+    "shellFootnote": "An interactive mode will land alongside real game and gallery content. No heavy WebGL ships here."
   },
   "Common": {
     "comingSoon": "Coming soon",
