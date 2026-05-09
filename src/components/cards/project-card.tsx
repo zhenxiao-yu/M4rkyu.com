@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { BorderBeam } from "@/components/ui/magic/border-beam"
 import { DraftBadge } from "@/components/placeholders/draft-badge"
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image"
 import { Link } from "@/i18n/navigation"
@@ -16,7 +17,19 @@ import type { Project } from "@/content/schemas"
 
 const ease = [0.2, 0.7, 0.2, 1] as const
 
-export function ProjectCard({ project, locale }: { project: Project; locale: Locale }) {
+interface ProjectCardProps {
+  project: Project
+  locale: Locale
+  /**
+   * Wraps the card with a BorderBeam highlight. Use sparingly —
+   * `docs/UI_LIBRARY_STRATEGY.md` §9 forbids more than one beam in
+   * view at once. Currently used on the FIRST featured card on the
+   * homepage only.
+   */
+  highlighted?: boolean
+}
+
+export function ProjectCard({ project, locale, highlighted = false }: ProjectCardProps) {
   const t = useTranslations("Projects")
   const localized = localize(project, locale)
   const cover = project.screenshots[0]
@@ -29,9 +42,10 @@ export function ProjectCard({ project, locale }: { project: Project; locale: Loc
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.22, ease }}
-      className="h-full"
+      className="relative h-full"
     >
-      <Card className="group h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-300 hover:border-ring/50 hover:shadow-lg">
+      {highlighted ? <BorderBeam duration={14} borderRadius={8} /> : null}
+      <Card className="group relative h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-300 hover:border-ring/50 hover:shadow-lg">
         <div className="relative aspect-[16/10] overflow-hidden border-b bg-muted">
           {cover ? (
             <Image
