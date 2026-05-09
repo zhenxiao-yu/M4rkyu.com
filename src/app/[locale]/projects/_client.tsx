@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ProjectCard } from "@/components/cards/project-card";
 import { Badge } from "@/components/ui/badge";
@@ -235,18 +235,10 @@ export function ProjectsClient({
                 {t("draftsCount", { count: drafts.length })}
               </span>
             </span>
-            <span
+            <ChevronDown
               aria-hidden="true"
-              className="font-mono text-xs text-muted-foreground group-open:hidden"
-            >
-              +
-            </span>
-            <span
-              aria-hidden="true"
-              className="hidden font-mono text-xs text-muted-foreground group-open:inline"
-            >
-              −
-            </span>
+              className="size-4 shrink-0 text-muted-foreground transition-transform duration-[var(--motion-fast)] ease-[var(--ease-premium)] group-open:rotate-180"
+            />
           </summary>
           <div className="border-t p-5">
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">

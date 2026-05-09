@@ -28,7 +28,7 @@ export default async function GalleryCollectionPage({
   return (
     <PageShell locale={locale}>
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="collection" title={item.title} description={item.description} />
+        <SectionHeading as="h1" eyebrow="collection" title={item.title} description={item.description} />
         <div className="mt-8 flex flex-wrap gap-2">
           <Badge variant="outline">{item.count} planned frames</Badge>
           <Badge variant="warning">{item.status}</Badge>

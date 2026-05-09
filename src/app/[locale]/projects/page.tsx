@@ -40,6 +40,7 @@ export default async function ProjectsPage({
         <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_22rem] lg:px-8">
           <FadeIn>
             <SectionHeading
+              as="h1"
               eyebrow="work index"
               title={t("title")}
               description={t("intro")}

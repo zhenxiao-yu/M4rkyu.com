@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
@@ -24,8 +24,9 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
       className="group relative grid gap-4 overflow-hidden rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-signal">
-          ★ {t("pinnedEyebrow")}
+        <span className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.24em] text-signal">
+          <Star aria-hidden="true" className="size-3 fill-current" />
+          {t("pinnedEyebrow")}
         </span>
         <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
           {post.category}

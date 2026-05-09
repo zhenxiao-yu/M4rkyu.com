@@ -16,6 +16,7 @@ export default async function ResourcesPage({ params }: { params: Promise<{ loca
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHeading
+            as="h1"
             eyebrow="tool library"
             title="Resources"
             description="A searchable reference-library prototype. Placeholder entries are explicitly marked and can later be indexed with Pagefind."
