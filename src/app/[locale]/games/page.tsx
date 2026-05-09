@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { games } from "@/content/games";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 import { localize } from "@/lib/content/localize";
 
 export async function generateMetadata({
@@ -21,7 +22,7 @@ export async function generateMetadata({
   return {
     title: tNav("games"),
     description: tGame("metaDescription"),
-    alternates: { canonical: `/${locale}/games` },
+    alternates: buildAlternates(locale, "/games"),
   };
 }
 

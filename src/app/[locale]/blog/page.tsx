@@ -6,6 +6,7 @@ import { PinnedPostCard } from "@/components/cards/pinned-post-card";
 import { FadeIn } from "@/components/motion/fade-in";
 import { posts } from "@/content/posts";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 import { BlogTimeline } from "./_client";
 
 export async function generateMetadata({
@@ -18,7 +19,7 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("metaDescription"),
-    alternates: { canonical: `/${locale}/blog` },
+    alternates: buildAlternates(locale, "/blog"),
   };
 }
 

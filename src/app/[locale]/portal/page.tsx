@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Terminal } from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
@@ -8,6 +9,21 @@ import { Particles } from "@/components/ui/magic/particles";
 import { ShineBorder } from "@/components/ui/magic/shine-border";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Portal" });
+  return {
+    title: t("title"),
+    description: t("intro"),
+    alternates: buildAlternates(locale, "/portal"),
+  };
+}
 
 const bootLines = [
   "> boot sequence: deferred",

@@ -17,6 +17,7 @@ import { allProjects, getProject } from "@/content/projects";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
+import { buildAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return allProjects.flatMap((project) => [
@@ -36,7 +37,7 @@ export async function generateMetadata({
   return {
     title: project.seo.title,
     description: project.seo.description,
-    alternates: { canonical: `/${locale}/projects/${slug}` },
+    alternates: buildAlternates(locale, `/projects/${slug}`),
   };
 }
 

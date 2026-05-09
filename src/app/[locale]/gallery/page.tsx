@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { ArchiveCard } from "@/components/cards/archive-card"
 import { PageShell } from "@/components/layout/page-shell"
 import { SectionHeading } from "@/components/sections/section-heading"
@@ -6,7 +7,22 @@ import { FadeIn } from "@/components/motion/fade-in"
 import { Stagger, StaggerItem } from "@/components/motion/stagger"
 import { galleryCollections, galleryItems } from "@/content/gallery"
 import type { Locale } from "@/i18n/routing"
+import { buildAlternates } from "@/lib/seo/alternates"
 import { GalleryGrid } from "./_client"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: "Gallery",
+    description:
+      "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
+    alternates: buildAlternates(locale, "/gallery"),
+  }
+}
 
 export default async function GalleryPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params

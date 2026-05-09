@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,22 @@ import { ContentPendingLabel } from "@/components/placeholders/content-pending-l
 import { services } from "@/content/services";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 import { ContactForm } from "./_contact-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "Contact",
+    description:
+      "Project inquiries and collaboration. Mailto and form fallback now, server-side provider later.",
+    alternates: buildAlternates(locale, "/contact"),
+  };
+}
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;

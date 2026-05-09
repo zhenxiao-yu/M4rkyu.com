@@ -15,6 +15,7 @@ import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { games } from "@/content/games";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
+import { buildAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return games.flatMap((game) => [
@@ -35,7 +36,7 @@ export async function generateMetadata({
   return {
     title: localized.title,
     description: localized.pitch as string,
-    alternates: { canonical: `/${locale}/games/${slug}` },
+    alternates: buildAlternates(locale, `/games/${slug}`),
   };
 }
 

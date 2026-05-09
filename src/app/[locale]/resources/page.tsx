@@ -1,9 +1,25 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { resources } from "@/content/resources";
 import type { Locale } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo/alternates";
 import { ResourcesClient } from "./_client";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "Resources",
+    description:
+      "Tools, frameworks, and references — the small personal stack actually in use.",
+    alternates: buildAlternates(locale, "/resources"),
+  };
+}
 
 export default async function ResourcesPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
