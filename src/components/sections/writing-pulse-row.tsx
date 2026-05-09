@@ -57,7 +57,7 @@ function PulseSlot({
   const eyebrow = t(eyebrowKeyBySlot[slot]);
 
   return (
-    <Card className="group flex h-full flex-col bg-card/80 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50">
+    <Card className="group flex h-full flex-col bg-card/80 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-lg hover:shadow-ring/5">
       <CardHeader className="gap-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">

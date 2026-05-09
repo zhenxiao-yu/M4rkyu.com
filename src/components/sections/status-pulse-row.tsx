@@ -25,10 +25,13 @@ export async function StatusPulseRow({ current, className }: StatusPulseRowProps
       {current.map((entry, index) => (
         <article
           key={`${entry.kind}-${index}`}
-          className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50"
+          className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5"
         >
           <header className="flex items-center gap-2">
-            <span aria-hidden="true" className="size-2 rounded-full bg-signal" />
+            <span aria-hidden="true" className="relative grid size-2 place-items-center">
+              <span className="absolute inset-0 animate-ping rounded-full bg-signal/60 motion-reduce:hidden" />
+              <span className="relative size-2 rounded-full bg-signal" />
+            </span>
             <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
               {t(entry.kind)}
             </span>
