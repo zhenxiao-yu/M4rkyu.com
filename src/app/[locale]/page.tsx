@@ -29,6 +29,7 @@ import { posts } from "@/content/posts";
 import { games } from "@/content/games";
 import { mediaItems } from "@/content/media";
 import { profile } from "@/content/profile";
+import { localize } from "@/lib/content/localize";
 
 export default async function HomePage({
   params,
@@ -39,13 +40,16 @@ export default async function HomePage({
   const t = await getTranslations({ locale, namespace: "Home" });
 
   // Status pulse — real data only. Skips slots when no honest source exists.
+  // Each entry is localized so /zh reads in CJK when the underlying content
+  // has a `translations.zh` slice; falls back to the base fields otherwise.
   const statusEntries: StatusPulseEntry[] = [];
   const shipping = featuredProjects.find((p) => p.contentStatus === "ready");
   if (shipping) {
+    const localizedShipping = localize(shipping, locale);
     statusEntries.push({
       kind: "shipping",
-      label: shipping.title,
-      detail: shipping.shortPitch,
+      label: localizedShipping.title,
+      detail: localizedShipping.shortPitch as string,
       href: `/projects/${shipping.slug}`,
     });
   }
@@ -60,10 +64,11 @@ export default async function HomePage({
   }
   const now = games.find((g) => g.status !== "ready") ?? games[0];
   if (now) {
+    const localizedNow = localize(now, locale);
     statusEntries.push({
       kind: "now",
-      label: now.title,
-      detail: now.pitch,
+      label: localizedNow.title,
+      detail: localizedNow.pitch as string,
       href: `/games/${now.slug}`,
     });
   }

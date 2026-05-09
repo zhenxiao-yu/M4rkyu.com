@@ -8,6 +8,14 @@ import type { Game } from "@/content/schemas";
 
 interface GameDetailHeaderProps {
   game: Game;
+  /**
+   * Localized fields. Pass values from `localize(game, locale)` so the
+   * header reads in the active locale when `game.translations[locale]`
+   * is set; falls back to the base game fields otherwise.
+   */
+  title: string;
+  pitch: string;
+  role: string;
 }
 
 /**
@@ -15,7 +23,12 @@ interface GameDetailHeaderProps {
  * eyebrow row + display title + lede + meta ribbon) but reads
  * game-specific fields: engine, year, role, platforms, build links.
  */
-export async function GameDetailHeader({ game }: GameDetailHeaderProps) {
+export async function GameDetailHeader({
+  game,
+  title,
+  pitch,
+  role,
+}: GameDetailHeaderProps) {
   const t = await getTranslations("CaseStudy");
   const tGame = await getTranslations("Game");
   const tProjects = await getTranslations("Projects");
@@ -41,18 +54,18 @@ export async function GameDetailHeader({ game }: GameDetailHeaderProps) {
         </div>
 
         <h1 className="mt-6 max-w-5xl text-balance font-[family-name:var(--font-display)] text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
-          {game.title}
+          {title}
         </h1>
 
         <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl">
-          {game.pitch}
+          {pitch}
         </p>
 
         <dl className="mt-10 grid gap-6 border-t pt-6 sm:grid-cols-[auto_1fr] sm:gap-x-10">
           <dt className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
             {tProjects("role")}
           </dt>
-          <dd className="text-sm leading-7 text-foreground">{game.role}</dd>
+          <dd className="text-sm leading-7 text-foreground">{role}</dd>
 
           {game.platforms.length > 0 ? (
             <>

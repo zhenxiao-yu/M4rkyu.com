@@ -159,6 +159,10 @@ export const gameSchema = z.object({
   buildLinks: z
     .array(z.object({ label: z.string(), url: z.string().url() }))
     .default([]),
+  // Phase 3.2 — per-locale translation overrides. Mirrors projectSchema.
+  // Same `localize()` helper at src/lib/content/localize.ts merges the
+  // active-locale slice into the base game object.
+  translations: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const mediaItemSchema = z.object({

@@ -14,6 +14,7 @@ import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { games } from "@/content/games";
 import type { Locale } from "@/i18n/routing";
+import { localize } from "@/lib/content/localize";
 
 export function generateStaticParams() {
   return games.flatMap((game) => [
@@ -30,9 +31,10 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const game = games.find((item) => item.slug === slug);
   if (!game) return {};
+  const localized = localize(game, locale);
   return {
-    title: game.title,
-    description: game.pitch,
+    title: localized.title,
+    description: localized.pitch as string,
     alternates: { canonical: `/${locale}/games/${slug}` },
   };
 }
@@ -48,6 +50,7 @@ export default async function GameDetailPage({
 
   const tGame = await getTranslations({ locale, namespace: "Game" });
   const tCase = await getTranslations({ locale, namespace: "CaseStudy" });
+  const localized = localize(game, locale);
 
   // Adjacent navigation in archive order — predictable, no clever sort.
   const gameIndex = games.findIndex((g) => g.slug === game.slug);
@@ -55,24 +58,35 @@ export default async function GameDetailPage({
   const nextGame =
     gameIndex < games.length - 1 ? games[gameIndex + 1] : undefined;
   const prev = prevGame
-    ? {
-        href: `/games/${prevGame.slug}`,
-        title: prevGame.title,
-        pitch: prevGame.pitch,
-      }
+    ? (() => {
+        const localizedPrev = localize(prevGame, locale);
+        return {
+          href: `/games/${prevGame.slug}`,
+          title: localizedPrev.title,
+          pitch: localizedPrev.pitch as string,
+        };
+      })()
     : undefined;
   const next = nextGame
-    ? {
-        href: `/games/${nextGame.slug}`,
-        title: nextGame.title,
-        pitch: nextGame.pitch,
-      }
+    ? (() => {
+        const localizedNext = localize(nextGame, locale);
+        return {
+          href: `/games/${nextGame.slug}`,
+          title: localizedNext.title,
+          pitch: localizedNext.pitch as string,
+        };
+      })()
     : undefined;
 
   return (
     <PageShell locale={locale}>
       <article>
-        <GameDetailHeader game={game} />
+        <GameDetailHeader
+          game={game}
+          title={localized.title}
+          pitch={localized.pitch as string}
+          role={localized.role as string}
+        />
 
         <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <BlurFade>
@@ -117,7 +131,7 @@ export default async function GameDetailPage({
             <BlurFade>
               <PullQuoteBlock
                 eyebrow={tCase("outcomeEyebrow")}
-                quote={game.outcome}
+                quote={(localized.outcome as string | undefined) ?? game.outcome}
               />
             </BlurFade>
           </section>
@@ -130,7 +144,7 @@ export default async function GameDetailPage({
                 eyebrow={tGame("postmortemEyebrow")}
                 title={tGame("postmortemTitle")}
               >
-                <p>{game.postmortem}</p>
+                <p>{(localized.postmortem as string | undefined) ?? game.postmortem}</p>
               </CaseStudySection>
             </BlurFade>
           </section>
