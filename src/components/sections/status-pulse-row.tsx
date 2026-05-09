@@ -25,7 +25,7 @@ export async function StatusPulseRow({ current, className }: StatusPulseRowProps
       {current.map((entry, index) => (
         <article
           key={`${entry.kind}-${index}`}
-          className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50"
+          className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50"
         >
           <header className="flex items-center gap-2">
             <span aria-hidden="true" className="size-2 rounded-full bg-signal" />
@@ -44,7 +44,7 @@ export async function StatusPulseRow({ current, className }: StatusPulseRowProps
                 {t("open")}
                 <ArrowUpRight
                   aria-hidden="true"
-                  className="size-3.5 transition-transform duration-[var(--motion-fast)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  className="size-3.5 transition-transform duration-(--motion-fast) group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </Link>
             </div>

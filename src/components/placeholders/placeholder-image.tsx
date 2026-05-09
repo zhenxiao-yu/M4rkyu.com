@@ -3,7 +3,7 @@ import { ContentPendingLabel } from "./content-pending-label";
 
 export function PlaceholderImage({
   label = "MEDIA TBD",
-  aspect = "aspect-[16/10]",
+  aspect = "aspect-16/10",
   className,
 }: {
   label?: string;

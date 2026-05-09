@@ -24,9 +24,9 @@ function PlaceholderStates() {
       </div>
       <MediaFrame eyebrow="storybook" label="DRAFT">
         <div className="grid gap-4 md:grid-cols-3">
-          <PlaceholderImage label="FRAME 01 TBD" aspect="aspect-[3/4]" />
-          <PlaceholderImage label="FRAME 02 TBD" aspect="aspect-[3/4]" />
-          <PlaceholderImage label="FRAME 03 TBD" aspect="aspect-[3/4]" />
+          <PlaceholderImage label="FRAME 01 TBD" aspect="aspect-3/4" />
+          <PlaceholderImage label="FRAME 02 TBD" aspect="aspect-3/4" />
+          <PlaceholderImage label="FRAME 03 TBD" aspect="aspect-3/4" />
         </div>
       </MediaFrame>
       <div className="grid gap-5 md:grid-cols-3">

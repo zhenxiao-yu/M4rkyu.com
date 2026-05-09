@@ -19,7 +19,7 @@ export function ResourcePreviewCard({ resource }: ResourcePreviewCardProps) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${resource.name} — opens in a new tab`}
-      className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:-translate-y-0.5 hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
@@ -43,7 +43,7 @@ export function ResourcePreviewCard({ resource }: ResourcePreviewCardProps) {
       <div className="mt-auto flex items-end justify-end pt-2">
         <ExternalLink
           aria-hidden="true"
-          className="size-4 text-muted-foreground transition-colors duration-[var(--motion-fast)] group-hover:text-foreground"
+          className="size-4 text-muted-foreground transition-colors duration-(--motion-fast) group-hover:text-foreground"
         />
       </div>
     </a>

@@ -237,7 +237,7 @@ export function ProjectsClient({
             </span>
             <ChevronDown
               aria-hidden="true"
-              className="size-4 shrink-0 text-muted-foreground transition-transform duration-[var(--motion-fast)] ease-[var(--ease-premium)] group-open:rotate-180"
+              className="size-4 shrink-0 text-muted-foreground transition-transform duration-(--motion-fast) ease-(--ease-premium) group-open:rotate-180"
             />
           </summary>
           <div className="border-t p-5">

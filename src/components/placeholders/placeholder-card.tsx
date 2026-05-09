@@ -11,7 +11,7 @@ export function PlaceholderCard({
 }) {
   return (
     <Card className="overflow-hidden bg-card/80">
-      <PlaceholderImage label="THUMBNAIL TBD" aspect="aspect-[4/3]" className="rounded-none border-0 border-b" />
+      <PlaceholderImage label="THUMBNAIL TBD" aspect="aspect-4/3" className="rounded-none border-0 border-b" />
       <CardHeader>
         <DraftBadge label="Placeholder" />
         <CardTitle>{title}</CardTitle>

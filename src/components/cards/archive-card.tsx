@@ -32,7 +32,7 @@ export function ArchiveCard({
     <Card className="group h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 hover:border-ring hover:shadow-md">
       <PlaceholderImage
         label={mediaLabel}
-        aspect="aspect-[4/3]"
+        aspect="aspect-4/3"
         className="rounded-none border-0 border-b"
       />
       <CardHeader>

@@ -6,7 +6,7 @@ function ProjectCardStory() {
   const project = allProjects[0];
   return (
     <Card className="max-w-sm overflow-hidden">
-      <div className="aspect-[16/10] bg-cyber-grid bg-muted" />
+      <div className="aspect-16/10 bg-cyber-grid bg-muted" />
       <CardHeader>
         <CardTitle>{project.title}</CardTitle>
       </CardHeader>

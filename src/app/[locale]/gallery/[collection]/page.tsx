@@ -39,7 +39,7 @@ export default async function GalleryCollectionPage({
             <Card key={entry.slug} className="overflow-hidden bg-card/80">
               <PlaceholderImage
                 label={index % 2 === 0 ? "COLLECTION IMAGE TBD" : "PROCESS FRAME TBD"}
-                aspect="aspect-[4/5]"
+                aspect="aspect-4/5"
                 className="rounded-none border-0 border-b"
               />
               <CardHeader>
@@ -58,7 +58,7 @@ export default async function GalleryCollectionPage({
             <PlaceholderImage
               key={index}
               label="MEDIA TBD"
-              aspect="aspect-[4/5]"
+              aspect="aspect-4/5"
               className="rounded-lg"
             />
           ))}

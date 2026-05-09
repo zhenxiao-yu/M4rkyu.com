@@ -54,7 +54,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
               // so focus management doesn't fight.
               window.setTimeout(() => setPaletteOpen(true), 0);
             }}
-            className="mt-6 inline-flex h-10 w-full items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-sm text-muted-foreground transition-colors duration-[var(--motion-fast)] ease-[var(--ease-premium)] hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="mt-6 inline-flex h-10 w-full items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-sm text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label={tPalette("title")}
           >
             <Search aria-hidden="true" className="size-4" />
