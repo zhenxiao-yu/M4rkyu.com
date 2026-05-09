@@ -207,6 +207,10 @@ export function ProjectsClient({
 
       {production.length > 0 ? (
         <Stagger
+          // Re-key on chip / year changes so the cards restagger smoothly.
+          // Search query is intentionally excluded — keystrokes would
+          // otherwise re-mount the grid mid-typing and steal focus state.
+          key={`stagger-${activeCategory ?? "all"}-${activeYear}`}
           className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
           delay={0.05}
         >
