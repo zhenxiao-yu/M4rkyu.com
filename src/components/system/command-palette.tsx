@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import {
   Briefcase,
   Camera,
-  CircleDot,
   FileText,
   Gamepad2,
   Image as ImageIcon,
@@ -60,7 +59,6 @@ const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
 const THEMES = [
   { value: "light", icon: Sun, key: "themeLight" },
   { value: "dark", icon: Moon, key: "themeDark" },
-  { value: "monochrome", icon: CircleDot, key: "themeMono" },
 ] as const;
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {

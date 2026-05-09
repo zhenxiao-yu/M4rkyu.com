@@ -19,9 +19,9 @@ export function NavLink({ href, locale, children }: NavLinkProps) {
       href={href}
       locale={locale}
       className={cn(
-        "relative transition-colors duration-[180ms] hover:text-foreground",
+        "relative transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm",
         isActive
-          ? "text-foreground after:absolute after:-bottom-0.5 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-foreground after:content-['']"
+          ? "text-foreground after:absolute after:-bottom-1 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-foreground after:content-['']"
           : "text-muted-foreground",
       )}
     >
