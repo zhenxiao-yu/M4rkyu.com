@@ -1,11 +1,19 @@
 ---
 title: M4rkyu.com — UI Library Strategy
-status: planning
+status: living
 audience: implementation agents (Claude, Codex), reviewers
-last_updated: 2026-05-07
+last_updated: 2026-05-10
 ---
 
 # UI Library Strategy
+
+> **Status as of 2026-05-10**: shipped Magic UI primitives (copy-in,
+> tokenized): `BlurFade`, `AnimatedGridPattern`, `BentoGrid`,
+> `BorderBeam`, `PointerSpotlight`, `ShineBorder`, `Particles`. All
+> live under `src/components/ui/magic/`. Aceternity → folded into
+> `PointerSpotlight` (Phase 4.1). One Magic-UI primitive per
+> viewport rule held — verify before adding more. Storybook covers
+> every shipped primitive.
 
 This document defines **which UI sources** the redesign is allowed to draw
 from, **what each one is for**, and **how to keep the site from looking like

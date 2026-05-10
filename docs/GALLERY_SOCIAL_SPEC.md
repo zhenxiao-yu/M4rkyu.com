@@ -1,11 +1,19 @@
 ---
 title: M4rkyu.com — Gallery Social Spec
-status: planning
+status: living
 audience: implementation agents (Claude, Codex), reviewers
-last_updated: 2026-05-07
+last_updated: 2026-05-10
 ---
 
 # Gallery Social Spec
+
+> **Status as of 2026-05-10**: visitor-local social MVP shipped
+> (Phase 1) — likes, saves, share via `src/lib/social/*`. Backed by
+> `localStorage` with a `useSyncExternalStore` channel; the lib
+> boundary is swap-ready for KV (Sprint 6.A) when the user provides
+> Upstash / Vercel KV secrets. Saved frames page lives at
+> `/<locale>/gallery/saved` and is `noindex` per Phase 5.1. UI:
+> Like / Save / Share affordances ship on every gallery frame.
 
 The gallery is the most public-facing surface on the site — the page most
 likely to get DM'd, reposted, and bookmarked. This document defines its

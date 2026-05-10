@@ -1,13 +1,21 @@
 ---
 title: M4rkyu.com — Redesign Direction
-status: planning
+status: living
 audience: design + engineering agents (Claude, Codex, human collaborators)
-last_updated: 2026-05-07
+last_updated: 2026-05-10
 ---
 
 # Redesign Direction
 
-This is the creative brief for the next iteration of **m4rkyu.com**. It is
+> **Status as of 2026-05-10**: Sprints 1–5 shipped (24 PRs to
+> `main`, #12–#35; see `git log --oneline`). Brand vocabulary, atmospheric
+> stack, two-theme system, Cmd-K palette, sitemap + per-route OG,
+> and PR CI are all live. This file remains the design north star —
+> if a section conflicts with what shipped, the implementation wins
+> and this file should be edited in a follow-up. See
+> `AI_WORKFLOW.md` for cadence + conventions.
+
+This is the creative brief for the **2027 m4rkyu.com**. It is
 opinionated on purpose. Future agents should treat the calls in this file as
 the first draft of design intent — not a menu of options to second-guess.
 
