@@ -17,9 +17,16 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
   return <div className={cn("flex flex-col gap-1.5 p-5", className)} {...props} />;
 }
 
-export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+type CardTitleTag = "h2" | "h3" | "h4";
+type CardTitleProps = React.HTMLAttributes<HTMLHeadingElement> & {
+  /** Heading level. Defaults to `h3`; promote to `h2` when the card sits
+   * directly under the page H1 so the document outline stays sequential. */
+  as?: CardTitleTag;
+};
+
+export function CardTitle({ className, as: Tag = "h3", ...props }: CardTitleProps) {
   return (
-    <h3
+    <Tag
       className={cn("text-lg font-semibold leading-none tracking-normal", className)}
       {...props}
     />

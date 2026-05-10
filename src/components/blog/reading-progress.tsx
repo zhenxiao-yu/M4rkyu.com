@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 
 /**
  * 2px-tall ring-color bar fixed under the sticky site header that
@@ -10,9 +11,18 @@ import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
  * the bar is purely ornamentation; reduced-motion users lose
  * nothing functional. The spring smooths the scroll-driven motion
  * so the bar glides instead of jittering on each frame.
+ *
+ * The reduced-motion check is intentionally done with `useState` +
+ * `useEffect` rather than `useReducedMotion()` from `motion/react`.
+ * That hook reads a module-scope `matchMedia` listener that is
+ * already populated on the client at first render, so its initial
+ * value differs from the SSR `null` and triggers a React #418
+ * hydration mismatch on the post route. Starting from a fixed
+ * `false` and resolving in an effect keeps the SSR HTML and the
+ * first client render in lockstep.
  */
 export function ReadingProgress() {
-  const reduceMotion = useReducedMotion();
+  const [enabled, setEnabled] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 110,
@@ -20,11 +30,15 @@ export function ReadingProgress() {
     mass: 0.4,
   });
 
-  // `useReducedMotion()` is tri-state — `null` until the media
-  // query resolves, then `true | false`. Treat anything other than
-  // an explicit `false` as "reduced" so the bar doesn't flash for
-  // one frame then unmount on first paint.
-  if (reduceMotion !== false) return null;
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setEnabled(!mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  if (!enabled) return null;
 
   return (
     <motion.div

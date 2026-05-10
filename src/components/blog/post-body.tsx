@@ -222,11 +222,21 @@ const components = {
   ),
   img: ({ src, alt, className }: ComponentPropsWithoutRef<"img">) => {
     if (typeof src !== "string") return null;
+    // dev.to's MDX template seeds images with placeholder alts like
+    // "Image description". Surfacing those as visible captions duplicates
+    // the alt for AT users (axe `image-redundant-alt`) without adding
+    // information, so we hide the caption when the alt is empty or a
+    // known placeholder phrase. Curated captions still render.
+    const trimmed = alt?.trim() ?? "";
+    const isPlaceholderAlt = /^(image( description)?|alt( text)?|cover)$/i.test(
+      trimmed,
+    );
+    const showCaption = trimmed.length > 0 && !isPlaceholderAlt;
     return (
       <span className="mt-6 block">
         <Image
           src={src}
-          alt={alt ?? ""}
+          alt={trimmed}
           width={1280}
           height={720}
           sizes="(min-width: 1024px) 800px, 100vw"
@@ -235,9 +245,9 @@ const components = {
             className,
           )}
         />
-        {alt ? (
+        {showCaption ? (
           <span className="mt-2 block text-center font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
-            {alt}
+            {trimmed}
           </span>
         ) : null}
       </span>
