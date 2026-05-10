@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import {
+  BookOpen,
   Briefcase,
   Camera,
   FileText,
@@ -39,9 +40,22 @@ import type { Locale } from "@/i18n/routing";
 import { galleryItems } from "@/content/gallery";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
+/**
+ * Slim post shape the palette indexes — keeps the prop payload
+ * dependency-free and avoids leaking the full `Post` schema down
+ * from the server boundary.
+ */
+export interface PalettePost {
+  slug: string;
+  title: string;
+  category: string;
+  tags: string[];
+}
+
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  posts?: PalettePost[];
 }
 
 const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
@@ -61,9 +75,14 @@ const THEMES = [
   { value: "dark", icon: Moon, key: "themeDark" },
 ] as const;
 
-export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
+export function CommandPalette({
+  open,
+  onOpenChange,
+  posts,
+}: CommandPaletteProps) {
   const tNav = useTranslations("Navigation");
   const tPalette = useTranslations("CommandPalette");
+  const tBlog = useTranslations("Blog");
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale() as Locale;
@@ -75,6 +94,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         .filter((item) => item.status === "ready")
         .slice(0, 6),
     [],
+  );
+
+  const writingItems = useMemo(
+    () => (posts ?? []).slice(0, 20),
+    [posts],
   );
 
   function go(href: string) {
@@ -150,6 +174,30 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       <span className="truncate">{item.title}</span>
                       <span className="ml-auto truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
                         {item.collection}
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
+
+            {writingItems.length > 0 ? (
+              <>
+                <CommandSeparator />
+                <CommandGroup heading={tBlog("paletteHeading")}>
+                  {writingItems.map((post) => (
+                    <CommandItem
+                      key={post.slug}
+                      value={`${post.title} ${post.category} ${post.tags.join(" ")}`}
+                      onSelect={() => go(`/blog/${post.slug}`)}
+                    >
+                      <BookOpen
+                        aria-hidden="true"
+                        className="size-4 text-muted-foreground"
+                      />
+                      <span className="truncate">{post.title}</span>
+                      <span className="ml-auto truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                        {post.category}
                       </span>
                     </CommandItem>
                   ))}
