@@ -47,3 +47,7 @@ export const games = [
     ],
   },
 ].map((game) => gameSchema.parse(game));
+
+export function getGame(slug: string) {
+  return games.find((game) => game.slug === slug);
+}
