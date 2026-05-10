@@ -4,6 +4,7 @@ import { games } from "@/content/games";
 import { galleryCollections } from "@/content/gallery";
 import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
+import { getAllPostSlugs } from "@/lib/blog/get-post";
 
 // Stable timestamp computed at build time. Real `lastModified` per
 // entry will land when content data carries explicit dates;
@@ -47,7 +48,7 @@ function entry(
   );
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries = STATIC_PATHS.flatMap(({ path, changeFrequency, priority }) =>
     entry(path, changeFrequency, priority),
   );
@@ -68,10 +69,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entry(`/gallery/${collection.slug}`, "monthly", 0.6),
     );
 
+  // Phase 8.2 — dev.to-syndicated post slugs land in the sitemap
+  // so the in-site /blog/[slug] route is discoverable. The page
+  // itself sets `alternates.canonical` to the dev.to URL so search
+  // engines treat dev.to as the source of truth.
+  const blogSlugs = await getAllPostSlugs();
+  const blogEntries = blogSlugs.flatMap((slug) =>
+    entry(`/blog/${slug}`, "weekly", 0.6),
+  );
+
   return [
     ...staticEntries,
     ...projectEntries,
     ...gameEntries,
     ...galleryEntries,
+    ...blogEntries,
   ];
 }

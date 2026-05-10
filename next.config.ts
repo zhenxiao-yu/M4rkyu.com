@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {
     formats: ["image/avif", "image/webp"],
+    // Dev.to-syndicated post bodies (Phase 8.2) reference images
+    // hosted on Forem's CDN and the underlying S3 bucket. Any new
+    // upstream image host added here must be a known, trusted CDN.
+    remotePatterns: [
+      { protocol: "https", hostname: "media.dev.to" },
+      { protocol: "https", hostname: "media2.dev.to" },
+      { protocol: "https", hostname: "media3.dev.to" },
+      { protocol: "https", hostname: "dev-to-uploads.s3.amazonaws.com" },
+    ],
   },
   experimental: {
     cpus: 1,

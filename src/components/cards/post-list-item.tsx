@@ -15,10 +15,10 @@ const monoMeta =
   "font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground";
 
 /**
- * Wraps the row in either a next-intl Link (in-site /blog/[slug])
- * or a plain external `<a>` (canonicalUrl on dev.to). Phase 8.1
- * routes everything to canonicalUrl; Phase 8.2 will flip to the
- * in-site detail when /blog/[slug] lands.
+ * Always routes to the in-site `/blog/[slug]` detail page (Phase
+ * 8.2). Syndicated posts now render in-site with a "View on dev.to"
+ * affordance inside the post header, so we no longer link out from
+ * the timeline.
  */
 function RowLink({
   post,
@@ -29,18 +29,6 @@ function RowLink({
   className: string;
   children: ReactNode;
 }) {
-  if (post.canonicalUrl) {
-    return (
-      <a
-        href={post.canonicalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
-      >
-        {children}
-      </a>
-    );
-  }
   return (
     <Link href={`/blog/${post.slug}`} className={className}>
       {children}

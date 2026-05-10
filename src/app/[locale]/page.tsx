@@ -73,10 +73,7 @@ export default async function HomePage({
       kind: "writing",
       label: writing.title,
       detail: writing.excerpt,
-      // Prefer the dev.to canonical URL when set so the homepage
-      // never links into an unbuilt route. Phase 8.2 will add the
-      // in-site /blog/[slug] and this can flip back to a local path.
-      href: writing.canonicalUrl ?? `/blog/${writing.slug}`,
+      href: `/blog/${writing.slug}`,
     });
   }
   const now = games.find((g) => g.status !== "ready") ?? games[0];
