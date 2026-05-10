@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CommandPalette } from "./command-palette";
+import { CommandPalette, type PalettePost } from "./command-palette";
 
 interface CommandPaletteContextValue {
   open: boolean;
@@ -31,7 +31,15 @@ export function useCommandPalette(): CommandPaletteContextValue {
   return ctx;
 }
 
-export function CommandPaletteProvider({ children }: { children: ReactNode }) {
+interface CommandPaletteProviderProps {
+  children: ReactNode;
+  posts?: PalettePost[];
+}
+
+export function CommandPaletteProvider({
+  children,
+  posts,
+}: CommandPaletteProviderProps) {
   const [open, setOpen] = useState(false);
 
   const toggle = useCallback(() => setOpen((value) => !value), []);
@@ -59,7 +67,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   return (
     <CommandPaletteContext.Provider value={value}>
       {children}
-      <CommandPalette open={open} onOpenChange={setOpen} />
+      <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
     </CommandPaletteContext.Provider>
   );
 }
