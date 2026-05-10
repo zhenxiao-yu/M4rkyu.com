@@ -110,6 +110,20 @@
   --motion-slow: 500ms;
   --motion-cinematic: 800ms;
   --ease-premium: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Cyber-pixel foundation tokens — phase 1 of
+   * docs/UNIFIED_VISUAL_DIRECTION.md §5.2. Theme-aware values reference
+   * --foreground / --ring / --card so they update automatically under
+   * [data-theme="dark"] without being duplicated below. */
+  --pixel-border: 1px;
+  --pixel-grid-unit: 4px;
+  --hud-muted: color-mix(in srgb, var(--foreground) 60%, transparent);
+  --terminal-glow: color-mix(in srgb, var(--ring) 28%, transparent);
+  --mission-surface: var(--card);
+  --scanline-opacity: 4%;
+  --noise-opacity: 12%;
+  --panel-depth: 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
+  --game-accent: var(--ring);
 }
 
 @theme inline {
@@ -134,6 +148,22 @@
   --color-signal: var(--signal);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  /* Pixel layer aliases — expose the phase-1 cyber-pixel tokens as
+   * Tailwind utilities (bg-mission-surface, text-hud-muted, font-pixel,
+   * ease-pixel-step, …). The underlying values live in :root above. */
+  --color-hud-muted: var(--hud-muted);
+  --color-terminal-glow: var(--terminal-glow);
+  --color-mission-surface: var(--mission-surface);
+  --color-game-accent: var(--game-accent);
+  /* `--font-pixel` is also set on <html> by next/font/google in
+   * src/app/layout.tsx; the className-scoped value wins on every real
+   * page, while this @theme inline definition keeps the `font-pixel`
+   * Tailwind utility resolvable in isolated contexts (Storybook,
+   * unit-test snapshots) where the next/font className may not apply.
+   * Both values name VT323 — next/font registers @font-face under the
+   * original Google family name, so `"VT323"` aliases the same file. */
+  --font-pixel: "VT323", "VT323 Fallback", ui-monospace, monospace;
+  --ease-pixel-step: steps(6, end);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -165,6 +195,23 @@
   --ring: #67e8f9;
   --surface-ink: #f2f0ea;
   --surface-paper: #070707;
+}
+
+/* CJK typography guard — phase 1 of docs/UNIFIED_VISUAL_DIRECTION.md §6.1.
+ * VT323 is English-only. Within any Chinese-language scope, redefine
+ * --font-pixel to the display/sans stack so consumers that opt into the
+ * pixel font transparently fall through to the system Chinese fonts
+ * (Source Han / PingFang / Microsoft YaHei). Both selectors are kept so
+ * the guard fires whether the locale is signalled via :lang(zh) (the
+ * primary form, used by next-intl-aware routes once lang={locale} is
+ * propagated to the DOM in a follow-up PR) or a literal `lang="zh"` /
+ * `lang="zh-…"` attribute set on any wrapper. */
+:lang(zh),
+[lang^="zh"] {
+  /* Single var() — `--font-display` already chains through Syne → Geist
+   * → system CJK; no need to re-append `--font-sans` and create a
+   * doubly-nested family list. */
+  --font-pixel: var(--font-display);
 }
 
 * {

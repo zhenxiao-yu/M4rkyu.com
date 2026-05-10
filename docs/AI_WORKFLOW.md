@@ -65,6 +65,29 @@ These are hard-won, not stylistic.
   via `useReducedMotion()` from `motion/react`. Touch surfaces
   short-circuit pointer-tracking effects via
   `matchMedia("(pointer: fine)")`.
+- **Pixel typography is opt-in and English-only.**
+  `var(--font-pixel)` (VT323, wired in `src/app/layout.tsx`) is
+  allowed for HUD chips, CTA glyphs, indices, status badges, and
+  command-console accents — never for body paragraphs, captions,
+  or any element that may render Chinese. The `:lang(zh)` /
+  `[lang^="zh"]` guard in `src/app/globals.css` rewrites
+  `--font-pixel` to the display/sans stack so CJK content keeps
+  falling through to the system Chinese fonts. See
+  `docs/UNIFIED_VISUAL_DIRECTION.md` §6 for the full surface map.
+- **Cyber-pixel UI work consumes the semantic tokens from
+  `globals.css`.** Available: `--font-pixel`, `--pixel-border`,
+  `--pixel-grid-unit`, `--hud-muted`, `--terminal-glow`,
+  `--mission-surface`, `--scanline-opacity`, `--noise-opacity`,
+  `--panel-depth`, `--game-accent`, `--ease-pixel-step`. Reach for
+  these (or their Tailwind utility aliases — `font-pixel`,
+  `bg-mission-surface`, `text-hud-muted`, `ease-pixel-step`, …)
+  before adding any new hex literal, raw color, or arbitrary
+  easing.
+- **The accent stays singular.** `--ring` (with `--game-accent`
+  as its semantic alias) is the only brand accent on production
+  routes. Do not introduce a second hue for "game-feel"
+  surfaces — retint through `--game-accent` if the playful slice
+  ever needs to drift away from `--ring`.
 
 ---
 
