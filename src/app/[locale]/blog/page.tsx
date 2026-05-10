@@ -52,7 +52,7 @@ export default async function BlogPage({
           <FadeIn direction="left" delay={0.1}>
             <Card className="bg-background/70 backdrop-blur">
               <CardHeader>
-                <CardTitle>{t("archiveStatus")}</CardTitle>
+                <CardTitle as="h2">{t("archiveStatus")}</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 text-sm text-muted-foreground">
                 <p>
@@ -65,7 +65,6 @@ export default async function BlogPage({
                     href={`https://dev.to/${DEVTO_USERNAME}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`dev.to profile, @${DEVTO_USERNAME}`}
                     className="text-foreground underline-offset-4 hover:underline"
                   >
                     dev.to / @{DEVTO_USERNAME}
