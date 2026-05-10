@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { HeroSection } from "@/components/sections/hero-section";
+import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { IntroLoader } from "@/components/system/intro-loader";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ProjectCard } from "@/components/cards/project-card";
@@ -100,6 +101,9 @@ export default async function HomePage({
     <PageShell locale={locale}>
       <IntroLoader />
       <HeroSection locale={locale} />
+
+      {/* Numbered capability spine — five overlapping systems (§3.B). */}
+      <CapabilitiesSection locale={locale} />
 
       {/* Status pulse — what's shipping / writing / next */}
       {statusEntries.length > 0 ? (
