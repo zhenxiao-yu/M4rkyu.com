@@ -7,6 +7,7 @@ import { FadeIn } from "@/components/motion/fade-in"
 import { allProjects } from "@/content/projects"
 import type { Locale } from "@/i18n/routing"
 import { buildAlternates } from "@/lib/seo/alternates"
+import { summarize } from "@/lib/content/summary"
 import { ProjectsClient } from "./_client"
 
 export async function generateMetadata({
@@ -30,8 +31,9 @@ export default async function ProjectsPage({
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "Projects" })
-  const readyCount = allProjects.filter((p) => p.contentStatus === "ready").length
-  const draftCount = allProjects.length - readyCount
+  const summary = summarize(allProjects, (p) => p.contentStatus)
+  const readyCount = summary.ready
+  const draftCount = summary.total - summary.ready
 
   return (
     <PageShell locale={locale}>

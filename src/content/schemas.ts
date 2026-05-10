@@ -1,21 +1,26 @@
 import { z } from "zod";
 
+// `min(1)` on required strings so empty data fails the Zod parse at
+// build time rather than silently rendering a blank line. Optional
+// fields stay loose; `contentStatusSchema` already gates whether a
+// page is real or placeholder.
+
 export const seoSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().min(1),
+  description: z.string().min(1),
 });
 
 export const imageSchema = z.object({
-  src: z.string(),
-  alt: z.string(),
+  src: z.string().min(1),
+  alt: z.string().min(1),
 });
 
 export const contentStatusSchema = z.enum(["ready", "draft", "placeholder", "coming-soon"]);
 
 export const projectSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  shortPitch: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  shortPitch: z.string().min(1),
   category: z.enum([
     "web-app",
     "game-dev",
@@ -24,21 +29,25 @@ export const projectSchema = z.object({
     "experiment",
     "maintenance",
   ]),
-  year: z.string(),
+  year: z.string().min(1),
   status: z.enum(["ready", "development", "maintenance", "archived", "draft"]),
   contentStatus: contentStatusSchema.default("draft"),
   featured: z.boolean(),
-  problem: z.string(),
-  solution: z.string(),
-  role: z.string(),
+  problem: z.string().min(1),
+  solution: z.string().min(1),
+  role: z.string().min(1),
   stack: z.array(z.string()),
   features: z.array(z.string()),
   architectureNotes: z.array(z.string()),
-  challenges: z.array(z.string()).default(["TBD: replace with final challenge notes."]),
+  // No "TBD…" default — an empty array reads as "no challenges yet"
+  // and the page section collapses cleanly. Inventing placeholder
+  // copy here would inject fake content into every project that
+  // forgot to author this field.
+  challenges: z.array(z.string()).default([]),
   screenshots: z.array(imageSchema).default([]),
   liveUrl: z.string().url().optional(),
   githubUrl: z.string().url().optional(),
-  outcome: z.string(),
+  outcome: z.string().min(1),
   lessonsLearned: z.array(z.string()),
   nextSteps: z.array(z.string()),
   seo: seoSchema,
@@ -71,9 +80,9 @@ export const galleryAspectSchema = z.enum([
 ]);
 
 export const galleryCollectionSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  description: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  description: z.string().min(1),
   cover: imageSchema.extend({
     focal: z.enum(["top", "center", "bottom"]).default("center"),
   }),
@@ -87,12 +96,12 @@ export const galleryCollectionSchema = z.object({
 });
 
 export const galleryItemSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  collection: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  collection: z.string().min(1),
   type: z.enum(["image", "contact-sheet", "process"]),
   status: contentStatusSchema,
-  caption: z.string(),
+  caption: z.string().min(1),
   src: imageSchema.optional(),
   aspect: galleryAspectSchema.default("4/5"),
   capturedAt: z.string().optional(),
@@ -105,24 +114,24 @@ export const galleryItemSchema = z.object({
 });
 
 export const resourceSchema = z.object({
-  name: z.string(),
-  slug: z.string(),
-  category: z.string(),
-  description: z.string(),
-  why: z.string(),
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  category: z.string().min(1),
+  description: z.string().min(1),
+  why: z.string().min(1),
   link: z.string().url(),
-  pricing: z.string(),
+  pricing: z.string().min(1),
   tags: z.array(z.string()),
   status: contentStatusSchema.default("placeholder"),
 });
 
 export const postSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  category: z.string(),
-  excerpt: z.string(),
-  date: z.string(),
-  readingTime: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  category: z.string().min(1),
+  excerpt: z.string().min(1),
+  date: z.string().min(1),
+  readingTime: z.string().min(1),
   tags: z.array(z.string()),
   status: contentStatusSchema,
   // Phase 1.5 additions
@@ -141,13 +150,13 @@ export const postsArraySchema = z.array(postSchema).superRefine((arr, ctx) => {
 });
 
 export const gameSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  engine: z.string(),
-  year: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  engine: z.string().min(1),
+  year: z.string().min(1),
   status: contentStatusSchema,
-  pitch: z.string(),
-  role: z.string(),
+  pitch: z.string().min(1),
+  role: z.string().min(1),
   notes: z.array(z.string()),
   // Phase 1.3 additions — all optional / defaulted so existing content validates.
   cover: imageSchema.optional(),
@@ -166,18 +175,18 @@ export const gameSchema = z.object({
 });
 
 export const mediaItemSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
   format: z.enum(["video", "reel", "process", "poster"]),
   status: contentStatusSchema,
-  description: z.string(),
+  description: z.string().min(1),
   duration: z.string().optional(),
 });
 
 export const serviceSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  description: z.string(),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  description: z.string().min(1),
   fit: z.array(z.string()),
   status: contentStatusSchema,
 });
