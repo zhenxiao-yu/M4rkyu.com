@@ -182,7 +182,15 @@
     "metaDescription": "Writing and devlog from ZhenXiao Mark Yu — engineering notes, design process, and game development.",
     "tagAll": "All",
     "pinnedEyebrow": "Pinned",
-    "noMatches": "No posts match this tag."
+    "noMatches": "No posts match this tag.",
+    "archiveStatus": "Archive status",
+    "postsPublished": "posts published",
+    "syndicatedFrom": "syndicated from",
+    "syndicatedNote": "Posts are mirrored in-site daily. Reactions and comments live on dev.to.",
+    "relatedHeading": "Related reading",
+    "originallyPublished": "originally published",
+    "originallyPublishedNote": "This post first ran on dev.to. Comments and reactions live there.",
+    "continueOnDevto": "Continue on dev.to"
   },
   "About": {
     "title": "About Mark",

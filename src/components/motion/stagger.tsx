@@ -27,20 +27,35 @@ const item: Variants = {
   },
 }
 
+type StaggerTag = "div" | "ol" | "ul" | "section"
+
 interface StaggerProps {
   children: React.ReactNode
   delay?: number
   className?: string
   once?: boolean
+  /**
+   * Render tag for the staggered container. Defaults to `"div"`.
+   * Use `"ol"` / `"ul"` when the staggered children are list rows
+   * so the resulting DOM stays semantically valid.
+   */
+  as?: StaggerTag
 }
 
-export function Stagger({ children, delay = 0, className, once = true }: StaggerProps) {
-  const ref = useRef<HTMLDivElement>(null)
+export function Stagger({
+  children,
+  delay = 0,
+  className,
+  once = true,
+  as = "div",
+}: StaggerProps) {
+  const ref = useRef<HTMLElement | null>(null)
   const isInView = useInView(ref, { once, margin: "-80px 0px" })
+  const Comp = motion[as] as typeof motion.div
 
   return (
-    <motion.div
-      ref={ref}
+    <Comp
+      ref={ref as React.Ref<HTMLDivElement>}
       variants={container}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
@@ -48,14 +63,25 @@ export function Stagger({ children, delay = 0, className, once = true }: Stagger
       className={cn(className)}
     >
       {children}
-    </motion.div>
+    </Comp>
   )
 }
 
-export function StaggerItem({ children, className }: { children: React.ReactNode; className?: string }) {
+type StaggerItemTag = "div" | "li"
+
+export function StaggerItem({
+  children,
+  className,
+  as = "div",
+}: {
+  children: React.ReactNode
+  className?: string
+  as?: StaggerItemTag
+}) {
+  const Comp = motion[as] as typeof motion.div
   return (
-    <motion.div variants={item} className={cn(className)}>
+    <Comp variants={item} className={cn(className)}>
       {children}
-    </motion.div>
+    </Comp>
   )
 }

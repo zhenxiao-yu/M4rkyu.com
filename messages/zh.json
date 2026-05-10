@@ -182,7 +182,15 @@
     "metaDescription": "于震潇的写作与开发日志：工程随笔、设计过程与游戏开发。",
     "tagAll": "全部",
     "pinnedEyebrow": "置顶",
-    "noMatches": "没有匹配此标签的文章。"
+    "noMatches": "没有匹配此标签的文章。",
+    "archiveStatus": "档案状态",
+    "postsPublished": "篇已发布",
+    "syndicatedFrom": "同步自",
+    "syndicatedNote": "文章每日同步至此。点赞与评论保留在 dev.to。",
+    "relatedHeading": "相关阅读",
+    "originallyPublished": "原文发布",
+    "originallyPublishedNote": "本文首发于 dev.to，评论与点赞保留在原站。",
+    "continueOnDevto": "在 dev.to 继续阅读"
   },
   "About": {
     "title": "关于 Mark",

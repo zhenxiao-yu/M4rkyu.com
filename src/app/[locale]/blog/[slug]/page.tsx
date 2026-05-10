@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PostHeader } from "@/components/blog/post-header";
 import { PostBody } from "@/components/blog/post-body";
+import { RelatedPosts } from "@/components/blog/related-posts";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
+import { BlurFade } from "@/components/ui/magic/blur-fade";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getPostBySlug, getAllPostSlugs } from "@/lib/blog/get-post";
@@ -83,6 +86,7 @@ export default async function BlogPostPage({
   );
   const next = adjacentEntry(idx > 0 ? articles[idx - 1] : undefined);
 
+  const t = await getTranslations({ locale, namespace: "Blog" });
   const { meta, full } = resolved;
 
   return (
@@ -105,31 +109,48 @@ export default async function BlogPostPage({
           username={DEVTO_USERNAME}
         />
 
-        <section className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-          <PostBody markdown={full.body_markdown} />
+        <section className="mx-auto w-full max-w-3xl bg-muted/10 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          <BlurFade delay={0.05}>
+            <PostBody markdown={full.body_markdown} />
+          </BlurFade>
         </section>
 
-        <section className="mx-auto w-full max-w-3xl border-t px-4 py-10 sm:px-6 lg:px-8">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-            originally published
-          </p>
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-muted-foreground">
-              This post first ran on dev.to. Comments and reactions live there.
+        {/* Cascade order matches DOM order so the reveal reads
+         * top-to-bottom: body 0.05 → related 0.10 → originally 0.12
+         * → footer 0.15. */}
+        <BlurFade delay={0.1}>
+          <RelatedPosts
+            currentSlug={meta.slug}
+            currentTags={meta.tag_list}
+            articles={articles}
+          />
+        </BlurFade>
+
+        <BlurFade delay={0.12}>
+          <section className="mx-auto w-full max-w-3xl border-t px-4 py-10 sm:px-6 lg:px-8">
+            <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
+              {t("originallyPublished")}
             </p>
-            <a
-              href={meta.canonical_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
-            >
-              <span>Continue on dev.to</span>
-              <ArrowUpRight aria-hidden="true" className="size-3.5" />
-            </a>
-          </div>
-        </section>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-muted-foreground">
+                {t("originallyPublishedNote")}
+              </p>
+              <a
+                href={meta.canonical_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
+              >
+                <span>{t("continueOnDevto")}</span>
+                <ArrowUpRight aria-hidden="true" className="size-3.5" />
+              </a>
+            </div>
+          </section>
+        </BlurFade>
 
-        <CaseStudyFooter prev={prev} next={next} archiveHref="/blog" />
+        <BlurFade delay={0.15}>
+          <CaseStudyFooter prev={prev} next={next} archiveHref="/blog" />
+        </BlurFade>
       </article>
     </PageShell>
   );
