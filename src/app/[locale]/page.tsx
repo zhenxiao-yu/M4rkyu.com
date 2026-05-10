@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { HeroSection } from "@/components/sections/hero-section";
+import { IntroLoader } from "@/components/system/intro-loader";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ProjectCard } from "@/components/cards/project-card";
 import { ArchiveCard } from "@/components/cards/archive-card";
@@ -97,6 +98,7 @@ export default async function HomePage({
 
   return (
     <PageShell locale={locale}>
+      <IntroLoader />
       <HeroSection locale={locale} />
 
       {/* Status pulse — what's shipping / writing / next */}
