@@ -2,7 +2,6 @@ import { ArrowUpRight, Heart, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 
 interface PostHeaderProps {
@@ -154,19 +153,21 @@ export function PostHeader({
         </div>
 
         {cover ? (
-          <BlurFade delay={0.05}>
-            <figure className="mt-10 aspect-16/10 overflow-hidden rounded-md border border-border bg-muted">
-              <Image
-                src={cover.src}
-                alt={cover.alt}
-                width={1000}
-                height={420}
-                priority
-                sizes="(min-width: 768px) 768px, 100vw"
-                className="h-full w-full object-cover"
-              />
-            </figure>
-          </BlurFade>
+          // Cover paints without a BlurFade wrapper so the LCP image
+          // is visible the instant the SSR HTML lands. Wrapping it in
+          // an opacity-fade animation cost ~200ms of LCP and made the
+          // hero feel like it was "loading" instead of "loaded".
+          <figure className="mt-10 aspect-16/10 overflow-hidden rounded-md border border-border bg-muted">
+            <Image
+              src={cover.src}
+              alt={cover.alt}
+              width={1000}
+              height={420}
+              priority
+              sizes="(min-width: 768px) 768px, 100vw"
+              className="h-full w-full object-cover"
+            />
+          </figure>
         ) : null}
       </div>
     </header>

@@ -8,7 +8,16 @@
  * blog timeline stays static between revalidation windows; the
  * first request after the window expires re-fetches and updates
  * the cache. No client-side fetching, ever.
+ *
+ * The exported fetchers are wrapped in React's `cache()` so callers
+ * within the same render (e.g. `generateStaticParams`,
+ * `generateMetadata`, and the page component all asking for the
+ * same article list) share a single resolved promise instead of
+ * re-parsing the response. Across requests, the underlying
+ * `fetch()` data cache still amortises the upstream call.
  */
+
+import { cache } from "react";
 
 const DEVTO_BASE = "https://dev.to/api";
 
@@ -53,7 +62,7 @@ interface FetchOptions {
  * Returns `[]` if the API call fails so a build-time outage does
  * not break the deploy. The error is logged for observability.
  */
-export async function fetchDevtoArticles(
+export const fetchDevtoArticles = cache(async function fetchDevtoArticles(
   username: string,
   { revalidate = REVALIDATE_SECONDS }: FetchOptions = {},
 ): Promise<DevtoArticleListItem[]> {
@@ -74,14 +83,14 @@ export async function fetchDevtoArticles(
     console.warn("[devto] articles list fetch failed:", error);
     return [];
   }
-}
+});
 
 /**
  * Fetch one article (with `body_markdown` + `body_html`) by id.
  *
  * Returns `null` if the article is missing or the call fails.
  */
-export async function fetchDevtoArticle(
+export const fetchDevtoArticle = cache(async function fetchDevtoArticle(
   id: number,
   { revalidate = REVALIDATE_SECONDS }: FetchOptions = {},
 ): Promise<DevtoArticle | null> {
@@ -98,4 +107,4 @@ export async function fetchDevtoArticle(
     console.warn(`[devto] article ${id} fetch failed:`, error);
     return null;
   }
-}
+});
