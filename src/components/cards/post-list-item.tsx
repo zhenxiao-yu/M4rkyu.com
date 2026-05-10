@@ -5,6 +5,7 @@ import { LinkPreview } from "@/components/system/link-preview";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import type { Post } from "@/content/schemas";
+import type { ReactNode } from "react";
 
 interface PostListItemProps {
   post: Post;
@@ -12,6 +13,40 @@ interface PostListItemProps {
 
 const monoMeta =
   "font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground";
+
+/**
+ * Wraps the row in either a next-intl Link (in-site /blog/[slug])
+ * or a plain external `<a>` (canonicalUrl on dev.to). Phase 8.1
+ * routes everything to canonicalUrl; Phase 8.2 will flip to the
+ * in-site detail when /blog/[slug] lands.
+ */
+function RowLink({
+  post,
+  className,
+  children,
+}: {
+  post: Post;
+  className: string;
+  children: ReactNode;
+}) {
+  if (post.canonicalUrl) {
+    return (
+      <a
+        href={post.canonicalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={`/blog/${post.slug}`} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 /**
  * Single timeline row for /blog. The whole row is one Link — no
@@ -29,12 +64,13 @@ export function PostListItem({ post }: PostListItemProps) {
         title={post.title}
         lede={post.excerpt}
         eyebrow={post.category}
+        image={post.coverImage}
         placeholderLabel="POST COVER TBD"
         side="right"
         align="start"
       >
-        <Link
-          href={`/blog/${post.slug}`}
+        <RowLink
+          post={post}
           className={cn(
             "group grid gap-3 rounded-lg border border-transparent px-4 py-5 transition-colors duration-(--motion-fast) ease-(--ease-premium)",
             "hover:border-border hover:bg-muted/30",
@@ -98,7 +134,7 @@ export function PostListItem({ post }: PostListItemProps) {
           >
             {post.readingTime}
           </span>
-        </Link>
+        </RowLink>
       </LinkPreview>
     </li>
   );

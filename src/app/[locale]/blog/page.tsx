@@ -4,9 +4,9 @@ import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { PinnedPostCard } from "@/components/cards/pinned-post-card";
 import { FadeIn } from "@/components/motion/fade-in";
-import { posts } from "@/content/posts";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { getPosts } from "@/lib/blog/get-posts";
 import { BlogTimeline } from "./_client";
 
 export async function generateMetadata({
@@ -30,6 +30,7 @@ export default async function BlogPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Blog" });
+  const posts = await getPosts();
   const pinned = posts.find((post) => post.pinned);
   const timelinePosts = posts.filter((post) => !post.pinned);
 

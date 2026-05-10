@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { PostListItem } from "./post-list-item";
-import { posts } from "@/content/posts";
 import type { Post } from "@/content/schemas";
 
 const readyPost: Post = {
@@ -14,6 +13,28 @@ const readyPost: Post = {
   tags: ["nextjs", "zod", "content"],
   status: "ready",
   pinned: false,
+  reactionsCount: 0,
+  commentsCount: 0,
+};
+
+const devtoPost: Post = {
+  ...readyPost,
+  slug: "the-true-cost-of-poor-data-quality-2epi",
+  title: "The True Cost of Poor Data Quality",
+  category: "Database",
+  excerpt:
+    "In today's fast-paced, data-driven world, businesses have more access to data than ever before.",
+  date: "Oct 16 '24",
+  readingTime: "6 min read",
+  tags: ["database", "datascience", "dataengineering"],
+  canonicalUrl:
+    "https://dev.to/markyu/the-true-cost-of-poor-data-quality-2epi",
+  coverImage: {
+    src: "/project-covers/nimbus.svg",
+    alt: "Cover placeholder for syndicated dev.to post",
+  },
+  reactionsCount: 12,
+  commentsCount: 2,
 };
 
 const longExcerptPost: Post = {
@@ -40,8 +61,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { post: posts[0] } };
+export const Default: Story = { args: { post: readyPost } };
 
 export const LongExcerpt: Story = { args: { post: longExcerptPost } };
 
-export const Ready: Story = { args: { post: readyPost } };
+// Syndicated row: external dev.to link target plus cover image
+// surfaced in the LinkPreview tooltip.
+export const FromDevTo: Story = { args: { post: devtoPost } };

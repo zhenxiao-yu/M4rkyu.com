@@ -91,16 +91,31 @@ function PulseSlot({
           </div>
         ) : null}
         <div className="mt-auto pt-1">
-          <Link
-            href={`/blog/${post.slug}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
-          >
-            {t("read")}
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-3.5 transition-transform duration-(--motion-fast) group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
-          </Link>
+          {post.canonicalUrl ? (
+            <a
+              href={post.canonicalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              {t("read")}
+              <ArrowUpRight
+                aria-hidden="true"
+                className="size-3.5 transition-transform duration-(--motion-fast) group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>
+          ) : (
+            <Link
+              href={`/blog/${post.slug}`}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              {t("read")}
+              <ArrowUpRight
+                aria-hidden="true"
+                className="size-3.5 transition-transform duration-(--motion-fast) group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </Link>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -25,12 +25,12 @@ import type { Locale } from "@/i18n/routing";
 import { featuredProjects } from "@/content/projects";
 import { galleryCollections, galleryItems } from "@/content/gallery";
 import { resources } from "@/content/resources";
-import { posts } from "@/content/posts";
 import { games } from "@/content/games";
 import { mediaItems } from "@/content/media";
 import { profile } from "@/content/profile";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { getPosts } from "@/lib/blog/get-posts";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -51,6 +51,7 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Home" });
+  const posts = await getPosts();
 
   // Status pulse — real data only. Skips slots when no honest source exists.
   // Each entry is localized so /zh reads in CJK when the underlying content
@@ -72,7 +73,10 @@ export default async function HomePage({
       kind: "writing",
       label: writing.title,
       detail: writing.excerpt,
-      href: `/blog/${writing.slug}`,
+      // Prefer the dev.to canonical URL when set so the homepage
+      // never links into an unbuilt route. Phase 8.2 will add the
+      // in-site /blog/[slug] and this can flip back to a local path.
+      href: writing.canonicalUrl ?? `/blog/${writing.slug}`,
     });
   }
   const now = games.find((g) => g.status !== "ready") ?? games[0];
@@ -87,9 +91,9 @@ export default async function HomePage({
   }
 
   const writingLatest = posts[0];
-  const writingDevlog = posts.find((p) =>
-    p.category.toLowerCase().includes("devlog"),
-  );
+  // Match a tag explicitly named "devlog" — dev.to uses lowercase
+  // unsplit tags (e.g. "devlog", not "Dev log").
+  const writingDevlog = posts.find((p) => p.tags.includes("devlog"));
   const featuredResources = resources.slice(0, 3);
   const readyFrames = galleryItems.filter((item) => item.status === "ready");
   const bentoFrames = readyFrames.length >= 4 ? readyFrames.slice(0, 4) : null;

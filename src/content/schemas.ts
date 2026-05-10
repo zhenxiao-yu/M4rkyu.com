@@ -136,18 +136,21 @@ export const postSchema = z.object({
   status: contentStatusSchema,
   // Phase 1.5 additions
   pinned: z.boolean().default(false),
+  // Phase 8.1 additions — populated when the post is syndicated
+  // from dev.to. `canonicalUrl` is set to dev.to so search engines
+  // see the original as canonical (no duplicate-content penalty);
+  // `coverImage` is dev.to's CDN-hosted social image.
+  canonicalUrl: z.string().url().optional(),
+  coverImage: imageSchema.optional(),
+  reactionsCount: z.number().int().nonnegative().default(0),
+  commentsCount: z.number().int().nonnegative().default(0),
 });
 
-// Build-time invariant: at most one post may be pinned site-wide.
-export const postsArraySchema = z.array(postSchema).superRefine((arr, ctx) => {
-  const pinnedCount = arr.filter((p) => p.pinned).length;
-  if (pinnedCount > 1) {
-    ctx.addIssue({
-      code: "custom",
-      message: `Only one post may be pinned at a time (found ${pinnedCount}).`,
-    });
-  }
-});
+// Note: the previous `postsArraySchema` ("at most one pinned") was
+// retired in Phase 8.1. Posts now come from the dev.to API which
+// has no pinned concept; the local `Post.pinned` flag is reserved
+// for a future hand-curated feature post and stays at most one by
+// authoring convention.
 
 export const gameSchema = z.object({
   title: z.string().min(1),
