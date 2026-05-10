@@ -265,3 +265,20 @@ body {
     transition-duration: 1ms !important;
   }
 }
+
+/* Shiki dual-theme color swap. Tokens are written with both
+ * `--shiki-light` / `--shiki-dark` CSS vars (defaultColor: false in
+ * the rehype-shiki options); this rule picks the active theme based
+ * on the `[data-theme="dark"]` attribute wired into @custom-variant
+ * above. Background is inherited from our `<pre>` wrapper (its inline
+ * style is stripped in PostBody), so we only recolour the text and do
+ * not touch span backgrounds — leaving room for future Shiki
+ * transformers (diff, focus, error) to render their own highlights. */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+[data-theme="dark"] .shiki,
+[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}

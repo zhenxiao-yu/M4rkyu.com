@@ -1,7 +1,12 @@
+import { Fragment, type ComponentPropsWithoutRef } from "react";
+import { jsx, jsxs } from "react/jsx-runtime";
 import Image from "next/image";
-import Markdown from "react-markdown";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
-import type { Components } from "react-markdown";
+import remarkRehype from "remark-rehype";
+import rehypeShiki from "@shikijs/rehype";
+import rehypeReact from "rehype-react";
 import { cn } from "@/lib/utils";
 
 interface PostBodyProps {
@@ -19,12 +24,13 @@ interface PostBodyProps {
  * - Images route through `next/image` with explicit
  *   width/height + lazy loading. dev.to hosts on its CDN so the
  *   `unoptimized` flag stays off — Next.js will optimize them.
- * - Code fences pass through with the language hint left on the
- *   `<pre>`/`<code>` for a future syntax-highlighting pass; the
- *   `font-mono` styles read well unhighlighted.
+ * - Code fences run through Shiki at build time (server-side) with
+ *   a dual github-light / github-dark-default theme. The token
+ *   colors are written as CSS variables (defaultColor: false) and
+ *   swapped via the `.dark .shiki` rule in globals.css.
  */
-const components: Components = {
-  h1: ({ className, ...props }) => (
+const components = {
+  h1: ({ className, ...props }: ComponentPropsWithoutRef<"h1">) => (
     <h1
       {...props}
       className={cn(
@@ -36,7 +42,7 @@ const components: Components = {
       )}
     />
   ),
-  h2: ({ className, ...props }) => (
+  h2: ({ className, ...props }: ComponentPropsWithoutRef<"h2">) => (
     <h2
       {...props}
       className={cn(
@@ -45,7 +51,7 @@ const components: Components = {
       )}
     />
   ),
-  h3: ({ className, ...props }) => (
+  h3: ({ className, ...props }: ComponentPropsWithoutRef<"h3">) => (
     <h3
       {...props}
       className={cn(
@@ -54,7 +60,7 @@ const components: Components = {
       )}
     />
   ),
-  h4: ({ className, ...props }) => (
+  h4: ({ className, ...props }: ComponentPropsWithoutRef<"h4">) => (
     <h4
       {...props}
       className={cn(
@@ -63,13 +69,18 @@ const components: Components = {
       )}
     />
   ),
-  p: ({ className, ...props }) => (
+  p: ({ className, ...props }: ComponentPropsWithoutRef<"p">) => (
     <p
       {...props}
       className={cn("mt-5 text-base leading-7 text-foreground/90", className)}
     />
   ),
-  a: ({ className, href, children, ...props }) => {
+  a: ({
+    className,
+    href,
+    children,
+    ...props
+  }: ComponentPropsWithoutRef<"a">) => {
     const external = typeof href === "string" && /^https?:\/\//i.test(href);
     return (
       <a
@@ -86,7 +97,7 @@ const components: Components = {
       </a>
     );
   },
-  ul: ({ className, ...props }) => (
+  ul: ({ className, ...props }: ComponentPropsWithoutRef<"ul">) => (
     <ul
       {...props}
       className={cn(
@@ -95,7 +106,7 @@ const components: Components = {
       )}
     />
   ),
-  ol: ({ className, ...props }) => (
+  ol: ({ className, ...props }: ComponentPropsWithoutRef<"ol">) => (
     <ol
       {...props}
       className={cn(
@@ -104,10 +115,13 @@ const components: Components = {
       )}
     />
   ),
-  li: ({ className, ...props }) => (
+  li: ({ className, ...props }: ComponentPropsWithoutRef<"li">) => (
     <li {...props} className={cn("pl-1", className)} />
   ),
-  blockquote: ({ className, ...props }) => (
+  blockquote: ({
+    className,
+    ...props
+  }: ComponentPropsWithoutRef<"blockquote">) => (
     <blockquote
       {...props}
       className={cn(
@@ -116,24 +130,29 @@ const components: Components = {
       )}
     />
   ),
-  hr: ({ className, ...props }) => (
+  hr: ({ className, ...props }: ComponentPropsWithoutRef<"hr">) => (
     <hr
       {...props}
       aria-hidden="true"
       className={cn("my-10 border-border/70", className)}
     />
   ),
-  code: ({ className, children, ...props }) => {
-    // react-markdown renders fenced code as `<pre><code>…</code></pre>`
-    // and inline code as bare `<code>`. v9 doesn't expose a parent
-    // pointer in the component props, so detect "fenced" via two
-    // signals:
-    // 1. a `language-*` className (set when the fence has a hint)
-    // 2. a children string containing a newline (set on every fence
-    //    body, inline code never spans lines in practice)
-    const hasNewline =
-      typeof children === "string" && children.includes("\n");
-    const isFenced = className?.startsWith("language-") || hasNewline;
+  code: ({
+    className,
+    children,
+    ...props
+  }: ComponentPropsWithoutRef<"code">) => {
+    // After rehype-shiki runs, fenced code lives inside `<pre><code
+    // class="shiki shiki-themes ...">…<span style="…">tokens</span>…
+    // </code></pre>`. Inline code stays as a bare `<code>` with no
+    // `language-*` and no `shiki` class. So:
+    //   - inline = no `language-` AND no `shiki`
+    //   - fenced = anything else (pass children through unchanged so
+    //     Shiki's colored token spans survive intact).
+    const cls = className ?? "";
+    const isShiki = cls.split(/\s+/).includes("shiki");
+    const hasLanguage = /(^|\s)language-/.test(cls);
+    const isFenced = isShiki || hasLanguage;
     if (!isFenced) {
       return (
         <code
@@ -153,19 +172,29 @@ const components: Components = {
       </code>
     );
   },
-  pre: ({ className, ...props }) => (
-    // `max-w-full` constrains the pre to the post body's column so a
-    // long unbreakable string scrolls horizontally inside the column
-    // rather than expanding the page on narrow viewports.
-    <pre
-      {...props}
-      className={cn(
-        "mt-6 max-w-full overflow-x-auto rounded-md border border-border bg-muted/50 p-4 font-mono text-sm leading-6",
-        className,
-      )}
-    />
-  ),
-  table: ({ className, ...props }) => (
+  pre: ({ className, ...props }: ComponentPropsWithoutRef<"pre">) => {
+    // Shiki injects an inline `style="background-color: …"` on the
+    // outer `<pre>`. Drop it so our `bg-muted/50` token wins without
+    // needing `!important`. With `defaultColor: false`, token spans
+    // carry their colors as `--shiki-light` / `--shiki-dark` CSS
+    // custom properties (no inline `color`); the `.shiki` rule in
+    // globals.css resolves the active theme via those vars.
+    const { style: _ignore, ...rest } = props;
+    void _ignore;
+    return (
+      // `max-w-full` constrains the pre to the post body's column so a
+      // long unbreakable string scrolls horizontally inside the column
+      // rather than expanding the page on narrow viewports.
+      <pre
+        {...rest}
+        className={cn(
+          "mt-6 max-w-full overflow-x-auto rounded-md border border-border bg-muted/50 p-4 font-mono text-sm leading-6",
+          className,
+        )}
+      />
+    );
+  },
+  table: ({ className, ...props }: ComponentPropsWithoutRef<"table">) => (
     <div className="mt-6 max-w-full overflow-x-auto rounded-md border border-border/70">
       <table
         {...props}
@@ -176,7 +205,7 @@ const components: Components = {
       />
     </div>
   ),
-  th: ({ className, ...props }) => (
+  th: ({ className, ...props }: ComponentPropsWithoutRef<"th">) => (
     <th
       {...props}
       className={cn(
@@ -185,13 +214,13 @@ const components: Components = {
       )}
     />
   ),
-  td: ({ className, ...props }) => (
+  td: ({ className, ...props }: ComponentPropsWithoutRef<"td">) => (
     <td
       {...props}
       className={cn("border-b border-border/60 px-3 py-2", className)}
     />
   ),
-  img: ({ src, alt, className }) => {
+  img: ({ src, alt, className }: ComponentPropsWithoutRef<"img">) => {
     if (typeof src !== "string") return null;
     return (
       <span className="mt-6 block">
@@ -216,12 +245,26 @@ const components: Components = {
   },
 };
 
-export function PostBody({ markdown, className }: PostBodyProps) {
+export async function PostBody({ markdown, className }: PostBodyProps) {
+  const file = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeShiki, {
+      themes: { light: "github-light", dark: "github-dark-default" },
+      defaultColor: false,
+    })
+    .use(rehypeReact, {
+      Fragment,
+      jsx,
+      jsxs,
+      components,
+    })
+    .process(markdown);
+
   return (
     <div className={cn("max-w-3xl", className)}>
-      <Markdown remarkPlugins={[remarkGfm]} components={components}>
-        {markdown}
-      </Markdown>
+      {file.result as React.ReactNode}
     </div>
   );
 }

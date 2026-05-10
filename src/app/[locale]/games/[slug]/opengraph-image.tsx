@@ -12,8 +12,9 @@ export const alt = "Game archive entry — M4rkyu.com";
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
-// Same Latin-only constraint as the project OG: next/og's default
-// font does not cover CJK, so the same render is reused per locale.
+// Pre-declare one OG per (locale, slug) so Next can statically
+// generate at build time. CJK glyphs are supported via the bundled
+// Noto Sans SC subset in `renderOgImage`.
 export function generateImageMetadata() {
   return games.flatMap((game) =>
     routing.locales.map((locale) => ({
@@ -33,7 +34,7 @@ export default async function OpengraphImage({
   const { slug } = await params;
   const game = getGame(slug);
   if (!game) notFound();
-  return renderOgImage({
+  return await renderOgImage({
     eyebrow: "GAME ARCHIVE",
     title: game.title,
     subtitle: game.pitch,

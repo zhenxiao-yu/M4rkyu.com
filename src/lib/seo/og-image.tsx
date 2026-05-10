@@ -21,12 +21,44 @@ const MUTED = "#9a9a9a";
 const RING = "#67e8f9";
 const BORDER = "#27272a";
 
+// Bundle a Noto Sans SC subset alongside the renderer so Satori can
+// shape CJK glyphs in OG titles/subtitles. The subset is built from
+// the repo's actual zh content (messages + content layer) plus basic
+// Latin / punctuation ranges, so it stays small (~190 KB) instead of
+// shipping the full ~7 MB CJK Common range. The `new URL(..., import.meta.url)`
+// + `fetch` pattern is the supported way to read a co-located binary
+// asset from the Next.js edge runtime (no `fs` access there).
+//
+// Regenerating after adding new zh content (one-shot, build-time only;
+// no project deps added):
+//   1. Download NotoSansSC[wght].ttf from
+//      https://github.com/google/fonts/raw/main/ofl/notosanssc/NotoSansSC%5Bwght%5D.ttf
+//   2. pip install --user fonttools brotli
+//   3. fonttools varLib.instancer NotoSansSC[wght].ttf wght=400 -o sc-400.ttf
+//   4. Scan src/ + messages/ for unique CJK codepoints and write them
+//      to cjk-chars.txt (one char per line is fine).
+//   5. pyftsubset sc-400.ttf --output-file=NotoSansSC-Regular.subset.ttf \
+//        --unicodes="U+0020-007F,U+00A0-00FF,U+2000-206F,U+2E00-2E7F,U+3000-303F,U+FF00-FFEF" \
+//        --text-file=cjk-chars.txt --no-hinting --desubroutinize \
+//        --drop-tables+=DSIG --no-glyph-names
+//   6. Replace src/lib/seo/fonts/NotoSansSC-Regular.subset.ttf and commit.
+const fontPromise = fetch(
+  new URL("./fonts/NotoSansSC-Regular.subset.ttf", import.meta.url),
+).then((r) => {
+  if (!r.ok) {
+    throw new Error(
+      `OG font subset fetch failed (${r.status}); rebuild may be missing the asset.`,
+    );
+  }
+  return r.arrayBuffer();
+});
+
 // Heuristic: shrink the title font when it's long. CJK glyphs are
 // visually ~1.7× wider than Latin, so we count them weighted.
 function effectiveLength(value: string): number {
   let length = 0;
   for (const ch of value) {
-    length += /[㐀-鿿豈-﫿　-〿]/.test(ch) ? 1.7 : 1;
+    length += /[㐀-鿿豈-﫿　-〿]/.test(ch) ? 1.7 : 1;
   }
   return length;
 }
@@ -40,18 +72,19 @@ function effectiveLength(value: string): number {
  * `style` only (no Tailwind classes). All values are literal hex/px
  * so SSR + Edge runtime evaluate cleanly.
  *
- * Note: this renderer ships with `next/og`'s default Latin font
- * only — no CJK font is bundled. Callers should keep `title` /
- * `subtitle` content in Latin script. Mixing in CJK characters
- * will render as tofu boxes until a font is wired in.
+ * The renderer bundles a Noto Sans SC subset (see `fontPromise`
+ * above) so CJK titles/subtitles render correctly. The subset is
+ * derived from the repo's content; characters outside that set will
+ * fall back to system sans and may render as tofu.
  */
-export function renderOgImage({
+export async function renderOgImage({
   eyebrow,
   title,
   subtitle,
   footer = "m4rkyu.com",
-}: OgImageProps): ImageResponse {
+}: OgImageProps): Promise<ImageResponse> {
   const len = effectiveLength(title);
+  const fontData = await fontPromise;
   return new ImageResponse(
     (
       <div
@@ -64,7 +97,7 @@ export function renderOgImage({
           background: BG,
           color: FG,
           padding: "72px 80px",
-          fontFamily: "ui-sans-serif, system-ui, sans-serif",
+          fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
           position: "relative",
         }}
       >
@@ -132,6 +165,7 @@ export function renderOgImage({
               letterSpacing: -2,
               color: FG,
               maxWidth: 1040,
+              fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
             }}
           >
             {title}
@@ -143,6 +177,8 @@ export function renderOgImage({
                 lineHeight: 1.32,
                 color: MUTED,
                 maxWidth: 880,
+                fontFamily:
+                  "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
               }}
             >
               {subtitle}
@@ -177,6 +213,25 @@ export function renderOgImage({
         </div>
       </div>
     ),
-    OG_IMAGE_SIZE,
+    {
+      ...OG_IMAGE_SIZE,
+      // The subset was instanced at wght=400. Register the same data
+      // under both 400 and 700 so Satori matches either weight request
+      // (title is bold, subtitle is regular) without synthesizing.
+      fonts: [
+        {
+          name: "Noto Sans SC",
+          data: fontData,
+          style: "normal",
+          weight: 400,
+        },
+        {
+          name: "Noto Sans SC",
+          data: fontData,
+          style: "normal",
+          weight: 700,
+        },
+      ],
+    },
   );
 }
