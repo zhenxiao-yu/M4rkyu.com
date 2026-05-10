@@ -13,9 +13,8 @@ export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 // Pre-declare one OG per (locale, slug) so Next can statically
-// generate at build time. The image content itself is Latin-only
-// (next/og default font lacks CJK), so the same render is reused
-// regardless of locale.
+// generate at build time. CJK glyphs are supported via the bundled
+// Noto Sans SC subset in `renderOgImage`.
 export function generateImageMetadata() {
   return allProjects.flatMap((project) =>
     routing.locales.map((locale) => ({
@@ -35,7 +34,7 @@ export default async function OpengraphImage({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
-  return renderOgImage({
+  return await renderOgImage({
     eyebrow: "PROJECT · CASE STUDY",
     title: project.title,
     subtitle: project.shortPitch,

@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Heart, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
@@ -115,6 +115,33 @@ export function PostListItem({ post }: PostListItemProps) {
           <div className="flex flex-wrap items-center gap-2">
             <span className={monoMeta}>{post.category}</span>
             {isDraft ? <DraftBadge label={post.status} /> : null}
+            {post.reactionsCount > 0 || post.commentsCount > 0 ? (
+              <span
+                className={cn(
+                  monoMeta,
+                  "ml-auto flex items-center gap-2.5 normal-case",
+                )}
+              >
+                {post.reactionsCount > 0 ? (
+                  <span
+                    className="flex items-center gap-1"
+                    aria-label={`${post.reactionsCount} reactions on dev.to`}
+                  >
+                    <Heart aria-hidden="true" className="size-3" />
+                    {post.reactionsCount}
+                  </span>
+                ) : null}
+                {post.commentsCount > 0 ? (
+                  <span
+                    className="flex items-center gap-1"
+                    aria-label={`${post.commentsCount} comments on dev.to`}
+                  >
+                    <MessageSquare aria-hidden="true" className="size-3" />
+                    {post.commentsCount}
+                  </span>
+                ) : null}
+              </span>
+            ) : null}
           </div>
           <h3 className="text-lg font-semibold leading-snug text-foreground">
             {post.title}
