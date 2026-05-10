@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Syne } from "next/font/google";
+import { Geist, Geist_Mono, Syne, VT323 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SmoothScroll } from "@/providers/smooth-scroll";
@@ -20,6 +20,15 @@ const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+// Pixel display font — phase 1 cyber-pixel layer. English-only:
+// the `:lang(zh)` / `[lang^="zh"]` guard in globals.css rewires
+// --font-pixel to the display/sans stack on Chinese-language scopes.
+const vt323 = VT323({
+  variable: "--font-pixel",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -63,7 +72,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} ${vt323.variable} h-full antialiased`}
     >
       <body
         suppressHydrationWarning
