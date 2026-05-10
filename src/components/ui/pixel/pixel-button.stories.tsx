@@ -37,3 +37,14 @@ export const Link: Story = {
 export const Disabled: Story = {
   args: { glyph: "caret", disabled: true },
 };
+
+// Covers the asChild + glyph code path used by the homepage hero CTAs —
+// PixelButton clones the consumer's child and injects the glyph so
+// Radix Slot still receives exactly one element.
+export const AsLink: Story = {
+  args: {
+    glyph: "caret",
+    asChild: true,
+    children: <a href="#">Browse the work</a>,
+  },
+};
