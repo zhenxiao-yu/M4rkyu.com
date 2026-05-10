@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 import { ArchiveCard } from "@/components/cards/archive-card"
 import { PageShell } from "@/components/layout/page-shell"
 import { SectionHeading } from "@/components/sections/section-heading"
@@ -16,10 +17,10 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
+  const tMeta = await getTranslations({ locale, namespace: "Meta" })
   return {
-    title: "Gallery",
-    description:
-      "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
+    title: tMeta("galleryTitle"),
+    description: tMeta("galleryDescription"),
     alternates: buildAlternates(locale, "/gallery"),
   }
 }
