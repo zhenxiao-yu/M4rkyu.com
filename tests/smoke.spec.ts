@@ -38,11 +38,10 @@ test("theme and language controls are visible on desktop", async ({ page }) => {
 
 test("theme toggle flips data-theme on click", async ({ page }) => {
   await page.goto("/en");
-  // Open the mobile sheet if the toggle is hidden behind it.
-  const menu = page.getByRole("button", { name: /open menu/i });
-  if (await menu.isVisible()) {
-    await menu.click();
-  }
+  // Theme toggle lives in the header rail at every breakpoint, so it
+  // is always directly clickable — no sheet to open. Opening the
+  // mobile sheet would actually break this test, because the sheet's
+  // backdrop overlay intercepts pointer events on the header.
   const toggle = page.locator('[data-testid="theme-toggle"]:visible').first();
   await expect(toggle).toBeVisible();
 
