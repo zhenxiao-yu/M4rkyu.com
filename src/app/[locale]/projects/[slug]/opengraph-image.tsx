@@ -1,0 +1,44 @@
+import { notFound } from "next/navigation";
+import {
+  OG_CONTENT_TYPE,
+  OG_IMAGE_SIZE,
+  renderOgImage,
+} from "@/lib/seo/og-image";
+import { allProjects, getProject } from "@/content/projects";
+import { routing } from "@/i18n/routing";
+
+export const runtime = "edge";
+export const alt = "Case study — M4rkyu.com";
+export const size = OG_IMAGE_SIZE;
+export const contentType = OG_CONTENT_TYPE;
+
+// Pre-declare one OG per (locale, slug) so Next can statically
+// generate at build time. The image content itself is Latin-only
+// (next/og default font lacks CJK), so the same render is reused
+// regardless of locale.
+export function generateImageMetadata() {
+  return allProjects.flatMap((project) =>
+    routing.locales.map((locale) => ({
+      id: `${locale}-${project.slug}`,
+      alt: `${project.title} — case study`,
+      contentType: OG_CONTENT_TYPE,
+      size: OG_IMAGE_SIZE,
+    })),
+  );
+}
+
+export default async function OpengraphImage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) notFound();
+  return renderOgImage({
+    eyebrow: "PROJECT · CASE STUDY",
+    title: project.title,
+    subtitle: project.shortPitch,
+    footer: `m4rkyu.com / projects / ${project.slug}`,
+  });
+}
