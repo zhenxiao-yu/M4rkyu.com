@@ -1,5 +1,4 @@
 import { ArrowUpRight, Star } from "lucide-react";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
@@ -21,24 +20,14 @@ const bodyClass = "grid gap-4 p-6 sm:p-8";
  * as PostListItem. Routes to the in-site `/blog/[slug]` detail
  * route — Phase 8.2 ships in-site rendering for syndicated posts.
  *
- * When `coverImage` is set, the card grows a 16:10 hero above the
- * meta row (mirrors `ProjectCard` rest/hover treatment).
+ * Cover imagery is intentionally omitted: the pinned card was the
+ * archive's LCP element, and a remote dev.to S3 fetch dominated
+ * first paint. The `LinkPreview` hover surface still exposes the
+ * cover for power users.
  */
 export async function PinnedPostCard({ post }: PinnedPostCardProps) {
   const t = await getTranslations("Blog");
   const isDraft = post.status !== "ready";
-
-  const cover = post.coverImage ? (
-    <div className="relative aspect-16/10 overflow-hidden border-b bg-muted">
-      <Image
-        src={post.coverImage.src}
-        alt={post.coverImage.alt}
-        fill
-        sizes="(min-width: 1024px) 1024px, 100vw"
-        className="object-cover grayscale transition duration-500 group-hover:scale-[1.02] group-hover:grayscale-0"
-      />
-    </div>
-  ) : null;
 
   const body = (
     <>
@@ -85,7 +74,6 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
 
   return (
     <Link href={`/blog/${post.slug}`} className={cardClass}>
-      {cover}
       <div className={bodyClass}>{body}</div>
     </Link>
   );
