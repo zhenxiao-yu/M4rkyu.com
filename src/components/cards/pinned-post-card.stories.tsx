@@ -65,6 +65,8 @@ const samplePost: Post = {
   tags: ["nextjs", "process", "writing"],
   status: "ready",
   pinned: true,
+  reactionsCount: 0,
+  commentsCount: 0,
 };
 
 const longTitlePost: Post = {

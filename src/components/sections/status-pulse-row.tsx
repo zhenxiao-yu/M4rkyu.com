@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -40,20 +41,52 @@ export async function StatusPulseRow({ current, className }: StatusPulseRowProps
           <p className="text-sm leading-6 text-muted-foreground">{entry.detail}</p>
           {entry.href ? (
             <div className="mt-auto pt-2">
-              <Link
-                href={entry.href}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
-              >
+              <OpenLink href={entry.href}>
                 {t("open")}
                 <ArrowUpRight
                   aria-hidden="true"
                   className="size-3.5 transition-transform duration-(--motion-fast) group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
-              </Link>
+              </OpenLink>
             </div>
           ) : null}
         </article>
       ))}
     </div>
+  );
+}
+
+const openLinkClass =
+  "inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline";
+
+/**
+ * Branches between an external `<a target="_blank">` and the
+ * next-intl `<Link>` based on whether the href is absolute
+ * (e.g. a dev.to canonical URL coming from Phase 8.1) or a
+ * locale-relative pathname.
+ */
+function OpenLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
+  if (/^https?:\/\//i.test(href)) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={openLinkClass}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={openLinkClass}>
+      {children}
+    </Link>
   );
 }

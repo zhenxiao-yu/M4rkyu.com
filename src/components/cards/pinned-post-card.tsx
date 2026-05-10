@@ -9,20 +9,21 @@ interface PinnedPostCardProps {
   post: Post;
 }
 
+const cardClass =
+  "group relative grid gap-4 overflow-hidden rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8";
+
 /**
  * One-per-site pinned essay slot at the top of /blog. Uses the
  * display family for the title; otherwise reads the same data shape
- * as PostListItem.
+ * as PostListItem. Routes to `canonicalUrl` (dev.to) when set,
+ * otherwise the in-site `/blog/[slug]` route.
  */
 export async function PinnedPostCard({ post }: PinnedPostCardProps) {
   const t = await getTranslations("Blog");
   const isDraft = post.status !== "ready";
 
-  return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className="group relative grid gap-4 overflow-hidden rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8"
-    >
+  const body = (
+    <>
       <div className="flex flex-wrap items-center gap-2">
         <span className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.24em] text-signal">
           <Star aria-hidden="true" className="size-3 fill-current" />
@@ -61,6 +62,25 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
           </div>
         ) : null}
       </div>
+    </>
+  );
+
+  if (post.canonicalUrl) {
+    return (
+      <a
+        href={post.canonicalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cardClass}
+      >
+        {body}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={`/blog/${post.slug}`} className={cardClass}>
+      {body}
     </Link>
   );
 }
