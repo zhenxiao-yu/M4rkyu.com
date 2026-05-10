@@ -28,7 +28,10 @@ const components: Components = {
     <h1
       {...props}
       className={cn(
-        "mt-12 scroll-mt-24 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-foreground sm:text-4xl",
+        // scroll-mt aligns anchored headings under the sticky site
+        // header (h-14 on <sm, h-16 above) plus a small breathing
+        // gap. Tightened from scroll-mt-24 to match case-study sections.
+        "mt-12 scroll-mt-20 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-foreground sm:text-4xl",
         className,
       )}
     />
@@ -37,7 +40,7 @@ const components: Components = {
     <h2
       {...props}
       className={cn(
-        "mt-10 scroll-mt-24 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-foreground sm:text-3xl",
+        "mt-10 scroll-mt-20 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-foreground sm:text-3xl",
         className,
       )}
     />
@@ -46,7 +49,7 @@ const components: Components = {
     <h3
       {...props}
       className={cn(
-        "mt-8 scroll-mt-24 text-xl font-semibold leading-snug text-foreground",
+        "mt-8 scroll-mt-20 text-xl font-semibold leading-snug text-foreground",
         className,
       )}
     />
@@ -55,7 +58,7 @@ const components: Components = {
     <h4
       {...props}
       className={cn(
-        "mt-6 scroll-mt-24 text-lg font-semibold leading-snug text-foreground",
+        "mt-6 scroll-mt-20 text-lg font-semibold leading-snug text-foreground",
         className,
       )}
     />
@@ -151,16 +154,19 @@ const components: Components = {
     );
   },
   pre: ({ className, ...props }) => (
+    // `max-w-full` constrains the pre to the post body's column so a
+    // long unbreakable string scrolls horizontally inside the column
+    // rather than expanding the page on narrow viewports.
     <pre
       {...props}
       className={cn(
-        "mt-6 overflow-x-auto rounded-md border border-border bg-muted/50 p-4 font-mono text-sm leading-6",
+        "mt-6 max-w-full overflow-x-auto rounded-md border border-border bg-muted/50 p-4 font-mono text-sm leading-6",
         className,
       )}
     />
   ),
   table: ({ className, ...props }) => (
-    <div className="mt-6 overflow-x-auto">
+    <div className="mt-6 max-w-full overflow-x-auto rounded-md border border-border/70">
       <table
         {...props}
         className={cn(

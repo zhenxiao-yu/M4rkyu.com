@@ -48,7 +48,9 @@ const longExcerptPost: Post = {
 function PostListItemStory({ post }: { post: Post }) {
   return (
     <ol className="grid gap-1 divide-y divide-border/60 max-w-3xl">
-      <PostListItem post={post} />
+      <li>
+        <PostListItem post={post} />
+      </li>
     </ol>
   );
 }

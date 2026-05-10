@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PostListItem } from "@/components/cards/post-list-item";
+import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import type { Post } from "@/content/schemas";
 
 interface BlogTimelineProps {
@@ -91,11 +92,20 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
           {t("noMatches")}
         </p>
       ) : (
-        <ol className="mt-8 grid gap-1 divide-y divide-border/60">
+        <Stagger
+          // Re-key on tag change so the rows restagger smoothly when
+          // a chip flips. Same pattern as the projects archive.
+          key={`stagger-${activeTag}`}
+          as="ol"
+          className="mt-8 grid gap-1 divide-y divide-border/60"
+          delay={0.04}
+        >
           {filtered.map((post) => (
-            <PostListItem key={post.slug} post={post} />
+            <StaggerItem key={post.slug} as="li">
+              <PostListItem post={post} />
+            </StaggerItem>
           ))}
-        </ol>
+        </Stagger>
       )}
     </>
   );

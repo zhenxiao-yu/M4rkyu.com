@@ -2,6 +2,8 @@ import { ArrowUpRight, Heart, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BlurFade } from "@/components/ui/magic/blur-fade";
+import { ReadingProgress } from "@/components/blog/reading-progress";
 
 interface PostHeaderProps {
   title: string;
@@ -19,9 +21,9 @@ interface PostHeaderProps {
 /**
  * Editorial header for a syndicated dev.to post. Same atmospheric
  * stack as case-study and game detail headers (cyber-grid + archive
- * vignette), but the meta ribbon below the title surfaces dev.to-
- * specific signals: reactions, comments, and a "view on dev.to" CTA
- * that opens the canonical source in a new tab.
+ * vignette), with a meta ribbon that surfaces date, reading time,
+ * reactions, and comments. Renders a ring-color reading-progress
+ * bar fixed to the bottom edge of the sticky site header.
  */
 export function PostHeader({
   title,
@@ -37,6 +39,7 @@ export function PostHeader({
 }: PostHeaderProps) {
   return (
     <header className="relative overflow-hidden border-b">
+      <ReadingProgress />
       <div
         className="absolute inset-0 bg-cyber-grid opacity-30"
         aria-hidden="true"
@@ -55,12 +58,18 @@ export function PostHeader({
           {description}
         </p>
 
-        <dl className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+        {/* Meta ribbon. On <sm we drop the inline `·` separators in
+         * favor of a wrap-friendly chip stack so a long reading time
+         * never orphans the reactions count on the next line. */}
+        <dl className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-5 sm:gap-y-2 sm:text-[0.65rem] sm:tracking-[0.2em]">
           <div className="flex items-center gap-2">
             <dt className="sr-only">Published</dt>
             <dd>{date}</dd>
           </div>
-          <span aria-hidden="true" className="text-muted-foreground/40">
+          <span
+            aria-hidden="true"
+            className="hidden text-muted-foreground/40 sm:inline"
+          >
             ·
           </span>
           <div className="flex items-center gap-2">
@@ -69,7 +78,10 @@ export function PostHeader({
           </div>
           {reactionsCount > 0 ? (
             <>
-              <span aria-hidden="true" className="text-muted-foreground/40">
+              <span
+                aria-hidden="true"
+                className="hidden text-muted-foreground/40 sm:inline"
+              >
                 ·
               </span>
               <div className="flex items-center gap-1.5">
@@ -81,7 +93,10 @@ export function PostHeader({
           ) : null}
           {commentsCount > 0 ? (
             <>
-              <span aria-hidden="true" className="text-muted-foreground/40">
+              <span
+                aria-hidden="true"
+                className="hidden text-muted-foreground/40 sm:inline"
+              >
                 ·
               </span>
               <div className="flex items-center gap-1.5">
@@ -139,17 +154,19 @@ export function PostHeader({
         </div>
 
         {cover ? (
-          <figure className="mt-10 overflow-hidden rounded-md border border-border">
-            <Image
-              src={cover.src}
-              alt={cover.alt}
-              width={1000}
-              height={420}
-              priority
-              sizes="(min-width: 768px) 768px, 100vw"
-              className="h-auto w-full"
-            />
-          </figure>
+          <BlurFade delay={0.05}>
+            <figure className="mt-10 aspect-16/10 overflow-hidden rounded-md border border-border bg-muted">
+              <Image
+                src={cover.src}
+                alt={cover.alt}
+                width={1000}
+                height={420}
+                priority
+                sizes="(min-width: 768px) 768px, 100vw"
+                className="h-full w-full object-cover"
+              />
+            </figure>
+          </BlurFade>
         ) : null}
       </div>
     </header>

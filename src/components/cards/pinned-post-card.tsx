@@ -1,4 +1,5 @@
 import { ArrowUpRight, Star } from "lucide-react";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
@@ -10,17 +11,34 @@ interface PinnedPostCardProps {
 }
 
 const cardClass =
-  "group relative grid gap-4 overflow-hidden rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8";
+  "group relative block overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+const bodyClass = "grid gap-4 p-6 sm:p-8";
 
 /**
  * One-per-site pinned essay slot at the top of /blog. Uses the
  * display family for the title; otherwise reads the same data shape
- * as PostListItem. Routes to `canonicalUrl` (dev.to) when set,
- * otherwise the in-site `/blog/[slug]` route.
+ * as PostListItem. Routes to the in-site `/blog/[slug]` detail
+ * route — Phase 8.2 ships in-site rendering for syndicated posts.
+ *
+ * When `coverImage` is set, the card grows a 16:10 hero above the
+ * meta row (mirrors `ProjectCard` rest/hover treatment).
  */
 export async function PinnedPostCard({ post }: PinnedPostCardProps) {
   const t = await getTranslations("Blog");
   const isDraft = post.status !== "ready";
+
+  const cover = post.coverImage ? (
+    <div className="relative aspect-16/10 overflow-hidden border-b bg-muted">
+      <Image
+        src={post.coverImage.src}
+        alt={post.coverImage.alt}
+        fill
+        sizes="(min-width: 1024px) 1024px, 100vw"
+        className="object-cover grayscale transition duration-500 group-hover:scale-[1.02] group-hover:grayscale-0"
+      />
+    </div>
+  ) : null;
 
   const body = (
     <>
@@ -67,7 +85,8 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
 
   return (
     <Link href={`/blog/${post.slug}`} className={cardClass}>
-      {body}
+      {cover}
+      <div className={bodyClass}>{body}</div>
     </Link>
   );
 }
