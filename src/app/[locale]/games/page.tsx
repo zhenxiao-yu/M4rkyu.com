@@ -10,6 +10,7 @@ import { games } from "@/content/games";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { localize } from "@/lib/content/localize";
+import { summarize } from "@/lib/content/summary";
 
 export async function generateMetadata({
   params,
@@ -34,8 +35,9 @@ export default async function GamesPage({
   const { locale } = await params;
   const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const tGame = await getTranslations({ locale, namespace: "Game" });
-  const readyCount = games.filter((g) => g.status === "ready").length;
-  const draftCount = games.length - readyCount;
+  const summary = summarize(games);
+  const readyCount = summary.ready;
+  const draftCount = summary.total - summary.ready;
 
   return (
     <PageShell locale={locale}>
