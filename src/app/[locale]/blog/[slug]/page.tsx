@@ -101,11 +101,6 @@ export default async function BlogPostPage({
           canonicalUrl={meta.canonical_url}
           reactionsCount={meta.positive_reactions_count}
           commentsCount={meta.comments_count}
-          cover={
-            meta.cover_image
-              ? { src: meta.cover_image, alt: meta.title }
-              : undefined
-          }
           username={DEVTO_USERNAME}
         />
 

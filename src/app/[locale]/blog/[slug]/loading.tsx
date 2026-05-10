@@ -56,12 +56,6 @@ export default function BlogPostLoading() {
             <div className={`${lineBase} h-8 w-32 rounded-md`} />
             <div className={`${lineBase} h-8 w-24 rounded-md`} />
           </div>
-
-          {/* Cover */}
-          <div
-            aria-hidden="true"
-            className="mt-10 aspect-16/10 w-full animate-pulse rounded-md border border-border bg-muted [animation-duration:1.6s]"
-          />
         </div>
       </header>
 
