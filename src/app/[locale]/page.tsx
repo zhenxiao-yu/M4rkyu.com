@@ -103,60 +103,51 @@ export default async function HomePage({
       {statusEntries.length > 0 ? (
         <section className="border-b bg-muted/20">
           <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-            <FadeIn>
-              <StatusPulseRow current={statusEntries} />
-            </FadeIn>
+            <StatusPulseRow current={statusEntries} />
           </div>
         </section>
       ) : null}
 
       {/* Featured projects */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <FadeIn>
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <SectionHeading
-              eyebrow="selected systems"
-              title={t("featured")}
-              description={t("featuredDescription")}
-            />
-            <Button asChild variant="outline" className="shrink-0">
-              <Link href="/projects" locale={locale}>
-                {t("fullArchive")}
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
-            </Button>
-          </div>
-        </FadeIn>
-        <Stagger className="mt-10 grid gap-5 md:grid-cols-3" delay={0.1}>
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <SectionHeading
+            eyebrow="selected systems"
+            title={t("featured")}
+            description={t("featuredDescription")}
+          />
+          <Button asChild variant="outline" className="shrink-0">
+            <Link href="/projects" locale={locale}>
+              {t("fullArchive")}
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
           {featuredProjects.slice(0, 3).map((project, index) => (
-            <StaggerItem key={project.slug}>
-              <ProjectCard
-                project={project}
-                locale={locale}
-                highlighted={index === 0}
-              />
-            </StaggerItem>
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              locale={locale}
+              highlighted={index === 0}
+            />
           ))}
-        </Stagger>
+        </div>
       </section>
 
       {/* Writing pulse */}
       <section className="border-y bg-muted/30">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <FadeIn>
-            <SectionHeading
-              eyebrow="writing pulse"
-              title={t("latest")}
-              description={t("latestDescription")}
+          <SectionHeading
+            eyebrow="writing pulse"
+            title={t("latest")}
+            description={t("latestDescription")}
+          />
+          <div className="mt-8">
+            <WritingPulseRow
+              posts={{ latest: writingLatest, devlog: writingDevlog }}
             />
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <div className="mt-8">
-              <WritingPulseRow
-                posts={{ latest: writingLatest, devlog: writingDevlog }}
-              />
-            </div>
-          </FadeIn>
+          </div>
         </div>
       </section>
 
