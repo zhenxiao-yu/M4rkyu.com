@@ -25,9 +25,12 @@
     "switchTo": "Switch to {target}"
   },
   "Home": {
-    "eyebrow": "M4rkyu.com / 2027 remake",
-    "title": "ZhenXiao Mark Yu",
-    "subtitle": "Software engineer, frontend systems builder, game developer, and digital artist building precise interfaces with cinematic restraint.",
+    "eyebrow": "M4RKYU.SYS · v2027",
+    "title": "One archive. Software, art, games.",
+    "subtitle": "Software engineer, game developer, and visual archivist. This site collects the work, the logs, and a small set of tools that earn their keep.",
+    "heroCtaBrowse": "Browse the work",
+    "heroCtaLogs": "Read the logs",
+    "heroCmdkHint": ">_ press ⌘K",
     "primaryCta": "View projects",
     "portalCta": "Enter portal",
     "featured": "Featured case studies",

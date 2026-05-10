@@ -25,9 +25,12 @@
     "switchTo": "切换到 {target}"
   },
   "Home": {
-    "eyebrow": "M4rkyu.com / 2027 重制",
-    "title": "ZhenXiao Mark Yu",
-    "subtitle": "软件工程师、前端系统构建者、游戏开发者与数字艺术创作者。用克制的电影感，打磨清晰、可靠、有质感的界面。",
+    "eyebrow": "M4RKYU.SYS · v2027",
+    "title": "一份档案。软件、艺术、游戏。",
+    "subtitle": "软件工程师，游戏开发者，视觉记录者。这里收录作品、日志，以及为自己写的小工具。",
+    "heroCtaBrowse": "浏览作品",
+    "heroCtaLogs": "阅读日志",
+    "heroCmdkHint": ">_ 按 ⌘K",
     "primaryCta": "查看项目",
     "portalCta": "进入 Portal",
     "featured": "精选案例",

@@ -32,8 +32,16 @@ test("theme and language controls are visible on desktop", async ({ page }) => {
   if (await menu.isVisible()) {
     await menu.click();
   }
-  await expect(page.locator('[data-testid="language-switcher"]:visible')).toBeVisible();
-  await expect(page.locator('[data-testid="theme-toggle"]:visible')).toBeVisible();
+  // `.first()` because Phase 3 surfaces the same controls in the
+  // hero's GameHud strip as well as the header — both are valid
+  // entry points; the test only needs to confirm at least one is
+  // reachable. Mirrors the `.first()` pattern used on line 45.
+  await expect(
+    page.locator('[data-testid="language-switcher"]:visible').first(),
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-testid="theme-toggle"]:visible').first(),
+  ).toBeVisible();
 });
 
 test("theme toggle flips data-theme on click", async ({ page }) => {
