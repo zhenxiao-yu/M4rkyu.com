@@ -188,6 +188,16 @@
     "title": "关于 Mark",
     "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
   },
+  "Meta": {
+    "galleryTitle": "影像",
+    "galleryDescription": "黑白摄影、数字艺术与样片 —— 于震潇的视觉档案。",
+    "resourcesTitle": "资源",
+    "resourcesDescription": "工具、框架与参考 —— 真正在使用的小型个人技术栈。",
+    "contactTitle": "联系",
+    "contactDescription": "项目咨询与合作。当前提供邮件与表单回退，后续接入服务端表单服务。",
+    "mediaTitle": "媒体",
+    "mediaDescription": "视频与流程档案 —— 占位帧先撑住版面，正式片段与海报随后替换。"
+  },
   "Portal": {
     "title": "Portal",
     "intro": "可选的交互式路由。当前保持轻量、快速、安静 —— 仅有氛围层。",

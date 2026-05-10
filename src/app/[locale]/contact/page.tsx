@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,10 +17,10 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const tMeta = await getTranslations({ locale, namespace: "Meta" });
   return {
-    title: "Contact",
-    description:
-      "Project inquiries and collaboration. Mailto and form fallback now, server-side provider later.",
+    title: tMeta("contactTitle"),
+    description: tMeta("contactDescription"),
     alternates: buildAlternates(locale, "/contact"),
   };
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
@@ -13,10 +14,10 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const tMeta = await getTranslations({ locale, namespace: "Meta" });
   return {
-    title: "Resources",
-    description:
-      "Tools, frameworks, and references — the small personal stack actually in use.",
+    title: tMeta("resourcesTitle"),
+    description: tMeta("resourcesDescription"),
     alternates: buildAlternates(locale, "/resources"),
   };
 }

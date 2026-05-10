@@ -188,6 +188,16 @@
     "title": "About Mark",
     "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."
   },
+  "Meta": {
+    "galleryTitle": "Gallery",
+    "galleryDescription": "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
+    "resourcesTitle": "Resources",
+    "resourcesDescription": "Tools, frameworks, and references — the small personal stack actually in use.",
+    "contactTitle": "Contact",
+    "contactDescription": "Project inquiries and collaboration. Mailto and form fallback now, server-side provider later.",
+    "mediaTitle": "Media",
+    "mediaDescription": "Video and process archive — draft frames hold the layout while final clips and posters land."
+  },
   "Portal": {
     "title": "Portal",
     "intro": "An opt-in interactive route. For now, the terminal stays light, fast, and quiet — atmosphere only.",
