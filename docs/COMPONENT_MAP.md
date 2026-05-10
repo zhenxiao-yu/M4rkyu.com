@@ -1,11 +1,18 @@
 ---
 title: M4rkyu.com — Component Map
-status: planning
+status: living
 audience: implementation agents (Claude, Codex), reviewers
-last_updated: 2026-05-07
+last_updated: 2026-05-10
 ---
 
 # Component Map
+
+> **Status as of 2026-05-10**: every public route in this map has
+> shipped (homepage, projects + slug, games + slug, gallery + slug,
+> blog timeline, media, resources, about, contact, portal, 404). The
+> `/tools` route was cut in Phase 4.5 — it duplicated `/resources`
+> and was orphaned. Section-by-section composition below is still
+> useful as a reference; flag drift in a follow-up if a page strays.
 
 Page-by-page composition for the redesign. Each section answers:
 
