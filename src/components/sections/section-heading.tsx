@@ -1,3 +1,5 @@
+import { GlitchText } from "@/components/motion/glitch-text";
+
 interface SectionHeadingProps {
   eyebrow?: string;
   title: string;
@@ -9,6 +11,13 @@ interface SectionHeadingProps {
    * `h1` via `CaseStudyHeader` / `GameDetailHeader`.
    */
   as?: "h1" | "h2";
+  /**
+   * Opt out of the single-shot glitch effect on the H1. Defaults to
+   * false so archive page titles get the entry animation; pages
+   * that want a quieter reveal (or already animate the title via
+   * another path) can disable it.
+   */
+  disableGlitch?: boolean;
 }
 
 const headingClass =
@@ -19,8 +28,10 @@ export function SectionHeading({
   title,
   description,
   as = "h2",
+  disableGlitch = false,
 }: SectionHeadingProps) {
   const Heading = as;
+  const useGlitch = as === "h1" && !disableGlitch;
   return (
     <div className="max-w-3xl">
       {eyebrow ? (
@@ -28,7 +39,9 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <Heading className={headingClass}>{title}</Heading>
+      <Heading className={headingClass}>
+        {useGlitch ? <GlitchText>{title}</GlitchText> : title}
+      </Heading>
       {description ? (
         <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
           {description}

@@ -13,6 +13,52 @@
  * for non-theme transitions (e.g. router moves) — we don't want
  * route changes to circle-reveal too. */
 @media (prefers-reduced-motion: no-preference) {
+  /* GlitchText (Phase 7.2) — single-shot RGB-split glitch on mount.
+   * Pseudo-elements duplicate the text via `data-text`, sliced into
+   * top/bottom halves and offset in the ring + signal colors. The
+   * `both` keyword keeps the pseudo layers at their final
+   * (transparent) state after the keyframe finishes, so the title
+   * sits still after entry. */
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Inherit typography explicitly so a future change to the host
+     * heading class can't silently leave the duplicates behind. */
+    font: inherit;
+    line-height: inherit;
+    pointer-events: none;
+    user-select: none;
+  }
+  .glitch-text::before {
+    color: var(--ring);
+    animation: glitch-slice-a 320ms steps(6, end) 1 both;
+  }
+  /* `--signal` is defined on `:root` (light) and intentionally not
+   * overridden in dark — the saturated red reads cleanly on both
+   * surfaces and matches the live-signal dot in StatusPulseRow. */
+  .glitch-text::after {
+    color: var(--signal);
+    animation: glitch-slice-b 320ms steps(6, end) 1 both;
+  }
+  @keyframes glitch-slice-a {
+    0% { clip-path: inset(0 0 65% 0); transform: translate(-3px, 0); opacity: 0.85; }
+    25% { clip-path: inset(15% 0 60% 0); transform: translate(2px, 0); opacity: 0.7; }
+    50% { clip-path: inset(8% 0 70% 0); transform: translate(-2px, 0); opacity: 0.6; }
+    75% { clip-path: inset(20% 0 50% 0); transform: translate(1px, 0); opacity: 0.4; }
+    100% { clip-path: inset(0 0 65% 0); transform: translate(0, 0); opacity: 0; }
+  }
+  @keyframes glitch-slice-b {
+    0% { clip-path: inset(60% 0 0 0); transform: translate(3px, 0); opacity: 0.85; }
+    25% { clip-path: inset(50% 0 10% 0); transform: translate(-2px, 0); opacity: 0.7; }
+    50% { clip-path: inset(70% 0 5% 0); transform: translate(2px, 0); opacity: 0.6; }
+    75% { clip-path: inset(40% 0 25% 0); transform: translate(-1px, 0); opacity: 0.4; }
+    100% { clip-path: inset(60% 0 0 0); transform: translate(0, 0); opacity: 0; }
+  }
+
   /* Kill the default cross-fade on the OLD layer so the NEW layer
    * reveals over a static snapshot — the circle keyframe owns the
    * whole transition. */
