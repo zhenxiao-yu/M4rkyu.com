@@ -65,19 +65,6 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
     </>
   );
 
-  if (post.canonicalUrl) {
-    return (
-      <a
-        href={post.canonicalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cardClass}
-      >
-        {body}
-      </a>
-    );
-  }
-
   return (
     <Link href={`/blog/${post.slug}`} className={cardClass}>
       {body}
