@@ -5,6 +5,33 @@
  * (icons, color tweaks) just work. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* Theme view-transition: when ThemeSwitcher sets data-theme-sweep="on"
+ * on <html> and the View Transitions API is available, the next
+ * theme is revealed via a circle expanding from the click position
+ * (--vt-cx / --vt-cy CSS vars set in the same JS click handler).
+ * Without `data-theme-sweep`, the default browser cross-fade plays
+ * for non-theme transitions (e.g. router moves) — we don't want
+ * route changes to circle-reveal too. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Kill the default cross-fade on the OLD layer so the NEW layer
+   * reveals over a static snapshot — the circle keyframe owns the
+   * whole transition. */
+  [data-theme-sweep="on"]::view-transition-old(root) {
+    animation: none;
+  }
+  [data-theme-sweep="on"]::view-transition-new(root) {
+    animation: theme-sweep 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes theme-sweep {
+    from {
+      clip-path: circle(0 at var(--vt-cx, 50%) var(--vt-cy, 50%));
+    }
+    to {
+      clip-path: circle(150% at var(--vt-cx, 50%) var(--vt-cy, 50%));
+    }
+  }
+}
+
 :root {
   color-scheme: light;
   --background: #f5f3ee;
