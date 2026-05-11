@@ -39,6 +39,7 @@ export async function ProjectCartridge({
     locale,
     namespace: "Categories",
   });
+  const tStatus = await getTranslations({ locale, namespace: "Status" });
 
   return (
     <header className="relative overflow-hidden border-b">
@@ -74,7 +75,10 @@ export async function ProjectCartridge({
                   * friendly localized-ish label (Ready / Draft / Pending /
                   * Soon); a second DraftBadge would duplicate the chip
                   * and leak the raw enum value into the UI. */}
-                <SystemBadge status={project.contentStatus} />
+                <SystemBadge
+                  status={project.contentStatus}
+                  label={tStatus(project.contentStatus)}
+                />
               </div>
             </PixelPanel>
           </aside>

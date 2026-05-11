@@ -27,6 +27,17 @@
   "Hud": {
     "systemStatus": "System status"
   },
+  "Status": {
+    "ready": "Ready",
+    "draft": "Draft",
+    "placeholder": "Pending",
+    "coming-soon": "Soon",
+    "live": "Live",
+    "now": "Now",
+    "wip": "WIP",
+    "archive": "Archive",
+    "info": "Info"
+  },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
     "title": "One archive. Software, art, games.",
