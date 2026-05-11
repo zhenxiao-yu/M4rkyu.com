@@ -1,15 +1,25 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
-import { GalleryLightbox } from "@/components/gallery/gallery-lightbox";
 import type { GalleryItem } from "@/content/schemas";
 import { cn } from "@/lib/utils";
+
+// Lightbox is only needed after a user clicks a frame — defer the
+// Dialog + per-frame controls bundle until first interaction.
+const GalleryLightbox = dynamic(
+  () =>
+    import("@/components/gallery/gallery-lightbox").then(
+      (mod) => mod.GalleryLightbox,
+    ),
+  { ssr: false },
+);
 
 interface GalleryGridProps {
   items: GalleryItem[];
@@ -78,12 +88,14 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
         ))}
       </div>
 
-      <GalleryLightbox
-        items={orderedItems}
-        openSlug={frame}
-        locale={locale}
-        onChange={setOpenSlug}
-      />
+      {frame !== null ? (
+        <GalleryLightbox
+          items={orderedItems}
+          openSlug={frame}
+          locale={locale}
+          onChange={setOpenSlug}
+        />
+      ) : null}
     </>
   );
 }

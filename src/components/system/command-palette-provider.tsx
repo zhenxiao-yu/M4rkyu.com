@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
   createContext,
   useCallback,
@@ -9,7 +10,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CommandPalette, type PalettePost } from "./command-palette";
+import type { PalettePost } from "./command-palette";
+
+// Dynamic import keeps cmdk + Radix Dialog + the lucide icon set +
+// the gallery content payload out of the initial JS bundle on every
+// route. The dialog body is only fetched the first time the user
+// opens the palette (Cmd+K or trigger button).
+const CommandPalette = dynamic(
+  () => import("./command-palette").then((mod) => mod.CommandPalette),
+  { ssr: false },
+);
 
 interface CommandPaletteContextValue {
   open: boolean;
@@ -41,8 +51,20 @@ export function CommandPaletteProvider({
   posts,
 }: CommandPaletteProviderProps) {
   const [open, setOpen] = useState(false);
+  // Latch flips the first time the palette opens so the dynamic
+  // import is initiated only on demand — we keep the chunk mounted
+  // afterwards so subsequent opens are instant.
+  const [hasOpened, setHasOpened] = useState(false);
 
-  const toggle = useCallback(() => setOpen((value) => !value), []);
+  const toggle = useCallback(() => {
+    setOpen((value) => !value);
+    setHasOpened(true);
+  }, []);
+
+  const handleSetOpen = useCallback((next: boolean) => {
+    setOpen(next);
+    if (next) setHasOpened(true);
+  }, []);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -60,14 +82,16 @@ export function CommandPaletteProvider({
   }, [toggle]);
 
   const value = useMemo(
-    () => ({ open, setOpen, toggle }),
-    [open, toggle],
+    () => ({ open, setOpen: handleSetOpen, toggle }),
+    [open, handleSetOpen, toggle],
   );
 
   return (
     <CommandPaletteContext.Provider value={value}>
       {children}
-      <CommandPalette open={open} onOpenChange={setOpen} posts={posts} />
+      {hasOpened ? (
+        <CommandPalette open={open} onOpenChange={handleSetOpen} posts={posts} />
+      ) : null}
     </CommandPaletteContext.Provider>
   );
 }

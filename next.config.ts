@@ -49,6 +49,11 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  compiler: {
+    // Strip dev logs from production client bundles. Keep errors and
+    // warnings so real problems still surface in the browser console.
+    removeConsole: { exclude: ["error", "warn"] },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     // Dev.to-syndicated post bodies (Phase 8.2) reference images
