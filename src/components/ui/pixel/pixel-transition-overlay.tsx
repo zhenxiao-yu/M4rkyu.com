@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Mode = "dither" | "wipe-l" | "wipe-r";
@@ -31,15 +34,18 @@ interface PixelTransitionOverlayProps {
  * easing token; the curtain is `pointer-events-none` and `aria-hidden`
  * so it never traps focus or steals clicks.
  *
- * Reduced-motion: the universal `transition-duration` / `animation-duration`
- * override in globals.css collapses the curtain to a 1ms no-op, matching
- * the §4.9 a11y spec without requiring an inline `useReducedMotion` check.
+ * Reduced-motion: short-circuits to `null` via `useReducedMotion()` so
+ * the keyframe never runs at all. The globals.css `animation-duration`
+ * override stays as a backstop for any other animated surface.
  */
 export function PixelTransitionOverlay({
   mode = "dither",
   duration = "medium",
   className,
 }: PixelTransitionOverlayProps) {
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return null;
+
   return (
     <div
       aria-hidden="true"
