@@ -29,10 +29,10 @@ export function Footer({ locale }: { locale: Locale }) {
             </p>
             <ul className="mt-4 grid gap-3 text-sm">
               {[
-                { label: "Projects", href: "/projects" },
+                { label: "Projects", href: "/work" },
                 { label: "Games", href: "/games" },
-                { label: "Gallery", href: "/gallery" },
-                { label: "Writing", href: "/blog" },
+                { label: "Gallery", href: "/archive" },
+                { label: "Writing", href: "/logs" },
                 { label: "Resources", href: "/resources" },
               ].map(({ label, href }) => (
                 <li key={href}>

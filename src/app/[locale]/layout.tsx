@@ -27,7 +27,7 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: locale as Locale });
 
   // Slim payload — only fields the palette indexes. Cached fetcher,
-  // shared with /blog and /blog/[slug] within the same render.
+  // shared with /logs and /logs/[slug] within the same render.
   const posts = await getPosts();
   const palettePosts = posts.slice(0, 20).map((post) => ({
     slug: post.slug,

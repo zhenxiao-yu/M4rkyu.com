@@ -9,10 +9,10 @@ import { NavLink } from "./nav-link";
 import { MobileNav } from "./mobile-nav";
 
 const navItems = [
-  ["projects", "/projects"],
+  ["projects", "/work"],
   ["games", "/games"],
-  ["gallery", "/gallery"],
-  ["blog", "/blog"],
+  ["gallery", "/archive"],
+  ["blog", "/logs"],
   ["media", "/media"],
   ["resources", "/resources"],
   ["about", "/about"],

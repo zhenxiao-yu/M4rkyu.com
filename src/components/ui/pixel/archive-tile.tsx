@@ -42,7 +42,7 @@ export function ArchiveTile({
   return (
     <BlurFade className={cn(className)}>
       <Link
-        href={`/gallery?frame=${item.slug}`}
+        href={`/archive?frame=${item.slug}`}
         aria-label={t("openFrame", { title: item.title })}
         className="group block overflow-hidden rounded-sm border border-border bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >

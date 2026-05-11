@@ -40,12 +40,12 @@ export async function HeroSection({ locale }: { locale: Locale }) {
               glyph="caret"
               sound="confirm"
               size="lg"
-              href="/projects"
+              href="/work"
             >
               {t("heroCtaBrowse")}
             </PixelButton>
             <Button variant="outline" size="lg" asChild>
-              <Link href="/blog" locale={locale}>
+              <Link href="/logs" locale={locale}>
                 {t("heroCtaLogs")}
                 <ArrowUpRight className="size-4" aria-hidden="true" />
               </Link>

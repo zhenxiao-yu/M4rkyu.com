@@ -15,9 +15,9 @@ const cardClass =
 const bodyClass = "grid gap-4 p-6 sm:p-8";
 
 /**
- * One-per-site pinned essay slot at the top of /blog. Uses the
+ * One-per-site pinned essay slot at the top of /logs. Uses the
  * display family for the title; otherwise reads the same data shape
- * as PostListItem. Routes to the in-site `/blog/[slug]` detail
+ * as PostListItem. Routes to the in-site `/logs/[slug]` detail
  * route — Phase 8.2 ships in-site rendering for syndicated posts.
  *
  * Cover imagery is intentionally omitted: the pinned card was the
@@ -73,7 +73,7 @@ export async function PinnedPostCard({ post }: PinnedPostCardProps) {
   );
 
   return (
-    <Link href={`/blog/${post.slug}`} className={cardClass}>
+    <Link href={`/logs/${post.slug}`} className={cardClass}>
       <div className={bodyClass}>{body}</div>
     </Link>
   );

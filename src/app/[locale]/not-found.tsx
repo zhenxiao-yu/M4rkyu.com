@@ -40,7 +40,7 @@ export default async function NotFoundPage() {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/gallery" locale={locale}>
+                  <Link href="/archive" locale={locale}>
                     {t("gallery")}
                   </Link>
                 </Button>

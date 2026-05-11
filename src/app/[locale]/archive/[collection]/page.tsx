@@ -28,7 +28,7 @@ export async function generateMetadata({
   return {
     title: item.title,
     description: item.description,
-    alternates: buildAlternates(locale, `/gallery/${collection}`),
+    alternates: buildAlternates(locale, `/archive/${collection}`),
   };
 }
 

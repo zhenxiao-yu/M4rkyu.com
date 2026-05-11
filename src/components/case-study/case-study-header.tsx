@@ -29,7 +29,7 @@ export async function CaseStudyHeader({
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
         <Link
-          href="/projects"
+          href="/work"
           className="font-mono text-[0.7rem] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
         >
           ← {t("projectsIndex")}

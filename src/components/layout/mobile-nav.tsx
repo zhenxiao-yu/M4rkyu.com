@@ -16,10 +16,10 @@ import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 
 const navItems = [
-  ["projects", "/projects"],
+  ["projects", "/work"],
   ["games", "/games"],
-  ["gallery", "/gallery"],
-  ["blog", "/blog"],
+  ["gallery", "/archive"],
+  ["blog", "/logs"],
   ["media", "/media"],
   ["resources", "/resources"],
   ["about", "/about"],

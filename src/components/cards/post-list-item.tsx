@@ -16,7 +16,7 @@ const monoMeta =
   "font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground";
 
 /**
- * Always routes to the in-site `/blog/[slug]` detail page (Phase
+ * Always routes to the in-site `/logs/[slug]` detail page (Phase
  * 8.2). Syndicated posts now render in-site with a "View on dev.to"
  * affordance inside the post header, so we no longer link out from
  * the timeline.
@@ -31,7 +31,7 @@ function RowLink({
   children: ReactNode;
 }) {
   return (
-    <Link href={`/blog/${post.slug}`} className={className}>
+    <Link href={`/logs/${post.slug}`} className={className}>
       {children}
     </Link>
   );

@@ -84,7 +84,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild size="sm">
-              <Link href={`/projects/${project.slug}`} locale={locale}>
+              <Link href={`/work/${project.slug}`} locale={locale}>
                 {t("caseStudy")}
                 <ArrowUpRight className="size-3.5" />
               </Link>

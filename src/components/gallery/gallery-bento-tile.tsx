@@ -25,7 +25,7 @@ export function GalleryBentoTile({ item, span }: GalleryBentoTileProps) {
   return (
     <BentoCard span={span} className="p-0">
       <Link
-        href={`/gallery?frame=${item.slug}`}
+        href={`/archive?frame=${item.slug}`}
         aria-label={t("openFrame", { title: item.title })}
         className="relative flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >

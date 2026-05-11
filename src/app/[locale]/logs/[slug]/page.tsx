@@ -42,7 +42,7 @@ export async function generateMetadata({
     // **overrides** the in-site URL with the dev.to canonical so
     // search engines treat dev.to as the source of truth.
     alternates: {
-      ...buildAlternates(locale, `/blog/${slug}`),
+      ...buildAlternates(locale, `/logs/${slug}`),
       canonical: meta.canonical_url,
     },
     openGraph: {
@@ -58,7 +58,7 @@ export async function generateMetadata({
 function adjacentEntry(article: DevtoArticleListItem | undefined) {
   if (!article) return undefined;
   return {
-    href: `/blog/${article.slug}`,
+    href: `/logs/${article.slug}`,
     title: article.title,
     pitch: article.description,
   };
@@ -144,7 +144,7 @@ export default async function BlogPostPage({
         </BlurFade>
 
         <BlurFade delay={0.15}>
-          <CaseStudyFooter prev={prev} next={next} archiveHref="/blog" />
+          <CaseStudyFooter prev={prev} next={next} archiveHref="/logs" />
         </BlurFade>
       </article>
     </PageShell>

@@ -1,5 +1,5 @@
 /**
- * Skeleton shown while the `/blog` server component awaits the
+ * Skeleton shown while the `/logs` server component awaits the
  * dev.to listing fetch. Mirrors the live composition: hero + toolbar
  * + first batch of timeline rows. Static Tailwind `animate-pulse`
  * only; `prefers-reduced-motion` halts the pulse via Tailwind 4
