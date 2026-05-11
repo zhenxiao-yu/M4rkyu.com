@@ -22,7 +22,14 @@ export async function PageShell({
         Skip to content
       </a>
       <Header locale={locale} />
-      <main id="main-content" className="flex-1">
+      {/* The header is sticky and reserves 60px of flow space. Pull
+        * `<main>` up by the same 60px so each page's first section
+        * (with its cyber-grid / noise / scanline overlay) extends to
+        * y=0 of the viewport and renders behind the glass dock —
+        * eliminates the body-coloured "bar" that would otherwise sit
+        * above every hero. Section content uses `py-16` (64px), which
+        * leaves a 4px clearance below the 60px dock end. */}
+      <main id="main-content" className="-mt-15 flex-1">
         <PageFade>{children}</PageFade>
       </main>
       <Footer locale={locale} />

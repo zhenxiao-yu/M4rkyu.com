@@ -48,11 +48,16 @@ export async function Header({ locale }: { locale: Locale }) {
   }));
 
   return (
-    // Outer wrapper is pointer-events-none so the gutter around the
-    // floating dock doesn't trap clicks on page content beneath. The
-    // dock itself re-enables them.
-    <header className="pointer-events-none sticky top-0 z-40 px-3 pt-3 sm:px-4 sm:pt-4">
-      <div className="pointer-events-auto mx-auto flex h-12 w-full max-w-7xl items-center gap-2 rounded-2xl border border-border/70 bg-background/70 px-2 shadow-lg shadow-black/5 backdrop-blur-2xl sm:h-14 sm:gap-3 sm:px-3 dark:shadow-black/20">
+    // Sticky header. The outer wrapper reserves 60px of flow space —
+    // page-shell pulls `<main>` up by the same amount so each page's
+    // hero atmospheric layer (cyber-grid / noise / scanline) extends
+    // behind the glass dock instead of leaving a body-coloured bar
+    // above it. The dock height is locked at `h-12` across breakpoints
+    // so hero content (sections use `py-16`) always clears the dock.
+    // `pointer-events-none` keeps the gutter click-through; the dock
+    // itself re-enables clicks.
+    <header className="pointer-events-none sticky top-0 z-40 px-3 pt-3 sm:px-4">
+      <div className="pointer-events-auto mx-auto flex h-12 w-full max-w-7xl items-center gap-2 rounded-2xl border border-border/70 bg-background/70 px-2 shadow-lg shadow-black/5 backdrop-blur-2xl sm:gap-3 sm:px-3 dark:shadow-black/20">
         <Link
           href="/"
           locale={locale}
