@@ -1,14 +1,17 @@
 "use client";
 
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 // Plugin registration runs once per client bundle on first import.
 // Server-side import is harmless because `gsap.registerPlugin` no-ops
 // before any DOM use, but everything that *uses* these plugins must
 // live inside a "use client" component.
-gsap.registerPlugin(ScrollTrigger, SplitText);
+//
+// ScrollTrigger is intentionally NOT registered — no consumer yet.
+// Add it back here only when shipping a surface that needs it (the
+// ~25 KB cost lands the moment registration happens).
+gsap.registerPlugin(SplitText);
 
 // Centralized motion-token defaults. Components should read these
 // instead of typing literals so the editorial pacing stays consistent
@@ -40,4 +43,4 @@ export function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export { gsap, ScrollTrigger, SplitText };
+export { gsap, SplitText };
