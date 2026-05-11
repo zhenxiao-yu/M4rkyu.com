@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { z } from "zod";
 import { Badge } from "../badge";
+import { StatusPulse } from "./status-pulse";
 import { cn } from "@/lib/utils";
 import { contentStatusSchema } from "@/content/schemas";
 
@@ -70,9 +71,9 @@ export function SystemBadge({
   const resolved =
     label ??
     (status ? STATUS_LABEL[status] : kind ? KIND_LABEL[kind] : "Info");
-  // `live` and `now` will pulse in Phase 6 via the dedicated StatusPulse
-  // primitive. For now the dot is static; the accessibility hooks are
-  // already in place so AT users hear updates once the visual pulse lands.
+  // `live` and `now` render a pulsing halo via the StatusPulse primitive
+  // (Phase 6). The outer Badge carries role="status" + aria-live="polite"
+  // so AT users hear updates; the pulse itself is purely decorative.
   const isLive = kind === "live" || kind === "now";
 
   return (
@@ -83,10 +84,14 @@ export function SystemBadge({
       aria-live={isLive ? "polite" : undefined}
       {...rest}
     >
-      <span
-        aria-hidden="true"
-        className={cn("size-1.5 rounded-full", DOT_CLASS[tone])}
-      />
+      {isLive ? (
+        <StatusPulse tone={kind === "live" ? "live" : "now"} />
+      ) : (
+        <span
+          aria-hidden="true"
+          className={cn("size-1.5 rounded-full", DOT_CLASS[tone])}
+        />
+      )}
       <span>{resolved}</span>
     </Badge>
   );
