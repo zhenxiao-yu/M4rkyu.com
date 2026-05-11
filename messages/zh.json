@@ -29,8 +29,8 @@
   },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
-    "title": "一份档案。软件、艺术、游戏。",
-    "subtitle": "软件工程师，游戏开发者，视觉记录者。这里收录作品、日志，以及为自己写的小工具。",
+    "title": "一个还算像样的地方，放这些。",
+    "subtitle": "项目、原型、图像与笔记——来自 Mark Yu。",
     "heroCtaBrowse": "浏览作品",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",
@@ -59,10 +59,10 @@
         "description": "摄影、影像、艺术指导、影像档案策展 —— 每一帧都值得留下。"
       }
     },
-    "primaryCta": "查看项目",
+    "primaryCta": "看看作品",
     "portalCta": "进入 Portal",
-    "featured": "精选案例",
-    "featuredDescription": "面向 Web 应用、AI 工具与数据可视化的生产级案例研究。",
+    "featured": "选出来的几件",
+    "featuredDescription": "几件覆盖 Web 应用、AI 工具与数据可视化的生产级案例。",
     "fullArchive": "完整档案",
     "latest": "写作脉搏",
     "latestDescription": "随笔与开发日志 —— 简短、有日期、有观点。",
