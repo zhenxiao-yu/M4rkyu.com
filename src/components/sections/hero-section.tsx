@@ -35,10 +35,13 @@ export async function HeroSection({ locale }: { locale: Locale }) {
             {t("subtitle")}
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <PixelButton glyph="caret" sound="confirm" size="lg" asChild>
-              <Link href="/projects" locale={locale}>
-                {t("heroCtaBrowse")}
-              </Link>
+            <PixelButton
+              glyph="caret"
+              sound="confirm"
+              size="lg"
+              href="/projects"
+            >
+              {t("heroCtaBrowse")}
             </PixelButton>
             <Button variant="outline" size="lg" asChild>
               <Link href="/blog" locale={locale}>

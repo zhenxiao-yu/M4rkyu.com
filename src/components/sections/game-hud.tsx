@@ -1,5 +1,6 @@
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
+import { SoundToggle } from "@/components/system/sound-toggle";
 import { cn } from "@/lib/utils";
 
 interface GameHudProps {
@@ -16,8 +17,7 @@ interface GameHudProps {
 /**
  * Persistent "system status" strip rendered in the homepage hero
  * footer (and, in a future phase, every page layout). Composes the
- * existing locale + theme toggles; the sound toggle slot is wired
- * in Phase 7.
+ * existing locale + theme + sound toggles.
  */
 export function GameHud({ hint, className }: GameHudProps) {
   return (
@@ -30,12 +30,12 @@ export function GameHud({ hint, className }: GameHudProps) {
     >
       <LanguageSwitcher />
       <ThemeSwitcher />
-      {/* Phase 7 slot — SoundToggle will land here without disturbing layout. */}
-      {/* `font-mono` (not `font-pixel`) because the zh hint contains the CJK
-        * character "按"; the `:lang(zh)` guard in globals.css doesn't yet
-        * fire (root layout still hardcodes `lang="en"`), so font-pixel
-        * would render that glyph through the per-glyph VT323 fallback. */}
-      <span className="ml-auto font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+      <SoundToggle />
+      {/* `font-pixel` is safe now that [locale]/layout.tsx propagates
+        * `lang={locale}` to the DOM — the `:lang(zh)` guard in
+        * globals.css redirects --font-pixel to the display stack on
+        * the zh route, so "按" never reaches the VT323 fallback. */}
+      <span className="ml-auto font-pixel text-base uppercase tracking-[0.12em] text-muted-foreground">
         {hint}
       </span>
     </nav>
