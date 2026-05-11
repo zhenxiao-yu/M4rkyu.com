@@ -274,7 +274,7 @@
   },
   "Contact": {
     "eyebrow": "collaboration",
-    "formProviderTbd": "FORM PROVIDER TBD",
+    "formProviderTbd": "INQUIRY · LIVE",
     "inquiryTitle": "Project inquiry",
     "projectTypeBadge": "Project type",
     "nameLabel": "Name",
@@ -289,9 +289,16 @@
     "messageLabel": "Message",
     "messagePlaceholder": "Tell me the goal, timeline, and what you already have…",
     "messageError": "Add at least 20 characters so the idea has enough context.",
-    "formNote": "This opens a prefilled email for now. A server-side provider can replace it when launch workflow is ready.",
-    "formSubmit": "Prepare email",
-    "formDirect": "Email directly"
+    "formNote": "Inquiries go straight to my inbox via Resend. Replies usually land within a couple of working days.",
+    "formSubmit": "Send inquiry",
+    "formSubmitting": "Sending…",
+    "formDirect": "Email directly",
+    "successTitle": "Inquiry sent",
+    "successBody": "Thanks — I'll get back to you within a couple of working days.",
+    "sendError": "Couldn't send right now. Try the direct mailto fallback below.",
+    "spamReject": "Couldn't verify that you're human. Refresh the page and try again.",
+    "unknownError": "Something went sideways. Try the direct mailto fallback below.",
+    "honeypotLabel": "Leave this field blank"
   },
   "Media": {
     "eyebrow": "video / process",

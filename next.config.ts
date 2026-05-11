@@ -1,5 +1,6 @@
 import createNextIntlPlugin from "next-intl/plugin";
 import createMDX from "@next/mdx";
+import nextBundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -86,5 +87,11 @@ const nextConfig: NextConfig = {
 
 const withNextIntl = createNextIntlPlugin();
 const withMDX = createMDX({});
+// Wrap last so it sees the fully composed config. Runs only when
+// `ANALYZE=true` is set (via the `analyze` npm script); otherwise it's
+// a no-op and the build runs identically to before.
+const withBundleAnalyzer = nextBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
-export default withNextIntl(withMDX(nextConfig));
+export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));

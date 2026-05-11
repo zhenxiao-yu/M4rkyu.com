@@ -274,7 +274,7 @@
   },
   "Contact": {
     "eyebrow": "合作",
-    "formProviderTbd": "表单服务待接入",
+    "formProviderTbd": "咨询通道 · 已上线",
     "inquiryTitle": "项目咨询",
     "projectTypeBadge": "项目类型",
     "nameLabel": "姓名",
@@ -289,9 +289,16 @@
     "messageLabel": "信息",
     "messagePlaceholder": "说说目标、时间线，以及你已经有的素材…",
     "messageError": "至少写 20 个字符，让需求有足够上下文。",
-    "formNote": "目前会打开预填邮件。等正式上线流程就绪后，会接入服务端表单服务。",
-    "formSubmit": "准备邮件",
-    "formDirect": "直接邮件联系"
+    "formNote": "咨询通过 Resend 直接送到我的邮箱。回复一般在 1–2 个工作日内。",
+    "formSubmit": "发送咨询",
+    "formSubmitting": "发送中…",
+    "formDirect": "直接邮件联系",
+    "successTitle": "已发送",
+    "successBody": "感谢联系 —— 我会在 1–2 个工作日内回复。",
+    "sendError": "暂时无法发送。请使用下方的备用邮件链接。",
+    "spamReject": "无法验证你是真人。刷新页面后再试。",
+    "unknownError": "出了点问题。请使用下方的备用邮件链接。",
+    "honeypotLabel": "请勿填写此项"
   },
   "Media": {
     "eyebrow": "视频 / 流程",

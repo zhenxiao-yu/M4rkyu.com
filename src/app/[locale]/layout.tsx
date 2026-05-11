@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 import { routing, type Locale } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog/get-posts";
 
@@ -52,6 +53,10 @@ export default async function LocaleLayout({
             <div lang={locale} className="contents">
               {children}
             </div>
+            {/* Sonner toaster mounts inside ThemeProvider so it tracks
+              * the active data-theme. Any client island can fire
+              * `toast.success(...)` from this point onward. */}
+            <Toaster />
           </CommandPaletteProvider>
         </TooltipProvider>
       </ThemeProvider>

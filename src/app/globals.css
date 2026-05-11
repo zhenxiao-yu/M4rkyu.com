@@ -157,6 +157,10 @@
   --motion-slow: 500ms;
   --motion-cinematic: 800ms;
   --ease-premium: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Sticky floating-dock reserved flow height. Page-shell pulls
+   * `<main>` up by this amount so each page's first section extends
+   * to y=0 behind the glass dock. Change here, both sides update. */
+  --dock-h: 60px;
 
   /* Cyber-pixel foundation tokens — phase 1 of
    * docs/UNIFIED_VISUAL_DIRECTION.md §5.2. Theme-aware values reference

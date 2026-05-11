@@ -48,12 +48,13 @@ export async function Header({ locale }: { locale: Locale }) {
   }));
 
   return (
-    // Sticky header. The outer wrapper reserves 60px of flow space —
-    // page-shell pulls `<main>` up by the same amount so each page's
-    // hero atmospheric layer (cyber-grid / noise / scanline) extends
-    // behind the glass dock instead of leaving a body-coloured bar
-    // above it. The dock height is locked at `h-12` across breakpoints
-    // so hero content (sections use `py-16`) always clears the dock.
+    // Sticky header. The outer wrapper reserves `var(--dock-h)` (60px)
+    // of flow space; page-shell pulls `<main>` up by the same amount
+    // so each page's hero atmospheric layer (cyber-grid / noise /
+    // scanline) extends behind the glass dock instead of leaving a
+    // body-coloured bar above it. `--dock-h` lives on `:root` in
+    // globals.css so both header and main read the same value — change
+    // it in one place when the dock height changes.
     // `pointer-events-none` keeps the gutter click-through; the dock
     // itself re-enables clicks.
     <header className="pointer-events-none sticky top-0 z-40 px-3 pt-3 sm:px-4">
