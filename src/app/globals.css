@@ -297,11 +297,6 @@ body {
   contain-intrinsic-block-size: 600px;
 }
 
-@keyframes marquee {
-  from { transform: translateX(0) }
-  to   { transform: translateX(-50%) }
-}
-
 /* Phase 6 — pixel transition + status pulse keyframes.
  * Paired with --ease-pixel-step (steps(6,end)) from @theme inline so the
  * curtain reads as a low-frame-rate dither rather than a smooth slide.

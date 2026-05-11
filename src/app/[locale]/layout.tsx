@@ -41,7 +41,17 @@ export default async function LocaleLayout({
       <ThemeProvider>
         <TooltipProvider delayDuration={400} skipDelayDuration={150}>
           <CommandPaletteProvider posts={palettePosts}>
-            {children}
+            {/*
+             * `lang={locale}` lives on a `display: contents` wrapper so
+             * the DOM exposes the active locale without altering layout.
+             * This is what lets the `:lang(zh)` CJK guard in globals.css
+             * fire on the /zh route (root <html> stays `lang="en"`),
+             * which in turn lets the pixel layer use `font-pixel` on
+             * translated strings (Phase 7 cleanup of Phase 3's NIT).
+             */}
+            <div lang={locale} className="contents">
+              {children}
+            </div>
           </CommandPaletteProvider>
         </TooltipProvider>
       </ThemeProvider>

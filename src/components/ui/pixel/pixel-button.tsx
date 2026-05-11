@@ -1,5 +1,9 @@
+"use client";
+
 import * as React from "react";
 import { Button, type ButtonProps } from "../button";
+import { Link } from "@/i18n/navigation";
+import { playCue } from "@/lib/audio/ui-sound";
 import { cn } from "@/lib/utils";
 
 type Glyph = "caret" | "play" | "send";
@@ -14,65 +18,85 @@ const GLYPHS: Record<Glyph, string> = {
 const GLYPH_CLASS =
   "font-pixel text-base leading-none opacity-60 transition duration-(--motion-fast) ease-(--ease-premium) group-hover:translate-x-0.5 group-hover:opacity-100";
 
-export interface PixelButtonProps extends ButtonProps {
+const BASE_CLASS =
+  "group transition duration-(--motion-micro) ease-(--ease-premium) active:scale-[0.98]";
+
+export interface PixelButtonProps extends Omit<ButtonProps, "asChild"> {
   /** Optional leading VT323 glyph that slides in on hover. */
   glyph?: Glyph;
   /**
-   * UI sound cue to emit on press. Prop is accepted in Phase 2 but
-   * not yet wired — Phase 7 adds the Web Audio module + SoundToggle.
-   * See docs/UNIFIED_VISUAL_DIRECTION.md §8.
+   * UI sound cue fired on click. Phase 7 wires this to the Web Audio
+   * module in `src/lib/audio/ui-sound.ts`; `playCue` itself is a no-op
+   * unless SoundToggle is ON and `prefers-reduced-motion` is unset.
    */
   sound?: Sound;
+  /**
+   * When set, PixelButton renders an internal next-intl `<Link>` to this
+   * href (button mode otherwise). Use this in place of the prior
+   * `asChild + <Link>` pattern; nesting the glyph + label inside the
+   * Link in one client tree avoids the `React.Children.only` failure
+   * the asChild path hit across the RSC server→client boundary.
+   * When provided, `onClick` is ignored.
+   */
+  href?: string;
 }
 
-export const PixelButton = React.forwardRef<HTMLButtonElement, PixelButtonProps>(
-  // `sound` is accepted in Phase 2 but unused — destructured here so
-  // it never reaches `...rest` and lands on <button> as a stray DOM
-  // attribute. Phase 7 (Web Audio module + SoundToggle) will swap the
-  // unused destructure for an `useUiSound(sound)` hook fired on click.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Phase 7 stub
-  ({ glyph, sound, asChild, className, children, ...rest }, ref) => {
-    const baseClass = cn(
-      // `transition` covers transform AND colors (both in v4's default
-      // property set), so the press scale + the inherited hover-color
-      // animation share one timing function. `active:scale-[0.98]` is
-      // the "confirm" press from §7.2.
-      "group transition duration-(--motion-micro) ease-(--ease-premium) active:scale-[0.98]",
-      className,
-    );
+function renderGlyph(glyph: Glyph | undefined) {
+  if (!glyph) return null;
+  return (
+    <span aria-hidden="true" className={GLYPH_CLASS}>
+      {GLYPHS[glyph]}
+    </span>
+  );
+}
 
-    const glyphNode = glyph ? (
-      <span aria-hidden="true" className={GLYPH_CLASS}>
-        {GLYPHS[glyph]}
-      </span>
-    ) : null;
-
-    // When `asChild` is set, Radix Slot expects exactly one child element
-    // and merges Button's props onto it. Inject the glyph into the
-    // consumer's child so Slot still sees a single element.
-    if (asChild && glyphNode) {
-      const child = React.Children.only(children) as React.ReactElement<{
-        children?: React.ReactNode;
-      }>;
-      const merged = React.cloneElement(
-        child,
-        undefined,
-        glyphNode,
-        child.props.children,
-      );
-      return (
-        <Button ref={ref} asChild className={baseClass} {...rest}>
-          {merged}
-        </Button>
+export const PixelButton = React.forwardRef<
+  HTMLButtonElement,
+  PixelButtonProps
+>(function PixelButton(
+  { glyph, sound, href, className, children, onClick, ...rest },
+  ref,
+) {
+  if (href) {
+    // Dev-only warning — the prop type allows `onClick + href` together
+    // but only the audio cue fires in link mode (Link handles its own
+    // navigation). Surface that quietly rather than letting a caller's
+    // handler silently never run.
+    if (process.env.NODE_ENV !== "production" && onClick) {
+      console.warn(
+        "PixelButton: `onClick` is ignored when `href` is set. Move the handler into the link target or drop `href`.",
       );
     }
-
     return (
-      <Button ref={ref} asChild={asChild} className={baseClass} {...rest}>
-        {glyphNode}
-        {children}
+      <Button
+        ref={ref}
+        asChild
+        className={cn(BASE_CLASS, className)}
+        onClick={() => {
+          if (sound) playCue(sound);
+        }}
+        {...rest}
+      >
+        <Link href={href}>
+          {renderGlyph(glyph)}
+          {children}
+        </Link>
       </Button>
     );
-  },
-);
-PixelButton.displayName = "PixelButton";
+  }
+
+  return (
+    <Button
+      ref={ref}
+      className={cn(BASE_CLASS, className)}
+      onClick={(event) => {
+        if (sound) playCue(sound);
+        onClick?.(event);
+      }}
+      {...rest}
+    >
+      {renderGlyph(glyph)}
+      {children}
+    </Button>
+  );
+});
