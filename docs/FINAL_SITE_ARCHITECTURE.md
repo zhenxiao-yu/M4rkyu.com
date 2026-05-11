@@ -247,21 +247,26 @@ Locked kernel screen · one interactive reveal · link back to main site.
 
 Every page gets **one** signature moment — not zero, not five.
 
-| Route        | Wow factor                                            |
-| ------------ | ----------------------------------------------------- |
-| `/`          | Cinematic boot-sequence command hero                  |
-| `/work`      | Selectable mission-file grid + selector glyph         |
-| `/work/[s]`  | System cartridge case-study header                    |
-| `/archive`   | Cinematic contact sheet with quiet lightbox           |
-| `/archive/[c]` | Film-slate opener                                   |
-| `/logs`      | Field-note timeline                                   |
-| `/logs/[s]`  | Field-report article header                           |
-| `/resources` | Stack map / tool inventory                            |
-| `/about`     | Operator dossier                                      |
-| `/contact`   | Open-channel console                                  |
-| `/resume`    | Printable system dossier                              |
-| `/terminal`  | Navigable portfolio shell                             |
-| `/portal`    | Controlled easter egg                                 |
+| Route        | Wow factor                                            | Status |
+| ------------ | ----------------------------------------------------- | ------ |
+| `/`          | Cinematic boot-sequence command hero                  | ✓ shipped (PR #63 — GSAP hero boot sequence + SplitText headline) |
+| `/work`      | Mission-file deck reveal — tiles drop in with stagger | ✓ shipped (GSAP `WorkDeckReveal`) |
+| `/work/[s]`  | System cartridge case-study header                    | pending |
+| `/archive`   | Contact-sheet flash — random-stagger frame reveal     | ✓ shipped (GSAP `ContactSheetFlash`) |
+| `/archive/[c]` | Film-slate opener                                   | pending |
+| `/logs`      | Field-note timeline                                   | pending |
+| `/logs/[s]`  | Field-report article header                           | pending |
+| `/resources` | Stack map / tool inventory                            | pending |
+| `/about`     | Operator dossier                                      | pending |
+| `/contact`   | Open-channel console                                  | pending |
+| `/resume`    | Printable system dossier                              | pending |
+| `/terminal`  | Navigable portfolio shell                             | pending |
+| `/portal`    | Controlled easter egg                                 | pending |
+
+Cross-route route-transition engine: View Transitions API via
+`TransitionLink` (see
+[docs/UNIFIED_VISUAL_DIRECTION.md §4.9](./UNIFIED_VISUAL_DIRECTION.md)).
+The prior `PixelTransitionOverlay` curtain has been decommissioned.
 
 ---
 
