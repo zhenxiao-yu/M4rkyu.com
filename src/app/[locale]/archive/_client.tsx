@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
+import { ContactSheetFlash } from "@/components/sections/contact-sheet-flash";
 import type { GalleryItem } from "@/content/schemas";
 import { cn } from "@/lib/utils";
 
@@ -59,34 +60,37 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
 
   return (
     <>
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        {orderedItems.map((item) => (
-          <button
-            key={item.slug}
-            onClick={() => setOpenSlug(item.slug)}
-            className="group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
-            type="button"
-            aria-label={t("openFrame", { title: item.title })}
-          >
-            <Card className="overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 group-hover:border-ring group-hover:shadow-md">
-              <FrameThumb item={item} frameTbdLabel={t("frameTbd")} />
-              <CardHeader>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline">{item.type}</Badge>
-                  {item.featured ? (
-                    <Badge variant="signal" className="text-[0.6rem]">
-                      {t("featured")}
-                    </Badge>
-                  ) : null}
-                </div>
-                <CardTitle className="text-base leading-tight">
-                  {item.title}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </button>
-        ))}
-      </div>
+      <ContactSheetFlash>
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+          {orderedItems.map((item) => (
+            <button
+              key={item.slug}
+              data-frame-tile
+              onClick={() => setOpenSlug(item.slug)}
+              className="group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
+              type="button"
+              aria-label={t("openFrame", { title: item.title })}
+            >
+              <Card className="overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 group-hover:border-ring group-hover:shadow-md">
+                <FrameThumb item={item} frameTbdLabel={t("frameTbd")} />
+                <CardHeader>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline">{item.type}</Badge>
+                    {item.featured ? (
+                      <Badge variant="signal" className="text-[0.6rem]">
+                        {t("featured")}
+                      </Badge>
+                    ) : null}
+                  </div>
+                  <CardTitle className="text-base leading-tight">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </button>
+          ))}
+        </div>
+      </ContactSheetFlash>
 
       {frame !== null ? (
         <GalleryLightbox

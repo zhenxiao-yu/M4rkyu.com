@@ -130,8 +130,8 @@ Currently registered:
 - `SplitText` plugin: ~6 KB gzipped
 - `@gsap/react` wrapper: ~1 KB gzipped
 
-**Total cost: ~57 KB gz on `/` only.** Other routes do not import
-any GSAP-using island, so they don't pay.
+**Total cost: ~57 KB gz on `/`, `/work`, `/archive`.** Other routes
+do not import any GSAP-using island, so they don't pay.
 
 If `ScrollTrigger` gets added later, that's another ~25 KB and the
 route(s) that import it will pay. Don't register it preemptively.
@@ -142,9 +142,11 @@ route(s) that import it will pay. Don't register it preemptively.
 | ------- | ---- | ---- |
 | EN home hero — full sequence | `src/components/sections/hero-boot-sequence.tsx` | Master timeline orchestrating eyebrow → headline → subtitle → CTAs → CommandHero panel → HUD strip |
 | EN home hero — headline | `src/components/sections/split-headline.tsx` | Char-staggered reveal with multi-line clip mask, plays in parallel with the boot sequence |
+| `/work` mission-file deck | `src/components/sections/work-deck-reveal.tsx` | Tile drop-in with subtle rotation + scale stagger on initial mount; re-fires on filter changes via the wrapper `key` |
+| `/archive` contact-sheet flash | `src/components/sections/contact-sheet-flash.tsx` | Random-stagger frame reveals like proofs developing across a contact sheet |
 
-That's the entire surface, intentionally. Both files run only on
-`/`. Other routes import nothing from `@/lib/gsap`.
+GSAP now lands on three routes (`/`, `/work`, `/archive`). Other
+routes import nothing from `@/lib/gsap` and do not pay for it.
 
 ## Adding the next GSAP surface
 

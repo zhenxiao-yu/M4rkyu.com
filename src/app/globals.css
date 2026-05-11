@@ -76,6 +76,53 @@
       clip-path: circle(150% at var(--vt-cx, 50%) var(--vt-cy, 50%));
     }
   }
+
+  /* Route View Transitions — runs whenever TransitionLink intercepts
+   * navigation through document.startViewTransition(). The theme sweep
+   * (above) wins via `[data-theme-sweep="on"]` specificity when its
+   * own toggle owns the transition; otherwise the route keyframes
+   * here play.
+   *
+   * Animation design:
+   *   - OLD layer: short fade + slight downward drift (gives the
+   *     departing page a quiet recede instead of a hard cut).
+   *   - NEW layer: longer fade-in with a soft scale-up from 0.995,
+   *     creating a "page surfaces from below" depth cue without a
+   *     long perceived duration.
+   *   - Total perceived duration: ~360ms desktop, ~280ms mobile.
+   *   - Both layers use --ease-premium so this stays consistent with
+   *     the rest of the site's motion tokens.
+   *
+   * Per-route overrides can be layered on later by selecting against
+   * [data-route="..."] on <html> — wiring is in place via the
+   * RouteAttribute client island. */
+  :root:not([data-theme-sweep="on"])::view-transition-old(root) {
+    animation: route-fade-out 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  :root:not([data-theme-sweep="on"])::view-transition-new(root) {
+    animation: route-fade-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes route-fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(4px); }
+  }
+  @keyframes route-fade-in {
+    from { opacity: 0; transform: scale(0.995); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Mobile pacing — shrink durations on phones so the transition
+   * feels snappier and never blocks input. The transforms stay
+   * identical (scale 0.995 → 1, 4px drift) so the read is the same
+   * on touch. */
+  @media (max-width: 640px) {
+    :root:not([data-theme-sweep="on"])::view-transition-old(root) {
+      animation-duration: 140ms;
+    }
+    :root:not([data-theme-sweep="on"])::view-transition-new(root) {
+      animation-duration: 240ms;
+    }
+  }
 }
 
 :root {
@@ -297,29 +344,8 @@ body {
   contain-intrinsic-block-size: 600px;
 }
 
-/* Phase 6 — pixel transition + status pulse keyframes.
- * Paired with --ease-pixel-step (steps(6,end)) from @theme inline so the
- * curtain reads as a low-frame-rate dither rather than a smooth slide.
- * `prefers-reduced-motion` is already neutralized globally below — these
- * animations become 1ms no-ops under that flag, no extra guard needed. */
-@keyframes pixel-curtain-down {
-  from { transform: translateY(-100%); }
-  to   { transform: translateY(0); }
-}
-
-@keyframes pixel-curtain-wipe-l {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
-}
-
-@keyframes pixel-curtain-wipe-r {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(0); }
-}
-
 /* Status pulse — opacity 1 → 0 while scaling out. Eased with
- * --ease-premium (not pixel-step) so the halo bloom reads as a soft
- * radar ping; only the curtain animations use the stepped easing. */
+ * --ease-premium so the halo bloom reads as a soft radar ping. */
 @keyframes pulse-halo {
   0%   { opacity: 0.85; transform: scale(1); }
   60%  { opacity: 0; transform: scale(2.6); }
