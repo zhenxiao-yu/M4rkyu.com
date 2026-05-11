@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
+import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { ContactSheetFlash } from "@/components/sections/contact-sheet-flash";
 import type { GalleryItem } from "@/content/schemas";
 import { cn } from "@/lib/utils";
@@ -57,6 +58,15 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
     },
     [pathname, router, searchParams],
   );
+
+  if (orderedItems.length === 0) {
+    return (
+      <EmptyArchiveState
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
+      />
+    );
+  }
 
   return (
     <>

@@ -27,6 +27,8 @@ export async function generateMetadata({
 
 export default async function GalleryPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "Gallery" })
+  const tMeta = await getTranslations({ locale, namespace: "Meta" })
   return (
     <PageShell locale={locale}>
       <section className="relative overflow-hidden border-b">
@@ -36,9 +38,9 @@ export default async function GalleryPage({ params }: { params: Promise<{ locale
           <FadeIn>
             <SectionHeading
               as="h1"
-              eyebrow="visual archive"
-              title="Gallery"
-              description="Black-and-white photography, digital art, and contact sheets. Placeholder frames hold the structure while final media is optimised."
+              eyebrow={t("eyebrow")}
+              title={tMeta("galleryTitle")}
+              description={t("description")}
             />
           </FadeIn>
         </div>
@@ -60,11 +62,11 @@ export default async function GalleryPage({ params }: { params: Promise<{ locale
               <ArchiveCard
                 title={collection.title}
                 description={collection.description}
-                eyebrow={`${collection.count} frames`}
+                eyebrow={t("framesCount", { count: collection.count })}
                 status={collection.status}
                 href={`/archive/${collection.slug}`}
                 locale={locale}
-                mediaLabel="COLLECTION COVER TBD"
+                mediaLabel={t("frameTbd")}
               />
             </StaggerItem>
           ))}
@@ -74,9 +76,9 @@ export default async function GalleryPage({ params }: { params: Promise<{ locale
       <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <FadeIn>
           <SectionHeading
-            eyebrow="contact sheet"
-            title="Media grid"
-            description="Each frame is lightbox-ready — click to open, arrow keys to navigate."
+            eyebrow={t("mediaGridEyebrow")}
+            title={t("mediaGridTitle")}
+            description={t("mediaGridDescription")}
           />
         </FadeIn>
         <div className="mt-8">

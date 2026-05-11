@@ -110,6 +110,14 @@
     "read": "Read"
   },
   "Gallery": {
+    "eyebrow": "visual archive",
+    "description": "Black-and-white photography, digital art, and contact sheets. Placeholder frames hold the structure while final media is optimised.",
+    "framesCount": "{count, plural, =0 {no frames} one {# frame} other {# frames}}",
+    "mediaGridEyebrow": "contact sheet",
+    "mediaGridTitle": "Media grid",
+    "mediaGridDescription": "Each frame is lightbox-ready — click to open, arrow keys to navigate.",
+    "emptyTitle": "The contact sheet is empty",
+    "emptyDescription": "No frames published yet. New work lands here as it gets edited and tagged.",
     "previousFrame": "Previous frame",
     "nextFrame": "Next frame",
     "fromCollection": "From this collection",
@@ -162,6 +170,11 @@
     "digestLabel": "fault id"
   },
   "Projects": {
+    "eyebrow": "work index",
+    "archiveStatus": "Archive status",
+    "production": "production entries",
+    "draft": "in development or planned",
+    "noClaims": "No fabricated clients, awards, or metrics included.",
     "title": "Project Archive",
     "intro": "A serious archive of web applications, game systems, AI tools, and creative engineering experiments.",
     "caseStudy": "Case study",
@@ -259,6 +272,50 @@
     "title": "About Mark",
     "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."
   },
+  "Contact": {
+    "eyebrow": "collaboration",
+    "formProviderTbd": "FORM PROVIDER TBD",
+    "inquiryTitle": "Project inquiry",
+    "projectTypeBadge": "Project type",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name…",
+    "nameError": "Add your name.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com…",
+    "emailError": "Use a valid email address.",
+    "projectTypeLabel": "Project Type",
+    "projectTypePlaceholder": "Frontend system, app prototype, game UI…",
+    "projectTypeError": "Add the kind of project.",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Tell me the goal, timeline, and what you already have…",
+    "messageError": "Add at least 20 characters so the idea has enough context.",
+    "formNote": "This opens a prefilled email for now. A server-side provider can replace it when launch workflow is ready.",
+    "formSubmit": "Prepare email",
+    "formDirect": "Email directly"
+  },
+  "Media": {
+    "eyebrow": "video / process",
+    "featuredTbd": "FEATURED VIDEO TBD",
+    "videoPosterTbd": "VIDEO POSTER TBD",
+    "mediaFrameTbd": "MEDIA FRAME TBD",
+    "posterEyebrow": "poster system",
+    "posterReplaceLabel": "REPLACE WITH FINAL CONTENT",
+    "posterTbd": "POSTER TBD",
+    "emptyTitle": "No media in the archive yet",
+    "emptyDescription": "Posters and clips will appear here once cuts are color-graded and captioned."
+  },
+  "Resources": {
+    "eyebrow": "tool library",
+    "categoryAll": "All",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Filter tools and notes…",
+    "filterSummary": "{filtered} / {total}",
+    "visit": "Visit resource",
+    "emptyTitle": "No resources found",
+    "emptyDescription": "Adjust the search or clear the active category to see more tools.",
+    "indexPendingTitle": "Resource search index pending",
+    "indexPendingDescription": "TBD: Pagefind index and tag search will be wired after final resources and posts are selected."
+  },
   "Meta": {
     "galleryTitle": "Gallery",
     "galleryDescription": "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
@@ -281,12 +338,18 @@
       "gallery": "gallery",
       "media": "media"
     },
-    "shellFootnote": "An interactive mode will land alongside real game and gallery content. No heavy WebGL ships here."
+    "shellFootnote": "An interactive mode will land alongside real game and gallery content. No heavy WebGL ships here.",
+    "bootLine1": "> boot sequence: deferred",
+    "bootLine2": "> webgl: disabled by default",
+    "bootLine3": "> motion: reduced-motion aware",
+    "bootLine4": "> assets: placeholder frames active",
+    "bootLine5": "> status: standby"
   },
   "Common": {
     "comingSoon": "Coming soon",
     "readMore": "Read more",
-    "status": "Status"
+    "status": "Status",
+    "replaceFinalContent": "Replace with final content"
   },
   "Notifications": {
     "label": "Notifications",

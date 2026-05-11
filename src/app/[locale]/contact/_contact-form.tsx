@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import type { FormEvent } from "react"
+import { useTranslations } from "next-intl"
 import { Mail, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,23 +23,14 @@ const initialState: FormState = {
   message: "",
 }
 
-function validate(values: FormState): Errors {
-  const errors: Errors = {}
-  if (!values.name.trim()) errors.name = "Add your name."
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = "Use a valid email address."
-  }
-  if (!values.projectType.trim()) errors.projectType = "Add the kind of project."
-  if (values.message.trim().length < 20) {
-    errors.message = "Add at least 20 characters so the idea has enough context."
-  }
-  return errors
-}
-
 export function ContactForm({ email }: { email: string }) {
+  const t = useTranslations("Contact")
   const [values, setValues] = useState<FormState>(initialState)
   const [errors, setErrors] = useState<Errors>({})
+
   const mailto = useMemo(() => {
+    // Subject prefix stays English on purpose — it becomes the email
+    // subject line and the inbox/filters on the receiving side are EN.
     const subject = values.projectType.trim()
       ? `Project inquiry: ${values.projectType.trim()}`
       : "Project inquiry"
@@ -51,6 +43,19 @@ export function ContactForm({ email }: { email: string }) {
     ].join("\n")
     return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
   }, [email, values])
+
+  function validate(state: FormState): Errors {
+    const next: Errors = {}
+    if (!state.name.trim()) next.name = t("nameError")
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+      next.email = t("emailError")
+    }
+    if (!state.projectType.trim()) next.projectType = t("projectTypeError")
+    if (state.message.trim().length < 20) {
+      next.message = t("messageError")
+    }
+    return next
+  }
 
   function updateField(field: keyof FormState, value: string) {
     setValues((current) => ({ ...current, [field]: value }))
@@ -69,10 +74,10 @@ export function ContactForm({ email }: { email: string }) {
   return (
     <form className="grid gap-5" aria-describedby="contact-form-note" onSubmit={onSubmit}>
       <label className="grid gap-2 text-sm font-medium">
-        Name
+        {t("nameLabel")}
         <Input
           name="name"
-          placeholder="Your name…"
+          placeholder={t("namePlaceholder")}
           autoComplete="name"
           value={values.name}
           onChange={(event) => updateField("name", event.target.value)}
@@ -86,11 +91,11 @@ export function ContactForm({ email }: { email: string }) {
         ) : null}
       </label>
       <label className="grid gap-2 text-sm font-medium">
-        Email
+        {t("emailLabel")}
         <Input
           name="email"
           type="email"
-          placeholder="you@example.com…"
+          placeholder={t("emailPlaceholder")}
           autoComplete="email"
           spellCheck={false}
           value={values.email}
@@ -105,10 +110,10 @@ export function ContactForm({ email }: { email: string }) {
         ) : null}
       </label>
       <label className="grid gap-2 text-sm font-medium">
-        Project Type
+        {t("projectTypeLabel")}
         <Input
           name="projectType"
-          placeholder="Frontend system, app prototype, game UI…"
+          placeholder={t("projectTypePlaceholder")}
           autoComplete="off"
           value={values.projectType}
           onChange={(event) => updateField("projectType", event.target.value)}
@@ -122,12 +127,12 @@ export function ContactForm({ email }: { email: string }) {
         ) : null}
       </label>
       <label className="grid gap-2 text-sm font-medium">
-        Message
+        {t("messageLabel")}
         <textarea
           name="message"
           rows={7}
           className="min-h-36 rounded-md border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          placeholder="Tell me the goal, timeline, and what you already have…"
+          placeholder={t("messagePlaceholder")}
           value={values.message}
           onChange={(event) => updateField("message", event.target.value)}
           aria-invalid={Boolean(errors.message)}
@@ -140,18 +145,17 @@ export function ContactForm({ email }: { email: string }) {
         ) : null}
       </label>
       <p id="contact-form-note" className="text-sm leading-6 text-muted-foreground">
-        This opens a prefilled email for now. A server-side provider can replace it when launch
-        workflow is ready.
+        {t("formNote")}
       </p>
       <div className="flex flex-wrap gap-3">
         <Button type="submit">
           <Send className="size-4" aria-hidden="true" />
-          Prepare Email
+          {t("formSubmit")}
         </Button>
         <Button asChild variant="outline">
           <a href={`mailto:${email}`}>
             <Mail className="size-4" aria-hidden="true" />
-            Email Directly
+            {t("formDirect")}
           </a>
         </Button>
       </div>
