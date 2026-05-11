@@ -59,10 +59,10 @@ interface CommandPaletteProps {
 }
 
 const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
-  { key: "projects", href: "/projects", icon: Briefcase },
+  { key: "projects", href: "/work", icon: Briefcase },
   { key: "games", href: "/games", icon: Gamepad2 },
-  { key: "gallery", href: "/gallery", icon: Camera },
-  { key: "blog", href: "/blog", icon: FileText },
+  { key: "gallery", href: "/archive", icon: Camera },
+  { key: "blog", href: "/logs", icon: FileText },
   { key: "media", href: "/media", icon: ImageIcon },
   { key: "resources", href: "/resources", icon: Wrench },
   { key: "about", href: "/about", icon: User },
@@ -165,7 +165,7 @@ export function CommandPalette({
                     <CommandItem
                       key={item.slug}
                       value={`${item.title} ${item.collection} ${item.tags.join(" ")}`}
-                      onSelect={() => go(`/gallery?frame=${item.slug}`)}
+                      onSelect={() => go(`/archive?frame=${item.slug}`)}
                     >
                       <Layers
                         aria-hidden="true"
@@ -189,7 +189,7 @@ export function CommandPalette({
                     <CommandItem
                       key={post.slug}
                       value={`${post.title} ${post.category} ${post.tags.join(" ")}`}
-                      onSelect={() => go(`/blog/${post.slug}`)}
+                      onSelect={() => go(`/logs/${post.slug}`)}
                     >
                       <BookOpen
                         aria-hidden="true"

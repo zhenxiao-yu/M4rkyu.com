@@ -10,7 +10,7 @@ function PinnedPostCardClone({ post }: { post: Post }) {
   const isDraft = post.status !== "ready";
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`/logs/${post.slug}`}
       className="group relative grid gap-4 overflow-hidden rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8"
     >
       <div className="flex flex-wrap items-center gap-2">

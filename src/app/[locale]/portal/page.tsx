@@ -58,7 +58,7 @@ export default async function PortalPage({ params }: { params: Promise<{ locale:
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild>
-                <Link href="/projects" locale={locale}>
+                <Link href="/work" locale={locale}>
                   {tNav("projects")}
                 </Link>
               </Button>

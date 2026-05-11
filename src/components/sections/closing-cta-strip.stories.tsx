@@ -7,7 +7,7 @@ const meta = {
   args: {
     statement:
       "Looking for an engineer who treats portfolio surfaces like product surfaces.",
-    primary: { label: "View projects", href: "/projects" },
+    primary: { label: "View projects", href: "/work" },
   },
 } satisfies Meta<typeof ClosingCTAStrip>;
 

@@ -14,10 +14,10 @@ const BUILT_AT = new Date();
 
 const STATIC_PATHS = [
   { path: "", changeFrequency: "weekly" as const, priority: 1.0 },
-  { path: "/projects", changeFrequency: "weekly" as const, priority: 0.9 },
+  { path: "/work", changeFrequency: "weekly" as const, priority: 0.9 },
   { path: "/games", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/gallery", changeFrequency: "weekly" as const, priority: 0.8 },
-  { path: "/blog", changeFrequency: "weekly" as const, priority: 0.7 },
+  { path: "/archive", changeFrequency: "weekly" as const, priority: 0.8 },
+  { path: "/logs", changeFrequency: "weekly" as const, priority: 0.7 },
   { path: "/media", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/resources", changeFrequency: "monthly" as const, priority: 0.6 },
   { path: "/about", changeFrequency: "monthly" as const, priority: 0.7 },
@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // placeholders don't get crawled before they have real bodies.
   const projectEntries = allProjects
     .filter((project) => project.contentStatus === "ready")
-    .flatMap((project) => entry(`/projects/${project.slug}`, "monthly", 0.7));
+    .flatMap((project) => entry(`/work/${project.slug}`, "monthly", 0.7));
 
   const gameEntries = games
     .filter((game) => game.status === "ready")
@@ -66,16 +66,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const galleryEntries = galleryCollections
     .filter((collection) => collection.status === "ready")
     .flatMap((collection) =>
-      entry(`/gallery/${collection.slug}`, "monthly", 0.6),
+      entry(`/archive/${collection.slug}`, "monthly", 0.6),
     );
 
   // Phase 8.2 — dev.to-syndicated post slugs land in the sitemap
-  // so the in-site /blog/[slug] route is discoverable. The page
+  // so the in-site /logs/[slug] route is discoverable. The page
   // itself sets `alternates.canonical` to the dev.to URL so search
   // engines treat dev.to as the source of truth.
   const blogSlugs = await getAllPostSlugs();
   const blogEntries = blogSlugs.flatMap((slug) =>
-    entry(`/blog/${slug}`, "weekly", 0.6),
+    entry(`/logs/${slug}`, "weekly", 0.6),
   );
 
   return [

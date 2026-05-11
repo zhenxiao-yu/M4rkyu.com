@@ -49,7 +49,7 @@ export async function MissionModuleCard({
     <div className="relative h-full">
       {highlighted ? <BorderBeam duration={14} borderRadius={8} /> : null}
       <Link
-        href={`/projects/${project.slug}`}
+        href={`/work/${project.slug}`}
         locale={locale}
         aria-label={localized.title as string}
         className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"

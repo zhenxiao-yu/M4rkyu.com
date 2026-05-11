@@ -92,7 +92,7 @@ function PulseSlot({
         ) : null}
         <div className="mt-auto pt-1">
           <Link
-            href={`/blog/${post.slug}`}
+            href={`/logs/${post.slug}`}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
           >
             {t("read")}

@@ -77,14 +77,14 @@ function Adjacent({
 }
 
 const prevEntry: AdjacentEntry = {
-  href: "/projects/nimbus",
+  href: "/work/nimbus",
   title: "Nimbus",
   pitch:
     "A secure file management platform shaped around calm organization, OTP access, and storage analytics.",
 };
 
 const nextEntry: AdjacentEntry = {
-  href: "/projects/m4rketview",
+  href: "/work/m4rketview",
   title: "M4rketView",
   pitch:
     "A cryptocurrency screener built for quick scanning, watchlist thinking, and market table clarity.",
@@ -99,13 +99,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const BothSides: Story = {
-  args: { prev: prevEntry, next: nextEntry, archiveHref: "/projects" },
+  args: { prev: prevEntry, next: nextEntry, archiveHref: "/work" },
 };
 
 export const OnlyPrev: Story = {
-  args: { prev: prevEntry, next: undefined, archiveHref: "/projects" },
+  args: { prev: prevEntry, next: undefined, archiveHref: "/work" },
 };
 
 export const OnlyNext: Story = {
-  args: { prev: undefined, next: nextEntry, archiveHref: "/projects" },
+  args: { prev: undefined, next: nextEntry, archiveHref: "/work" },
 };

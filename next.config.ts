@@ -6,6 +6,49 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR ?? (process.env.VERCEL ? ".next" : ".next-node22"),
   outputFileTracingRoot: process.cwd(),
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // PR #59 route migration — preserve inbound links to the previous
+  // /projects, /gallery, /blog URLs (and their slug children) by
+  // issuing 308 permanent redirects to the renamed segments. Both
+  // the bare paths (handled by next-intl's locale prefix rewrite
+  // afterwards) and the explicit /:locale forms (direct hits from
+  // external links) are covered so search engines, RSS readers, and
+  // shared dev.to URLs all land on the new destination without a
+  // 404 hop.
+  async redirects() {
+    return [
+      // /projects → /work
+      { source: "/projects", destination: "/work", permanent: true },
+      { source: "/projects/:slug*", destination: "/work/:slug*", permanent: true },
+      { source: "/:locale(en|zh)/projects", destination: "/:locale/work", permanent: true },
+      {
+        source: "/:locale(en|zh)/projects/:slug*",
+        destination: "/:locale/work/:slug*",
+        permanent: true,
+      },
+      // /gallery → /archive  (dynamic segment is /[collection])
+      { source: "/gallery", destination: "/archive", permanent: true },
+      {
+        source: "/gallery/:collection*",
+        destination: "/archive/:collection*",
+        permanent: true,
+      },
+      { source: "/:locale(en|zh)/gallery", destination: "/:locale/archive", permanent: true },
+      {
+        source: "/:locale(en|zh)/gallery/:collection*",
+        destination: "/:locale/archive/:collection*",
+        permanent: true,
+      },
+      // /blog → /logs
+      { source: "/blog", destination: "/logs", permanent: true },
+      { source: "/blog/:slug*", destination: "/logs/:slug*", permanent: true },
+      { source: "/:locale(en|zh)/blog", destination: "/:locale/logs", permanent: true },
+      {
+        source: "/:locale(en|zh)/blog/:slug*",
+        destination: "/:locale/logs/:slug*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     // Dev.to-syndicated post bodies (Phase 8.2) reference images

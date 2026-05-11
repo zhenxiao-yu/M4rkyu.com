@@ -45,7 +45,7 @@ export const Disabled: Story = {
 export const AsLink: Story = {
   args: {
     glyph: "caret",
-    href: "/projects",
+    href: "/work",
     children: "Browse the work",
   },
 };

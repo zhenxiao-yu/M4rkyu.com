@@ -52,7 +52,7 @@ export async function ProjectCartridge({
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
         <Link
-          href="/projects"
+          href="/work"
           locale={locale}
           className="font-mono text-[0.7rem] uppercase tracking-[0.24em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground"
         >

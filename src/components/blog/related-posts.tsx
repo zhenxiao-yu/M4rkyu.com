@@ -73,7 +73,7 @@ export async function RelatedPosts({
         {related.map((article) => (
           <Link
             key={article.slug}
-            href={`/blog/${article.slug}`}
+            href={`/logs/${article.slug}`}
             className="group rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">

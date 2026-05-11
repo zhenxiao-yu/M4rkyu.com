@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: tMeta("galleryTitle"),
     description: tMeta("galleryDescription"),
-    alternates: buildAlternates(locale, "/gallery"),
+    alternates: buildAlternates(locale, "/archive"),
   }
 }
 
@@ -62,7 +62,7 @@ export default async function GalleryPage({ params }: { params: Promise<{ locale
                 description={collection.description}
                 eyebrow={`${collection.count} frames`}
                 status={collection.status}
-                href={`/gallery/${collection.slug}`}
+                href={`/archive/${collection.slug}`}
                 locale={locale}
                 mediaLabel="COLLECTION COVER TBD"
               />

@@ -20,7 +20,7 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("metaDescription"),
-    alternates: buildAlternates(locale, "/blog"),
+    alternates: buildAlternates(locale, "/logs"),
   };
 }
 

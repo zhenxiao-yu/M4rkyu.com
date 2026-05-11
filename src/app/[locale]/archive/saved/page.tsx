@@ -58,7 +58,7 @@ export default function SavedGalleryPage({
               <CardContent className="py-12 text-center">
                 <p className="text-base text-muted-foreground">{t("savedEmpty")}</p>
                 <Button asChild className="mt-4">
-                  <Link href="/gallery" locale={locale}>
+                  <Link href="/archive" locale={locale}>
                     {t("savedOpenGallery")}
                   </Link>
                 </Button>
@@ -71,7 +71,7 @@ export default function SavedGalleryPage({
               {savedItems.map((item) => (
                 <StaggerItem key={item.slug}>
                   <Link
-                    href={`/gallery?frame=${item.slug}`}
+                    href={`/archive?frame=${item.slug}`}
                     locale={locale}
                     aria-label={t("openFrame", { title: item.title })}
                     className="group block h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

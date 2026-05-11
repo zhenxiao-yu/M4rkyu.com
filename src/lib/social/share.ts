@@ -35,5 +35,5 @@ export async function shareOrCopy(input: ShareInput): Promise<ShareResult> {
 
 export function buildFrameShareUrl(origin: string, locale: string, slug: string): string {
   const safeOrigin = origin.replace(/\/$/, "");
-  return `${safeOrigin}/${locale}/gallery?frame=${encodeURIComponent(slug)}`;
+  return `${safeOrigin}/${locale}/archive?frame=${encodeURIComponent(slug)}`;
 }

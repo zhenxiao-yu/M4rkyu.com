@@ -37,7 +37,7 @@ export async function generateMetadata({
   return {
     title: project.seo.title,
     description: project.seo.description,
-    alternates: buildAlternates(locale, `/projects/${slug}`),
+    alternates: buildAlternates(locale, `/work/${slug}`),
   };
 }
 
@@ -72,14 +72,14 @@ export default async function ProjectDetailPage({
       : undefined;
   const prev = prevProject
     ? {
-        href: `/projects/${prevProject.slug}`,
+        href: `/work/${prevProject.slug}`,
         title: prevProject.title,
         pitch: prevProject.shortPitch,
       }
     : undefined;
   const next = nextProject
     ? {
-        href: `/projects/${nextProject.slug}`,
+        href: `/work/${nextProject.slug}`,
         title: nextProject.title,
         pitch: nextProject.shortPitch,
       }
@@ -248,7 +248,7 @@ export default async function ProjectDetailPage({
                 {related.map((item) => (
                   <Link
                     key={item.slug}
-                    href={`/projects/${item.slug}`}
+                    href={`/work/${item.slug}`}
                     className="group rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
@@ -267,7 +267,7 @@ export default async function ProjectDetailPage({
           </section>
         ) : null}
 
-        <CaseStudyFooter prev={prev} next={next} archiveHref="/projects" />
+        <CaseStudyFooter prev={prev} next={next} archiveHref="/work" />
       </article>
     </PageShell>
   );

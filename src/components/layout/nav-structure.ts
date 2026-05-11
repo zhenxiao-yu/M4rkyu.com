@@ -1,12 +1,9 @@
 /**
  * Shared navigation structure for desktop dropdowns + mobile sheet.
  *
- * URLs intentionally point at the CURRENT routes (`/projects`, `/gallery`,
- * `/blog`). The vocabulary swap to `/work`, `/archive`, `/logs` lands in
- * PR #59 — until then, the labels live in the new shape but the hrefs
- * still resolve to the existing pages. Sub-items that depend on URL
- * params (e.g. `/projects?category=ai-tool`) ride on the in-page filter
- * already wired up in `app/[locale]/projects/_client.tsx`.
+ * Sub-items that depend on URL params (e.g. `/work?category=ai-tool`)
+ * ride on the in-page filter wired up in
+ * `app/[locale]/work/_client.tsx`.
  */
 
 export interface NavDropdownItem {
@@ -49,7 +46,7 @@ export interface NavLabels {
   resources: string;
   about: string;
   contact: string;
-  // Categories namespace — used for /projects?category= deep links.
+  // Categories namespace — used for /work?category= deep links.
   categoryWebApp: string;
   categoryAiTool: string;
   categoryExperiment: string;
@@ -62,24 +59,24 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         id: "work",
         label: labels.work,
         items: [
-          { id: "all-work", label: labels.allWork, href: "/projects" },
+          { id: "all-work", label: labels.allWork, href: "/work" },
           { id: "games", label: labels.games, href: "/games" },
           // Project filters ride on `?category=` already parsed by
-          // app/[locale]/projects/_client.tsx — safe to deep-link.
+          // app/[locale]/work/_client.tsx — safe to deep-link.
           {
             id: "software",
             label: labels.categoryWebApp,
-            href: "/projects?category=web-app",
+            href: "/work?category=web-app",
           },
           {
             id: "ai-tools",
             label: labels.categoryAiTool,
-            href: "/projects?category=ai-tool",
+            href: "/work?category=ai-tool",
           },
           {
             id: "experiments",
             label: labels.categoryExperiment,
-            href: "/projects?category=experiment",
+            href: "/work?category=experiment",
           },
         ],
       },
@@ -87,7 +84,7 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         id: "archive",
         label: labels.archive,
         items: [
-          { id: "visual-archive", label: labels.visualArchive, href: "/gallery" },
+          { id: "visual-archive", label: labels.visualArchive, href: "/archive" },
           { id: "media", label: labels.media, href: "/media" },
         ],
       },
@@ -95,7 +92,7 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         id: "logs",
         label: labels.logs,
         items: [
-          { id: "writing", label: labels.writing, href: "/blog" },
+          { id: "writing", label: labels.writing, href: "/logs" },
           { id: "resources", label: labels.resources, href: "/resources" },
         ],
       },

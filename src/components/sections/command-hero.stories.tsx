@@ -24,7 +24,8 @@ export const WithStatus: Story = {
   args: {
     status: {
       label: "Nimbus · secure file vault",
-      href: "/projects/nimbus",
+      badgeLabel: "NOW",
+      href: "/work/nimbus",
       accessibleLabel: "Open Nimbus case study",
     },
   },
@@ -38,7 +39,8 @@ export const ZhLocale: Story = {
 > 工程师 · 艺术家 · 开发者`,
     status: {
       label: "Nimbus · 安全文件库",
-      href: "/projects/nimbus",
+      badgeLabel: "当下",
+      href: "/work/nimbus",
       accessibleLabel: "打开 Nimbus 案例研究",
     },
   },

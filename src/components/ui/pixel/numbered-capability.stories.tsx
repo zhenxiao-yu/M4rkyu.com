@@ -26,7 +26,7 @@ export const WithTags: Story = {
 export const WithCta: Story = {
   args: {
     tags: ["Next.js", "TypeScript", "CI"],
-    cta: { label: "Browse production work", href: "/projects" },
+    cta: { label: "Browse production work", href: "/work" },
   },
 };
 

@@ -5,7 +5,7 @@ import { routing, type Locale } from "@/i18n/routing";
  * `generateMetadata` call.
  *
  * `path` is the locale-relative pathname starting with "/" (e.g.
- * "/projects/nimbus"). The active locale's URL becomes the
+ * "/work/nimbus"). The active locale's URL becomes the
  * canonical; all routing locales are emitted as `languages` for
  * `<link rel="alternate" hreflang="…">` tags. The active locale is
  * intentionally included in `languages` — Google recommends a

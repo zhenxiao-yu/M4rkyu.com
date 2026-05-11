@@ -14,7 +14,7 @@ interface BlogTimelineProps {
 const PAGE_SIZE = 10;
 
 /**
- * Client wrapper around the `/blog` timeline. Owns:
+ * Client wrapper around the `/logs` timeline. Owns:
  *
  * - URL-synced filter state (`?q=` + `?tag=`).
  * - Substring search over `title + excerpt + tags`.

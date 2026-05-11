@@ -1,7 +1,7 @@
 import { postSchema, type Post } from "@/content/schemas";
 import { fetchDevtoArticles, type DevtoArticleListItem } from "./devto";
 
-/** dev.to username feeding the /blog timeline. */
+/** dev.to username feeding the /logs timeline. */
 export const DEVTO_USERNAME = "markyu";
 
 /**

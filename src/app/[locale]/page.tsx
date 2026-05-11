@@ -65,7 +65,7 @@ export default async function HomePage({
       kind: "shipping",
       label: localizedShipping.title,
       detail: localizedShipping.shortPitch as string,
-      href: `/projects/${shipping.slug}`,
+      href: `/work/${shipping.slug}`,
     });
   }
   const writing = posts[0];
@@ -74,7 +74,7 @@ export default async function HomePage({
       kind: "writing",
       label: writing.title,
       detail: writing.excerpt,
-      href: `/blog/${writing.slug}`,
+      href: `/logs/${writing.slug}`,
     });
   }
   const now = games.find((g) => g.status !== "ready") ?? games[0];
@@ -122,7 +122,7 @@ export default async function HomePage({
             description={t("featuredDescription")}
           />
           <Button asChild variant="outline" className="shrink-0">
-            <Link href="/projects" locale={locale}>
+            <Link href="/work" locale={locale}>
               {t("fullArchive")}
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
@@ -192,7 +192,7 @@ export default async function HomePage({
               description={t("galleryDescription")}
             />
             <Button asChild variant="outline" className="mt-8">
-              <Link href="/gallery" locale={locale}>
+              <Link href="/archive" locale={locale}>
                 {t("openGallery")}
               </Link>
             </Button>
@@ -217,7 +217,7 @@ export default async function HomePage({
                     description={collection.description}
                     eyebrow={`${collection.count} frames`}
                     status={collection.status}
-                    href={`/gallery/${collection.slug}`}
+                    href={`/archive/${collection.slug}`}
                     locale={locale}
                     mediaLabel="GALLERY MEDIA TBD"
                   />
@@ -270,7 +270,7 @@ export default async function HomePage({
       {/* Closing strip */}
       <ClosingCTAStrip
         statement={t("closingStatement")}
-        primary={{ label: t("primaryCta"), href: "/projects" }}
+        primary={{ label: t("primaryCta"), href: "/work" }}
         secondary={{ label: t("emailDirectly"), mailto: profile.email }}
       />
     </PageShell>
