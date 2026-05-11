@@ -110,6 +110,20 @@
     "read": "阅读"
   },
   "Gallery": {
+    "eyebrow": "视觉档案",
+    "description": "黑白摄影、数字艺术与样片。占位帧先撑起结构，正式影像优化后陆续替换。",
+    "framesCount": "{count, plural, =0 {还没有影像} other {# 帧}}",
+    "mediaGridEyebrow": "样片表",
+    "mediaGridTitle": "最近的帧",
+    "mediaGridDescription": "每一帧都可在灯箱中打开。点开一张，方向键翻其余。",
+    "emptyTitle": "样片表还空着",
+    "emptyDescription": "还没有上线的影像。新作完成编辑与标签后会出现在这里。",
+    "viewSaved": "查看已收藏的帧",
+    "savedCount": "{count, plural, =0 {还没有收藏} other {已收藏 # 帧}}",
+    "collectionsEyebrow": "按合集",
+    "collectionsTitle": "三个分组",
+    "collectionsDescription": "每个合集都有自己的样片表，节奏更慢一点。",
+    "hoverHint": "点开灯箱 · 方向键翻动",
     "previousFrame": "上一帧",
     "nextFrame": "下一帧",
     "fromCollection": "来自该合集",
@@ -154,6 +168,11 @@
     "archiveTitle": "来自档案"
   },
   "Projects": {
+    "eyebrow": "项目索引",
+    "archiveStatus": "档案状态",
+    "production": "已上线条目",
+    "draft": "开发中或计划中",
+    "noClaims": "不包含虚构的客户、奖项或指标。",
     "title": "项目档案",
     "intro": "这里整理 Web 应用、游戏系统、AI 工具和创意工程实验，不只是卡片，而是可阅读的案例。",
     "caseStudy": "案例",
@@ -251,6 +270,50 @@
     "title": "关于 Mark",
     "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
   },
+  "Contact": {
+    "eyebrow": "合作",
+    "formProviderTbd": "表单服务待接入",
+    "inquiryTitle": "项目咨询",
+    "projectTypeBadge": "项目类型",
+    "nameLabel": "姓名",
+    "namePlaceholder": "你的名字…",
+    "nameError": "请填写姓名。",
+    "emailLabel": "邮箱",
+    "emailPlaceholder": "you@example.com…",
+    "emailError": "请填写有效的邮箱地址。",
+    "projectTypeLabel": "项目类型",
+    "projectTypePlaceholder": "前端系统、应用原型、游戏 UI…",
+    "projectTypeError": "请填写项目类型。",
+    "messageLabel": "信息",
+    "messagePlaceholder": "说说目标、时间线，以及你已经有的素材…",
+    "messageError": "至少写 20 个字符，让需求有足够上下文。",
+    "formNote": "目前会打开预填邮件。等正式上线流程就绪后，会接入服务端表单服务。",
+    "formSubmit": "准备邮件",
+    "formDirect": "直接邮件联系"
+  },
+  "Media": {
+    "eyebrow": "视频 / 流程",
+    "featuredTbd": "主打视频待定",
+    "videoPosterTbd": "视频海报待定",
+    "mediaFrameTbd": "媒体帧待定",
+    "posterEyebrow": "海报系统",
+    "posterReplaceLabel": "正式内容替换中",
+    "posterTbd": "海报待定",
+    "emptyTitle": "档案里还没有媒体",
+    "emptyDescription": "完成调色与字幕后，海报与片段会陆续出现在这里。"
+  },
+  "Resources": {
+    "eyebrow": "工具库",
+    "categoryAll": "全部",
+    "searchLabel": "搜索",
+    "searchPlaceholder": "按工具或笔记过滤…",
+    "filterSummary": "{filtered} / {total}",
+    "visit": "前往资源",
+    "emptyTitle": "没有找到匹配的资源",
+    "emptyDescription": "调整搜索词或清除分类，看看更多工具。",
+    "indexPendingTitle": "资源搜索索引待上线",
+    "indexPendingDescription": "待办：等正式资源与笔记确定后，会接入 Pagefind 索引与标签搜索。"
+  },
   "Meta": {
     "galleryTitle": "影像",
     "galleryDescription": "黑白摄影、数字艺术与样片 —— 于震潇的视觉档案。",
@@ -273,12 +336,18 @@
       "gallery": "影像",
       "media": "媒体"
     },
-    "shellFootnote": "交互模式将随真实游戏与影像内容一起上线。这里不会运行重量级 WebGL。"
+    "shellFootnote": "交互模式将随真实游戏与影像内容一起上线。这里不会运行重量级 WebGL。",
+    "bootLine1": "> boot sequence: deferred",
+    "bootLine2": "> webgl: disabled by default",
+    "bootLine3": "> motion: reduced-motion aware",
+    "bootLine4": "> assets: placeholder frames active",
+    "bootLine5": "> status: standby"
   },
   "Common": {
     "comingSoon": "即将开放",
     "readMore": "继续阅读",
-    "status": "状态"
+    "status": "状态",
+    "replaceFinalContent": "正式内容替换中"
   },
   "CommandPalette": {
     "title": "命令面板",
