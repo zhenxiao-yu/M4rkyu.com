@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Stagger, StaggerItem } from "@/components/motion/stagger";
+import { WorkDeckReveal } from "@/components/sections/work-deck-reveal";
 import type { Project } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
 
@@ -206,20 +206,20 @@ export function ProjectsClient({
       ) : null}
 
       {production.length > 0 ? (
-        <Stagger
-          // Re-key on chip / year changes so the cards restagger smoothly.
-          // Search query is intentionally excluded — keystrokes would
-          // otherwise re-mount the grid mid-typing and steal focus state.
-          key={`stagger-${activeCategory ?? "all"}-${activeYear}`}
-          className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-          delay={0.05}
+        // Re-key on chip / year changes so the deck restages cleanly.
+        // Search query is intentionally excluded — keystrokes would
+        // otherwise re-mount the grid mid-typing and steal focus state.
+        <WorkDeckReveal
+          key={`deck-${activeCategory ?? "all"}-${activeYear}`}
         >
-          {production.map((project) => (
-            <StaggerItem key={project.slug}>
-              <ProjectCard project={project} locale={locale} />
-            </StaggerItem>
-          ))}
-        </Stagger>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {production.map((project) => (
+              <div data-deck-card key={project.slug}>
+                <ProjectCard project={project} locale={locale} />
+              </div>
+            ))}
+          </div>
+        </WorkDeckReveal>
       ) : null}
 
       {production.length === 0 && drafts.length > 0 ? (
