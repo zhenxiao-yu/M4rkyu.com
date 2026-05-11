@@ -3,24 +3,35 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
+import { SoundToggle } from "@/components/system/sound-toggle";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
-import { NavLink } from "./nav-link";
+import { DesktopNav } from "./desktop-nav";
 import { MobileNav } from "./mobile-nav";
-
-const navItems = [
-  ["projects", "/projects"],
-  ["games", "/games"],
-  ["gallery", "/gallery"],
-  ["blog", "/blog"],
-  ["media", "/media"],
-  ["resources", "/resources"],
-  ["about", "/about"],
-  ["contact", "/contact"],
-] as const;
+import { buildNavStructure, type NavLabels } from "./nav-structure";
 
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Navigation" });
+  const tCategories = await getTranslations({ locale, namespace: "Categories" });
+
+  const labels: NavLabels = {
+    work: t("work"),
+    archive: t("archive"),
+    logs: t("logs"),
+    allWork: t("allWork"),
+    visualArchive: t("visualArchive"),
+    writing: t("writing"),
+    games: t("games"),
+    media: t("media"),
+    resources: t("resources"),
+    about: t("about"),
+    contact: t("contact"),
+    categoryWebApp: tCategories("web-app"),
+    categoryAiTool: tCategories("ai-tool"),
+    categoryExperiment: tCategories("experiment"),
+  };
+
+  const structure = buildNavStructure(labels);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background/85 backdrop-blur-xl">
@@ -33,32 +44,29 @@ export async function Header({ locale }: { locale: Locale }) {
           <span className="grid size-8 place-items-center rounded-md border bg-foreground text-background text-xs font-bold tracking-tight">
             M4
           </span>
-          <span className="hidden tracking-wide sm:inline">M4rkyu.com</span>
+          <span className="hidden tracking-wide sm:inline">M4RKYU.SYS</span>
         </Link>
 
-        <nav
-          className="hidden flex-1 items-center justify-center gap-x-5 gap-y-1 text-sm xl:flex"
-          aria-label="Main navigation"
-        >
-          {navItems.map(([key, href]) => (
-            <NavLink key={key} href={href} locale={locale}>
-              {t(key)}
-            </NavLink>
-          ))}
-        </nav>
+        <DesktopNav
+          locale={locale}
+          groups={structure.groups}
+          flatLinks={structure.flatLinks}
+          ariaLabel="Main navigation"
+        />
 
-        {/* Desktop right rail (xl+): full Cmd-K pill + theme + lang. */}
-        <div className="hidden shrink-0 items-center gap-2 xl:flex">
+        {/* Desktop right rail (lg+): full Cmd-K pill + lang + theme + sound. */}
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
           <CommandPaletteTrigger />
-          <ThemeSwitcher />
           <LanguageSwitcher />
+          <ThemeSwitcher />
+          <SoundToggle />
         </div>
 
-        {/* Compact rail (sm → xl): icon search + theme + menu. */}
-        <div className="flex shrink-0 items-center gap-1.5 xl:hidden">
+        {/* Compact rail (<lg): icon search + theme + menu. */}
+        <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
           <CommandPaletteIconTrigger />
           <ThemeSwitcher />
-          <MobileNav locale={locale} />
+          <MobileNav locale={locale} groups={structure.groups} flatLinks={structure.flatLinks} />
         </div>
       </div>
     </header>

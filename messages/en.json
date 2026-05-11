@@ -11,7 +11,13 @@
     "contact": "Contact",
     "portal": "Portal",
     "menu": "Open menu",
-    "navigateLabel": "navigate"
+    "navigateLabel": "navigate",
+    "work": "Work",
+    "archive": "Archive",
+    "logs": "Logs",
+    "allWork": "All Work",
+    "visualArchive": "Visual Archive",
+    "writing": "Writing"
   },
   "Theme": {
     "label": "Theme",
