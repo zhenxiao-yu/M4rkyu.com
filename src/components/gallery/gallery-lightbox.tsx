@@ -170,7 +170,17 @@ export function GalleryLightbox({
               >
                 <ChevronLeft aria-hidden="true" className="size-4" />
               </Button>
-              <span className="font-mono text-xs text-muted-foreground">
+              {/* Keyboard hint — hidden on touch / small screens since
+                * the arrow shortcuts don't apply there. Same pattern
+                * as the command palette footer. */}
+              <div className="hidden items-center gap-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground sm:flex">
+                <kbd className="rounded border px-1.5 py-0.5">←</kbd>
+                <kbd className="rounded border px-1.5 py-0.5">→</kbd>
+                <span className="tabular-nums">
+                  {openIndex + 1} / {items.length}
+                </span>
+              </div>
+              <span className="font-mono text-xs text-muted-foreground sm:hidden">
                 {openIndex + 1} / {items.length}
               </span>
               <Button
