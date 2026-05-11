@@ -4,6 +4,7 @@ import { ArchiveCard } from "@/components/cards/archive-card";
 import { PageShell } from "@/components/layout/page-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { games } from "@/content/games";
@@ -75,24 +76,28 @@ export default async function GamesPage({
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <Stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3" delay={0.05}>
-          {games.map((game) => {
-            const localized = localize(game, locale);
-            return (
-              <StaggerItem key={game.slug}>
-                <ArchiveCard
-                  title={localized.title}
-                  description={localized.pitch as string}
-                  eyebrow={game.engine}
-                  status={game.status}
-                  href={`/games/${game.slug}`}
-                  locale={locale}
-                  mediaLabel={tGame("coverTbd")}
-                />
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+        {games.length === 0 ? (
+          <EmptyArchiveState />
+        ) : (
+          <Stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3" delay={0.05}>
+            {games.map((game) => {
+              const localized = localize(game, locale);
+              return (
+                <StaggerItem key={game.slug}>
+                  <ArchiveCard
+                    title={localized.title}
+                    description={localized.pitch as string}
+                    eyebrow={game.engine}
+                    status={game.status}
+                    href={`/games/${game.slug}`}
+                    locale={locale}
+                    mediaLabel={tGame("coverTbd")}
+                  />
+                </StaggerItem>
+              );
+            })}
+          </Stagger>
+        )}
       </section>
     </PageShell>
   );

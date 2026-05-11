@@ -44,7 +44,7 @@ export default async function ProjectsPage({
           <FadeIn>
             <SectionHeading
               as="h1"
-              eyebrow="work index"
+              eyebrow={t("eyebrow")}
               title={t("title")}
               description={t("intro")}
             />
@@ -52,16 +52,16 @@ export default async function ProjectsPage({
           <FadeIn direction="left" delay={0.1}>
             <Card className="bg-background/70 backdrop-blur">
               <CardHeader>
-                <CardTitle>Archive status</CardTitle>
+                <CardTitle>{t("archiveStatus")}</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 text-sm text-muted-foreground">
                 <p>
-                  <span className="font-mono text-foreground">{readyCount}</span> production entries
+                  <span className="font-mono text-foreground">{readyCount}</span> {t("production")}
                 </p>
                 <p>
-                  <span className="font-mono text-foreground">{draftCount}</span> in development or planned
+                  <span className="font-mono text-foreground">{draftCount}</span> {t("draft")}
                 </p>
-                <p>No fabricated clients, awards, or metrics included.</p>
+                <p>{t("noClaims")}</p>
               </CardContent>
             </Card>
           </FadeIn>

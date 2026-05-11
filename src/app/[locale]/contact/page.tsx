@@ -27,6 +27,8 @@ export async function generateMetadata({
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Contact" });
+  const tMeta = await getTranslations({ locale, namespace: "Meta" });
 
   return (
     <PageShell locale={locale}>
@@ -36,9 +38,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHeading
             as="h1"
-            eyebrow="collaboration"
-            title="Contact"
-            description="A production-safe project inquiry flow with a mailto fallback now, ready for a server-side form provider later."
+            eyebrow={t("eyebrow")}
+            title={tMeta("contactTitle")}
+            description={tMeta("contactDescription")}
           />
         </div>
       </section>
@@ -49,7 +51,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <Card key={service.slug} className="bg-card/80">
               <CardHeader>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">Project type</Badge>
+                  <Badge variant="outline">{t("projectTypeBadge")}</Badge>
                   <Badge variant="warning">{service.status}</Badge>
                 </div>
                 <CardTitle>{service.title}</CardTitle>
@@ -70,8 +72,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
         <Card className="bg-card/80">
           <CardHeader>
-            <ContentPendingLabel label="FORM PROVIDER TBD" />
-            <CardTitle>Project inquiry</CardTitle>
+            <ContentPendingLabel label={t("formProviderTbd")} />
+            <CardTitle>{t("inquiryTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
             <ContactForm email={profile.email} />

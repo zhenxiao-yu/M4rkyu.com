@@ -24,6 +24,8 @@ export async function generateMetadata({
 
 export default async function ResourcesPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Resources" });
+  const tMeta = await getTranslations({ locale, namespace: "Meta" });
   const categories = Array.from(new Set(resources.map((resource) => resource.category)));
 
   return (
@@ -34,9 +36,9 @@ export default async function ResourcesPage({ params }: { params: Promise<{ loca
         <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHeading
             as="h1"
-            eyebrow="tool library"
-            title="Resources"
-            description="A searchable reference-library prototype. Placeholder entries are explicitly marked and can later be indexed with Pagefind."
+            eyebrow={t("eyebrow")}
+            title={tMeta("resourcesTitle")}
+            description={tMeta("resourcesDescription")}
           />
         </div>
       </section>
@@ -45,8 +47,8 @@ export default async function ResourcesPage({ params }: { params: Promise<{ loca
       </section>
       <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <EmptyArchiveState
-          title="Resource search index pending"
-          description="TBD: Pagefind index and tag search will be wired after final resources and posts are selected."
+          title={t("indexPendingTitle")}
+          description={t("indexPendingDescription")}
         />
       </section>
     </PageShell>

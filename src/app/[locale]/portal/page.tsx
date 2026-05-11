@@ -25,18 +25,13 @@ export async function generateMetadata({
   };
 }
 
-const bootLines = [
-  "> boot sequence: deferred",
-  "> webgl: disabled by default",
-  "> motion: reduced-motion aware",
-  "> assets: placeholder frames active",
-  "> status: standby",
-];
+const bootLineKeys = ["bootLine1", "bootLine2", "bootLine3", "bootLine4", "bootLine5"] as const;
 
 export default async function PortalPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Portal" });
   const tNav = await getTranslations({ locale, namespace: "Navigation" });
+  const bootLines = bootLineKeys.map((key) => t(key));
 
   return (
     <PageShell locale={locale}>

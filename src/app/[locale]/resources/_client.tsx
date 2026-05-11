@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useTranslations } from "next-intl"
 import { ExternalLink, Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ export function ResourcesClient({
   resources: Resource[]
   categories: string[]
 }) {
+  const t = useTranslations("Resources")
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -76,7 +78,7 @@ export function ResourcesClient({
             className="h-auto p-0 hover:bg-transparent"
             aria-pressed={!selectedCategory}
           >
-            <Badge variant={!selectedCategory ? "success" : "outline"}>All</Badge>
+            <Badge variant={!selectedCategory ? "success" : "outline"}>{t("categoryAll")}</Badge>
           </Button>
           {categories.map((category) => (
             <Button
@@ -94,11 +96,11 @@ export function ResourcesClient({
             </Button>
           ))}
           <span className="ml-2 font-mono text-xs text-muted-foreground">
-            {filtered.length} / {resources.length}
+            {t("filterSummary", { filtered: filtered.length, total: resources.length })}
           </span>
         </div>
         <label className="grid gap-2 text-sm text-muted-foreground">
-          Search
+          {t("searchLabel")}
           <span className="relative">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2"
@@ -108,7 +110,8 @@ export function ResourcesClient({
               className="pl-9"
               name="resource-search"
               autoComplete="off"
-              placeholder="Filter tools and notes…"
+              aria-label={t("searchLabel")}
+              placeholder={t("searchPlaceholder")}
               value={query}
               onChange={(event) => {
                 setQuery(event.target.value)
@@ -143,7 +146,7 @@ export function ResourcesClient({
                 </div>
                 <Button asChild variant="outline" size="sm">
                   <a href={resource.link} target="_blank" rel="noopener noreferrer">
-                    Visit Resource
+                    {t("visit")}
                     <ExternalLink className="size-4" aria-hidden="true" />
                   </a>
                 </Button>
@@ -154,8 +157,8 @@ export function ResourcesClient({
       ) : (
         <div className="mt-10">
           <EmptyArchiveState
-            title="No resources found"
-            description="Adjust the search or clear the active category to see more tools."
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
           />
         </div>
       )}
