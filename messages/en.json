@@ -11,7 +11,13 @@
     "contact": "Contact",
     "portal": "Portal",
     "menu": "Open menu",
-    "navigateLabel": "navigate"
+    "navigateLabel": "navigate",
+    "work": "Work",
+    "archive": "Archive",
+    "logs": "Logs",
+    "allWork": "All Work",
+    "visualArchive": "Visual Archive",
+    "writing": "Writing"
   },
   "Theme": {
     "label": "Theme",
@@ -26,6 +32,17 @@
   },
   "Hud": {
     "systemStatus": "System status"
+  },
+  "Status": {
+    "ready": "Ready",
+    "draft": "Draft",
+    "placeholder": "Pending",
+    "coming-soon": "Soon",
+    "live": "Live",
+    "now": "Now",
+    "wip": "WIP",
+    "archive": "Archive",
+    "info": "Info"
   },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",

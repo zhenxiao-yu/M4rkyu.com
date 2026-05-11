@@ -11,7 +11,13 @@
     "contact": "联系",
     "portal": "入口",
     "menu": "打开菜单",
-    "navigateLabel": "导航"
+    "navigateLabel": "导航",
+    "work": "作品",
+    "archive": "档案",
+    "logs": "日志",
+    "allWork": "全部作品",
+    "visualArchive": "视觉档案",
+    "writing": "写作"
   },
   "Theme": {
     "label": "主题",
@@ -26,6 +32,17 @@
   },
   "Hud": {
     "systemStatus": "系统状态"
+  },
+  "Status": {
+    "ready": "就绪",
+    "draft": "草稿",
+    "placeholder": "待定",
+    "coming-soon": "即将",
+    "live": "在线",
+    "now": "进行",
+    "wip": "进行中",
+    "archive": "归档",
+    "info": "信息"
   },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
