@@ -31,6 +31,31 @@
     "heroCtaBrowse": "Browse the work",
     "heroCtaLogs": "Read the logs",
     "heroCmdkHint": ">_ press ⌘K",
+    "capabilities": {
+      "eyebrow": "05 / capabilities",
+      "title": "Systems & surfaces",
+      "lede": "Five overlapping systems, one operator. Each is a real practice, not a buzzword.",
+      "production": {
+        "title": "Production engineering",
+        "description": "Shipping Next.js / TypeScript / CI / observability work — the slow, careful kind that survives the second year."
+      },
+      "interface": {
+        "title": "Interface systems",
+        "description": "Design systems, tokens, motion, Storybook, accessibility — interfaces you can read end-to-end."
+      },
+      "game": {
+        "title": "Game feel & interaction",
+        "description": "Prototypes, input systems, tuning. LAST KERNEL and a small workshop of interactive ideas."
+      },
+      "ai": {
+        "title": "AI-assisted creative tools",
+        "description": "Agent workflows, content pipelines, internal tooling. Models treated as craft, not as a brand."
+      },
+      "visual": {
+        "title": "Visual storytelling",
+        "description": "Photography, film, art direction, gallery curation — frames that earn their place."
+      }
+    },
     "primaryCta": "View projects",
     "portalCta": "Enter portal",
     "featured": "Featured case studies",

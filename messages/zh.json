@@ -31,6 +31,31 @@
     "heroCtaBrowse": "浏览作品",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",
+    "capabilities": {
+      "eyebrow": "05 / 能力",
+      "title": "系统与界面",
+      "lede": "五个相互重叠的系统，由同一个人操作。每一项都是真实的实践，不是流行语。",
+      "production": {
+        "title": "生产工程",
+        "description": "Next.js / TypeScript / CI / 可观测性 —— 缓慢、谨慎、能在第二年仍然站得住的那种代码。"
+      },
+      "interface": {
+        "title": "界面系统",
+        "description": "设计系统、Token、动效、Storybook、可访问性 —— 可以从头读到尾的界面。"
+      },
+      "game": {
+        "title": "游戏感与交互",
+        "description": "原型、输入系统、手感调校。LAST KERNEL 与一座小型互动想法的工作间。"
+      },
+      "ai": {
+        "title": "AI 辅助创作工具",
+        "description": "Agent 工作流、内容流水线、内部工具。把模型当作手艺，不当作品牌。"
+      },
+      "visual": {
+        "title": "视觉叙事",
+        "description": "摄影、影像、艺术指导、影像档案策展 —— 每一帧都值得留下。"
+      }
+    },
     "primaryCta": "查看项目",
     "portalCta": "进入 Portal",
     "featured": "精选案例",
