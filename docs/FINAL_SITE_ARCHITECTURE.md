@@ -4,7 +4,7 @@ status: living (post-Phase-8)
 audience: implementation agents (Claude, Codex), reviewers, future contributors
 last_updated: 2026-05-11
 supersedes_partial: docs/REDESIGN_DIRECTION.md (extends — see §0)
-companion: docs/UNIFIED_VISUAL_DIRECTION.md, docs/COMPONENT_MAP.md, docs/UI_LIBRARY_STRATEGY.md, docs/INTERACTION_TECHNIQUES.md, docs/PHASE_8_AUDIT.md
+companion: docs/UNIFIED_VISUAL_DIRECTION.md, docs/COMPONENT_MAP.md, docs/UI_LIBRARY_STRATEGY.md, docs/INTERACTION_TECHNIQUES.md, docs/COPY_VOICE.md, docs/PHASE_8_AUDIT.md
 ---
 
 # Final Site Architecture — "M4RKYU.SYS"
