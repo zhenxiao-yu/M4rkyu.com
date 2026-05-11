@@ -76,10 +76,10 @@
         "description": "Photography, film, art direction, gallery curation — frames that earn their place."
       }
     },
-    "primaryCta": "View projects",
+    "primaryCta": "See the work",
     "portalCta": "Enter portal",
-    "featured": "Featured case studies",
-    "featuredDescription": "Production-grade case studies across web apps, AI tooling, and data visualisation.",
+    "featured": "Selected work",
+    "featuredDescription": "A few production-grade case studies across web apps, AI tooling, and data visualisation.",
     "fullArchive": "Full archive",
     "latest": "Writing pulse",
     "latestDescription": "Field notes and devlog — short, dated, opinionated.",

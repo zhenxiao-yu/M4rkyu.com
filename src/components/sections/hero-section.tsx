@@ -5,6 +5,8 @@ import { PixelButton } from "@/components/ui/pixel/pixel-button";
 import { Button } from "@/components/ui/button";
 import { CommandHero } from "./command-hero";
 import { GameHud } from "./game-hud";
+import { HudScrollFrame } from "./hud-scroll-frame";
+import { SplitHeadline } from "./split-headline";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
@@ -30,7 +32,13 @@ export async function HeroSection({ locale }: { locale: Locale }) {
             {t("eyebrow")}
           </span>
           <h1 className="font-display text-balance text-[3rem] font-extrabold leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl">
-            {t("title")}
+            {/* Text-splitting is EN-only by doctrine — see PR #60.
+             * /zh renders the headline as plain text. */}
+            {locale === "en" ? (
+              <SplitHeadline text={t("title")} />
+            ) : (
+              t("title")
+            )}
           </h1>
           <p className="max-w-xl text-lg leading-8 text-muted-foreground">
             {t("subtitle")}
@@ -60,12 +68,16 @@ export async function HeroSection({ locale }: { locale: Locale }) {
         <CommandHero />
       </div>
 
-      {/* Footer HUD strip */}
+      {/* Footer HUD strip — scroll-tied opacity ramp per PR #60.
+        * Opacity goes 1.0 → 0.7 across the first 100px of page scroll;
+        * reduced-motion users see a static 1.0. */}
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
-        <GameHud
-          hint={t("heroCmdkHint")}
-          ariaLabel={tHud("systemStatus")}
-        />
+        <HudScrollFrame>
+          <GameHud
+            hint={t("heroCmdkHint")}
+            ariaLabel={tHud("systemStatus")}
+          />
+        </HudScrollFrame>
       </div>
     </section>
   );
