@@ -28,7 +28,11 @@ export type InquiryActionState =
       messageKey: string;
     };
 
-export const idleInquiryState: InquiryActionState = { status: "idle" };
+// Note: Next 15 requires every runtime export from a "use server"
+// file to be an async function. Plain constants / objects are rejected
+// at module load with `invalid-use-server-value`. Keep helpers and
+// type aliases in this file (types erase at runtime), but never add
+// non-async value exports here.
 
 /**
  * Server action behind the /contact form. Wired through
