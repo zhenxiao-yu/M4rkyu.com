@@ -10,6 +10,7 @@ import type { Locale } from "@/i18n/routing";
 
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
+  const tHud = await getTranslations({ locale, namespace: "Hud" });
 
   return (
     <section className="relative overflow-hidden border-b">
@@ -61,7 +62,10 @@ export async function HeroSection({ locale }: { locale: Locale }) {
 
       {/* Footer HUD strip */}
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
-        <GameHud hint={t("heroCmdkHint")} />
+        <GameHud
+          hint={t("heroCmdkHint")}
+          ariaLabel={tHud("systemStatus")}
+        />
       </div>
     </section>
   );

@@ -11,6 +11,11 @@ interface GameHudProps {
    * passive reminder, not an interactive button.
    */
   hint: string;
+  /**
+   * Translated nav landmark label. **Required** — no default. Phase 8
+   * a11y fix; the prior hardcoded `"System status"` read English on /zh.
+   */
+  ariaLabel: string;
   className?: string;
 }
 
@@ -19,10 +24,10 @@ interface GameHudProps {
  * footer (and, in a future phase, every page layout). Composes the
  * existing locale + theme + sound toggles.
  */
-export function GameHud({ hint, className }: GameHudProps) {
+export function GameHud({ hint, ariaLabel, className }: GameHudProps) {
   return (
     <nav
-      aria-label="System status"
+      aria-label={ariaLabel}
       className={cn(
         "flex flex-wrap items-center gap-x-4 gap-y-3 border-t border-border/60 pt-4",
         className,

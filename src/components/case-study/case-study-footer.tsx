@@ -83,7 +83,7 @@ function CaseStudyAdjacent({
     >
       <Link
         href={entry.href}
-        className={`group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+        className={`group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isNext ? "lg:text-right" : ""
         }`}
       >

@@ -41,6 +41,13 @@ export interface PixelPanelProps
   eyebrow?: string;
   /** Render a 12px cartridge corner notch on the top-right (sm+). */
   notch?: boolean;
+  /**
+   * Document-outline level for the title bar headline. Defaults to `2`
+   * because PixelPanel typically opens a top-level section, but consumers
+   * nested under a page `<h1>`+`<h2>` (e.g. CommandHero inside the hero)
+   * should pass `3` so the outline stays sequential. Phase 8 a11y fix.
+   */
+  headingLevel?: 2 | 3;
 }
 
 export function PixelPanel({
@@ -48,6 +55,7 @@ export function PixelPanel({
   eyebrow,
   tone,
   notch = false,
+  headingLevel = 2,
   className,
   children,
   ...rest
@@ -55,6 +63,7 @@ export function PixelPanel({
   const titleId = React.useId();
   const hasHeader = Boolean(title || eyebrow);
   const Element: React.ElementType = title ? "section" : "div";
+  const Heading: React.ElementType = headingLevel === 3 ? "h3" : "h2";
 
   return (
     <Element
@@ -78,12 +87,12 @@ export function PixelPanel({
               </span>
             ) : null}
             {title ? (
-              <h2
+              <Heading
                 id={titleId}
                 className="font-pixel text-base normal-case tracking-normal text-foreground"
               >
                 {title}
-              </h2>
+              </Heading>
             ) : null}
           </div>
           {/* Right slot — empty in Phase 2. Phase 6 (StatusPulse) lands

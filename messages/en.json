@@ -24,6 +24,9 @@
     "zh": "中文",
     "switchTo": "Switch to {target}"
   },
+  "Hud": {
+    "systemStatus": "System status"
+  },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
     "title": "One archive. Software, art, games.",
@@ -139,6 +142,7 @@
     "caseStudy": "Case study",
     "live": "Live",
     "source": "Source",
+    "mediaTbd": "PROJECT MEDIA TBD",
     "quickFacts": "Quick facts",
     "problem": "Problem",
     "solution": "Solution",
