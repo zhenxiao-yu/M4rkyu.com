@@ -11,7 +11,13 @@
     "contact": "Contact",
     "portal": "Portal",
     "menu": "Open menu",
-    "navigateLabel": "navigate"
+    "navigateLabel": "navigate",
+    "work": "Work",
+    "archive": "Archive",
+    "logs": "Logs",
+    "allWork": "All Work",
+    "visualArchive": "Visual Archive",
+    "writing": "Writing"
   },
   "Theme": {
     "label": "Theme",
@@ -27,10 +33,21 @@
   "Hud": {
     "systemStatus": "System status"
   },
+  "Status": {
+    "ready": "Ready",
+    "draft": "Draft",
+    "placeholder": "Pending",
+    "coming-soon": "Soon",
+    "live": "Live",
+    "now": "Now",
+    "wip": "WIP",
+    "archive": "Archive",
+    "info": "Info"
+  },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
-    "title": "One archive. Software, art, games.",
-    "subtitle": "Software engineer, game developer, and visual archivist. This site collects the work, the logs, and a small set of tools that earn their keep.",
+    "title": "A decent place to put all this.",
+    "subtitle": "Projects, prototypes, images, and notes from Mark Yu.",
     "heroCtaBrowse": "Browse the work",
     "heroCtaLogs": "Read the logs",
     "heroCmdkHint": ">_ press ⌘K",

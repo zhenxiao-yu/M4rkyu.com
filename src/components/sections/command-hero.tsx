@@ -8,10 +8,16 @@ import { cn } from "@/lib/utils";
 interface CommandHeroStatus {
   /** Short label shown next to the live dot (e.g. project title). */
   label: string;
+  /** Translated badge label for the SystemBadge — e.g. tStatus("now"). */
+  badgeLabel: string;
+  /**
+   * Translated accessible label for the link wrapping the status text.
+   * **Required** when `href` is set — Phase 8 follow-up removed the
+   * English `Open ${label}` fallback that previously leaked onto /zh.
+   */
+  accessibleLabel: string;
   /** Optional internal href the label links to. */
   href?: string;
-  /** Optional accessible label override. Defaults to `Open ${label}`. */
-  accessibleLabel?: string;
 }
 
 interface CommandHeroProps {
@@ -49,9 +55,9 @@ export function CommandHero({
         {/* atmospheric grid substrate, masked to the panel body */}
         <div
           aria-hidden="true"
-          className="bg-cyber-grid pointer-events-none absolute inset-0 opacity-20 [mask-image:radial-gradient(circle_at_center,black,transparent_80%)]"
+          className="bg-cyber-grid pointer-events-none absolute inset-0 opacity-20 mask-[radial-gradient(circle_at_center,black,transparent_80%)]"
         />
-        <div className="relative flex min-h-[16rem] flex-col justify-between gap-8 py-4 text-center">
+        <div className="relative flex min-h-64 flex-col justify-between gap-8 py-4 text-center">
           <pre
             aria-hidden="true"
             className="font-pixel select-none text-base leading-tight text-foreground/85"
@@ -60,13 +66,11 @@ export function CommandHero({
           </pre>
           {status ? (
             <div className="flex items-center justify-center gap-3">
-              <SystemBadge kind="now" />
+              <SystemBadge kind="now" label={status.badgeLabel} />
               {status.href ? (
                 <Link
                   href={status.href}
-                  aria-label={
-                    status.accessibleLabel ?? `Open ${status.label}`
-                  }
+                  aria-label={status.accessibleLabel}
                   className="font-mono text-xs text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground"
                 >
                   {status.label}

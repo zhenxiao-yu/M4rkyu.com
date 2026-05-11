@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Tone = "live" | "now" | "info";
@@ -24,19 +27,20 @@ interface StatusPulseProps {
 
 /**
  * Small live / now / info indicator. The halo ring animates via the
- * `pulse-halo` keyframe in `globals.css`; under reduced-motion the
- * universal `animation-iteration-count: 1` override collapses the
- * infinite loop to a single near-instant tick. Always render this
- * inside an outer element that carries the semantic role+aria-live
- * (e.g. SystemBadge) — the pulse itself is purely decorative.
+ * `pulse-halo` keyframe in `globals.css`. Under reduced-motion the
+ * halo is skipped entirely (via `useReducedMotion()`) and only the
+ * steady dot renders. Always render this inside an outer element
+ * that carries the semantic role+aria-live (e.g. SystemBadge) — the
+ * pulse itself is purely decorative.
  */
 export function StatusPulse({
   tone = "info",
   size = "sm",
   className,
 }: StatusPulseProps) {
+  const reduceMotion = useReducedMotion();
   const dotColor = DOT_CLASS[tone];
-  const animates = tone !== "info";
+  const animates = tone !== "info" && !reduceMotion;
 
   return (
     <span
