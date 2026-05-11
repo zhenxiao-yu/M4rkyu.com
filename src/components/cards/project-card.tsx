@@ -45,7 +45,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
       className="relative h-full"
     >
       {highlighted ? <BorderBeam duration={14} borderRadius={8} /> : null}
-      <Card className="group relative h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-lg hover:shadow-ring/5">
+      <Card className="group relative h-full overflow-hidden bg-card/80 transition duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-lg hover:shadow-ring/5">
         <div className="relative aspect-16/10 overflow-hidden border-b bg-muted">
           {cover ? (
             <Image
@@ -56,7 +56,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
               className="object-cover grayscale transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
             />
           ) : (
-            <PlaceholderImage label="PROJECT MEDIA TBD" aspect="h-full" className="rounded-none border-0" />
+            <PlaceholderImage label={t("mediaTbd")} aspect="h-full" className="rounded-none border-0" />
           )}
         </div>
 

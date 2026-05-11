@@ -34,9 +34,10 @@ export function NumberedCapability({
   const titleNode = (
     <h3 className="font-display text-2xl font-extrabold leading-tight sm:text-3xl">
       {cta ? (
+        // No `aria-label` — visible title inside the link is the accessible
+        // name. Phase 8 a11y fix; see docs/PHASE_8_AUDIT.md.
         <Link
           href={cta.href}
-          aria-label={cta.label}
           className="group/cta relative inline-block w-fit text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground/85"
         >
           <span>{title}</span>

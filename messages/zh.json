@@ -24,6 +24,9 @@
     "zh": "中文",
     "switchTo": "切换到 {target}"
   },
+  "Hud": {
+    "systemStatus": "系统状态"
+  },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
     "title": "一份档案。软件、艺术、游戏。",
@@ -139,6 +142,7 @@
     "caseStudy": "案例",
     "live": "在线",
     "source": "源码",
+    "mediaTbd": "项目素材待补",
     "quickFacts": "关键信息",
     "problem": "问题",
     "solution": "方案",

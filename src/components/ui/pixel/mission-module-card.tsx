@@ -1,6 +1,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SystemBadge } from "./system-badge";
@@ -29,12 +30,13 @@ interface MissionModuleCardProps {
 const NOTCH_CLASS =
   "sm:[clip-path:polygon(0_0,calc(100%-14px)_0,100%_14px,100%_100%,0_100%)]";
 
-export function MissionModuleCard({
+export async function MissionModuleCard({
   project,
   locale,
   highlighted = false,
   compact = false,
 }: MissionModuleCardProps) {
+  const tProjects = await getTranslations({ locale, namespace: "Projects" });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
   const stackDisplay =
@@ -73,7 +75,7 @@ export function MissionModuleCard({
               />
             ) : (
               <PlaceholderImage
-                label="PROJECT MEDIA TBD"
+                label={tProjects("mediaTbd")}
                 aspect="h-full"
                 className="rounded-none border-0"
               />

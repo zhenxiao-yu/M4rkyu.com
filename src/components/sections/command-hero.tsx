@@ -42,6 +42,8 @@ export function CommandHero({
       <PixelPanel
         eyebrow="m4rkyu.sys"
         title={versionLabel}
+        // The hero owns the page <h1>; this panel header belongs at h3.
+        headingLevel={3}
         className="relative h-full overflow-hidden"
       >
         {/* atmospheric grid substrate, masked to the panel body */}
