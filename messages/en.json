@@ -153,6 +153,14 @@
     "archiveEyebrow": "recently shipped",
     "archiveTitle": "From the archive"
   },
+  "Error": {
+    "eyebrow": "system fault / unhandled",
+    "title": "Something tripped a wire.",
+    "subtitle": "The page hit an error before it finished loading. The fault has been logged — try again, or head home and we'll pick it up from there.",
+    "retry": "Try again",
+    "home": "Home",
+    "digestLabel": "fault id"
+  },
   "Projects": {
     "title": "Project Archive",
     "intro": "A serious archive of web applications, game systems, AI tools, and creative engineering experiments.",

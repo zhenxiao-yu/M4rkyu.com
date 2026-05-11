@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { HeroSection } from "@/components/sections/hero-section";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
-import { IntroLoader } from "@/components/system/intro-loader";
+import { IntroLoaderIsland } from "@/components/system/intro-loader-island";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { MissionModuleCard } from "@/components/ui/pixel/mission-module-card";
 import { ArchiveTile } from "@/components/ui/pixel/archive-tile";
@@ -98,7 +98,7 @@ export default async function HomePage({
 
   return (
     <PageShell locale={locale}>
-      <IntroLoader />
+      <IntroLoaderIsland />
       <HeroSection locale={locale} />
 
       {/* Numbered capability spine — five overlapping systems (§3.B). */}

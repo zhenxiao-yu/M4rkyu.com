@@ -153,6 +153,14 @@
     "archiveEyebrow": "近期上线",
     "archiveTitle": "来自档案"
   },
+  "Error": {
+    "eyebrow": "系统异常 / 未处理",
+    "title": "刚才有根线绊到了。",
+    "subtitle": "这一页加载时遇到错误，故障已记录。可以重试，或回到首页再继续。",
+    "retry": "重试",
+    "home": "首页",
+    "digestLabel": "故障编号"
+  },
   "Projects": {
     "title": "项目档案",
     "intro": "这里整理 Web 应用、游戏系统、AI 工具和创意工程实验，不只是卡片，而是可阅读的案例。",
