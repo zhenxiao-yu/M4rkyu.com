@@ -4,14 +4,13 @@ import { HeroSection } from "@/components/sections/hero-section";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { IntroLoader } from "@/components/system/intro-loader";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { ProjectCard } from "@/components/cards/project-card";
+import { MissionModuleCard } from "@/components/ui/pixel/mission-module-card";
+import { ArchiveTile } from "@/components/ui/pixel/archive-tile";
 import { ArchiveCard } from "@/components/cards/archive-card";
 import { ResourcePreviewCard } from "@/components/cards/resource-preview-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BentoGrid } from "@/components/ui/magic/bento-grid";
-import { GalleryBentoTile } from "@/components/gallery/gallery-bento-tile";
 import { PageShell } from "@/components/layout/page-shell";
 import { PlaceholderVideo } from "@/components/placeholders/placeholder-video";
 import { FadeIn } from "@/components/motion/fade-in";
@@ -131,7 +130,7 @@ export default async function HomePage({
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {featuredProjects.slice(0, 3).map((project, index) => (
-            <ProjectCard
+            <MissionModuleCard
               key={project.slug}
               project={project}
               locale={locale}
@@ -200,15 +199,15 @@ export default async function HomePage({
           </FadeIn>
           <FadeIn direction="left" delay={0.1}>
             {bentoFrames ? (
-              <BentoGrid className="lg:auto-rows-[12rem] lg:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2 lg:gap-4">
                 {bentoFrames.map((item, index) => (
-                  <GalleryBentoTile
+                  <ArchiveTile
                     key={item.slug}
                     item={item}
-                    span={index === 0 ? "sm:row-span-2" : undefined}
+                    aspect={index === 0 ? "4/5" : "1/1"}
                   />
                 ))}
-              </BentoGrid>
+              </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {galleryCollections.slice(0, 2).map((collection) => (

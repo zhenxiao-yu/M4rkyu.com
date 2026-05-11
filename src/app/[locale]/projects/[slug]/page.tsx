@@ -6,7 +6,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
-import { CaseStudyHeader } from "@/components/case-study/case-study-header";
+import { ProjectCartridge } from "@/components/ui/pixel/project-cartridge";
 import {
   CaseStudyList,
   CaseStudySection,
@@ -94,8 +94,9 @@ export default async function ProjectDetailPage({
   return (
     <PageShell locale={locale}>
       <article>
-        <CaseStudyHeader
+        <ProjectCartridge
           project={project}
+          locale={locale}
           title={localized.title}
           shortPitch={localized.shortPitch as string}
           role={localized.role as string}
