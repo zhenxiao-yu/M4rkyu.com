@@ -280,6 +280,17 @@
     "readMore": "Read more",
     "status": "Status"
   },
+  "Notifications": {
+    "label": "Notifications",
+    "open": "Open notifications",
+    "heading": "What's new",
+    "subheading": "Recent log entries since you last stopped by.",
+    "empty": "All caught up. New logs will surface here.",
+    "markRead": "Mark all read",
+    "viewAll": "View all logs",
+    "newBadge": "new",
+    "unreadStatus": "{count, plural, =0 {No unread updates} one {# unread update} other {# unread updates}}"
+  },
   "CommandPalette": {
     "title": "Command palette",
     "description": "Jump to a page, frame, or setting.",
