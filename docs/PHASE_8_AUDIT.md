@@ -25,13 +25,21 @@ This document logs each finding, marks status (`fixed in this PR` /
 
 ## Summary
 
-| Severity | Total | Fixed in Phase 8 | Deferred |
-| --- | --- | --- | --- |
-| BLOCK | 3 | 3 | 0 |
-| SHOULD-FIX | 6 | 3 | 3 |
-| NIT | 7 | 0 | 7 |
+| Severity | Total | Fixed in Phase 8 | Fixed in follow-up | Deferred |
+| --- | --- | --- | --- | --- |
+| BLOCK | 3 | 3 | 0 | 0 |
+| SHOULD-FIX | 6 | 3 | 1 | 2 |
+| NIT | 7 | 0 | 1 | 6 |
 
-The NIT row's "Fixed: 0" is accurate — the bilingual parity check is a *finding* (no issue found), not a remediation; it stays in the audit log for traceability but didn't require code.
+The follow-up PR (`chore(qa): phase-8 audit cleanup`) closed two more
+items: SystemBadge default labels now translate via a new `Status`
+namespace at the call sites, and CommandHero's `status.accessibleLabel`
+became required (with `badgeLabel`) so the English `Open ${label}`
+fallback is gone.
+
+The remaining NIT row's "Fixed: 0" entry is the bilingual parity check
+itself — a *finding* (no issue found), not a remediation; it stays in
+the audit log for traceability but didn't require code.
 
 ---
 
@@ -108,31 +116,34 @@ The NIT row's "Fixed: 0" is accurate — the bilingual parity check is a *findin
 
 ## 2 — Deferred to follow-up PRs
 
-### SHOULD-FIX · A11y · Hover lifts fire on touch
+### SHOULD-FIX · A11y · Hover lifts fire on touch — **Verified not needed**
 - **Files:** `mission-module-card.tsx:56`, `archive-tile.tsx:61`,
   resource-preview-card, others.
-- **Finding:** `group-hover:-translate-y-1` and `group-hover:scale-[1.02]` fire
-  on tap-and-hold because nothing wraps them in `@media (hover: hover)`.
-  Cards lift and stay lifted after a tap — reads as a stuck state.
-- **Why deferred:** Repo-wide change. The clean fix is a Tailwind v4
-  `@custom-variant hover-fine (@media (hover: hover) and (pointer: fine))`
-  + sweep every call site. Scoping that to its own PR keeps Phase 8
-  reviewable.
-- **Follow-up:** Add `--hover-fine` variant in `globals.css @theme inline`;
-  rename `group-hover:` → `hover-fine:group-hover:` across pixel components
-  and legacy cards.
+- **Finding:** Original concern was that `group-hover:-translate-y-1` and
+  `group-hover:scale-[1.02]` would fire on tap-and-hold and stick.
+- **Verification:** Tailwind v4's default `hover` behavior already
+  wraps `hover:` AND `group-hover:` in `@media (hover: hover)` (see
+  [Tailwind docs](https://tailwindcss.com/docs/hover-focus-and-other-states#hover)).
+  The project hasn't overridden `--default-hover-behavior`, so touch
+  devices never match the hover media query — no sticky-hover possible.
+- **Status:** No action needed. The audit finding was Tailwind-v3-era
+  thinking; the framework's v4 default handles it.
 
-### SHOULD-FIX · A11y · CommandHero brand mark hidden from AT
-- **File:** `src/components/sections/command-hero.tsx:53-58`
-- **Finding:** `<pre aria-hidden="true">` hides the M4RKYU brand mark from
-  screen readers. The panel therefore announces only "v2027" — thin context
-  for an atmospheric panel.
-- **Why deferred:** Requires a content + a11y design call (do we want
-  AT users to hear "M4RKYU SYSTEM ONLINE ENGINEER ARTIST DEV"?). Leaving the
-  mark `aria-hidden` is the conservative choice — atmospheric content over
-  AT noise.
-- **Follow-up:** Decide whether to expose an `srOnly` analog of the brand
-  mark, or accept the panel as decorative-only.
+### SHOULD-FIX · A11y · CommandHero brand mark hidden from AT — **Resolved (decorative)**
+- **File:** `src/components/sections/command-hero.tsx`
+- **Decision:** Keep `aria-hidden="true"` on the ASCII brand mark. The
+  panel's accessible name comes from its `aria-labelledby` linkage to the
+  versioned `<h3>` (e.g. "v2027"); when a `status` is supplied, the
+  translated `accessibleLabel` on the status link adds the meaningful
+  content. The ASCII mark stays atmospheric, not load-bearing.
+- **Status:** No code change; logged as a deliberate content call. If
+  future user testing shows SR users want a brand readout, expose it via
+  a `srOnly` prop on CommandHero.
+
+### SHOULD-FIX · A11y · CommandHero `status.accessibleLabel` English fallback — **Fixed in follow-up**
+- **File:** `src/components/sections/command-hero.tsx`
+- **Finding:** The fallback `aria-label={status.accessibleLabel ?? \`Open ${status.label}\`}` injected English on /zh when callers omitted `accessibleLabel`.
+- **Fix:** Made `accessibleLabel` **required** on `CommandHeroStatus` (alongside a new required `badgeLabel` for the SystemBadge inside the status row). The English fallback is gone. No current call site passes `status`, so the breaking-prop change has no impact today.
 
 ### SHOULD-FIX · A11y · Atmospheric layers may reduce muted-foreground contrast
 - **Files:** `globals.css:252-266` (`.scanline-layer`, `.noise-layer`,
@@ -169,16 +180,10 @@ The NIT row's "Fixed: 0" is accurate — the bilingual parity check is a *findin
   `<ul role="list">` + `<li>` per toggle or `role="toolbar"` is a
   larger semantic decision.
 
-### NIT · Bilingual · SystemBadge default labels stay English on /zh
-- **File:** `src/components/ui/pixel/system-badge.tsx:27-40`
-- **Finding:** `STATUS_LABEL` and `KIND_LABEL` (Ready / Draft / Pending /
-  Soon / Live / Now / WIP / Archive / Info) render English on the ZH route
-  unless callers pass a `label` override. No current caller does.
-- **Why deferred:** Confirm intent — keeping chips in English is
-  defensible for tech-tag-style tags, but ZH content authors might prefer
-  translation. Needs a content decision.
-- **Follow-up:** Add a `Status` namespace if translation is desired;
-  thread `t()` lookups via a new SystemBadge prop or context.
+### NIT · Bilingual · SystemBadge default labels stay English on /zh — **Fixed in follow-up**
+- **File:** `src/components/ui/pixel/system-badge.tsx`
+- **Finding:** `STATUS_LABEL` and `KIND_LABEL` (Ready / Draft / Pending / Soon / Live / Now / WIP / Archive / Info) rendered English on the ZH route.
+- **Fix:** Added a `Status` namespace to `messages/en.json` + `messages/zh.json` covering all four `contentStatusSchema` values + all five `SystemKind` values. The three existing call sites (MissionModuleCard, ProjectCartridge, CommandHero) now load `getTranslations({ namespace: "Status" })` and pass `label={tStatus(status)}` (or `label={tStatus(kind)}`) to SystemBadge. The English defaults inside SystemBadge stay as the fallback for un-translated callers (e.g. future Storybook stories).
 
 ### NIT · A11y · SoundToggle tooltip duplicates aria-label
 - **File:** `src/components/system/sound-toggle.tsx`

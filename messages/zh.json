@@ -27,10 +27,21 @@
   "Hud": {
     "systemStatus": "系统状态"
   },
+  "Status": {
+    "ready": "就绪",
+    "draft": "草稿",
+    "placeholder": "待定",
+    "coming-soon": "即将",
+    "live": "在线",
+    "now": "进行",
+    "wip": "进行中",
+    "archive": "归档",
+    "info": "信息"
+  },
   "Home": {
     "eyebrow": "M4RKYU.SYS · v2027",
-    "title": "一份档案。软件、艺术、游戏。",
-    "subtitle": "软件工程师，游戏开发者，视觉记录者。这里收录作品、日志，以及为自己写的小工具。",
+    "title": "一个还算像样的地方，放这些。",
+    "subtitle": "项目、原型、图像与笔记——来自 Mark Yu。",
     "heroCtaBrowse": "浏览作品",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",

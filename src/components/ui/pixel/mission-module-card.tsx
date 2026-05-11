@@ -37,6 +37,7 @@ export async function MissionModuleCard({
   compact = false,
 }: MissionModuleCardProps) {
   const tProjects = await getTranslations({ locale, namespace: "Projects" });
+  const tStatus = await getTranslations({ locale, namespace: "Status" });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
   const stackDisplay =
@@ -83,7 +84,10 @@ export async function MissionModuleCard({
           </div>
           <div className="flex flex-col gap-3 p-5">
             <div className="flex items-center justify-between gap-3">
-              <SystemBadge status={project.contentStatus} />
+              <SystemBadge
+                status={project.contentStatus}
+                label={tStatus(project.contentStatus)}
+              />
               <span className="font-mono text-xs text-muted-foreground">
                 {project.year}
               </span>
