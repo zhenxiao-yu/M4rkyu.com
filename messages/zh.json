@@ -11,7 +11,13 @@
     "contact": "联系",
     "portal": "入口",
     "menu": "打开菜单",
-    "navigateLabel": "导航"
+    "navigateLabel": "导航",
+    "work": "作品",
+    "archive": "档案",
+    "logs": "日志",
+    "allWork": "全部作品",
+    "visualArchive": "视觉档案",
+    "writing": "写作"
   },
   "Theme": {
     "label": "主题",
