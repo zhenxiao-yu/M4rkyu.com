@@ -148,7 +148,40 @@ pointer follow and hover response.
 
 ---
 
-## 9. Cross-cutting rules
+## 9. View Transitions (route engine)
+
+```
+Use for           — every route navigation initiated via TransitionLink (i.e. every
+                    Link import from @/i18n/navigation today)
+Do not use for    — modal/sheet/dialog open-close (cross-fade is enough), in-page
+                    toggles, theme switching (owned by the theme-sweep keyframe)
+Mobile fallback   — same effect; durations halve under (max-width: 640px) so the
+                    perceived transition completes under ~280ms on phones
+Reduced motion    — `prefers-reduced-motion: reduce` collapses the keyframes to
+                    instant via the global 1ms override — no extra guard
+A11y notes        — TransitionLink renders the underlying <a> element unchanged.
+                    Cmd/Ctrl/Shift/Alt-click, middle-click, and target="_blank"
+                    fall through to native Link, preserving "open in new tab"
+                    semantics
+Performance risk  — none added — the API is browser-native and only runs when
+                    `document.startViewTransition` exists. Older Safari falls
+                    back to instant navigation
+Allowed pages     — all routes (foundational, like Viewport Detection)
+```
+
+The default keyframes are in `globals.css` (route-fade-out +
+route-fade-in). Per-route overrides can be layered by selecting
+`[data-route="..."]::view-transition-new(root)` — the `data-route`
+attribute is mirrored from the current pathname by
+`<RouteAttribute />` in `PageShell`. None ship today; the default
+reveal is shared across all routes.
+
+The PR-table entry (§10) is "First lands in #VT" — fill in the PR
+number when it merges.
+
+---
+
+## 10. Cross-cutting rules
 
 These apply to every technique above.
 
@@ -167,7 +200,7 @@ These apply to every technique above.
 
 ---
 
-## 10. Where this fits in the roadmap
+## 11. Where this fits in the roadmap
 
 These techniques land alongside their consuming PRs in
 [FINAL_SITE_ARCHITECTURE.md §12](./FINAL_SITE_ARCHITECTURE.md#12-pr-roadmap):

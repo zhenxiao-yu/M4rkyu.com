@@ -397,22 +397,42 @@ specifies the same eight facets.
 - **Stories:** Cmd-K palette skin · CTA panel skin · without scanlines ·
   zh-locale · reduced-motion.
 
-### 4.9 `PixelTransitionOverlay`
+### 4.9 Route transitions — View Transitions API
 
-- **Purpose:** the dither / pixel-mask scene-change wipe used on Dialog,
-  Sheet, and App Router `loading.tsx` boundaries.
-- **Props:** `mode: "dither" | "wipe-l" | "wipe-r"`, `duration?: "medium" |
-  "slow" | "cinematic"`, `onDone?: () => void`.
-- **Visual style:** a fixed-position overlay using a CSS mask of stepped
-  squares (no canvas), rendered in `var(--background)`.
-- **Motion:** `Motion` with `steps(N, end)` easing for the stepped look,
-  using `--motion-medium` to `--motion-cinematic`. On
-  `prefers-reduced-motion`, falls back to a 180ms cross-fade.
-- **Hover/click:** none — it's a transition layer.
-- **Mobile:** smaller step count (perf), shorter duration
-  (`--motion-medium`).
-- **A11y:** `aria-hidden`, `pointer-events: none`; never traps focus.
-- **Stories:** dither · wipe-l · wipe-r · reduced-motion · mobile-step.
+- **Purpose:** the scene-change wipe between routes. Replaces the
+  prior `PixelTransitionOverlay` curtain (deprecated and removed —
+  the dither/steps animation read as "uglish" in production and the
+  overlay component was decommissioned).
+- **Engine:** the browser View Transitions API. `TransitionLink` in
+  `src/components/system/transition-link.tsx` wraps `next-intl/Link`
+  via the `@/i18n/navigation` barrel re-export, so every existing
+  `Link` import automatically gets the upgrade. On left-click without
+  modifier keys, the wrapper calls `document.startViewTransition(()
+  => router.push(...))`. Cmd/Ctrl-click, middle-click, shift-click,
+  and non-string hrefs fall through to native Link behavior.
+- **Visual style:** old layer fades out 200ms with 4px translateY
+  drift; new layer fades in 360ms with a soft `scale: 0.995 → 1`
+  scale-up. Both layers use `--ease-premium`. Theme-sweep keeps
+  ownership of its circle reveal via `[data-theme-sweep="on"]`
+  specificity.
+- **Per-route hooks:** `RouteAttribute` in
+  `src/components/system/route-attribute.tsx` mirrors the current
+  pathname to `<html data-route="...">`. Per-route keyframes can be
+  layered later by selecting
+  `[data-route="work"]::view-transition-new(root) { ... }` in
+  `globals.css`. None ship today — the default reveal is shared by
+  all routes.
+- **Mobile:** durations halve under `(max-width: 640px)` so the
+  total perceived transition completes under ~280ms on phones.
+- **Reduced motion:** `prefers-reduced-motion: reduce` is already
+  neutralized globally (1ms transitions) — the keyframes collapse
+  to an instant cross-fade automatically, no extra guard.
+- **Fallback:** browsers without `document.startViewTransition`
+  (older Safari, Firefox without the flag) navigate normally. No
+  JS overhead.
+- **A11y:** `TransitionLink` preserves the underlying `<a>` element
+  and all next-intl Link semantics. No focus traps, no aria
+  attributes added.
 
 ### 4.10 `SoundToggle`
 
@@ -620,7 +640,7 @@ VT323 (pixel) — *added*, not replacing. No fifth font is allowed.
 | --- | --- | --- |
 | Hover (menu-select) | `>` caret slides in, 1–2px outline shift, no glow. | `--motion-fast` · `--ease-premium`. |
 | Click / press | `scale: 0.98`, optional UI tone (opt-in). | `--motion-micro` · `--ease-premium`. |
-| Route change | Pixel-mask dither wipe via `PixelTransitionOverlay`. | `--motion-medium` to `--motion-cinematic` · `--ease-pixel-step`. |
+| Route change | View Transitions API — `TransitionLink` wraps every `next-intl/Link` and calls `document.startViewTransition()` around `router.push`. Default keyframes: 200ms fade-out + 4px drift on the old layer, 360ms fade-in + scale 0.995→1 on the new layer. Falls back to instant on browsers without VT support. | `--ease-premium`. |
 | Modal / Sheet open | Cross-fade + 4px lift (existing). | `--motion-medium` · `--ease-premium`. |
 | Card hover (cartridge) | `y: -4`, spine brightens — *no scale, no rotate, no 3D tilt*. | `--motion-medium` · `--ease-premium`. |
 | Theme switch | Keep existing `theme-sweep` circle reveal. | 520ms · existing curve. |

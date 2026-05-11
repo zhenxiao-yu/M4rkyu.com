@@ -1,7 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useReducedMotion } from "motion/react";
+import { useGSAP } from "@gsap/react";
+import { gsap, SplitText, motionTokens } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 interface SplitHeadlineProps {
@@ -11,79 +13,91 @@ interface SplitHeadlineProps {
 }
 
 /**
- * Word-staggered reveal for the EN hero headline. Intentionally narrow
- * scope — only used by `HeroSection` on /en. The /zh route renders the
- * headline as plain text instead (PR #60 doctrine: text-splitting is
- * banned on zh because CJK measurements + per-word stagger read off).
+ * Char-level staggered reveal for the EN hero headline. Powered by
+ * GSAP SplitText so multi-line wrapping, ligatures, and per-character
+ * masks are correct without hand-rolling word-splitting logic.
  *
- * SSR-safe: server output is the final string. After hydration the
- * component mounts in its initial (hidden) state for a single frame and
- * then animates to the visible state, so there is no layout shift. On
- * reduced-motion the animation is skipped and the full string is
- * rendered instantly.
+ * Scope guards (carried forward from the motion/react predecessor):
  *
- * Accessibility: the wrapper carries `aria-label` so SR reads the
- * headline once. The animated word spans are `aria-hidden`.
+ *   - EN-only. `HeroSection` gates on `locale === "en"` and renders
+ *     the plain string on /zh because per-char stagger on CJK reads
+ *     off (text-splitting is banned on zh per
+ *     docs/INTERACTION_TECHNIQUES.md §5).
+ *
+ *   - SSR-safe. Before hydration the server renders the final plain
+ *     string. The `mounted` latch flips on the first effect tick,
+ *     after which GSAP takes over and animates from the initial
+ *     hidden state to the final position. There is no layout shift
+ *     because SplitText preserves the original line breaks and the
+ *     entry tween only animates `yPercent` + `opacity`.
+ *
+ *   - Reduced-motion. The hook short-circuits when the user has
+ *     `prefers-reduced-motion: reduce` set — the plain string
+ *     renders, no GSAP timeline is created.
+ *
+ *   - Accessible. The wrapper carries `aria-label` so SR reads the
+ *     headline once. SplitText's generated char/word spans are
+ *     `aria-hidden` via the `aria` config below.
+ *
+ * Why GSAP over motion/react: SplitText handles the multi-line clip
+ * mask correctly when the headline wraps (the `mask` div per line
+ * keeps overflow hidden), which the prior word-stagger approach
+ * couldn't do without measuring text manually.
  */
 export function SplitHeadline({ text, className }: SplitHeadlineProps) {
   const reduceMotion = useReducedMotion();
-  // `mounted` flips on the first client effect tick. Before that we
-  // render the final string (matches SSR HTML exactly). After it, we
-  // render the animated split. This avoids a hydration mismatch and
-  // also avoids a layout shift, because the animated path renders
-  // every word at its final position with only `opacity` + `y`
-  // changing during entry.
+  const wrapperRef = useRef<HTMLSpanElement | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // SSR-safe mount latch: the server renders the final plain string
-    // (the `!mounted` branch below), and we flip to the animated split
-    // after hydration. There is no external system to subscribe to —
-    // the trigger is "we are now on the client" — so setState in an
-    // effect is the correct pattern here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  if (!mounted || reduceMotion) {
-    return <span className={cn("inline", className)}>{text}</span>;
-  }
+  useGSAP(
+    () => {
+      if (!mounted || reduceMotion) return;
+      const target = wrapperRef.current;
+      if (!target) return;
 
-  const words = text.split(" ");
-  // Total reveal stays well under 800ms: 0.05s base + 0.06s * (n-1)
-  // stagger + 0.5s per-word duration. For "A decent place to put all
-  // this." (7 words) that's ~0.91s of the last word's entry tail —
-  // the perceived completion is closer to 700ms.
-  const stagger = 0.06;
-  const base = 0.05;
+      const split = SplitText.create(target, {
+        type: "chars,words,lines",
+        // GSAP injects role/aria-label on the wrapper; we keep
+        // aria-label on our own outer span (set below in JSX) and
+        // mark the inner generated nodes aria-hidden so SR doesn't
+        // double-read each character.
+        aria: "hidden",
+        mask: "lines",
+        linesClass: "split-line",
+      });
+
+      gsap.fromTo(
+        split.chars,
+        { yPercent: 110, opacity: 0 },
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: motionTokens.slow,
+          ease: motionTokens.easePremium,
+          stagger: 0.02,
+          delay: 0.05,
+        },
+      );
+
+      return () => {
+        split.revert();
+      };
+    },
+    { dependencies: [mounted, reduceMotion, text], scope: wrapperRef },
+  );
 
   return (
-    <span aria-label={text} className={cn("inline", className)}>
-      {words.map((word, i) => (
-        <span
-          key={`${word}-${i}`}
-          aria-hidden="true"
-          className="inline-block overflow-hidden align-baseline"
-        >
-          <motion.span
-            className="inline-block"
-            initial={{ y: "110%", opacity: 0 }}
-            animate={{ y: "0%", opacity: 1 }}
-            transition={{
-              duration: 0.5,
-              delay: base + i * stagger,
-              ease: [0.2, 0.7, 0.2, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-          {i < words.length - 1 ? (
-            <span aria-hidden="true" className="inline-block">
-              {" "}
-            </span>
-          ) : null}
-        </span>
-      ))}
+    <span
+      ref={wrapperRef}
+      aria-label={text}
+      className={cn("inline-block", className)}
+    >
+      {text}
     </span>
   );
 }
