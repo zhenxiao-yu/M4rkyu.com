@@ -15,14 +15,18 @@ interface HeroBootSequenceProps {
  * server-rendered) and runs a single GSAP timeline that animates
  * each beat in sequence:
  *
- *   1. `data-boot="eyebrow"`  — system label
- *   2. `data-boot="headline"` — char-staggered headline (handled by
- *                              SplitHeadline's own timeline; this
- *                              beat just kicks off in parallel)
- *   3. `data-boot="subtitle"` — supporting line
- *   4. `data-boot="ctas"`     — button row, items stagger
- *   5. `data-boot="panel"`    — CommandHero panel draws in
- *   6. `data-boot="hud"`      — HUD hint strip
+ *   1. `data-boot="eyebrow"`         — system label
+ *   2. `data-boot="corner-display"`  — Zentry-style watermark wordmark
+ *   3. `data-boot="headline"`        — char-staggered headline (handled
+ *                                     by SplitHeadline's own timeline;
+ *                                     this beat just kicks off in
+ *                                     parallel)
+ *   4. `data-boot="subtitle"`        — supporting line
+ *   5. `data-boot="preview"`         — photo-stack mini-preview tile
+ *   6. `data-boot="ctas"`            — button row, items stagger
+ *   7. `data-boot="panel"`           — CommandHero panel draws in
+ *   8. `data-boot="specs"`           — metric strip, cells stagger
+ *   9. `data-boot="hud"`             — HUD hint strip
  *
  * Why a master timeline instead of per-element animations:
  *   The hero now reads as a single sequenced moment rather than a
@@ -58,9 +62,16 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       if (!root) return;
 
       const eyebrow = root.querySelector<HTMLElement>('[data-boot="eyebrow"]');
+      const cornerDisplay = root.querySelector<HTMLElement>(
+        '[data-boot="corner-display"]',
+      );
       const subtitle = root.querySelector<HTMLElement>('[data-boot="subtitle"]');
+      const preview = root.querySelector<HTMLElement>('[data-boot="preview"]');
       const ctas = root.querySelectorAll<HTMLElement>('[data-boot="ctas"] > *');
       const panel = root.querySelector<HTMLElement>('[data-boot="panel"]');
+      const specs = root.querySelectorAll<HTMLElement>(
+        '[data-boot="specs"] > *',
+      );
       const hud = root.querySelector<HTMLElement>('[data-boot="hud"]');
 
       // Hide the elements we orchestrate. The headline is intentionally
@@ -68,9 +79,12 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       // plays in parallel.
       const eased = motionTokens.easePremium;
       gsap.set(eyebrow, { opacity: 0, y: 8 });
+      gsap.set(cornerDisplay, { opacity: 0, y: 12 });
       gsap.set(subtitle, { opacity: 0, y: 12 });
+      gsap.set(preview, { opacity: 0, scale: 0.85 });
       gsap.set(ctas, { opacity: 0, y: 12 });
       gsap.set(panel, { opacity: 0, y: 16, scale: 0.985 });
+      gsap.set(specs, { opacity: 0, y: 10 });
       gsap.set(hud, { opacity: 0, y: 8 });
 
       const tl = gsap.timeline();
@@ -80,6 +94,16 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
         duration: motionTokens.fast,
         ease: eased,
       })
+        .to(
+          cornerDisplay,
+          {
+            opacity: 1,
+            y: 0,
+            duration: motionTokens.slow,
+            ease: eased,
+          },
+          0.1,
+        )
         // Headline beat: SplitHeadline auto-plays at this point.
         // We don't tween anything here — the position just establishes
         // pacing for the next beat to land cleanly after it.
@@ -92,6 +116,16 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             ease: eased,
           },
           0.35,
+        )
+        .to(
+          preview,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: motionTokens.slow,
+            ease: eased,
+          },
+          0.45,
         )
         .to(
           ctas,
@@ -114,6 +148,17 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             ease: eased,
           },
           0.25,
+        )
+        .to(
+          specs,
+          {
+            opacity: 1,
+            y: 0,
+            duration: motionTokens.base,
+            stagger: 0.07,
+            ease: eased,
+          },
+          0.65,
         )
         .to(
           hud,

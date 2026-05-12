@@ -96,7 +96,24 @@
     "media": "Media placeholders",
     "mediaDescription": "Video and process pages are presentationally ready — final posters and clips replace these frames later.",
     "closingStatement": "One archive. Software, games, art, writing — built deliberately.",
-    "emailDirectly": "Email directly"
+    "emailDirectly": "Email directly",
+    "hero": {
+      "cornerDisplay": "OPERAT<b>O</b>R",
+      "previewLabel": "cycle frame",
+      "previewAria": "Cycle to next hero frame",
+      "missionBriefTitle": "mission brief",
+      "missionBriefShipping": "currently shipping",
+      "missionBriefIdle": "queueing the next post",
+      "missionBriefMetrics": "{posts} posts · est. 2014",
+      "specs": {
+        "locationLabel": "based in",
+        "latestLabel": "latest devlog",
+        "latestFallback": "drafting",
+        "practiceLabel": "practice",
+        "statusLabel": "status",
+        "statusOpen": "Open for collaboration"
+      }
+    }
   },
   "Pulse": {
     "now": "NOW",

@@ -322,6 +322,56 @@ body {
     linear-gradient(to bottom, transparent, color-mix(in srgb, var(--background) 86%, transparent));
 }
 
+/* Hero radial vignette — top + bottom edge darkening so the central
+ * content owns visual weight over the cycling photographic substrate.
+ * Lives at hero scope only (consumed by `hero-section.tsx`). */
+.hero-vignette {
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--background) 90%, transparent), transparent 36rem),
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--background) 88%, transparent), transparent 30rem);
+}
+
+/* Stylistic-alt letter swap for editorial display headings. Wrap the
+ * letter(s) you want featured in `<b>` inside an element carrying
+ * `.special-font`. Adapted from adrianhajdin/award-winning-website
+ * (Zentry's `.special-font`) but rerouted to Syne italic + ss01 so the
+ * accent stays inside our existing typography stack — no new fonts.
+ * Locale-aware: CJK ignores the swap by rendering normal weight (no
+ * matching italic glyph), which is the intended degrade. */
+.special-font b {
+  font-family: var(--font-syne), var(--font-display), "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-feature-settings: "ss01" on;
+}
+
+/* EQ-style indicator bars for "status: open" pulses. Three bars whose
+ * heights cycle out of phase via `--eq-order`. Port of the
+ * `.indicator-line` keyframe from adrianhajdin/award-winning-website,
+ * retuned to our motion tokens. Paused when `prefers-reduced-motion`
+ * is set — bars render at base height with no animation. */
+.eq-bar {
+  display: inline-block;
+  width: 2px;
+  height: 4px;
+  background-color: currentColor;
+  border-radius: 2px;
+  animation: eq-bar 0.6s ease-in-out infinite;
+  animation-delay: calc(var(--eq-order, 0) * 0.12s);
+}
+
+@keyframes eq-bar {
+  0%, 100% { height: 4px; transform: translateY(0); }
+  50% { height: 12px; transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-bar {
+    animation: none;
+    height: 8px;
+  }
+}
+
 .placeholder-noise {
   background-image:
     linear-gradient(135deg, color-mix(in srgb, var(--foreground) 10%, transparent), transparent 45%),

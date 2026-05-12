@@ -2,104 +2,168 @@ import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PixelButton } from "@/components/ui/pixel/pixel-button";
 import { Button } from "@/components/ui/button";
+import { Particles } from "@/components/ui/magic/particles";
+import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern";
 import { CommandHero } from "./command-hero";
 import { GameHud } from "./game-hud";
 import { HudScrollFrame } from "./hud-scroll-frame";
 import { SplitHeadline } from "./split-headline";
 import { HeroBootSequence } from "./hero-boot-sequence";
+import { HeroClipFrame } from "./hero-clip-frame";
+import { HeroPhotoStack, type HeroPhotoFrame } from "./hero-photo-stack";
+import { HeroCornerDisplay } from "./hero-corner-display";
+import { HeroSpecsStrip } from "./hero-specs-strip";
+import { galleryCollections } from "@/content/gallery";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+
+/**
+ * Build the cycling photo frames for `HeroPhotoStack` from the real
+ * gallery collection covers. Falls through to an empty list if none
+ * have an `src` — the stack renders nothing and the rest of the hero
+ * still composes correctly over the atmospheric layers.
+ */
+function buildHeroFrames(): HeroPhotoFrame[] {
+  return galleryCollections
+    .filter((c) => c.cover?.src)
+    .map((c) => ({
+      slug: c.slug,
+      src: c.cover!.src,
+      alt: c.cover!.alt,
+    }));
+}
 
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
   const tHud = await getTranslations({ locale, namespace: "Hud" });
 
+  const frames = buildHeroFrames();
+
   return (
     <section className="relative overflow-hidden border-b">
-      {/* Atmospheric layers — `noise` + `scanline` carry the 20% cyber
-        * slice from docs/UNIFIED_VISUAL_DIRECTION.md §2; cyber-grid is
-        * scoped to CommandHero so the homepage stays editorial-first. */}
-      <div className="noise-layer absolute inset-0" aria-hidden="true" />
-      <div
-        className="scanline-layer absolute inset-0 opacity-25"
-        aria-hidden="true"
-      />
+      {/* The clip-frame wraps every atmospheric + decorative layer so
+        * scrolling deforms the whole substrate as one piece. Content
+        * (headline, CTAs, brief, specs) sits OUTSIDE the clip frame
+        * so it stays crisp and readable as the frame morphs under
+        * scroll — port of the layered z-index pattern from
+        * adrianhajdin/award-winning-website's Hero/About sections. */}
+      <HeroClipFrame>
+        <div className="absolute inset-0 -z-10">
+          <HeroPhotoStack frames={frames} />
+        </div>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-background/55"
+        />
+        <AnimatedGridPattern
+          className="-z-10 mask-[radial-gradient(ellipse_at_center,white,transparent_70%)]"
+          numSquares={18}
+          maxOpacity={0.1}
+          duration={6}
+        />
+        <Particles
+          className="-z-10 hidden sm:block"
+          quantity={24}
+          speed={0.06}
+          size={1.2}
+          maxOpacity={0.4}
+          color="var(--ring)"
+        />
+        <div
+          aria-hidden="true"
+          className="noise-layer absolute inset-0 -z-10"
+        />
+        <div
+          aria-hidden="true"
+          className="scanline-layer absolute inset-0 -z-10 opacity-20"
+        />
+        <div
+          aria-hidden="true"
+          className="hero-vignette absolute inset-0 -z-10"
+        />
+        {/* Watermark wordmark behind everything — port of the
+          * absolute-positioned corner heading from Zentry's `Hero.jsx`,
+          * but at very low alpha so the foreground content keeps
+          * contrast on every theme. */}
+        <HeroCornerDisplay locale={locale} />
 
-      <HeroBootSequence>
-        <div className="relative mx-auto grid w-full max-w-7xl items-start gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_400px] lg:gap-16 lg:py-28 lg:px-8">
-          {/* Left column — eyebrow, headline, subtitle, two CTAs. */}
-          <div className="flex flex-col gap-7">
-            <span
-              data-boot="eyebrow"
-              className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground"
-            >
-              {t("eyebrow")}
-            </span>
-            <h1
-              data-boot="headline"
-              className="font-display text-balance text-[3rem] font-extrabold leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl"
-            >
-              {/* Text-splitting is EN-only by doctrine — see PR #60.
-               * /zh renders the headline as plain text. */}
-              {locale === "en" ? (
-                <SplitHeadline text={t("title")} />
-              ) : (
-                t("title")
-              )}
-            </h1>
-            <p
-              data-boot="subtitle"
-              className="max-w-xl text-lg leading-8 text-muted-foreground"
-            >
-              {t("subtitle")}
-            </p>
-            <div
-              data-boot="ctas"
-              className="flex flex-wrap items-center gap-3 pt-2"
-            >
-              <PixelButton
-                glyph="caret"
-                sound="confirm"
-                size="lg"
-                href="/work"
+        <HeroBootSequence>
+          <div className="relative mx-auto grid w-full max-w-7xl items-start gap-10 px-4 pt-20 pb-12 sm:px-6 lg:grid-cols-[1fr_400px] lg:gap-16 lg:pt-28 lg:pb-16 lg:px-8">
+            {/* Left column — eyebrow, headline, subtitle, two CTAs. */}
+            <div className="flex flex-col gap-7">
+              <span
+                data-boot="eyebrow"
+                className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground"
               >
-                {t("heroCtaBrowse")}
-              </PixelButton>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/logs" locale={locale}>
-                  {t("heroCtaLogs")}
-                  <ArrowUpRight className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
+                {t("eyebrow")}
+              </span>
+              <h1
+                data-boot="headline"
+                className="font-display text-balance text-[3rem] font-extrabold leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl"
+              >
+                {/* Text-splitting is EN-only by doctrine — see PR #60.
+                 * /zh renders the headline as plain text. */}
+                {locale === "en" ? (
+                  <SplitHeadline text={t("title")} />
+                ) : (
+                  t("title")
+                )}
+              </h1>
+              <p
+                data-boot="subtitle"
+                className="max-w-xl text-lg leading-8 text-muted-foreground"
+              >
+                {t("subtitle")}
+              </p>
+              <div
+                data-boot="ctas"
+                className="flex flex-wrap items-center gap-3 pt-2"
+              >
+                <PixelButton
+                  glyph="caret"
+                  sound="confirm"
+                  size="lg"
+                  href="/work"
+                >
+                  {t("heroCtaBrowse")}
+                </PixelButton>
+                <Button variant="outline" size="lg" asChild>
+                  <Link href="/logs" locale={locale}>
+                    {t("heroCtaLogs")}
+                    <ArrowUpRight className="size-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Right column — refreshed CommandHero (BentoTilt +
+              * CursorRadial + BorderBeam now layered inside).
+              * Single-column on tablet/mobile per the existing pattern. */}
+            <div data-boot="panel">
+              <CommandHero locale={locale} />
             </div>
           </div>
 
-          {/* Right column — atmospheric command card. Visible at every
-            * viewport per docs/UNIFIED_VISUAL_DIRECTION.md §9.1; the
-            * grid is single-column below `lg`, so it stacks under the
-            * headline on tablet and mobile rather than disappearing. */}
-          <div data-boot="panel">
-            <CommandHero />
+          {/* Specs strip — sits inside the boot sequence so its
+            * stagger lands as the closing beat. */}
+          <div className="relative mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+            <HeroSpecsStrip locale={locale} />
           </div>
-        </div>
 
-        {/* Footer HUD strip — scroll-tied opacity ramp per PR #60.
-          * Opacity goes 1.0 → 0.7 across the first 100px of page
-          * scroll; reduced-motion users see a static 1.0. The boot
-          * sequence fades the strip in once, after the rest of the
-          * hero has landed. */}
-        <div
-          data-boot="hud"
-          className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8"
-        >
-          <HudScrollFrame>
-            <GameHud
-              hint={t("heroCmdkHint")}
-              ariaLabel={tHud("systemStatus")}
-            />
-          </HudScrollFrame>
-        </div>
-      </HeroBootSequence>
+          {/* Footer HUD strip — scroll-tied opacity ramp per PR #60. */}
+          <div
+            data-boot="hud"
+            className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8"
+          >
+            <HudScrollFrame>
+              <GameHud
+                hint={t("heroCmdkHint")}
+                ariaLabel={tHud("systemStatus")}
+              />
+            </HudScrollFrame>
+          </div>
+        </HeroBootSequence>
+      </HeroClipFrame>
     </section>
   );
 }

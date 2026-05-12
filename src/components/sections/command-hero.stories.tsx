@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { NextIntlClientProvider } from "next-intl";
-import zhMessages from "../../../messages/zh.json";
 import { CommandHero } from "./command-hero";
 
+/**
+ * Note: `CommandHero` is an async server component that fetches the
+ * latest dev.to post via `getPosts()`. Storybook's RSC mode is
+ * required to render it; otherwise the story falls back to an
+ * unresolved-promise placeholder. The visual coverage lives in the
+ * home-page integration — these stories are mostly for prop typing
+ * and the @storybook/nextjs-vite RSC pipeline.
+ */
 const meta = {
   title: "Sections/CommandHero",
   component: CommandHero,
@@ -18,37 +24,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-
-export const WithStatus: Story = {
+export const English: Story = {
   args: {
-    status: {
-      label: "Nimbus · secure file vault",
-      badgeLabel: "NOW",
-      href: "/work/nimbus",
-      accessibleLabel: "Open Nimbus case study",
-    },
+    locale: "en",
   },
 };
 
-export const ZhLocale: Story = {
+export const Chinese: Story = {
   args: {
-    versionLabel: "v2027",
-    markGlyph: `> M4RKYU
-> 系统在线
-> 工程师 · 艺术家 · 开发者`,
-    status: {
-      label: "Nimbus · 安全文件库",
-      badgeLabel: "当下",
-      href: "/work/nimbus",
-      accessibleLabel: "打开 Nimbus 案例研究",
-    },
+    locale: "zh",
   },
-  decorators: [
-    (Story) => (
-      <NextIntlClientProvider locale="zh" messages={zhMessages}>
-        <Story />
-      </NextIntlClientProvider>
-    ),
-  ],
 };

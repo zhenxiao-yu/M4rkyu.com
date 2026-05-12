@@ -21,6 +21,19 @@ const GLYPH_CLASS =
 const BASE_CLASS =
   "group transition duration-(--motion-micro) ease-(--ease-premium) active:scale-[0.98]";
 
+// Two-text-layer hover swap — odometer / text-roll-up effect ported
+// from adrianhajdin/award-winning-website's `Button.jsx`. The visible
+// layer slides up + skews on hover; the hidden duplicate rolls in
+// from below + flattens. Pure CSS, no JS, respects reduced-motion via
+// the global `prefers-reduced-motion: reduce` rule that disables
+// transitions in `globals.css`.
+const LABEL_ROLL_OUTER =
+  "relative inline-flex overflow-hidden align-middle";
+const LABEL_ROLL_PRIMARY =
+  "translate-y-0 skew-y-0 transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover:-translate-y-[160%] group-hover:skew-y-6";
+const LABEL_ROLL_GHOST =
+  "absolute inset-0 translate-y-[160%] -skew-y-6 transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover:translate-y-0 group-hover:skew-y-0";
+
 export interface PixelButtonProps extends Omit<ButtonProps, "asChild"> {
   /** Optional leading VT323 glyph that slides in on hover. */
   glyph?: Glyph;
@@ -46,6 +59,22 @@ function renderGlyph(glyph: Glyph | undefined) {
   return (
     <span aria-hidden="true" className={GLYPH_CLASS}>
       {GLYPHS[glyph]}
+    </span>
+  );
+}
+
+/**
+ * Wrap a label in the text-roll-up duo so hover slides the primary
+ * up + rolls the duplicate in from below. The duplicate is
+ * `aria-hidden` so screen readers don't double-read the label.
+ */
+function renderLabel(children: React.ReactNode) {
+  return (
+    <span className={LABEL_ROLL_OUTER}>
+      <span className={LABEL_ROLL_PRIMARY}>{children}</span>
+      <span aria-hidden="true" className={LABEL_ROLL_GHOST}>
+        {children}
+      </span>
     </span>
   );
 }
@@ -79,7 +108,7 @@ export const PixelButton = React.forwardRef<
       >
         <Link href={href}>
           {renderGlyph(glyph)}
-          {children}
+          {renderLabel(children)}
         </Link>
       </Button>
     );
