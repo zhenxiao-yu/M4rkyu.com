@@ -22,7 +22,11 @@ interface HeroPhotoStackProps {
   frames: HeroPhotoFrame[];
 }
 
-const FALLBACK_OPACITY = 0.32;
+// Active photo opacity. Audit pass: bumped from 0.32 to 0.55 so the
+// placeholder geometric covers read as intentional graphic art instead
+// of dim mud. Pair this with REMOVING the parent `bg-background/55`
+// scrim in `hero-section.tsx` — they were fighting each other.
+const FALLBACK_OPACITY = 0.55;
 
 /**
  * Full-bleed photographic substrate that cycles through `frames` on
@@ -86,12 +90,13 @@ export function HeroPhotoStack({ frames }: HeroPhotoStackProps) {
   return (
     <>
       {/* Showcased full-bleed frame. AnimatePresence-driven crossfade
-        * when `currentIndex` changes. */}
+        * when `currentIndex` changes. `-z-10` so atmospheric layers
+        * and content render above it. */}
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
           key={currentFrame.slug}
           aria-hidden="true"
-          className="absolute inset-0"
+          className="absolute inset-0 -z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: FALLBACK_OPACITY }}
           exit={{ opacity: 0 }}
@@ -108,53 +113,48 @@ export function HeroPhotoStack({ frames }: HeroPhotoStackProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Mini-preview tile — centered button. Clicking cycles the
-        * showcased frame; the tile briefly expands as a visual cue. */}
+      {/* Mini-preview tile — bottom-left corner of the hero. Audit
+        * pass moved this from `absolute inset-0 grid place-items-center`
+        * (which made it unreachable on mobile and ambiguous on desktop)
+        * to a fixed corner anchor so it reads as a "now showing" badge
+        * and never competes with the headline or brief card. `z-30` is
+        * resolved in the SECTION's stacking context now that the
+        * photo-stack wrapper has no z-index. */}
       {nextFrame ? (
-        <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center">
-          <motion.button
-            type="button"
-            data-boot="preview"
-            onClick={onCycle}
-            aria-label={t("previewAria")}
-            className={cn(
-              "pointer-events-auto group relative aspect-square w-32 overflow-hidden rounded-2xl border border-border/70 bg-background/70 shadow-xl shadow-black/20 backdrop-blur-xl outline-none transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-40",
-              isExpanding && "pointer-events-none",
-            )}
-            animate={
-              reduceMotion || !isExpanding
-                ? { scale: 1, borderRadius: 16 }
-                : {
-                    // Expand: scale up + flatten the border-radius to
-                    // suggest the tile "takes over" the substrate.
-                    scale: 6,
-                    borderRadius: 4,
-                  }
-            }
-            transition={{ duration: 0.34, ease: [0.2, 0.7, 0.2, 1] }}
+        <motion.button
+          type="button"
+          data-boot="preview"
+          onClick={onCycle}
+          aria-label={t("previewAria")}
+          className={cn(
+            "group absolute bottom-4 left-4 z-30 aspect-square w-24 overflow-hidden rounded-2xl border border-border/70 bg-background/70 shadow-xl shadow-black/20 backdrop-blur-xl outline-none transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:bottom-6 sm:left-6 sm:w-28",
+            isExpanding && "pointer-events-none",
+          )}
+          // Tap-feedback pulse only — the "expand to fill" mechanic
+          // doesn't fit a corner-anchored tile (it'd grow off-axis).
+          // Keep the cycle action and let the AnimatePresence
+          // crossfade on the bg image carry the visual payoff.
+          animate={
+            reduceMotion ? { scale: 1 } : { scale: isExpanding ? 0.92 : 1 }
+          }
+          transition={{ duration: 0.18, ease: [0.2, 0.7, 0.2, 1] }}
+        >
+          <Image
+            src={nextFrame.src}
+            alt=""
+            fill
+            sizes="(min-width: 640px) 112px, 96px"
+            className="object-cover transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover:scale-105"
+          />
+          {/* Hint chip — fades in on hover. */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1.5 bg-linear-to-t from-background/85 via-background/50 to-transparent px-2 py-1.5 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-foreground/80 opacity-0 transition-opacity duration-(--motion-fast) ease-(--ease-premium) group-hover:opacity-100"
           >
-            <Image
-              src={nextFrame.src}
-              alt=""
-              fill
-              sizes="(min-width: 640px) 160px, 128px"
-              className="object-cover transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover:scale-105"
-            />
-            {/* Pixel hint chip on the tile — fades in on hover, fades
-              * out during expansion so it doesn't read once the tile
-              * is full-bleed. */}
-            <span
-              aria-hidden="true"
-              className={cn(
-                "absolute inset-x-0 bottom-0 flex items-center justify-between gap-1.5 bg-gradient-to-t from-background/85 via-background/50 to-transparent px-2.5 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-foreground/80 opacity-0 transition-opacity duration-(--motion-fast) ease-(--ease-premium) group-hover:opacity-100",
-                isExpanding && "!opacity-0",
-              )}
-            >
-              <span className="truncate">{t("previewLabel")}</span>
-              <ArrowUpRight aria-hidden="true" className="size-3 shrink-0" />
-            </span>
-          </motion.button>
-        </div>
+            <span className="truncate">{t("previewLabel")}</span>
+            <ArrowUpRight aria-hidden="true" className="size-2.5 shrink-0" />
+          </span>
+        </motion.button>
       ) : null}
     </>
   );

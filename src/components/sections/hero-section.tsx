@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { PixelButton } from "@/components/ui/pixel/pixel-button";
 import { Button } from "@/components/ui/button";
 import { Particles } from "@/components/ui/magic/particles";
-import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern";
 import { CommandHero } from "./command-hero";
 import { GameHud } from "./game-hud";
 import { HudScrollFrame } from "./hud-scroll-frame";
@@ -40,27 +39,29 @@ export async function HeroSection({ locale }: { locale: Locale }) {
   const frames = buildHeroFrames();
 
   return (
-    <section className="relative overflow-hidden border-b">
+    <section className="relative min-h-dvh overflow-hidden border-b">
       {/* The clip-frame wraps every atmospheric + decorative layer so
         * scrolling deforms the whole substrate as one piece. Content
         * (headline, CTAs, brief, specs) sits OUTSIDE the clip frame
         * so it stays crisp and readable as the frame morphs under
         * scroll — port of the layered z-index pattern from
-        * adrianhajdin/award-winning-website's Hero/About sections. */}
+        * adrianhajdin/award-winning-website's Hero/About sections.
+        *
+        * Audit pass:
+        *   - Photo wrapper no longer carries `-z-10` (was creating a
+        *     stacking context that trapped the preview tile behind
+        *     content). Photo image owns its own `-z-10`; the preview
+        *     tile resolves at `z-30` in the section context.
+        *   - Dropped the redundant `bg-background/55` scrim — the
+        *     photo opacity bump (0.32 → 0.55) does the dimming.
+        *   - Dropped AnimatedGridPattern — Particles carries the
+        *     atmospheric trail alone for a less cyber-noisy read.
+        *   - Corner watermark moved BEFORE content in DOM so it
+        *     paints behind without z-index gymnastics. */}
       <HeroClipFrame>
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0">
           <HeroPhotoStack frames={frames} />
         </div>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-background/55"
-        />
-        <AnimatedGridPattern
-          className="-z-10 mask-[radial-gradient(ellipse_at_center,white,transparent_70%)]"
-          numSquares={18}
-          maxOpacity={0.1}
-          duration={6}
-        />
         <Particles
           className="-z-10 hidden sm:block"
           quantity={24}
@@ -81,10 +82,6 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           aria-hidden="true"
           className="hero-vignette absolute inset-0 -z-10"
         />
-        {/* Watermark wordmark behind everything — port of the
-          * absolute-positioned corner heading from Zentry's `Hero.jsx`,
-          * but at very low alpha so the foreground content keeps
-          * contrast on every theme. */}
         <HeroCornerDisplay locale={locale} />
 
         <HeroBootSequence>
