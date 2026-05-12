@@ -7,7 +7,6 @@ import {
 import { games, getGame } from "@/content/games";
 import { routing } from "@/i18n/routing";
 
-export const runtime = "edge";
 export const alt = "Game archive entry — M4rkyu.com";
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;

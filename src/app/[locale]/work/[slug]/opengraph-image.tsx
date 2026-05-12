@@ -7,7 +7,6 @@ import {
 import { allProjects, getProject } from "@/content/projects";
 import { routing } from "@/i18n/routing";
 
-export const runtime = "edge";
 export const alt = "Case study — M4rkyu.com";
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;

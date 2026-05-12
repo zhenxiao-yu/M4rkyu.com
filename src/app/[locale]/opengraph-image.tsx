@@ -4,7 +4,6 @@ import {
   renderOgImage,
 } from "@/lib/seo/og-image";
 
-export const runtime = "edge";
 export const alt = "M4rkyu.com — software, games, art";
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;
