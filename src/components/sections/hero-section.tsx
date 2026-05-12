@@ -11,7 +11,6 @@ import { HeroBootSequence } from "./hero-boot-sequence";
 import { HeroClipFrame } from "./hero-clip-frame";
 import { HeroPhotoStack, type HeroPhotoFrame } from "./hero-photo-stack";
 import { HeroCornerDisplay } from "./hero-corner-display";
-import { HeroSpecsStrip } from "./hero-specs-strip";
 import { galleryCollections } from "@/content/gallery";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -141,13 +140,10 @@ export async function HeroSection({ locale }: { locale: Locale }) {
             </div>
           </div>
 
-          {/* Specs strip — sits inside the boot sequence so its
-            * stagger lands as the closing beat. */}
-          <div className="relative mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
-            <HeroSpecsStrip locale={locale} />
-          </div>
-
-          {/* Footer HUD strip — scroll-tied opacity ramp per PR #60. */}
+          {/* Footer HUD strip — scroll-tied opacity ramp per PR #60.
+            * Specs strip was moved out of the hero (was duplicating
+            * the brief card's info); it now lives as its own
+            * "signals" band on the home page right below this hero. */}
           <div
             data-boot="hud"
             className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8"

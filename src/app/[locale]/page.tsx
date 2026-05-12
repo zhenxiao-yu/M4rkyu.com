@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { HeroSection } from "@/components/sections/hero-section";
+import { HeroSpecsStrip } from "@/components/sections/hero-specs-strip";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { IntroLoaderIsland } from "@/components/system/intro-loader-island";
 import { SectionHeading } from "@/components/sections/section-heading";
@@ -100,6 +101,15 @@ export default async function HomePage({
     <PageShell locale={locale}>
       <IntroLoaderIsland />
       <HeroSection locale={locale} />
+
+      {/* Signals band — was inside the hero where it duplicated the
+        * mission brief; now lives as a thin bridge between the
+        * cinematic hero and the structured capability spine. */}
+      <section className="border-b bg-muted/10">
+        <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <HeroSpecsStrip locale={locale} />
+        </div>
+      </section>
 
       {/* Numbered capability spine — five overlapping systems (§3.B). */}
       <CapabilitiesSection locale={locale} />

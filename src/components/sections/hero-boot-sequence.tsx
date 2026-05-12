@@ -12,44 +12,28 @@ interface HeroBootSequenceProps {
 /**
  * Cinematic boot-sequence orchestrator for the homepage hero. Wraps
  * the entire hero content (server-rendered children stay
- * server-rendered) and runs a single GSAP timeline that animates
- * each beat in sequence:
+ * server-rendered) and runs a single GSAP timeline.
  *
- *   1. `data-boot="eyebrow"`         — system label
- *   2. `data-boot="corner-display"`  — Zentry-style watermark wordmark
- *   3. `data-boot="headline"`        — char-staggered headline (handled
- *                                     by SplitHeadline's own timeline;
- *                                     this beat just kicks off in
- *                                     parallel)
- *   4. `data-boot="subtitle"`        — supporting line
- *   5. `data-boot="preview"`         — photo-stack mini-preview tile
- *   6. `data-boot="ctas"`            — button row, items stagger
- *   7. `data-boot="panel"`           — CommandHero panel draws in
- *   8. `data-boot="specs"`           — metric strip, cells stagger
- *   9. `data-boot="hud"`             — HUD hint strip
+ * Audit-pass beat layout (re-paced for fewer overlaps, longer per-
+ * beat durations, total perceived run ≈ 1.1s):
  *
- * Why a master timeline instead of per-element animations:
- *   The hero now reads as a single sequenced moment rather than a
- *   handful of independent reveals racing each other. The pacing
- *   token defaults in `@/lib/gsap` keep it aligned with the rest of
- *   the site's motion.
+ *   t=0.00  eyebrow         (fade-up, fast)
+ *   t=0.15  corner-display  (fade-up, slow — watermark settles)
+ *   t=0.20  headline        (SplitHeadline auto-plays, parallel)
+ *   t=0.40  subtitle        (fade-up, base)
+ *   t=0.30  panel           (fade-up, slow — runs alongside subtitle)
+ *   t=0.65  ctas            (stagger, base)
+ *   t=0.80  preview         (scale-in, base — last interactive element)
+ *   t=0.95  hud             (fade-up, fast — final settle)
  *
- * SSR-safe:
- *   - The children render fully visible on the server (no
- *     `opacity: 0` on the initial DOM). The first effect tick runs
- *     `gsap.set()` to push elements to their initial-hidden state
- *     and the timeline plays. The `useGSAP` helper uses
- *     `useLayoutEffect` internally so this happens before paint.
- *   - Reduced-motion: `gsap.set()` never runs, no timeline created,
- *     the elements stay in their final visible state.
+ * Specs strip beat retired: the strip is no longer inside the hero
+ * (moved to its own band below the hero on the home page).
  *
+ * SSR-safe + reduced-motion-safe + ScrollTrigger-free as before.
  * Performance discipline (matches docs/GSAP_INTEGRATION.md rules):
- *   - Animates only `opacity`, `y`, and `scale` — no width/height,
- *     no filter, no shadow.
- *   - No ScrollTrigger.
+ *   - Animates only `opacity`, `y`, and `scale`.
  *   - One timeline. Auto-killed on unmount via `useGSAP`.
- *   - Lives on `/` only — the rest of the site doesn't pay for
- *     this code.
+ *   - Lives on `/` only.
  */
 export function HeroBootSequence({ children }: HeroBootSequenceProps) {
   const scopeRef = useRef<HTMLDivElement | null>(null);
@@ -69,9 +53,6 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       const preview = root.querySelector<HTMLElement>('[data-boot="preview"]');
       const ctas = root.querySelectorAll<HTMLElement>('[data-boot="ctas"] > *');
       const panel = root.querySelector<HTMLElement>('[data-boot="panel"]');
-      const specs = root.querySelectorAll<HTMLElement>(
-        '[data-boot="specs"] > *',
-      );
       const hud = root.querySelector<HTMLElement>('[data-boot="hud"]');
 
       // Hide the elements we orchestrate. The headline is intentionally
@@ -84,7 +65,6 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       gsap.set(preview, { opacity: 0, scale: 0.85 });
       gsap.set(ctas, { opacity: 0, y: 12 });
       gsap.set(panel, { opacity: 0, y: 16, scale: 0.985 });
-      gsap.set(specs, { opacity: 0, y: 10 });
       gsap.set(hud, { opacity: 0, y: 8 });
 
       const tl = gsap.timeline();
@@ -102,11 +82,20 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             duration: motionTokens.slow,
             ease: eased,
           },
-          0.1,
+          0.15,
         )
-        // Headline beat: SplitHeadline auto-plays at this point.
-        // We don't tween anything here — the position just establishes
-        // pacing for the next beat to land cleanly after it.
+        // Headline beat: SplitHeadline auto-plays at t=0.20.
+        .to(
+          panel,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: motionTokens.slow,
+            ease: eased,
+          },
+          0.3,
+        )
         .to(
           subtitle,
           {
@@ -115,17 +104,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             duration: motionTokens.base,
             ease: eased,
           },
-          0.35,
-        )
-        .to(
-          preview,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: motionTokens.slow,
-            ease: eased,
-          },
-          0.45,
+          0.4,
         )
         .to(
           ctas,
@@ -136,36 +115,24 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             stagger: 0.08,
             ease: eased,
           },
-          0.5,
-        )
-        .to(
-          panel,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: motionTokens.slow,
-            ease: eased,
-          },
-          0.25,
-        )
-        .to(
-          specs,
-          {
-            opacity: 1,
-            y: 0,
-            duration: motionTokens.base,
-            stagger: 0.07,
-            ease: eased,
-          },
           0.65,
+        )
+        .to(
+          preview,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: motionTokens.base,
+            ease: eased,
+          },
+          0.8,
         )
         .to(
           hud,
           {
             opacity: 1,
             y: 0,
-            duration: motionTokens.base,
+            duration: motionTokens.fast,
             ease: eased,
           },
           0.95,
