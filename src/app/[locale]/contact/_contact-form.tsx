@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/forms/form-field";
+import { useTurnstile } from "@/lib/hooks/use-turnstile";
 import {
   inquirySchema,
   type InquiryInput,
@@ -38,8 +39,6 @@ const defaultValues: InquiryInput = {
 export function ContactForm({ email }: { email: string }) {
   const t = useTranslations("Contact");
   const honeypotId = useId();
-  const turnstileContainerRef = useRef<HTMLDivElement>(null);
-  const turnstileWidgetIdRef = useRef<string | null>(null);
 
   const {
     control,
@@ -61,15 +60,14 @@ export function ContactForm({ email }: { email: string }) {
   const [pending, startTransition] = useTransition();
   const [lastResult, setLastResult] = useState<InquiryActionState | null>(null);
 
-  // Stable across renders so it can be a dep of the result-handling
-  // effect without re-firing each render. Declared with useCallback
-  // before any effect that references it.
-  const resetTurnstile = useCallback(() => {
-    if (!TURNSTILE_SITE_KEY || !turnstileWidgetIdRef.current) return;
-    const win = window as unknown as { turnstile?: TurnstileApi };
-    win.turnstile?.reset(turnstileWidgetIdRef.current);
-    setValue("turnstileToken", "");
-  }, [setValue]);
+  const {
+    containerRef: turnstileRef,
+    reset: resetTurnstile,
+    enabled: turnstileEnabled,
+  } = useTurnstile({
+    siteKey: TURNSTILE_SITE_KEY,
+    onToken: (token) => setValue("turnstileToken", token),
+  });
 
   async function onValid(values: InquiryInput) {
     const formData = new FormData();
@@ -114,37 +112,6 @@ export function ContactForm({ email }: { email: string }) {
       resetTurnstile();
     }
   }, [lastResult, reset, resetTurnstile, setError, t]);
-
-  // Turnstile widget: only renders when the public site key is set.
-  // We load the script once and call `window.turnstile.render` so we
-  // can wire the success callback into RHF's `turnstileToken` field.
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY) return;
-    function renderWidget() {
-      const win = window as unknown as { turnstile?: TurnstileApi };
-      if (!win.turnstile || !turnstileContainerRef.current) return;
-      if (turnstileWidgetIdRef.current) return;
-      turnstileWidgetIdRef.current = win.turnstile.render(
-        turnstileContainerRef.current,
-        {
-          sitekey: TURNSTILE_SITE_KEY!,
-          callback: (token: string) => setValue("turnstileToken", token),
-          "error-callback": () => setValue("turnstileToken", ""),
-          "expired-callback": () => setValue("turnstileToken", ""),
-          theme: "auto",
-          appearance: "interaction-only",
-        },
-      );
-    }
-    // Script may already have loaded earlier; cover both paths.
-    renderWidget();
-    const id = window.setInterval(renderWidget, 200);
-    const stop = window.setTimeout(() => window.clearInterval(id), 4000);
-    return () => {
-      window.clearInterval(id);
-      window.clearTimeout(stop);
-    };
-  }, [setValue]);
 
   const submitting = pending || isSubmitting;
 
@@ -231,8 +198,8 @@ export function ContactForm({ email }: { email: string }) {
           />
         </div>
 
-        {TURNSTILE_SITE_KEY ? (
-          <div ref={turnstileContainerRef} className="min-h-16.25" />
+        {turnstileEnabled ? (
+          <div ref={turnstileRef} className="min-h-16.25" />
         ) : null}
 
         <p id="contact-form-note" className="text-sm leading-6 text-muted-foreground">
@@ -275,18 +242,3 @@ function resolveError(
   }
 }
 
-/** Minimal Turnstile API surface we use. */
-type TurnstileApi = {
-  render: (
-    el: HTMLElement,
-    options: {
-      sitekey: string;
-      callback?: (token: string) => void;
-      "error-callback"?: () => void;
-      "expired-callback"?: () => void;
-      theme?: "light" | "dark" | "auto";
-      appearance?: "always" | "execute" | "interaction-only";
-    },
-  ) => string;
-  reset: (widgetId?: string) => void;
-};

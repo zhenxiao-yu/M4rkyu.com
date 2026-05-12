@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bell, BellRing } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { useLastSeen } from "@/lib/hooks/use-last-seen";
 import { cn } from "@/lib/utils";
 
 /** Minimal post shape the bell needs — keeps the prop surface narrow. */
-export interface NotificationPost {
+interface NotificationPost {
   slug: string;
   title: string;
   date: string;
@@ -22,44 +23,7 @@ interface NotificationBellProps {
   locale: Locale;
 }
 
-const STORAGE_KEY = "m4rkyu.notifications.lastSeen";
-
-/**
- * useSyncExternalStore-driven read of the lastSeen timestamp from
- * localStorage. The store emits via a `storage` event on writes (in
- * other tabs) and via a window-scoped CustomEvent for same-tab
- * writes (which `storage` doesn't fire for).
- */
-const STORAGE_EVENT = "m4rkyu:notifications:lastSeen";
-
-function subscribeLastSeen(callback: () => void): () => void {
-  function onStorage(event: StorageEvent) {
-    if (event.key === STORAGE_KEY) callback();
-  }
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(STORAGE_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(STORAGE_EVENT, callback);
-  };
-}
-
-function readLastSeen(): number {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? Number.parseInt(raw, 10) : 0;
-    return Number.isFinite(parsed) ? parsed : 0;
-  } catch {
-    return 0;
-  }
-}
-
-/** Server snapshot: treat everything as already-seen so SSR + first
- * client paint don't flash a badge for returning visitors. The real
- * value lands on the next render after hydration. */
-function serverSnapshot(): number {
-  return Number.POSITIVE_INFINITY;
-}
+const LAST_SEEN_KEY = "m4rkyu.notifications.lastSeen";
 
 /** Sort posts newest first by parsed date; unparseable dates sink. */
 function sortNewestFirst(posts: NotificationPost[]): NotificationPost[] {
@@ -77,11 +41,7 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
   const t = useTranslations("Notifications");
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
-  const lastSeen = useSyncExternalStore(
-    subscribeLastSeen,
-    readLastSeen,
-    serverSnapshot,
-  );
+  const { lastSeen, markSeen: markAllRead } = useLastSeen(LAST_SEEN_KEY);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close on outside click or Escape.
@@ -116,18 +76,6 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
       return stamp > lastSeen ? count + 1 : count;
     }, 0);
   }, [ordered, lastSeen]);
-
-  const markAllRead = useCallback(() => {
-    const now = Date.now();
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(now));
-      // Same-tab writes don't fire `storage`; broadcast manually so
-      // the subscriber recomputes.
-      window.dispatchEvent(new CustomEvent(STORAGE_EVENT));
-    } catch {
-      /* localStorage may be unavailable (private mode) — silent fallback. */
-    }
-  }, []);
 
   const ariaStatus = t("unreadStatus", { count: unreadCount });
 
