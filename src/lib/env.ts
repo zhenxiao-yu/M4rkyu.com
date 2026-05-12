@@ -23,6 +23,11 @@ export const env = createEnv({
       .string()
       .email("INQUIRY_FROM_EMAIL must be a valid sender (e.g. inquiry@m4rkyu.com)"),
     TURNSTILE_SECRET_KEY: z.string().optional(),
+    // Resend webhook signing secret. Required only by the webhook
+    // route. Optional at module load so other server entry points
+    // (server actions, build steps) don't fail when the webhook
+    // isn't configured. The route itself returns 503 if missing.
+    RESEND_WEBHOOK_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
@@ -32,6 +37,7 @@ export const env = createEnv({
     INQUIRY_TO_EMAIL: process.env.INQUIRY_TO_EMAIL,
     INQUIRY_FROM_EMAIL: process.env.INQUIRY_FROM_EMAIL,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    RESEND_WEBHOOK_SECRET: process.env.RESEND_WEBHOOK_SECRET,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
   // `next lint` and Storybook import this module without Resend keys
