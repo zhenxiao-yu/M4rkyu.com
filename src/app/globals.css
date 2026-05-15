@@ -206,22 +206,24 @@
   --color-terminal-glow: var(--terminal-glow);
   --color-mission-surface: var(--mission-surface);
   --color-game-accent: var(--game-accent);
-  /* `--font-pixel` is also set on <html> by next/font/google in
-   * src/app/layout.tsx; the className-scoped value wins on every real
-   * page, while this @theme inline definition keeps the `font-pixel`
-   * Tailwind utility resolvable in isolated contexts (Storybook,
-   * unit-test snapshots) where the next/font className may not apply.
-   * Both values name VT323 — next/font registers @font-face under the
-   * original Google family name, so `"VT323"` aliases the same file. */
+  /* Font tokens are also set on <html> by next/font in src/app/layout.tsx;
+   * the className-scoped values win on every real page, while these @theme
+   * inline definitions keep the Tailwind utilities (font-display, font-heading,
+   * font-sans, font-mono, font-pixel) resolvable in isolated contexts
+   * (Storybook, unit-test snapshots) where the next/font className may not
+   * apply. The "X Fallback" entries are the metric-overridden families
+   * auto-emitted by next/font for CLS mitigation — keep them chained. */
   --font-pixel: "VT323", "VT323 Fallback", ui-monospace, monospace;
   --ease-pixel-step: steps(6, end);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-  --font-display: "Syne", "Syne Fallback", "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Clash Display", "Clash Display Fallback", "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-cjk: "Noto Sans SC", "Noto Sans SC Fallback", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
 [data-theme="dark"] {
@@ -248,21 +250,21 @@
   --surface-paper: #070707;
 }
 
-/* CJK typography guard — phase 1 of docs/UNIFIED_VISUAL_DIRECTION.md §6.1.
- * VT323 is English-only. Within any Chinese-language scope, redefine
- * --font-pixel to the display/sans stack so consumers that opt into the
- * pixel font transparently fall through to the system Chinese fonts
- * (Source Han / PingFang / Microsoft YaHei). Both selectors are kept so
- * the guard fires whether the locale is signalled via :lang(zh) (the
- * primary form, used by next-intl-aware routes once lang={locale} is
- * propagated to the DOM in a follow-up PR) or a literal `lang="zh"` /
- * `lang="zh-…"` attribute set on any wrapper. */
+/* CJK typography guard — phase 2 of docs/UNIFIED_VISUAL_DIRECTION.md §6.1.
+ * Clash, Cabinet, and Satoshi are Latin-only; VT323 is English-only.
+ * Within any Chinese-language scope, redefine the heading/body/pixel
+ * tokens to --font-cjk (Noto Sans SC) so /zh renders in a deliberate
+ * CJK face instead of falling through to system roulette. --font-mono
+ * stays JBM — code blocks are rarely CJK-heavy, and JBM's own fallback
+ * chain handles the edge case. Both selectors are kept so the guard
+ * fires whether the locale is signalled via :lang(zh) (next-intl
+ * propagation) or a literal `lang="zh"` / `lang="zh-…"` attribute. */
 :lang(zh),
 [lang^="zh"] {
-  /* Single var() — `--font-display` already chains through Syne → Geist
-   * → system CJK; no need to re-append `--font-sans` and create a
-   * doubly-nested family list. */
-  --font-pixel: var(--font-display);
+  --font-display: var(--font-cjk);
+  --font-heading: var(--font-cjk);
+  --font-sans: var(--font-cjk);
+  --font-pixel: var(--font-cjk);
 }
 
 * {
@@ -273,10 +275,14 @@ html {
   scroll-behavior: auto;
 }
 
-h1,
-h2,
-h3 {
+h1 {
   font-family: var(--font-display), var(--font-sans);
+}
+
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), var(--font-sans);
 }
 
 body {
@@ -284,7 +290,9 @@ body {
     radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--foreground) 9%, transparent), transparent 30rem),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
@@ -300,11 +308,27 @@ body {
   background-size: 56px 56px;
 }
 
+/* Light-theme hero atmosphere: editorial paper feel. A fine dotted
+ * grain (4-px grid of foreground micro-dots) plus a warm cream wash
+ * biased to the upper-center for warmth. No corner blobs — paper
+ * doesn't have spotlights. */
 .noise-layer {
+  background-color: transparent;
   background-image:
-    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--foreground) 12%, transparent), transparent 24rem),
-    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--ring) 14%, transparent), transparent 26rem),
-    linear-gradient(to bottom, transparent, color-mix(in srgb, var(--background) 88%, transparent));
+    radial-gradient(ellipse 110% 70% at 50% 28%, color-mix(in srgb, var(--ring) 6%, transparent), transparent 70%),
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 9%, transparent) 0.6px, transparent 1.4px);
+  background-size: auto, 4px 4px;
+}
+
+/* Dark-theme hero atmosphere: cinematic depth. A soft moonlight glow
+ * behind the headline, a counter-glow biased low-left, no corner
+ * spotlight blobs. Particles + DotGrid carry the rest. */
+[data-theme="dark"] .noise-layer {
+  background-color: transparent;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 30%, color-mix(in srgb, var(--ring) 8%, transparent), transparent 65%),
+    radial-gradient(ellipse 70% 60% at 15% 90%, color-mix(in srgb, var(--foreground) 5%, transparent), transparent 65%);
+  background-size: auto;
 }
 
 .scanline-layer {
@@ -312,7 +336,7 @@ body {
     to bottom,
     transparent 0,
     transparent 3px,
-    color-mix(in srgb, var(--foreground) 4%, transparent) 4px
+    color-mix(in srgb, var(--foreground) 9%, transparent) 4px
   );
 }
 
@@ -325,24 +349,41 @@ body {
 /* Hero radial vignette — top + bottom edge darkening so the central
  * content owns visual weight over the cycling photographic substrate.
  * Lives at hero scope only (consumed by `hero-section.tsx`). */
+/* Light-theme vignette: soft fade at the bottom only, low intensity
+ * because the paper-grain noise layer already carries depth. */
 .hero-vignette {
   background:
-    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--background) 90%, transparent), transparent 36rem),
-    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--background) 88%, transparent), transparent 30rem);
+    radial-gradient(ellipse 110% 28% at 50% 100%, color-mix(in srgb, var(--background) 80%, transparent), transparent 75%);
 }
 
-/* Stylistic-alt letter swap for editorial display headings. Wrap the
- * letter(s) you want featured in `<b>` inside an element carrying
- * `.special-font`. Adapted from adrianhajdin/award-winning-website
- * (Zentry's `.special-font`) but rerouted to Syne italic + ss01 so the
- * accent stays inside our existing typography stack — no new fonts.
- * Locale-aware: CJK ignores the swap by rendering normal weight (no
- * matching italic glyph), which is the intended degrade. */
-.special-font b {
-  font-family: var(--font-syne), var(--font-display), "Geist", ui-sans-serif, system-ui, sans-serif;
-  font-style: italic;
-  font-weight: 800;
-  font-feature-settings: "ss01" on;
+/* Dark-theme vignette: stronger bottom fade + a soft top fade to
+ * give the headline a "stage" feeling without the harsh band the
+ * earlier fixed-rem version produced. */
+[data-theme="dark"] .hero-vignette {
+  background:
+    radial-gradient(ellipse 100% 45% at 50% 100%, color-mix(in srgb, var(--background) 94%, transparent), transparent 78%),
+    radial-gradient(ellipse 120% 30% at 50% 0%, color-mix(in srgb, var(--background) 55%, transparent), transparent 75%);
+}
+
+/* Render-quality polish — applies across all type. Smoothing on macOS,
+ * tabular numerics on every mono-utility consumer (HUD counters, stats,
+ * timestamps), and consistent display/heading tracking so the new
+ * Clash/Cabinet stack reads tight at any size. */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  letter-spacing: -0.02em;
+}
+
+.font-heading {
+  letter-spacing: -0.01em;
 }
 
 /* EQ-style indicator bars for "status: open" pulses. Three bars whose
@@ -405,6 +446,46 @@ body {
   60%  { opacity: 0; transform: scale(2.6); }
   100% { opacity: 0; transform: scale(2.6); }
 }
+
+/* ShinyText sweep — bg-clip-text gradient pans 200% horizontally so
+ * the highlight band travels across the glyphs. Reduced-motion media
+ * query below kills the animation; the gradient remains as a static
+ * subtle accent. */
+@keyframes shiny {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Marquee — used by AnimatedSeparator mode="marquee" on the home
+ * page. Translates a doubled track left by 50% (one copy width) so the
+ * loop reads as continuous. */
+@keyframes marquee {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Floating-star drift — used by the LetsBuildCTA decorative stars.
+ * Three keyframes give a sine-like rise/fall plus a slow rotation so
+ * the stars feel handheld instead of perfectly orbital. */
+@keyframes star-float {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.5; }
+  50%  { transform: translate3d(0, -12px, 0) rotate(8deg); opacity: 0.9; }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.5; }
+}
+
+/* Quiet vertical bob — used by the hero scroll affordance. The
+ * translate range is intentionally small (4px peak) so it reads as
+ * a subtle "alive" cue, not a bouncing arrow. */
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, 4px, 0); }
+}
+
+/* Home-page "fullpage" scroll snap is owned by Lenis' `Snap` helper
+ * (registered in `src/providers/home-smooth-scroll.tsx`). It picks up
+ * every `[data-snap=section]` element, snaps to it on a debounced
+ * scroll-end with eased lerp, and integrates with the rest of Lenis'
+ * wheel/touch loop so no native CSS scroll-snap is needed. */
 
 @media (prefers-reduced-motion: reduce) {
   *,

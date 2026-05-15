@@ -8,10 +8,29 @@ import { SplitText } from "gsap/SplitText";
 // before any DOM use, but everything that *uses* these plugins must
 // live inside a "use client" component.
 //
-// ScrollTrigger is intentionally NOT registered — no consumer yet.
-// Add it back here only when shipping a surface that needs it (the
-// ~25 KB cost lands the moment registration happens).
+// ScrollTrigger is intentionally NOT registered at module scope —
+// only the home route's smooth-scroll island loads it (lazy via
+// `registerScrollTrigger()` below) so the ~25 KB plugin cost stays
+// off every other route's initial chunk.
 gsap.registerPlugin(SplitText);
+
+let scrollTriggerLoaded = false;
+
+/**
+ * Lazy-register ScrollTrigger. Idempotent. Returns the plugin instance
+ * so callers can wire `gsap.context()` + `ScrollTrigger.create()`
+ * directly. Home-only by design — every other surface must continue to
+ * achieve scroll effects via `motion/react`'s `useScroll`.
+ */
+export async function registerScrollTrigger() {
+  if (typeof window === "undefined") return null;
+  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+  if (!scrollTriggerLoaded) {
+    gsap.registerPlugin(ScrollTrigger);
+    scrollTriggerLoaded = true;
+  }
+  return ScrollTrigger;
+}
 
 // Centralized motion-token defaults. Components should read these
 // instead of typing literals so the editorial pacing stays consistent

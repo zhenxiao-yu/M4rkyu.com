@@ -2,18 +2,29 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { DecryptedText } from "@/components/ui/magic/decrypted-text";
 
-const SESSION_KEY = "m4rkyu:intro-played";
+// Bump the suffix when the boot scene is reworked so existing visitors
+// see the new version once before the session-storage gate caches it
+// off for the rest of their tab session.
+const SESSION_KEY = "m4rkyu:intro-played-v3";
 
 /**
- * One-shot full-viewport intro shown on the first visit of a session.
- * Skips entirely on repeat visits (sessionStorage flag) and on
+ * One-shot full-viewport boot overlay shown on the first visit of a
+ * session. Skips on repeat visits (sessionStorage flag) and on
  * `prefers-reduced-motion: reduce`. Renders nothing on the server so
- * SSR HTML stays untouched and there is no hydration delta.
+ * SSR HTML stays untouched.
+ *
+ * v3 polish (ReactBits text-animation pass):
+ *   - Wordmark "M4RKYU" decrypts in via DecryptedText sequential mode.
+ *   - Four status lines scramble in, each delayed so the sequence
+ *     reads as a system boot feed.
+ *   - Progress bar still pulses, deterministic 1.8 s.
+ *   - Cyber-grid + scanlines + bottom version stamp for atmospheric depth.
  *
  * The intent is perceived-performance: the homepage's first paint runs
- * behind the overlay while the visitor watches a deterministic counter,
- * so subsequent scroll/interaction feels immediate.
+ * behind the overlay while the visitor watches the boot, so scrolling
+ * feels instant afterward.
  */
 export function IntroLoader() {
   const [visible, setVisible] = useState(false);
@@ -25,15 +36,12 @@ export function IntroLoader() {
       sessionStorage.setItem(SESSION_KEY, "1");
       return;
     }
-    // Reading sessionStorage and matchMedia at module level would
-    // diverge from SSR; the intro is a deliberate post-hydration
-    // one-shot. The setState here cannot be lifted out of the effect.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);
     sessionStorage.setItem(SESSION_KEY, "1");
 
     const start = performance.now();
-    const duration = 1400;
+    const duration = 1800;
     let raf = 0;
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
@@ -42,7 +50,7 @@ export function IntroLoader() {
       if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        setTimeout(() => setVisible(false), 220);
+        setTimeout(() => setVisible(false), 260);
       }
     };
     raf = requestAnimationFrame(tick);
@@ -55,30 +63,61 @@ export function IntroLoader() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
-          className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-background"
+          transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+          className="fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background"
           aria-hidden="true"
         >
+          <div className="bg-cyber-grid absolute inset-0 opacity-30" aria-hidden="true" />
+          <div className="archive-vignette absolute inset-0" aria-hidden="true" />
           <div
-            className="absolute inset-0 bg-cyber-grid opacity-30"
+            className="scanline-layer absolute inset-0 opacity-30"
             aria-hidden="true"
           />
-          <div
-            className="archive-vignette absolute inset-0"
-            aria-hidden="true"
-          />
-          <div className="relative flex flex-col items-center gap-10">
+
+          {/* Corner version stamps for that "system" feel */}
+          <div className="absolute left-4 top-4 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/60 sm:left-8 sm:top-8">
+            <DecryptedText
+              text="M4RKYU.SYS · BOOT v2027"
+              sequential
+              speed={20}
+              animateOn="mount"
+            />
+          </div>
+          <div className="absolute right-4 top-4 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/60 sm:right-8 sm:top-8">
+            <DecryptedText
+              text={`SESSION · ${new Date().getFullYear()}`}
+              sequential
+              speed={22}
+              animateOn="mount"
+              delay={80}
+            />
+          </div>
+
+          <div className="relative flex flex-col items-center gap-10 px-6">
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
-              className="font-[family-name:var(--font-display)] text-5xl font-semibold tracking-tight sm:text-6xl"
+              className="font-display text-6xl font-extrabold tracking-tight sm:text-7xl"
             >
-              M4RKYU
+              <DecryptedText
+                text="M4RKYU"
+                sequential
+                speed={40}
+                revealDirection="center"
+                animateOn="mount"
+                encryptedClassName="text-foreground/40"
+              />
             </motion.div>
-            <div className="flex w-72 flex-col gap-2 sm:w-96">
+
+            <div className="flex w-72 flex-col gap-3 sm:w-[28rem]">
               <div className="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-                <span>booting · m4rkyu.com</span>
+                <DecryptedText
+                  text="booting · m4rkyu.com"
+                  sequential
+                  speed={20}
+                  animateOn="mount"
+                />
                 <span className="tabular-nums text-foreground">
                   {count.toString().padStart(3, "0")}
                 </span>
@@ -90,7 +129,32 @@ export function IntroLoader() {
                   transition={{ duration: 0 }}
                 />
               </div>
+
+              {/* Status feed — each line decrypts in with staggered delay so
+                * the sequence reads as the boot streaming output. */}
+              <ul className="mt-3 grid gap-1.5 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-foreground/55">
+                {[
+                  "calibrating archive...",
+                  "loading creative + developer...",
+                  "ontario · canada — built deliberately",
+                  "ready.",
+                ].map((line, i) => (
+                  <li key={line}>
+                    <DecryptedText
+                      text={line}
+                      sequential
+                      speed={18}
+                      animateOn="mount"
+                      delay={180 + i * 240}
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
+          </div>
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/50">
+            press any key to skip · or just wait
           </div>
         </motion.div>
       ) : null}

@@ -1,34 +1,69 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Syne, VT323 } from "next/font/google";
+import localFont from "next/font/local";
+import { JetBrains_Mono, Noto_Sans_SC, VT323 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SmoothScroll } from "@/providers/smooth-scroll";
 import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const clashDisplay = localFont({
+  src: "../../public/fonts/clash-display/ClashDisplay-Variable.woff2",
+  variable: "--font-display",
+  weight: "200 700",
+  display: "swap",
+  preload: true,
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const cabinetGrotesk = localFont({
+  src: "../../public/fonts/cabinet-grotesk/CabinetGrotesk-Variable.woff2",
+  variable: "--font-heading",
+  weight: "100 900",
+  display: "swap",
 });
 
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+const satoshi = localFont({
+  src: [
+    {
+      path: "../../public/fonts/satoshi/Satoshi-Variable.woff2",
+      style: "normal",
+      weight: "300 900",
+    },
+    {
+      path: "../../public/fonts/satoshi/Satoshi-VariableItalic.woff2",
+      style: "italic",
+      weight: "300 900",
+    },
+  ],
+  variable: "--font-sans",
+  display: "swap",
+  preload: true,
 });
 
-// Pixel display font — phase 1 cyber-pixel layer. English-only:
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Latin gets the preload-eligible subset; Google chunks CJK via unicode-range
+// and loads chunks on demand when /zh glyphs render. preload: false so EN-only
+// visitors don't pay a preload for a Latin face Satoshi already covers.
+const notoSansSC = Noto_Sans_SC({
+  variable: "--font-cjk",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+// Pixel display font — cyber-pixel UI layer. English-only:
 // the `:lang(zh)` / `[lang^="zh"]` guard in globals.css rewires
-// --font-pixel to the display/sans stack on Chinese-language scopes.
+// --font-pixel to --font-cjk on Chinese-language scopes.
 const vt323 = VT323({
   variable: "--font-pixel",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -72,7 +107,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} ${vt323.variable} h-full antialiased`}
+      className={`${clashDisplay.variable} ${cabinetGrotesk.variable} ${satoshi.variable} ${jetbrainsMono.variable} ${notoSansSC.variable} ${vt323.variable} h-full antialiased`}
     >
       <body
         suppressHydrationWarning

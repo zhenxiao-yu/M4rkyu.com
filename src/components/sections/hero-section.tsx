@@ -1,162 +1,189 @@
-import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { PixelButton } from "@/components/ui/pixel/pixel-button";
-import { Button } from "@/components/ui/button";
-import { Particles } from "@/components/ui/magic/particles";
-import { CommandHero } from "./command-hero";
-import { GameHud } from "./game-hud";
-import { HudScrollFrame } from "./hud-scroll-frame";
+import { Galaxy } from "@/components/ui/magic/galaxy";
+import { StarGlyph } from "@/components/ui/magic/star-glyph";
+import { DecryptedText } from "@/components/ui/magic/decrypted-text";
 import { SplitHeadline } from "./split-headline";
 import { HeroBootSequence } from "./hero-boot-sequence";
-import { HeroClipFrame } from "./hero-clip-frame";
-import { HeroPhotoStack, type HeroPhotoFrame } from "./hero-photo-stack";
-import { HeroCornerDisplay } from "./hero-corner-display";
-import { galleryCollections } from "@/content/gallery";
-import { Link } from "@/i18n/navigation";
+import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * Build the cycling photo frames for `HeroPhotoStack` from the real
- * gallery collection covers. Falls through to an empty list if none
- * have an `src` — the stack renders nothing and the rest of the hero
- * still composes correctly over the atmospheric layers.
+ * Hero — wodniack-patterned "Creative ✦ Developer." stage.
+ *
+ *   - Galaxy fills the upper field (both themes; light inverts via
+ *     CSS filter so stars become dark specks on cream).
+ *   - Top-left: 4-line mono status panel.
+ *   - Top-right (sm+): short tag + email-me link.
+ *   - Bottom band (pinned to viewport floor):
+ *       1. Binary-feed marquee (top edge)
+ *       2. Solid theme-bg block with huge headline
+ *          "Creative ✦ Developer." — `+` from the i18n string is
+ *          replaced with the StarGlyph SVG. Solid bg means the
+ *          galaxy doesn't bleed through under the headline (per
+ *          user feedback "background behind text should be solid").
+ *       3. Binary-feed marquee (bottom edge)
+ *
+ * `.hero-vignette` was retired — its radial gradient produced a
+ * visible white blob on too many viewports.
  */
-function buildHeroFrames(): HeroPhotoFrame[] {
-  return galleryCollections
-    .filter((c) => c.cover?.src)
-    .map((c) => ({
-      slug: c.slug,
-      src: c.cover!.src,
-      alt: c.cover!.alt,
-    }));
-}
-
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
-  const tHud = await getTranslations({ locale, namespace: "Hud" });
+  // Binary feed — system-telemetry caps text. Used for both the
+  // top and bottom marquee strips around the headline.
+  const BINARY_FEED =
+    "01001101 00110100 01010010 01001011 01011001 01010101 // 0xFF3E // 11000100 01001011 // 01011001 0xCAFE // 0xDEAD 10101010 // 01010011 01011001 01010011 01000011 // 0xA4B7 // 01101111 01110000 01100101 01110010 01100001 01110100 01101001 01101110 01100111";
 
-  const frames = buildHeroFrames();
+  // Split title at "+" so we can drop the StarGlyph in between while
+  // each side still flows through SplitHeadline's char-stagger reveal
+  // (EN only). Falls back to plain rendering when no "+" present.
+  const title = t("title");
+  const [titleA, titleB] = title.includes("+")
+    ? title.split("+").map((s) => s.trim())
+    : [title, ""];
 
   return (
-    <section className="relative min-h-dvh overflow-hidden border-b">
-      {/* The clip-frame wraps every atmospheric + decorative layer so
-        * scrolling deforms the whole substrate as one piece. Content
-        * (headline, CTAs, brief, specs) sits OUTSIDE the clip frame
-        * so it stays crisp and readable as the frame morphs under
-        * scroll — port of the layered z-index pattern from
-        * adrianhajdin/award-winning-website's Hero/About sections.
-        *
-        * Audit pass:
-        *   - Photo wrapper no longer carries `-z-10` (was creating a
-        *     stacking context that trapped the preview tile behind
-        *     content). Photo image owns its own `-z-10`; the preview
-        *     tile resolves at `z-30` in the section context.
-        *   - Dropped the redundant `bg-background/55` scrim — the
-        *     photo opacity bump (0.32 → 0.55) does the dimming.
-        *   - Dropped AnimatedGridPattern — Particles carries the
-        *     atmospheric trail alone for a less cyber-noisy read.
-        *   - Corner watermark moved BEFORE content in DOM so it
-        *     paints behind without z-index gymnastics. */}
-      <HeroClipFrame>
-        <div className="absolute inset-0">
-          <HeroPhotoStack frames={frames} />
-        </div>
-        <Particles
-          className="-z-10 hidden sm:block"
-          quantity={24}
-          speed={0.06}
-          size={1.2}
-          maxOpacity={0.4}
-          color="var(--ring)"
+    <section
+      data-snap="section"
+      className="relative isolate flex min-h-dvh flex-col overflow-hidden border-b"
+    >
+      {/* Galaxy backdrop — both themes, dark-mode native, light-mode
+        * inverts so stars become dark specks on cream. */}
+      <div className="absolute inset-0 -z-20 invert dark:invert-0">
+        <Galaxy
+          density={0.5}
+          hueShift={105}
+          speed={0.6}
+          glowIntensity={0.2}
+          saturation={0.15}
+          twinkleIntensity={0.1}
+          starSpeed={0.4}
+          rotationSpeed={0.05}
+          mouseInteraction
+          mouseRepulsion={false}
+          transparent
         />
-        <div
-          aria-hidden="true"
-          className="noise-layer absolute inset-0 -z-10"
-        />
-        <div
-          aria-hidden="true"
-          className="scanline-layer absolute inset-0 -z-10 opacity-20"
-        />
-        <div
-          aria-hidden="true"
-          className="hero-vignette absolute inset-0 -z-10"
-        />
-        <HeroCornerDisplay locale={locale} />
+      </div>
 
-        <HeroBootSequence>
-          <div className="relative mx-auto grid w-full max-w-7xl items-start gap-10 px-4 pt-20 pb-12 sm:px-6 lg:grid-cols-[1fr_400px] lg:gap-16 lg:pt-28 lg:pb-16 lg:px-8">
-            {/* Left column — eyebrow, headline, subtitle, two CTAs. */}
-            <div className="flex flex-col gap-7">
-              <span
-                data-boot="eyebrow"
-                className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground"
-              >
-                {t("eyebrow")}
-              </span>
-              <h1
-                data-boot="headline"
-                className="font-display text-balance text-[3rem] font-extrabold leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl"
-              >
-                {/* Text-splitting is EN-only by doctrine — see PR #60.
-                 * /zh renders the headline as plain text. */}
+      <HeroBootSequence>
+        {/* Top-left mono status panel. Each line scrambles in via
+          * DecryptedText with staggered delay so the panel reads as
+          * a system feed coming online (matches the boot loader's
+          * grammar). EN-only — for ZH the chars decrypt to CJK which
+          * doesn't read well in a glyph-shuffle, so plain text is
+          * fine as a fallback (locale check inside each line). */}
+        <div
+          data-boot="eyebrow"
+          className="absolute left-4 top-20 z-10 max-w-xs sm:left-8 sm:top-24"
+        >
+          <ul className="space-y-1 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-foreground/75 sm:text-[0.65rem]">
+            {[
+              { text: t("eyebrow"), delay: 0 },
+              { text: t("heroStatus.line2"), delay: 140 },
+              { text: t("heroStatus.line3"), delay: 280 },
+              { text: t("heroStatus.line4"), delay: 420 },
+            ].map(({ text, delay }) => (
+              <li key={text}>
                 {locale === "en" ? (
-                  <SplitHeadline text={t("title")} />
+                  <DecryptedText
+                    text={text}
+                    sequential
+                    speed={18}
+                    animateOn="mount"
+                    delay={delay}
+                    encryptedClassName="text-foreground/40"
+                  />
                 ) : (
-                  t("title")
+                  text
                 )}
-              </h1>
-              <p
-                data-boot="subtitle"
-                className="max-w-xl text-lg leading-8 text-muted-foreground"
-              >
-                {t("subtitle")}
-              </p>
-              <div
-                data-boot="ctas"
-                className="flex flex-wrap items-center gap-3 pt-2"
-              >
-                <PixelButton
-                  glyph="caret"
-                  sound="confirm"
-                  size="lg"
-                  href="/work"
-                >
-                  {t("heroCtaBrowse")}
-                </PixelButton>
-                <Button variant="outline" size="lg" asChild>
-                  <Link href="/logs" locale={locale}>
-                    {t("heroCtaLogs")}
-                    <ArrowUpRight className="size-4" aria-hidden="true" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-            {/* Right column — refreshed CommandHero (BentoTilt +
-              * CursorRadial + BorderBeam now layered inside).
-              * Single-column on tablet/mobile per the existing pattern. */}
-            <div data-boot="panel">
-              <CommandHero locale={locale} />
-            </div>
-          </div>
-
-          {/* Footer HUD strip — scroll-tied opacity ramp per PR #60.
-            * Specs strip was moved out of the hero (was duplicating
-            * the brief card's info); it now lives as its own
-            * "signals" band on the home page right below this hero. */}
-          <div
-            data-boot="hud"
-            className="relative mx-auto w-full max-w-7xl px-4 pb-6 sm:px-6 lg:px-8"
+        {/* Top-right tag + email — hidden below sm */}
+        <div
+          data-boot="subtitle"
+          className="absolute right-4 top-20 z-10 hidden max-w-xs text-right sm:right-8 sm:top-24 sm:block"
+        >
+          <p className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-foreground/75 sm:text-[0.65rem]">
+            {t("heroTagShort")}
+          </p>
+          <a
+            href={`mailto:${profile.email}`}
+            className="mt-3 inline-flex items-center gap-1.5 text-sm leading-snug underline-offset-4 hover:underline focus-visible:outline-none focus-visible:underline"
           >
-            <HudScrollFrame>
-              <GameHud
-                hint={t("heroCmdkHint")}
-                ariaLabel={tHud("systemStatus")}
-              />
-            </HudScrollFrame>
+            {t("heroAvailable")}
+            <span aria-hidden="true">→</span>
+            <span className="font-medium">{t("heroEmailMe")}</span>
+          </a>
+        </div>
+
+        {/* Bottom band — marquee, solid-bg headline, marquee */}
+        <div
+          data-boot="hud"
+          className="absolute inset-x-0 bottom-0 z-10 bg-background"
+        >
+          {/* Top marquee (above headline) */}
+          <BinaryMarquee feed={BINARY_FEED} />
+
+          {/* Headline on solid theme background */}
+          <div className="flex w-full justify-center sm:overflow-hidden">
+            <h1
+              data-boot="headline"
+              className="font-display w-full px-2 pt-4 pb-3 text-center text-[clamp(2.25rem,6.25vw,7.5rem)] font-black leading-[0.9] tracking-[-0.04em] sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pt-5 sm:pb-5"
+            >
+              {/* Mobile: plain text + star, wraps. Desktop: SplitHeadline
+                * around each word, with the star between, all on one line. */}
+              <span className="sm:hidden">
+                {titleA}{" "}
+                <StarGlyph className="-mt-1 inline-block size-[0.65em] align-middle text-ring" />{" "}
+                {titleB}
+              </span>
+              <span className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]">
+                {locale === "en" ? <SplitHeadline text={titleA} /> : titleA}
+                <StarGlyph className="inline-block size-[0.55em] shrink-0 self-center text-ring" />
+                {locale === "en" ? <SplitHeadline text={titleB} /> : titleB}
+              </span>
+            </h1>
           </div>
-        </HeroBootSequence>
-      </HeroClipFrame>
+
+          {/* Bottom marquee (below headline) — flips direction so the
+            * pair reads as a frame around the headline. */}
+          <BinaryMarquee feed={BINARY_FEED} reverse />
+        </div>
+      </HeroBootSequence>
     </section>
+  );
+}
+
+/**
+ * Thin marquee strip used as the binary-feed bookends around the
+ * headline. Doubled track for seamless loop. Reduced-motion → static.
+ * `reverse` flips direction (used for the bottom strip so the two
+ * read as a frame, not a parallel pair).
+ */
+function BinaryMarquee({
+  feed,
+  reverse = false,
+}: {
+  feed: string;
+  reverse?: boolean;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative overflow-hidden border-y border-foreground/15 py-1"
+    >
+      <div className="pointer-events-none absolute inset-0 mask-[linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]" />
+      <div
+        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/55 motion-safe:animate-[marquee_38s_linear_infinite]"
+        style={reverse ? { animationDirection: "reverse" } : undefined}
+      >
+        <span>{feed}</span>
+        <span>{feed}</span>
+        <span>{feed}</span>
+        <span>{feed}</span>
+      </div>
+    </div>
   );
 }

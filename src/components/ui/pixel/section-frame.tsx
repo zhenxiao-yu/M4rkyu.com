@@ -9,7 +9,9 @@ export interface SectionFrameProps {
   index?: string;
   /** Short uppercase mono eyebrow (e.g. "selected · missions"). */
   eyebrow?: string;
-  title: string;
+  /** Section heading — string for simple titles, ReactNode when you
+   * need to drop an animated primitive (e.g. `<GhostedWord>`) inside. */
+  title: React.ReactNode;
   /** One-paragraph lede under the title. */
   lede?: string;
   /** Inline actions rendered on the right (typically a small CTA group). */
@@ -58,7 +60,7 @@ export function SectionFrame({
             ) : null}
           </div>
         ) : null}
-        <h2 className="font-display text-balance text-3xl font-bold leading-[1.05] tracking-normal sm:text-4xl lg:text-5xl">
+        <h2 className="font-heading text-balance text-3xl font-bold leading-[1.05] tracking-normal sm:text-4xl lg:text-5xl">
           {title}
         </h2>
         {lede ? (

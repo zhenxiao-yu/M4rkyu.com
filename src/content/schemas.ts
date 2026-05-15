@@ -68,6 +68,24 @@ export const profileSchema = z.object({
     }),
   ),
   values: z.array(z.string()),
+  // Optional social handles. Each key holds either a real URL or
+  // null/undefined when the handle hasn't been claimed yet — the
+  // footer / CTA renderers render only the populated ones, so adding
+  // a handle requires no other code changes.
+  socials: z
+    .object({
+      github: z.string().url().optional(),
+      devto: z.string().url().optional(),
+      linkedin: z.string().url().optional(),
+      bluesky: z.string().url().optional(),
+      twitter: z.string().url().optional(),
+      instagram: z.string().url().optional(),
+      mastodon: z.string().url().optional(),
+    })
+    .partial()
+    .default({}),
+  // Optional resume link. Public PDF lives at `public/resume.pdf`.
+  resumeUrl: z.string().optional(),
 });
 
 export const galleryAspectSchema = z.enum([

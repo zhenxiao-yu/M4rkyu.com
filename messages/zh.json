@@ -45,16 +45,69 @@
     "info": "信息"
   },
   "Home": {
-    "eyebrow": "M4RKYU.SYS · v2027",
-    "title": "一个还算像样的地方，放这些。",
-    "subtitle": "项目、原型、图像与笔记——来自 Mark Yu。",
-    "heroCtaBrowse": "浏览作品",
+    "eyebrow": "M4RKYU.SYS · 2027",
+    "title": "创作 + 开发。",
+    "subtitle": "软件、游戏、视觉系统。在安大略，慢慢地、认真地搭建——一份贯通工程、艺术与写作的档案。",
+    "heroTagline": "自 2014 起",
+    "heroStatus": {
+      "line2": "档案构建 · v2027",
+      "line3": "加拿大 · 安大略",
+      "line4": "认真搭建"
+    },
+    "heroTagShort": "软件 · 游戏 · 视觉系统",
+    "heroAvailable": "开放合作",
+    "heroEmailMe": "写信给 Mark",
+    "scroll": "向下",
+    "heroCtaBrowse": "看看作品",
+    "heroCtaEmail": "写信给 Mark",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",
+    "aboutBriefly": {
+      "eyebrow": "01 / 关于",
+      "heading": "Mark，简介。",
+      "readLonger": "完整版本",
+      "portraitLabel": "肖像 — 待提供或 AI 生成",
+      "subnote": "跨文化路径，定居安大略。一个档案，而不是七个零散的账号。"
+    },
+    "selectedWork": {
+      "eyebrow": "02 / 精选",
+      "heading": "我做过的几件事。",
+      "lede": "一组值得展示的项目 —— 完成的在前，草稿淡淡地排在后面。",
+      "titleWord": "WORK",
+      "openWork": "全部项目",
+      "draftsLabel": "草稿"
+    },
+    "frames": {
+      "eyebrow": "03 / 帧",
+      "heading": "我是如何走到这里的。",
+      "lede": "一份视觉小册 —— 房间、年份、当时算数的瞬间。",
+      "openArchive": "进入影像档案",
+      "firstComputer": "第一台电脑 —— 发现屏幕能听我话。",
+      "firstGame": "第一个游戏项目 —— 故事比引擎先写好。",
+      "moveToCanada": "从中国到加拿大 —— 一程长途与新的口音。",
+      "westernUniversity": "西安大略大学 —— 软件工程、深夜实验、学会按时交付。",
+      "jdPower": "J.D. Power —— 全栈实习，真实用户，真实工单。",
+      "firstFilm": "第一部短片 —— 手持拍摄，主要靠自然光。",
+      "openingTheArchive": "打开档案 —— 这个网站，按长期运营来搭。",
+      "now": "现在 —— 一帧一帧地构建。"
+    },
+    "letsBuild": {
+      "eyebrow": "聊聊合作",
+      "letsLabel": "一起",
+      "verb1": "搭建",
+      "verb2": "交付",
+      "verb3": "做点东西",
+      "verb4": "试个原型",
+      "body": "想到什么了？前端系统、原型、创作工具，或者就是打个招呼——都行。",
+      "openLabel": "点这里",
+      "closeLabel": "收起",
+      "emailDirect": "直接邮件",
+      "sendBrief": "提交简报"
+    },
     "capabilities": {
       "eyebrow": "05 / 能力",
       "title": "系统与界面",
-      "lede": "五个相互重叠的系统，由同一个人操作。每一项都是真实的实践，不是流行语。",
+      "lede": "五个相互重叠的系统。每一项都是真实的实践，不是流行语。",
       "production": {
         "title": "生产工程",
         "description": "Next.js / TypeScript / CI / 可观测性 —— 缓慢、谨慎、能在第二年仍然站得住的那种代码。"
@@ -81,8 +134,10 @@
     "featured": "选出来的几件",
     "featuredDescription": "几件覆盖 Web 应用、AI 工具与数据可视化的生产级案例。",
     "fullArchive": "完整档案",
-    "latest": "写作脉搏",
-    "latestDescription": "随笔与开发日志 —— 简短、有日期、有观点。",
+    "writingEyebrow": "04 / 写作",
+    "latest": "现场笔记。",
+    "latestDescription": "简短、有日期、有观点。开发日志加系统札记 —— 同步自 dev.to。",
+    "allLogs": "全部日志",
     "tools": "资源",
     "toolsEyebrow": "工具 / 栈",
     "toolsDescription": "我真正在用的小型个人工具栈，附上为什么用的简短说明。",
