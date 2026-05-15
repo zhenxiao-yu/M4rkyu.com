@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
@@ -25,9 +27,10 @@ const BORDER = "#27272a";
 // shape CJK glyphs in OG titles/subtitles. The subset is built from
 // the repo's actual zh content (messages + content layer) plus basic
 // Latin / punctuation ranges, so it stays small (~190 KB) instead of
-// shipping the full ~7 MB CJK Common range. The `new URL(..., import.meta.url)`
-// + `fetch` pattern is the supported way to read a co-located binary
-// asset from the Next.js edge runtime (no `fs` access there).
+// shipping the full ~7 MB CJK Common range. Next 16's ImageResponse
+// docs show local fonts loaded with readFile; this avoids Turbopack
+// rewriting import.meta.url assets to a relative /_next URL that Node
+// cannot parse during static metadata generation.
 //
 // Regenerating after adding new zh content (one-shot, build-time only;
 // no project deps added):
@@ -42,16 +45,15 @@ const BORDER = "#27272a";
 //        --text-file=cjk-chars.txt --no-hinting --desubroutinize \
 //        --drop-tables+=DSIG --no-glyph-names
 //   6. Replace src/lib/seo/fonts/NotoSansSC-Regular.subset.ttf and commit.
-const fontPromise = fetch(
-  new URL("./fonts/NotoSansSC-Regular.subset.ttf", import.meta.url),
-).then((r) => {
-  if (!r.ok) {
-    throw new Error(
-      `OG font subset fetch failed (${r.status}); rebuild may be missing the asset.`,
-    );
-  }
-  return r.arrayBuffer();
-});
+const fontPromise = readFile(
+  join(process.cwd(), "src/lib/seo/fonts/NotoSansSC-Regular.subset.ttf"),
+).then(
+  (buffer) =>
+    buffer.buffer.slice(
+      buffer.byteOffset,
+      buffer.byteOffset + buffer.byteLength,
+    ) as ArrayBuffer,
+);
 
 // Heuristic: shrink the title font when it's long. CJK glyphs are
 // visually ~1.7× wider than Latin, so we count them weighted.
@@ -86,133 +88,130 @@ export async function renderOgImage({
   const len = effectiveLength(title);
   const fontData = await fontPromise;
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        background: BG,
+        color: FG,
+        padding: "72px 80px",
+        fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
+        position: "relative",
+      }}
+    >
+      {/* Cyber-grid wash via two repeating linear gradients. */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          background: BG,
-          color: FG,
-          padding: "72px 80px",
-          fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
-          position: "relative",
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `linear-gradient(${BORDER} 1px, transparent 1px), linear-gradient(90deg, ${BORDER} 1px, transparent 1px)`,
+          backgroundSize: "60px 60px, 60px 60px",
+          opacity: 0.45,
+        }}
+      />
+      {/* Subtle accent wash toward the bottom. Satori's radial
+       * support is partial; a top-to-bottom linear gradient
+       * fades cleanly to a soft ring tint above the footer. */}
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `linear-gradient(to bottom, transparent 55%, rgba(103, 232, 249, 0.12) 100%)`,
+        }}
+      />
+      {/* Top eyebrow row. */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+          fontSize: 22,
+          letterSpacing: 6,
+          textTransform: "uppercase",
+          color: MUTED,
+          zIndex: 1,
         }}
       >
-        {/* Cyber-grid wash via two repeating linear gradients. */}
-        <div
+        <span
           style={{
-            display: "flex",
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `linear-gradient(${BORDER} 1px, transparent 1px), linear-gradient(90deg, ${BORDER} 1px, transparent 1px)`,
-            backgroundSize: "60px 60px, 60px 60px",
-            opacity: 0.45,
+            display: "inline-block",
+            height: 1,
+            width: 56,
+            background: BORDER,
           }}
         />
-        {/* Subtle accent wash toward the bottom. Satori's radial
-         * support is partial; a top-to-bottom linear gradient
-         * fades cleanly to a soft ring tint above the footer. */}
-        <div
-          style={{
-            display: "flex",
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `linear-gradient(to bottom, transparent 55%, rgba(103, 232, 249, 0.12) 100%)`,
-          }}
-        />
-        {/* Top eyebrow row. */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-            fontSize: 22,
-            letterSpacing: 6,
-            textTransform: "uppercase",
-            color: MUTED,
-            zIndex: 1,
-          }}
-        >
-          <span
-            style={{
-              display: "inline-block",
-              height: 1,
-              width: 56,
-              background: BORDER,
-            }}
-          />
-          {eyebrow}
-        </div>
+        {eyebrow}
+      </div>
 
-        {/* Title block. */}
+      {/* Title block. */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+          zIndex: 1,
+        }}
+      >
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 28,
-            zIndex: 1,
+            fontSize: len > 48 ? 80 : len > 24 ? 96 : 112,
+            fontWeight: 700,
+            lineHeight: 1.02,
+            letterSpacing: -2,
+            color: FG,
+            maxWidth: 1040,
+            fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
           }}
         >
+          {title}
+        </div>
+        {subtitle ? (
           <div
             style={{
-              fontSize: len > 48 ? 80 : len > 24 ? 96 : 112,
-              fontWeight: 700,
-              lineHeight: 1.02,
-              letterSpacing: -2,
-              color: FG,
-              maxWidth: 1040,
+              fontSize: 32,
+              lineHeight: 1.32,
+              color: MUTED,
+              maxWidth: 880,
               fontFamily: "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
             }}
           >
-            {title}
+            {subtitle}
           </div>
-          {subtitle ? (
-            <div
-              style={{
-                fontSize: 32,
-                lineHeight: 1.32,
-                color: MUTED,
-                maxWidth: 880,
-                fontFamily:
-                  "Noto Sans SC, ui-sans-serif, system-ui, sans-serif",
-              }}
-            >
-              {subtitle}
-            </div>
-          ) : null}
-          <div
-            style={{
-              height: 2,
-              width: 96,
-              background: RING,
-              opacity: 0.65,
-            }}
-          />
-        </div>
-
-        {/* Footer row. */}
+        ) : null}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-            fontSize: 22,
-            letterSpacing: 4,
-            textTransform: "uppercase",
-            color: MUTED,
-            zIndex: 1,
+            height: 2,
+            width: 96,
+            background: RING,
+            opacity: 0.65,
           }}
-        >
-          <span>{footer}</span>
-          <span>{OG_FOOTER_TAG}</span>
-        </div>
+        />
       </div>
-    ),
+
+      {/* Footer row. */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+          fontSize: 22,
+          letterSpacing: 4,
+          textTransform: "uppercase",
+          color: MUTED,
+          zIndex: 1,
+        }}
+      >
+        <span>{footer}</span>
+        <span>{OG_FOOTER_TAG}</span>
+      </div>
+    </div>,
     {
       ...OG_IMAGE_SIZE,
       // The subset was instanced at wght=400. Register the same data

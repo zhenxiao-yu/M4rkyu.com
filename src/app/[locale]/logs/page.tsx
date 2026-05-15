@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { PageHero } from "@/components/layout/page-hero";
+import { PageSection } from "@/components/layout/page-section";
 import { PinnedPostCard } from "@/components/cards/pinned-post-card";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,59 +38,50 @@ export default async function BlogPage({
 
   return (
     <PageShell locale={locale}>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-cyber-grid opacity-30" aria-hidden="true" />
-        <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_22rem] lg:px-8">
-          <FadeIn>
-            <SectionHeading
-              as="h1"
-              eyebrow={t("eyebrow")}
-              title={t("title")}
-              description={t("description")}
-            />
-          </FadeIn>
-          <FadeIn direction="left" delay={0.1}>
-            <Card className="bg-background/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle as="h2">{t("archiveStatus")}</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-3 text-sm text-muted-foreground">
-                <p>
-                  <span className="font-mono text-foreground">{posts.length}</span>{" "}
-                  {t("postsPublished")}
-                </p>
-                <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em]">
-                  {t("syndicatedFrom")}{" "}
-                  <a
-                    href={`https://dev.to/${DEVTO_USERNAME}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
-                    dev.to / @{DEVTO_USERNAME}
-                  </a>
-                </p>
-                <p>{t("syndicatedNote")}</p>
-              </CardContent>
-            </Card>
-          </FadeIn>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        description={t("description")}
+        decorativeWord="LOGS"
+      >
+        <Card className="bg-background/70 shadow-lg shadow-black/5 backdrop-blur-xl hover:border-ring/50 dark:shadow-black/20">
+          <CardHeader>
+            <CardTitle as="h2">{t("archiveStatus")}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3 text-sm text-muted-foreground">
+            <p>
+              <span className="font-mono text-foreground">{posts.length}</span>{" "}
+              {t("postsPublished")}
+            </p>
+            <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em]">
+              {t("syndicatedFrom")}{" "}
+              <a
+                href={`https://dev.to/${DEVTO_USERNAME}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm text-foreground underline-offset-4 transition-colors hover:text-ring hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                dev.to / @{DEVTO_USERNAME}
+              </a>
+            </p>
+            <p>{t("syndicatedNote")}</p>
+          </CardContent>
+        </Card>
+      </PageHero>
 
       {pinned ? (
-        <section className="mx-auto w-full max-w-5xl px-4 pt-12 sm:px-6 lg:px-8">
+        <PageSection width="narrow" innerClassName="pb-0">
           <FadeIn>
             <PinnedPostCard post={pinned} />
           </FadeIn>
-        </section>
+        </PageSection>
       ) : null}
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+      <PageSection width="narrow" innerClassName={pinned ? "pt-10" : undefined}>
         <FadeIn>
           <BlogTimeline posts={timelinePosts} />
         </FadeIn>
-      </section>
+      </PageSection>
     </PageShell>
   );
 }

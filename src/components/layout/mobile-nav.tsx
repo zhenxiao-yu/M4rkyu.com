@@ -9,7 +9,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Collapsible,
@@ -35,6 +34,7 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
   const tPalette = useTranslations("CommandPalette");
   const { setOpen: setPaletteOpen } = useCommandPalette();
   const pathname = usePathname();
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   // Default-open the group containing the active route so the user
   // lands on their current location without an extra tap. Falls back
@@ -52,16 +52,15 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
   }
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <button
-          type="button"
-          aria-label={t("menu")}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          <Menu aria-hidden="true" className="size-4" />
-        </button>
-      </SheetTrigger>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+      <button
+        type="button"
+        aria-label={t("menu")}
+        onClick={() => setSheetOpen(true)}
+        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        <Menu aria-hidden="true" className="size-4" />
+      </button>
       <SheetContent className="top-0 flex h-dvh translate-y-0 flex-col gap-0 p-0 sm:max-w-sm">
         <SheetHeader className="border-b px-5 py-4">
           <SheetTitle className="font-mono text-sm tracking-wide">
@@ -94,17 +93,20 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
             {t("navigateLabel")}
           </p>
 
-          <nav aria-label="Mobile navigation" className="mt-3 flex flex-col gap-1">
+          <nav
+            aria-label="Mobile navigation"
+            className="mt-3 flex flex-col gap-1"
+          >
             {groups.map((group) => {
               const open = openGroup === group.id;
-              const groupActive = group.items.some((item) => isActive(item.href));
+              const groupActive = group.items.some((item) =>
+                isActive(item.href),
+              );
               return (
                 <Collapsible
                   key={group.id}
                   open={open}
-                  onOpenChange={(next) =>
-                    setOpenGroup(next ? group.id : null)
-                  }
+                  onOpenChange={(next) => setOpenGroup(next ? group.id : null)}
                 >
                   <CollapsibleTrigger
                     className={cn(

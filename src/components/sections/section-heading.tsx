@@ -20,8 +20,10 @@ interface SectionHeadingProps {
   disableGlitch?: boolean;
 }
 
-const headingClass =
-  "mt-3 text-3xl font-[700] leading-[1.05] tracking-normal text-balance sm:text-4xl lg:text-5xl";
+const headingClass = {
+  h1: "mt-3 text-4xl font-[700] leading-[1.02] tracking-normal text-balance sm:text-5xl lg:text-6xl",
+  h2: "mt-3 text-3xl font-[700] leading-[1.05] tracking-normal text-balance sm:text-4xl lg:text-5xl",
+};
 
 export function SectionHeading({
   eyebrow,
@@ -39,7 +41,7 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <Heading className={headingClass}>
+      <Heading className={headingClass[as]}>
         {useGlitch ? <GlitchText>{title}</GlitchText> : title}
       </Heading>
       {description ? (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/page-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { PageHero } from "@/components/layout/page-hero";
+import { PageSection } from "@/components/layout/page-section";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderVideo } from "@/components/placeholders/placeholder-video";
@@ -26,44 +27,59 @@ export async function generateMetadata({
   };
 }
 
-export default async function MediaPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function MediaPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Media" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
 
   return (
     <PageShell locale={locale}>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-cyber-grid opacity-30" aria-hidden="true" />
-        <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
-          <SectionHeading
-            as="h1"
-            eyebrow={t("eyebrow")}
-            title={tMeta("mediaTitle")}
-            description={tMeta("mediaDescription")}
-          />
-          <PlaceholderVideo label={t("featuredTbd")} />
-        </div>
-      </section>
+      <PageHero
+        eyebrow={t("eyebrow")}
+        title={tMeta("mediaTitle")}
+        description={tMeta("mediaDescription")}
+        decorativeWord="MEDIA"
+        sidecarClassName="w-full"
+      >
+        <PlaceholderVideo label={t("featuredTbd")} />
+      </PageHero>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <PageSection>
         {mediaItems.length === 0 ? (
-          <EmptyArchiveState title={t("emptyTitle")} description={t("emptyDescription")} />
+          <EmptyArchiveState
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
+          />
         ) : (
           <div className="grid gap-5 md:grid-cols-2">
             {mediaItems.map((item) => (
-              <Card key={item.slug} className="overflow-hidden bg-card/80">
+              <Card
+                key={item.slug}
+                className="overflow-hidden bg-card/80 hover:border-ring/50 hover:shadow-md"
+              >
                 {item.format === "video" || item.format === "reel" ? (
-                  <PlaceholderVideo label={t("videoPosterTbd")} className="rounded-none border-0 border-b" />
+                  <PlaceholderVideo
+                    label={t("videoPosterTbd")}
+                    className="rounded-none border-0 border-b"
+                  />
                 ) : (
-                  <PlaceholderImage label={t("mediaFrameTbd")} aspect="aspect-video" className="rounded-none border-0 border-b" />
+                  <PlaceholderImage
+                    label={t("mediaFrameTbd")}
+                    aspect="aspect-video"
+                    className="rounded-none border-0 border-b"
+                  />
                 )}
                 <CardHeader>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="outline">{item.format}</Badge>
                     <Badge variant="warning">{item.status}</Badge>
-                    {item.duration ? <Badge variant="outline">{item.duration}</Badge> : null}
+                    {item.duration ? (
+                      <Badge variant="outline">{item.duration}</Badge>
+                    ) : null}
                   </div>
                   <CardTitle>{item.title}</CardTitle>
                 </CardHeader>
@@ -74,17 +90,24 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
             ))}
           </div>
         )}
-      </section>
+      </PageSection>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <MediaFrame eyebrow={t("posterEyebrow")} label={t("posterReplaceLabel")}>
+      <PageSection innerClassName="pt-0">
+        <MediaFrame
+          eyebrow={t("posterEyebrow")}
+          label={t("posterReplaceLabel")}
+        >
           <div className="grid gap-4 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, index) => (
-              <PlaceholderImage key={index} label={t("posterTbd")} aspect="aspect-3/4" />
+              <PlaceholderImage
+                key={index}
+                label={t("posterTbd")}
+                aspect="aspect-3/4"
+              />
             ))}
           </div>
         </MediaFrame>
-      </section>
+      </PageSection>
     </PageShell>
   );
 }

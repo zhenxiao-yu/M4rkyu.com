@@ -3,7 +3,6 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import type { MouseEvent } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -76,17 +75,18 @@ export function ThemeSwitcher() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          aria-label="Toggle theme"
-          data-testid="theme-toggle"
-          onClick={toggle}
-          className="h-9 w-9 border-border bg-background/70 p-0 text-muted-foreground hover:border-ring/50 hover:bg-background/70 hover:text-foreground"
-        >
-          <Sun className="size-4 hidden dark:block" aria-hidden="true" />
-          <Moon className="size-4 block dark:hidden" aria-hidden="true" />
-        </Button>
+        <span className="inline-flex">
+          <button
+            type="button"
+            aria-label="Toggle theme"
+            data-testid="theme-toggle"
+            onClick={toggle}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 p-0 text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:bg-background/70 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Sun className="size-4 hidden dark:block" aria-hidden="true" />
+            <Moon className="size-4 block dark:hidden" aria-hidden="true" />
+          </button>
+        </span>
       </TooltipTrigger>
       <TooltipContent>Toggle theme</TooltipContent>
     </Tooltip>

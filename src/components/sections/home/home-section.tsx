@@ -68,7 +68,7 @@ export function HomeSection({
                 </p>
               ) : null}
               {heading ? (
-                <h2 className="mt-4 font-heading text-balance text-[clamp(2rem,5vw,4rem)] font-semibold leading-[1.02] tracking-tight">
+                <h2 className="mt-4 font-heading text-balance text-4xl font-semibold leading-[1.02] tracking-normal sm:text-5xl lg:text-6xl">
                   {heading}
                 </h2>
               ) : null}
@@ -78,10 +78,14 @@ export function HomeSection({
                 </p>
               ) : null}
             </div>
-            {action ? <div className="md:justify-self-end">{action}</div> : null}
+            {action ? (
+              <div className="md:justify-self-end">{action}</div>
+            ) : null}
           </header>
         )}
-        <div className={cn((eyebrow || heading || lede) && "mt-14")}>{children}</div>
+        <div className={cn((eyebrow || heading || lede) && "mt-14")}>
+          {children}
+        </div>
       </div>
     </section>
   );

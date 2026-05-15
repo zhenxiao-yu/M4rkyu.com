@@ -45,18 +45,58 @@
     animation: glitch-slice-b 320ms steps(6, end) 1 both;
   }
   @keyframes glitch-slice-a {
-    0% { clip-path: inset(0 0 65% 0); transform: translate(-3px, 0); opacity: 0.85; }
-    25% { clip-path: inset(15% 0 60% 0); transform: translate(2px, 0); opacity: 0.7; }
-    50% { clip-path: inset(8% 0 70% 0); transform: translate(-2px, 0); opacity: 0.6; }
-    75% { clip-path: inset(20% 0 50% 0); transform: translate(1px, 0); opacity: 0.4; }
-    100% { clip-path: inset(0 0 65% 0); transform: translate(0, 0); opacity: 0; }
+    0% {
+      clip-path: inset(0 0 65% 0);
+      transform: translate(-3px, 0);
+      opacity: 0.85;
+    }
+    25% {
+      clip-path: inset(15% 0 60% 0);
+      transform: translate(2px, 0);
+      opacity: 0.7;
+    }
+    50% {
+      clip-path: inset(8% 0 70% 0);
+      transform: translate(-2px, 0);
+      opacity: 0.6;
+    }
+    75% {
+      clip-path: inset(20% 0 50% 0);
+      transform: translate(1px, 0);
+      opacity: 0.4;
+    }
+    100% {
+      clip-path: inset(0 0 65% 0);
+      transform: translate(0, 0);
+      opacity: 0;
+    }
   }
   @keyframes glitch-slice-b {
-    0% { clip-path: inset(60% 0 0 0); transform: translate(3px, 0); opacity: 0.85; }
-    25% { clip-path: inset(50% 0 10% 0); transform: translate(-2px, 0); opacity: 0.7; }
-    50% { clip-path: inset(70% 0 5% 0); transform: translate(2px, 0); opacity: 0.6; }
-    75% { clip-path: inset(40% 0 25% 0); transform: translate(-1px, 0); opacity: 0.4; }
-    100% { clip-path: inset(60% 0 0 0); transform: translate(0, 0); opacity: 0; }
+    0% {
+      clip-path: inset(60% 0 0 0);
+      transform: translate(3px, 0);
+      opacity: 0.85;
+    }
+    25% {
+      clip-path: inset(50% 0 10% 0);
+      transform: translate(-2px, 0);
+      opacity: 0.7;
+    }
+    50% {
+      clip-path: inset(70% 0 5% 0);
+      transform: translate(2px, 0);
+      opacity: 0.6;
+    }
+    75% {
+      clip-path: inset(40% 0 25% 0);
+      transform: translate(-1px, 0);
+      opacity: 0.4;
+    }
+    100% {
+      clip-path: inset(60% 0 0 0);
+      transform: translate(0, 0);
+      opacity: 0;
+    }
   }
 
   /* Kill the default cross-fade on the OLD layer so the NEW layer
@@ -103,12 +143,24 @@
     animation: route-fade-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
   @keyframes route-fade-out {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(4px); }
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(4px);
+    }
   }
   @keyframes route-fade-in {
-    from { opacity: 0; transform: scale(0.995); }
-    to   { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   /* Mobile pacing — shrink durations on phones so the transition
@@ -219,11 +271,22 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-display: "Clash Display", "Clash Display Fallback", "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --font-cjk: "Noto Sans SC", "Noto Sans SC Fallback", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-display:
+    "Clash Display", "Clash Display Fallback", "Cabinet Grotesk",
+    "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC",
+    ui-sans-serif, system-ui, sans-serif;
+  --font-heading:
+    "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi",
+    "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono:
+    "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, "SFMono-Regular",
+    Menlo, Consolas, monospace;
+  --font-cjk:
+    "Noto Sans SC", "Noto Sans SC Fallback", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
 }
 
 [data-theme="dark"] {
@@ -292,7 +355,11 @@ h4 {
 
 body {
   background:
-    radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--foreground) 9%, transparent), transparent 30rem),
+    radial-gradient(
+      circle at 50% -10%,
+      color-mix(in srgb, var(--foreground) 9%, transparent),
+      transparent 30rem
+    ),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
@@ -308,8 +375,16 @@ body {
 
 .bg-cyber-grid {
   background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--foreground) 9%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--foreground) 9%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 56px 56px;
 }
 
@@ -320,9 +395,19 @@ body {
 .noise-layer {
   background-color: transparent;
   background-image:
-    radial-gradient(ellipse 110% 70% at 50% 28%, color-mix(in srgb, var(--ring) 6%, transparent), transparent 70%),
-    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 9%, transparent) 0.6px, transparent 1.4px);
-  background-size: auto, 4px 4px;
+    radial-gradient(
+      ellipse 110% 70% at 50% 28%,
+      color-mix(in srgb, var(--ring) 6%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 1px 1px,
+      color-mix(in srgb, var(--foreground) 9%, transparent) 0.6px,
+      transparent 1.4px
+    );
+  background-size:
+    auto,
+    4px 4px;
 }
 
 /* Dark-theme hero atmosphere: cinematic depth. A soft moonlight glow
@@ -331,8 +416,16 @@ body {
 [data-theme="dark"] .noise-layer {
   background-color: transparent;
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% 30%, color-mix(in srgb, var(--ring) 8%, transparent), transparent 65%),
-    radial-gradient(ellipse 70% 60% at 15% 90%, color-mix(in srgb, var(--foreground) 5%, transparent), transparent 65%);
+    radial-gradient(
+      ellipse 80% 60% at 50% 30%,
+      color-mix(in srgb, var(--ring) 8%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 15% 90%,
+      color-mix(in srgb, var(--foreground) 5%, transparent),
+      transparent 65%
+    );
   background-size: auto;
 }
 
@@ -347,8 +440,26 @@ body {
 
 .archive-vignette {
   background:
-    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--foreground) 10%, transparent), transparent 28rem),
-    linear-gradient(to bottom, transparent, color-mix(in srgb, var(--background) 86%, transparent));
+    radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--foreground) 10%, transparent),
+      transparent 28rem
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--background) 86%, transparent)
+    );
+}
+
+[aria-hidden="true"].bg-cyber-grid,
+[aria-hidden="true"].noise-layer,
+[aria-hidden="true"].scanline-layer,
+[aria-hidden="true"].archive-vignette,
+[aria-hidden="true"].hero-vignette,
+[aria-hidden="true"].placeholder-noise,
+[aria-hidden="true"].contact-sheet {
+  pointer-events: none;
 }
 
 /* Hero radial vignette — top + bottom edge darkening so the central
@@ -357,8 +468,11 @@ body {
 /* Light-theme vignette: soft fade at the bottom only, low intensity
  * because the paper-grain noise layer already carries depth. */
 .hero-vignette {
-  background:
-    radial-gradient(ellipse 110% 28% at 50% 100%, color-mix(in srgb, var(--background) 80%, transparent), transparent 75%);
+  background: radial-gradient(
+    ellipse 110% 28% at 50% 100%,
+    color-mix(in srgb, var(--background) 80%, transparent),
+    transparent 75%
+  );
 }
 
 /* Dark-theme vignette: stronger bottom fade + a soft top fade to
@@ -366,8 +480,16 @@ body {
  * earlier fixed-rem version produced. */
 [data-theme="dark"] .hero-vignette {
   background:
-    radial-gradient(ellipse 100% 45% at 50% 100%, color-mix(in srgb, var(--background) 94%, transparent), transparent 78%),
-    radial-gradient(ellipse 120% 30% at 50% 0%, color-mix(in srgb, var(--background) 55%, transparent), transparent 75%);
+    radial-gradient(
+      ellipse 100% 45% at 50% 100%,
+      color-mix(in srgb, var(--background) 94%, transparent),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 120% 30% at 50% 0%,
+      color-mix(in srgb, var(--background) 55%, transparent),
+      transparent 75%
+    );
 }
 
 /* Render-quality polish — applies across all type. Smoothing on macOS,
@@ -384,11 +506,11 @@ html {
 }
 
 .font-display {
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .font-heading {
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 /* EQ-style indicator bars for "status: open" pulses. Three bars whose
@@ -407,8 +529,15 @@ html {
 }
 
 @keyframes eq-bar {
-  0%, 100% { height: 4px; transform: translateY(0); }
-  50% { height: 12px; transform: translateY(-2px); }
+  0%,
+  100% {
+    height: 4px;
+    transform: translateY(0);
+  }
+  50% {
+    height: 12px;
+    transform: translateY(-2px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -420,7 +549,11 @@ html {
 
 .placeholder-noise {
   background-image:
-    linear-gradient(135deg, color-mix(in srgb, var(--foreground) 10%, transparent), transparent 45%),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--foreground) 10%, transparent),
+      transparent 45%
+    ),
     repeating-linear-gradient(
       -45deg,
       color-mix(in srgb, var(--foreground) 8%, transparent) 0 1px,
@@ -430,8 +563,16 @@ html {
 
 .contact-sheet {
   background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--foreground) 16%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 16%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--foreground) 16%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--foreground) 16%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 24px 24px;
 }
 
@@ -447,9 +588,18 @@ html {
 /* Status pulse — opacity 1 → 0 while scaling out. Eased with
  * --ease-premium so the halo bloom reads as a soft radar ping. */
 @keyframes pulse-halo {
-  0%   { opacity: 0.85; transform: scale(1); }
-  60%  { opacity: 0; transform: scale(2.6); }
-  100% { opacity: 0; transform: scale(2.6); }
+  0% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 
 /* ShinyText sweep — bg-clip-text gradient pans 200% horizontally so
@@ -457,33 +607,55 @@ html {
  * query below kills the animation; the gradient remains as a static
  * subtle accent. */
 @keyframes shiny {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Marquee — used by AnimatedSeparator mode="marquee" on the home
  * page. Translates a doubled track left by 50% (one copy width) so the
  * loop reads as continuous. */
 @keyframes marquee {
-  0%   { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 /* Floating-star drift — used by the LetsBuildCTA decorative stars.
  * Three keyframes give a sine-like rise/fall plus a slow rotation so
  * the stars feel handheld instead of perfectly orbital. */
 @keyframes star-float {
-  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.5; }
-  50%  { transform: translate3d(0, -12px, 0) rotate(8deg); opacity: 0.9; }
-  100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.5; }
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(8deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0.5;
+  }
 }
 
 /* Quiet vertical bob — used by the hero scroll affordance. The
  * translate range is intentionally small (4px peak) so it reads as
  * a subtle "alive" cue, not a bouncing arrow. */
 @keyframes float-y {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(0, 4px, 0); }
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 4px, 0);
+  }
 }
 
 /* Home-page "fullpage" scroll snap is owned by Lenis' `Snap` helper

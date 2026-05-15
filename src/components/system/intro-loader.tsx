@@ -64,13 +64,19 @@ export function IntroLoader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
-          className="fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background"
+          className="pointer-events-none fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background"
           aria-hidden="true"
         >
-          <div className="bg-cyber-grid absolute inset-0 opacity-30" aria-hidden="true" />
-          <div className="archive-vignette absolute inset-0" aria-hidden="true" />
           <div
-            className="scanline-layer absolute inset-0 opacity-30"
+            className="bg-cyber-grid pointer-events-none absolute inset-0 opacity-30"
+            aria-hidden="true"
+          />
+          <div
+            className="archive-vignette pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          />
+          <div
+            className="scanline-layer pointer-events-none absolute inset-0 opacity-30"
             aria-hidden="true"
           />
 
@@ -131,7 +137,7 @@ export function IntroLoader() {
               </div>
 
               {/* Status feed — each line decrypts in with staggered delay so
-                * the sequence reads as the boot streaming output. */}
+               * the sequence reads as the boot streaming output. */}
               <ul className="mt-3 grid gap-1.5 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-foreground/55">
                 {[
                   "calibrating archive...",

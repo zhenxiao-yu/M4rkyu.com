@@ -4,7 +4,8 @@ import { use, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { PageShell } from "@/components/layout/page-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { PageHero } from "@/components/layout/page-hero";
+import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
@@ -27,7 +28,9 @@ export default function SavedGalleryPage({
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const t = useTranslations("Gallery");
 
-  const savedItems = galleryItems.filter((item) => savedSlugs.includes(item.slug));
+  const savedItems = galleryItems.filter((item) =>
+    savedSlugs.includes(item.slug),
+  );
 
   function handleClearAll() {
     clearAll();
@@ -36,27 +39,21 @@ export default function SavedGalleryPage({
 
   return (
     <PageShell locale={locale}>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-cyber-grid opacity-25" aria-hidden="true" />
-        <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <FadeIn>
-            <SectionHeading
-              as="h1"
-              eyebrow={t("savedEyebrow")}
-              title={t("saved")}
-              description={t("savedDescription")}
-            />
-          </FadeIn>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={t("savedEyebrow")}
+        title={t("saved")}
+        description={t("savedDescription")}
+        decorativeWord="SAVED"
+      />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <PageSection>
         {savedItems.length === 0 ? (
           <FadeIn>
             <Card className="bg-card/80">
               <CardContent className="py-12 text-center">
-                <p className="text-base text-muted-foreground">{t("savedEmpty")}</p>
+                <p className="text-base text-muted-foreground">
+                  {t("savedEmpty")}
+                </p>
                 <Button asChild className="mt-4">
                   <Link href="/archive" locale={locale}>
                     {t("savedOpenGallery")}
@@ -67,7 +64,10 @@ export default function SavedGalleryPage({
           </FadeIn>
         ) : (
           <>
-            <Stagger className="grid gap-5 sm:grid-cols-2 md:grid-cols-3" delay={0.08}>
+            <Stagger
+              className="grid gap-5 sm:grid-cols-2 md:grid-cols-3"
+              delay={0.08}
+            >
               {savedItems.map((item) => (
                 <StaggerItem key={item.slug}>
                   <Link
@@ -76,7 +76,7 @@ export default function SavedGalleryPage({
                     aria-label={t("openFrame", { title: item.title })}
                     className="group block h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <Card className="h-full overflow-hidden bg-card/80 transition-[border-color,box-shadow] duration-200 group-hover:border-ring group-hover:shadow-md">
+                    <Card className="h-full overflow-hidden bg-card/80 group-hover:border-ring group-hover:shadow-md">
                       <FrameThumb item={item} frameTbdLabel={t("frameTbd")} />
                       <CardHeader>
                         <CardTitle className="line-clamp-2 text-base leading-tight">
@@ -120,7 +120,7 @@ export default function SavedGalleryPage({
             </FadeIn>
           </>
         )}
-      </section>
+      </PageSection>
     </PageShell>
   );
 }

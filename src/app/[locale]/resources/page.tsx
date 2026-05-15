@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { PageHero } from "@/components/layout/page-hero";
+import { PageSection } from "@/components/layout/page-section";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { resources } from "@/content/resources";
 import type { Locale } from "@/i18n/routing";
@@ -22,35 +23,35 @@ export async function generateMetadata({
   };
 }
 
-export default async function ResourcesPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function ResourcesPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Resources" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
-  const categories = Array.from(new Set(resources.map((resource) => resource.category)));
+  const categories = Array.from(
+    new Set(resources.map((resource) => resource.category)),
+  );
 
   return (
     <PageShell locale={locale}>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-cyber-grid opacity-25" aria-hidden="true" />
-        <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHeading
-            as="h1"
-            eyebrow={t("eyebrow")}
-            title={tMeta("resourcesTitle")}
-            description={tMeta("resourcesDescription")}
-          />
-        </div>
-      </section>
-      <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <PageHero
+        eyebrow={t("eyebrow")}
+        title={tMeta("resourcesTitle")}
+        description={tMeta("resourcesDescription")}
+        decorativeWord="TOOLS"
+      />
+      <PageSection innerClassName="py-10 sm:py-12 lg:py-14">
         <ResourcesClient resources={resources} categories={categories} />
-      </section>
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+      </PageSection>
+      <PageSection innerClassName="pt-0">
         <EmptyArchiveState
           title={t("indexPendingTitle")}
           description={t("indexPendingDescription")}
         />
-      </section>
+      </PageSection>
     </PageShell>
   );
 }
