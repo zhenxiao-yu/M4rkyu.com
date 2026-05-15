@@ -45,16 +45,69 @@
     "info": "Info"
   },
   "Home": {
-    "eyebrow": "M4RKYU.SYS · v2027",
-    "title": "A decent place to put all this.",
-    "subtitle": "Projects, prototypes, images, and notes from Mark Yu.",
-    "heroCtaBrowse": "Browse the work",
+    "eyebrow": "M4RKYU.SYS · 2027",
+    "title": "Creative + Developer.",
+    "subtitle": "Software, games, visual systems. Built deliberately from Ontario — one archive across engineering, art, and writing.",
+    "heroTagline": "since 2014",
+    "heroStatus": {
+      "line2": "Archive build · v2027",
+      "line3": "Ontario · Canada",
+      "line4": "Built deliberately"
+    },
+    "heroTagShort": "Software · Games · Visual systems",
+    "heroAvailable": "Available for projects",
+    "heroEmailMe": "Email Mark",
+    "scroll": "scroll",
+    "heroCtaBrowse": "See the work",
+    "heroCtaEmail": "Email Mark",
     "heroCtaLogs": "Read the logs",
     "heroCmdkHint": ">_ press ⌘K",
+    "aboutBriefly": {
+      "eyebrow": "01 / who",
+      "heading": "Mark, briefly.",
+      "readLonger": "Longer version",
+      "portraitLabel": "PORTRAIT — PROVIDE OR AI-GENERATE",
+      "subnote": "Cross-cultural path. Ontario-based. Operates one archive instead of seven scattered profiles."
+    },
+    "selectedWork": {
+      "eyebrow": "02 / selected",
+      "heading": "Things I shipped.",
+      "lede": "A short loop of the projects worth showing — ready ones in front, drafts dimmed behind them.",
+      "titleWord": "WORK",
+      "openWork": "All projects",
+      "draftsLabel": "in draft"
+    },
+    "frames": {
+      "eyebrow": "03 / frames",
+      "heading": "How I got here.",
+      "lede": "A short visual journal — the rooms, the years, the moments that earned a slot.",
+      "openArchive": "Open the archive",
+      "firstComputer": "First computer — discovering you can make the screen do things.",
+      "firstGame": "First game project — wrote a story before I wrote the engine.",
+      "moveToCanada": "China to Canada — a long flight and a new accent.",
+      "westernUniversity": "Western University — software engineering, late labs, a city that taught me to ship.",
+      "jdPower": "J.D. Power — full-stack internship, real users, real tickets.",
+      "firstFilm": "First short film — handheld, mostly natural light.",
+      "openingTheArchive": "Opening the archive — this site, structured for the long run.",
+      "now": "Now — building deliberately."
+    },
+    "letsBuild": {
+      "eyebrow": "let's collaborate",
+      "letsLabel": "Let's",
+      "verb1": "build",
+      "verb2": "ship",
+      "verb3": "make",
+      "verb4": "prototype",
+      "body": "Something on your mind? Frontend systems, prototypes, creative tooling, or just a hello — whichever.",
+      "openLabel": "tap me",
+      "closeLabel": "close",
+      "emailDirect": "Email directly",
+      "sendBrief": "Send a brief"
+    },
     "capabilities": {
       "eyebrow": "05 / capabilities",
       "title": "Systems & surfaces",
-      "lede": "Five overlapping systems, one operator. Each is a real practice, not a buzzword.",
+      "lede": "Five overlapping systems. Each is a real practice, not a buzzword.",
       "production": {
         "title": "Production engineering",
         "description": "Shipping Next.js / TypeScript / CI / observability work — the slow, careful kind that survives the second year."
@@ -81,8 +134,10 @@
     "featured": "Selected work",
     "featuredDescription": "A few production-grade case studies across web apps, AI tooling, and data visualisation.",
     "fullArchive": "Full archive",
-    "latest": "Writing pulse",
-    "latestDescription": "Field notes and devlog — short, dated, opinionated.",
+    "writingEyebrow": "04 / writing",
+    "latest": "Field notes.",
+    "latestDescription": "Short, dated, opinionated. Devlog plus systems notes — syndicated from dev.to.",
+    "allLogs": "All logs",
     "tools": "Resources",
     "toolsEyebrow": "tools / stack",
     "toolsDescription": "A small, real personal stack — the things I actually use, with notes on why.",

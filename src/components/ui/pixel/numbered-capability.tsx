@@ -32,7 +32,7 @@ export function NumberedCapability({
   // stays well-formed regardless of whether a CTA is supplied. The
   // <Link> nests inside the h3 when `cta` is present.
   const titleNode = (
-    <h3 className="font-display text-2xl font-extrabold leading-tight sm:text-3xl">
+    <h3 className="font-heading text-2xl font-extrabold leading-tight sm:text-3xl">
       {cta ? (
         // No `aria-label` — visible title inside the link is the accessible
         // name. Phase 8 a11y fix; see docs/PHASE_8_AUDIT.md.

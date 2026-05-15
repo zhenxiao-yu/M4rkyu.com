@@ -1,0 +1,213 @@
+/* GooeyNav — ReactBits port (MIT). The SVG-filter trick: the .filter
+ * span has `filter: blur(7px) contrast(100)` so neighbouring shapes
+ * blur into each other and the high-contrast pass "snaps" the merged
+ * outline — giving the metaball/gooey effect. Particles spawned on
+ * active-change spray outward with phys-y easing.
+ *
+ * Tokenized for M4rkyu — pill / particle colors read from CSS vars
+ * (`--gn-pill`, `--gn-text`, `--gn-pill-text`, `--color-1..4`) set
+ * on the container. */
+
+.container {
+  position: relative;
+}
+
+.container nav {
+  display: flex;
+  position: relative;
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.container nav ul {
+  display: flex;
+  gap: 0.5em;
+  list-style: none;
+  padding: 0 0.25em;
+  margin: 0;
+  position: relative;
+  z-index: 3;
+}
+
+.container nav ul li {
+  border-radius: 100vw;
+  position: relative;
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 0 0.5px 1.5px transparent;
+  color: var(--gn-text);
+}
+
+.container nav ul li a {
+  display: inline-block;
+  padding: 0.45em 0.95em;
+  font-size: 0.875rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.container nav ul li:focus-within:has(:focus-visible) {
+  box-shadow: 0 0 0.5px 1.5px var(--gn-ring, var(--ring));
+}
+
+.container nav ul li::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 100vw;
+  background: var(--gn-pill);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.container nav ul li.active {
+  color: var(--gn-pill-text);
+  text-shadow: none;
+}
+
+.container nav ul li.active::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.container .effect {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 1;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+}
+
+.container .effect.text {
+  color: var(--gn-text);
+  transition: color 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.container .effect.text.active {
+  color: var(--gn-pill-text);
+}
+
+.container .effect.filter {
+  filter: blur(7px) contrast(100) blur(0);
+  mix-blend-mode: lighten;
+}
+
+.container .effect.filter::before {
+  content: "";
+  position: absolute;
+  inset: -75px;
+  z-index: -2;
+  background: black;
+}
+
+.container .effect.filter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gn-pill);
+  transform: scale(0);
+  opacity: 0;
+  z-index: -1;
+  border-radius: 100vw;
+}
+
+.container .effect.active::after {
+  animation: gn-pill 0.3s ease both;
+}
+
+@keyframes gn-pill {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.particle,
+.point {
+  display: block;
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  transform-origin: center;
+}
+
+.particle {
+  --time: 5s;
+  position: absolute;
+  top: calc(50% - 8px);
+  left: calc(50% - 8px);
+  animation: gn-particle calc(var(--time)) ease 1 -350ms;
+}
+
+.point {
+  background: var(--color);
+  opacity: 1;
+  animation: gn-point calc(var(--time)) ease 1 -350ms;
+}
+
+@keyframes gn-particle {
+  0% {
+    transform: rotate(0deg) translate(calc(var(--start-x)), calc(var(--start-y)));
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  70% {
+    transform: rotate(calc(var(--rotate) * 0.5))
+      translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.2));
+    opacity: 1;
+    animation-timing-function: ease;
+  }
+  85% {
+    transform: rotate(calc(var(--rotate) * 0.66))
+      translate(calc(var(--end-x)), calc(var(--end-y)));
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(calc(var(--rotate) * 1.2))
+      translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5));
+    opacity: 1;
+  }
+}
+
+@keyframes gn-point {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  25% {
+    transform: scale(calc(var(--scale) * 0.25));
+  }
+  38% {
+    opacity: 1;
+  }
+  65% {
+    transform: scale(var(--scale));
+    opacity: 1;
+    animation-timing-function: ease;
+  }
+  85% {
+    transform: scale(var(--scale));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}

@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { PageFade } from "@/components/motion/page-fade";
 import { RouteAttribute } from "@/components/system/route-attribute";
+import { ClickSpark } from "@/components/ui/magic/click-spark";
 
 export async function PageShell({
   locale,
@@ -15,6 +16,13 @@ export async function PageShell({
   return (
     <div className="flex min-h-dvh flex-col">
       <RouteAttribute />
+      {/* Site-wide click sparks only. The MouseFollower ring was
+        * removed in the polish pass — its mix-blend-difference circle
+        * read as a random floating artifact against typographic
+        * content rather than a deliberate cursor cue. DotGrid +
+        * TiltedCard + Magnet already carry the "cursor responds to
+        * you" feeling at the element level. */}
+      <ClickSpark />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"

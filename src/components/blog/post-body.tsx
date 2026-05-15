@@ -46,7 +46,7 @@ const components = {
     <h2
       {...props}
       className={cn(
-        "mt-10 scroll-mt-20 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-foreground sm:text-3xl",
+        "mt-10 scroll-mt-20 font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl",
         className,
       )}
     />

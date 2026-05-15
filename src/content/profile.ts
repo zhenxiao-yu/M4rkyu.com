@@ -30,4 +30,18 @@ export const profile = profileSchema.parse({
     "Accessible interfaces with atmosphere",
     "Creative tooling that feels precise",
   ],
+  // Real socials live here. Empty entries get omitted in the footer
+  // and the LetsBuild CTA — wire the handle and it shows up.
+  socials: {
+    github: "https://github.com/zhenxiao-yu",
+    devto: "https://dev.to/zhenxiao_yu_a87bb6b2017f1",
+    // linkedin: "https://linkedin.com/in/…",
+    // bluesky: "https://bsky.app/profile/…",
+    // twitter: "https://x.com/…",
+    // instagram: "https://instagram.com/…",
+  },
+  // PDF lives at public/resume.pdf — show in footer as soon as the
+  // file is uploaded. Until then, the footer renders the link with a
+  // "pending" badge.
+  resumeUrl: "/resume.pdf",
 });

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { SectionFrame } from "@/components/ui/pixel/section-frame";
 import { NumberedCapability } from "@/components/ui/pixel/numbered-capability";
+import { GhostedWord } from "@/components/ui/magic/ghosted-word";
 import type { Locale } from "@/i18n/routing";
 
 // Capability rows — structural metadata. Titles + descriptions come from
@@ -40,15 +41,32 @@ export async function CapabilitiesSection({ locale }: { locale: Locale }) {
     namespace: "Home.capabilities",
   });
 
+  const titleRaw = t("title");
+  // Split on the last word so the ghost-letter motion lands on a single
+  // visually-anchored token instead of the entire heading. Works for
+  // EN ("Systems & surfaces") and ZH ("系统与界面") — both split cleanly
+  // by their final whitespace-or-character group.
+  const lastSpace = titleRaw.lastIndexOf(" ");
+  const titleHead = lastSpace > 0 ? titleRaw.slice(0, lastSpace + 1) : "";
+  const titleTail = lastSpace > 0 ? titleRaw.slice(lastSpace + 1) : titleRaw;
+
   return (
-    <section className="border-b">
-      <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+    <section
+      data-snap="section"
+      className="relative isolate flex min-h-dvh flex-col justify-center border-b"
+    >
+      <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
         {/* No `index` prop — the doc's "05 / capabilities" mono prefix
           * already lives inside the eyebrow string, so passing both would
           * paint "05" twice on the same line. */}
         <SectionFrame
           eyebrow={t("eyebrow")}
-          title={t("title")}
+          title={
+            <>
+              {titleHead}
+              <GhostedWord text={titleTail} ghosts={5} spread={22} />
+            </>
+          }
           lede={t("lede")}
         />
         {/* `divide-y divide-dashed` paints the dotted rule between rows

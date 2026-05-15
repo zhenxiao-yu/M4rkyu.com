@@ -22,7 +22,7 @@ function PinnedPostCardClone({ post }: { post: Post }) {
         </span>
         {isDraft ? <DraftBadge label={post.status} /> : null}
       </div>
-      <h3 className="font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight text-balance sm:text-3xl">
+      <h3 className="font-heading text-2xl font-semibold leading-tight text-balance sm:text-3xl">
         {post.title}
         <ArrowUpRight
           aria-hidden="true"

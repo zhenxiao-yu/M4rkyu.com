@@ -46,25 +46,25 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       if (!root) return;
 
       const eyebrow = root.querySelector<HTMLElement>('[data-boot="eyebrow"]');
-      const cornerDisplay = root.querySelector<HTMLElement>(
-        '[data-boot="corner-display"]',
-      );
       const subtitle = root.querySelector<HTMLElement>('[data-boot="subtitle"]');
-      const preview = root.querySelector<HTMLElement>('[data-boot="preview"]');
       const ctas = root.querySelectorAll<HTMLElement>('[data-boot="ctas"] > *');
-      const panel = root.querySelector<HTMLElement>('[data-boot="panel"]');
       const hud = root.querySelector<HTMLElement>('[data-boot="hud"]');
 
       // Hide the elements we orchestrate. The headline is intentionally
       // not in this list — SplitHeadline runs its own char-stagger and
       // plays in parallel.
+      //
+      // Beats (sparser hero post wodniack rebuild — corner display
+      // retired so this stays a flat 4-beat reveal):
+      //   t=0.00  eyebrow
+      //   t=0.20  headline (SplitHeadline auto-plays in parallel)
+      //   t=0.35  subtitle
+      //   t=0.50  ctas (stagger)
+      //   t=0.80  hud strip
       const eased = motionTokens.easePremium;
       gsap.set(eyebrow, { opacity: 0, y: 8 });
-      gsap.set(cornerDisplay, { opacity: 0, y: 12 });
       gsap.set(subtitle, { opacity: 0, y: 12 });
-      gsap.set(preview, { opacity: 0, scale: 0.85 });
       gsap.set(ctas, { opacity: 0, y: 12 });
-      gsap.set(panel, { opacity: 0, y: 16, scale: 0.985 });
       gsap.set(hud, { opacity: 0, y: 8 });
 
       const tl = gsap.timeline();
@@ -75,28 +75,6 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
         ease: eased,
       })
         .to(
-          cornerDisplay,
-          {
-            opacity: 1,
-            y: 0,
-            duration: motionTokens.slow,
-            ease: eased,
-          },
-          0.15,
-        )
-        // Headline beat: SplitHeadline auto-plays at t=0.20.
-        .to(
-          panel,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: motionTokens.slow,
-            ease: eased,
-          },
-          0.3,
-        )
-        .to(
           subtitle,
           {
             opacity: 1,
@@ -104,7 +82,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             duration: motionTokens.base,
             ease: eased,
           },
-          0.4,
+          0.35,
         )
         .to(
           ctas,
@@ -115,17 +93,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             stagger: 0.08,
             ease: eased,
           },
-          0.65,
-        )
-        .to(
-          preview,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: motionTokens.base,
-            ease: eased,
-          },
-          0.8,
+          0.5,
         )
         .to(
           hud,
@@ -135,7 +103,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             duration: motionTokens.fast,
             ease: eased,
           },
-          0.95,
+          0.8,
         );
     },
     { dependencies: [reduceMotion], scope: scopeRef },
