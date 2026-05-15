@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Galaxy } from "@/components/ui/magic/galaxy";
 import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
-import { SplitHeadline } from "./split-headline";
+import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
@@ -132,17 +132,19 @@ export async function HeroSection({ locale }: { locale: Locale }) {
               data-boot="headline"
               className="font-display w-full px-2 pt-4 pb-3 text-center text-[clamp(2.25rem,6.25vw,7.5rem)] font-black leading-[0.9] tracking-[-0.04em] sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pt-5 sm:pb-5"
             >
-              {/* Mobile: plain text + star, wraps. Desktop: SplitHeadline
-                * around each word, with the star between, all on one line. */}
+              {/* Mobile: plain text + star, wraps. Desktop: Shuffle reel
+                * around each word, with the star between, all on one line.
+                * StarGlyph drops to currentColor so it tracks the headline
+                * across themes. */}
               <span className="sm:hidden">
-                {titleA}{" "}
-                <StarGlyph className="-mt-1 inline-block size-[0.65em] align-middle text-ring" />{" "}
-                {titleB}
+                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}{" "}
+                <StarGlyph className="-mt-1 inline-block size-[0.65em] align-middle" />{" "}
+                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
               </span>
               <span className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]">
-                {locale === "en" ? <SplitHeadline text={titleA} /> : titleA}
-                <StarGlyph className="inline-block size-[0.55em] shrink-0 self-center text-ring" />
-                {locale === "en" ? <SplitHeadline text={titleB} /> : titleB}
+                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
+                <StarGlyph className="inline-block size-[0.55em] shrink-0 self-center" />
+                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
               </span>
             </h1>
           </div>
@@ -157,10 +159,33 @@ export async function HeroSection({ locale }: { locale: Locale }) {
 }
 
 /**
+ * Headline word — single set of Shuffle props in one place. Tuned as
+ * an ambient detail: short scramble, small motion travel, long pause
+ * between loops so the eye lands on the word, not the animation.
+ */
+function HeadlineShuffle({ text }: { text: string }) {
+  return (
+    <Shuffle
+      text={text}
+      duration={0.45}
+      density={0.25}
+      loop
+      loopDelay={4}
+      triggerOnHover
+      shuffleDirection="up"
+    />
+  );
+}
+
+/**
  * Thin marquee strip used as the binary-feed bookends around the
  * headline. Doubled track for seamless loop. Reduced-motion → static.
  * `reverse` flips direction (used for the bottom strip so the two
  * read as a frame, not a parallel pair).
+ *
+ * Each feed segment is a `DecryptedText animateOn="hover"` — pointing
+ * at the strip scrambles the glyphs that segment shows and resolves
+ * back when the cursor leaves.
  */
 function BinaryMarquee({
   feed,
@@ -179,10 +204,18 @@ function BinaryMarquee({
         className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/55 motion-safe:animate-[marquee_38s_linear_infinite]"
         style={reverse ? { animationDirection: "reverse" } : undefined}
       >
-        <span>{feed}</span>
-        <span>{feed}</span>
-        <span>{feed}</span>
-        <span>{feed}</span>
+        {[0, 1, 2, 3].map((i) => (
+          <DecryptedText
+            key={i}
+            text={feed}
+            animateOn="hover"
+            sequential
+            speed={22}
+            useOriginalCharsOnly
+            className="text-foreground/55"
+            encryptedClassName="text-foreground/30"
+          />
+        ))}
       </div>
     </div>
   );

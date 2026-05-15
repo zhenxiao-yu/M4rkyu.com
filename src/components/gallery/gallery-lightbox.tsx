@@ -199,7 +199,7 @@ export function GalleryLightbox({
                 <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
                   {tGallery("fromCollection")}
                 </p>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {related.map((item) => (
                     <button
                       key={item.slug}

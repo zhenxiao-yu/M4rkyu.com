@@ -273,6 +273,11 @@
 
 html {
   scroll-behavior: auto;
+  /* Reserve the scrollbar gutter even on pages whose content fits the
+   * viewport. Without this, navigating from a tall page (with scrollbar)
+   * to a short page (without) shifts the layout horizontally by the
+   * scrollbar's width — reads as a content "twitch" between routes. */
+  scrollbar-gutter: stable;
 }
 
 h1 {

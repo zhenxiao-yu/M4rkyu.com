@@ -75,7 +75,7 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
       <p className="mb-4 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
         {t("hoverHint")}
       </p>
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {orderedItems.map((item) => (
           <FrameTile
             key={item.slug}
@@ -214,7 +214,7 @@ function FrameThumb({
       {(item.capturedAt || item.location) && hasImage ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-background/85 via-background/40 to-transparent px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-foreground opacity-0 transition-opacity duration-(--motion-base) ease-(--ease-premium) group-hover:opacity-100 group-focus-visible:opacity-100"
+          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-linear-to-t from-background/85 via-background/40 to-transparent px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-foreground opacity-0 transition-opacity duration-(--motion-base) ease-(--ease-premium) group-hover:opacity-100 group-focus-visible:opacity-100"
         >
           {item.location ? (
             <span className="truncate">{item.location}</span>

@@ -9,7 +9,7 @@ import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
-import { GooeyNav } from "@/components/ui/magic/gooey-nav";
+import { PillNav } from "@/components/ui/magic/pill-nav";
 import { getPosts } from "@/lib/blog/get-posts";
 import { MobileNav } from "./mobile-nav";
 import { buildNavStructure, type NavLabels } from "./nav-structure";
@@ -73,7 +73,7 @@ export async function Header({ locale }: { locale: Locale }) {
           locale={locale}
           className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-xl px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:scale-105 group-active:scale-100">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100">
             M4
           </span>
           <span className="hidden truncate tracking-wide sm:inline">
@@ -81,13 +81,13 @@ export async function Header({ locale }: { locale: Locale }) {
           </span>
         </Link>
 
-        {/* Center: GooeyNav (lg+ only — mobile uses the sheet via
+        {/* Center: PillNav (lg+ only — mobile uses the sheet via
           * MobileNav). The pill snaps to the active route on first
           * paint via pathname-driven activeIndex; clicking another
-          * item morphs the pill + spawns a particle burst (12
-          * particles, 500ms variance, 500px radius — user-tuned). */}
+          * item slides the pill across via motion's shared layout
+          * transition. */}
         <div className="hidden flex-1 justify-center lg:flex">
-          <GooeyNav items={navItems} />
+          <PillNav items={navItems} />
         </div>
 
         {/* Desktop right rail (lg+) */}

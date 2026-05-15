@@ -2,6 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -121,13 +122,15 @@ function Frame({
             className="w-full"
           />
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={frame.src}
-            alt={frame.alt ?? caption}
-            className="aspect-4/5 w-full rounded-md border object-cover"
-            loading="lazy"
-          />
+          <div className="relative aspect-4/5 w-full overflow-hidden rounded-md border bg-muted">
+            <Image
+              src={frame.src!}
+              alt={frame.alt ?? caption}
+              fill
+              sizes="(max-width: 768px) 100vw, 45vw"
+              className="object-cover"
+            />
+          </div>
         )}
       </div>
       <div>

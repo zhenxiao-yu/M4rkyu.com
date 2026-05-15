@@ -138,9 +138,12 @@ function CollectionRailCard({
     <Link
       href={href}
       locale={locale}
-      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
+      className="group block focus-visible:outline-none"
     >
-      <Card className="h-full bg-card/80 transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) group-hover:border-ring group-hover:shadow-md">
+      {/* Focus ring lives on the Card so it traces the visible card
+        * shape (lg radius) instead of a rounded-md rectangle around
+        * the bare Link wrapper. */}
+      <Card className="h-full bg-card/80 transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) group-hover:border-ring group-hover:shadow-md group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background">
         <CardHeader className="gap-2">
           <div className="flex items-center justify-between gap-2">
             <Badge

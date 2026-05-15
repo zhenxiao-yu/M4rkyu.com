@@ -186,9 +186,12 @@ function ProjectTile({
         // TiltedCard handles the lift + glare on hover, so the inner
         // article only animates border-color + shadow here (no
         // duplicate translate / scale fight).
-        "group relative isolate flex h-full overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-[box-shadow,border-color] duration-(--motion-base) ease-(--ease-premium)",
+        "group relative isolate flex h-full overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-[box-shadow,border-color,filter,opacity] duration-(--motion-base) ease-(--ease-premium)",
         isReady && "hover:border-ring/60 hover:shadow-xl hover:shadow-black/20",
-        isDraft && "opacity-70",
+        // Drafts read as inactive at rest (desaturated + dimmed) but
+        // restore to full color/opacity on hover so the user can
+        // sample what's coming without losing the visual hierarchy.
+        isDraft && "opacity-60 grayscale hover:opacity-100 hover:grayscale-0",
       )}
     >
       <div className={cn("relative w-full overflow-hidden bg-muted", aspect)}>

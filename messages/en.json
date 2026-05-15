@@ -211,7 +211,12 @@
     "savedClearConfirm": "Are you sure? This cannot be undone.",
     "savedConfirm": "Confirm clear",
     "savedCancel": "Cancel",
-    "featured": "featured"
+    "featured": "featured",
+    "collectionEyebrow": "collection",
+    "plannedFramesCount": "{count, plural, =0 {no planned frames} one {# planned frame} other {# planned frames}}",
+    "finalImagesTbd": "Final images TBD",
+    "collectionMediaPendingTitle": "Collection media pending",
+    "collectionMediaPendingDescription": "Final gallery images land here after optimisation and metadata review."
   },
   "Social": {
     "like": "Like",
@@ -275,6 +280,9 @@
     "searchLabel": "Search",
     "searchPlaceholder": "Filter by name or stack…",
     "noMatches": "No projects match this filter.",
+    "noMatchesHint": "Try widening the year, clearing search, or jumping back to all categories.",
+    "clearFilters": "Clear all filters",
+    "clearSearch": "Clear search",
     "draftsHeading": "Drafts in development",
     "draftsCount": "{count, plural, =0 {no drafts} one {# draft hidden} other {# drafts hidden}}",
     "noProductionMatches": "{count, plural, =0 {No matches.} one {No production projects match — # draft hidden below.} other {No production projects match — # drafts hidden below.}}"
@@ -344,7 +352,18 @@
     "relatedHeading": "Related reading",
     "originallyPublished": "originally published",
     "originallyPublishedNote": "This post first ran on dev.to. Comments and reactions live there.",
-    "continueOnDevto": "Continue on dev.to"
+    "continueOnDevto": "Continue on dev.to",
+    "clearSearch": "Clear search",
+    "viewOnDevto": "View on dev.to",
+    "discuss": "Discuss",
+    "syndicatedHeader": "syndicated · dev.to / @{username}",
+    "metaPublished": "Published",
+    "metaReadingTime": "Reading time",
+    "metaReactions": "Reactions",
+    "metaComments": "Comments",
+    "viewModeLabel": "View",
+    "viewModeList": "List",
+    "viewModeGrid": "Grid"
   },
   "About": {
     "title": "About Mark",

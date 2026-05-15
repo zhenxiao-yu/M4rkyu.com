@@ -1,26 +1,29 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { BlogToolbar } from "@/components/blog/blog-toolbar";
+import { useViewMode } from "@/components/blog/use-view-mode";
 import { PostListItem } from "@/components/cards/post-list-item";
+import { PostCard } from "@/components/cards/post-card";
 import type { Post } from "@/content/schemas";
 
 interface BlogTimelineProps {
   posts: Post[];
 }
 
-const PAGE_SIZE = 10;
-
 /**
  * Client wrapper around the `/logs` timeline. Owns:
  *
  * - URL-synced filter state (`?q=` + `?tag=`).
  * - Substring search over `title + excerpt + tags`.
- * - Batched render (`PAGE_SIZE` rows at a time) gated by an
- *   `IntersectionObserver` sentinel so the DOM never holds all
- *   ~50 posts at once on first paint.
+ *
+ * All filtered posts render at once. The previous IntersectionObserver
+ * batched-paging approach grew the document height as the user scrolled,
+ * which made the scrollbar handle deceptive — the user would scroll to
+ * what looked like the end, only for more cards to load below them.
+ * Stable layout > marginal initial-render savings for ~50-post archives.
  */
 export function BlogTimeline({ posts }: BlogTimelineProps) {
   const router = useRouter();
@@ -28,6 +31,7 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
   const t = useTranslations("Blog");
+  const [viewMode, setViewMode] = useViewMode();
 
   // Rank tags by frequency so the toolbar's top-N slot picks the
   // ones that actually filter useful slices of the archive.
@@ -93,44 +97,6 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
     });
   }, [posts, activeTag, query]);
 
-  // --- Batched render via IntersectionObserver ---------------------
-  const [visible, setVisible] = useState(PAGE_SIZE);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  // Reset the window when the filter signature changes so the user
-  // doesn't end up with `visible > filtered.length` for the new slice.
-  // The "setState during render" pattern documented at
-  // https://react.dev/reference/react/useState#storing-information-from-previous-renders
-  // — cheaper than an effect + no cascading render warning.
-  const filterSig = `${activeTag ?? ""}::${query}`;
-  const [trackedSig, setTrackedSig] = useState(filterSig);
-  if (trackedSig !== filterSig) {
-    setTrackedSig(filterSig);
-    setVisible(PAGE_SIZE);
-  }
-
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node) return;
-    if (visible >= filtered.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setVisible((prev) => Math.min(prev + PAGE_SIZE, filtered.length));
-            break;
-          }
-        }
-      },
-      { rootMargin: "320px 0px" },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [visible, filtered.length]);
-
-  const slice = filtered.slice(0, visible);
-  const exhausted = visible >= filtered.length;
-
   return (
     <>
       <BlogToolbar
@@ -141,6 +107,8 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
         onTagChange={setTag}
         filteredCount={filtered.length}
         totalCount={posts.length}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
       {filtered.length === 0 ? (
@@ -149,26 +117,32 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
         </p>
       ) : (
         <>
-          <ol className="mt-8 grid gap-1 divide-y divide-border/60">
-            {slice.map((post) => (
-              <li key={post.slug}>
-                <PostListItem post={post} />
-              </li>
-            ))}
-          </ol>
-          {exhausted ? (
-            <p className="mt-8 text-center font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-              {t("endOfResults", { count: filtered.length })}
-            </p>
+          {viewMode === "grid" ? (
+            <ol className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((post, i) => (
+                <li key={post.slug} className="h-full">
+                  {/* First two cards above the fold get priority cover
+                      preloads; the rest fall back to next/image's
+                      default lazy-loading. */}
+                  <PostCard post={post} priority={i < 2} />
+                </li>
+              ))}
+            </ol>
           ) : (
-            <div
-              ref={sentinelRef}
-              aria-hidden="true"
-              className="mt-8 h-px w-full"
-            />
+            <ol className="mt-8 grid gap-1 divide-y divide-border/60">
+              {filtered.map((post) => (
+                <li key={post.slug}>
+                  <PostListItem post={post} />
+                </li>
+              ))}
+            </ol>
           )}
+          <p className="mt-8 text-center font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
+            {t("endOfResults", { count: filtered.length })}
+          </p>
         </>
       )}
     </>
   );
 }
+

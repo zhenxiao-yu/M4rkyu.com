@@ -14,15 +14,17 @@ import { cn } from "@/lib/utils";
  * optional mouse repulsion field.
  *
  * Adapted for M4rkyu:
- *   - Reduced-motion: short-circuits, paints one static frame, then
- *     stops the RAF loop. The starfield is still visible (atmosphere)
- *     but nothing animates.
+ *   - Reduced-motion: paints one static frame, then stops the RAF loop.
+ *     The starfield stays visible as atmosphere; nothing animates.
+ *   - `disableAnimation` prop mirrors the upstream API for callers that
+ *     want to force the static frame regardless of OS preference.
  *   - IntersectionObserver pauses the RAF loop when the container is
  *     off-screen so it costs nothing on inactive sections.
- *   - Container resize observer keeps the canvas sized correctly when
- *     the section grows / collapses.
- *   - Defaults tuned for the M4rkyu hero — `hueShift=200` for cyan-
- *     ring tint, `density=0.9`, `glowIntensity=0.35`, `twinkle=0.45`.
+ *   - ResizeObserver keeps the canvas sized correctly when the section
+ *     grows/collapses (e.g. hero pinned to dvh on mobile address-bar
+ *     show/hide).
+ *   - Wrapper opts out of pointer events when `mouseInteraction` is
+ *     off so the backdrop doesn't swallow clicks under the hero.
  *
  * Bundle: ~12 kB minified including OGL's tree-shaken bits.
  */
@@ -32,8 +34,9 @@ interface GalaxyProps {
   rotation?: [number, number];
   starSpeed?: number;
   density?: number;
-  /** Hue offset in degrees. Defaults to 200 for cool cyan tint. */
   hueShift?: number;
+  /** Force static frame regardless of OS reduced-motion preference. */
+  disableAnimation?: boolean;
   speed?: number;
   mouseInteraction?: boolean;
   glowIntensity?: number;
@@ -218,16 +221,17 @@ void main() {
 export function Galaxy({
   focal = [0.5, 0.5],
   rotation = [1.0, 0.0],
-  starSpeed = 0.4,
-  density = 0.9,
-  hueShift = 200,
+  starSpeed = 0.5,
+  density = 1,
+  hueShift = 140,
+  disableAnimation = false,
   speed = 1.0,
   mouseInteraction = true,
-  glowIntensity = 0.35,
+  glowIntensity = 0.3,
   saturation = 0.0,
   mouseRepulsion = true,
-  twinkleIntensity = 0.45,
-  rotationSpeed = 0.08,
+  twinkleIntensity = 0.3,
+  rotationSpeed = 0.1,
   repulsionStrength = 2,
   autoCenterRepulsion = 0,
   transparent = true,
@@ -239,6 +243,7 @@ export function Galaxy({
   const targetActive = useRef(0);
   const smoothActive = useRef(0);
   const reduce = useReducedMotion();
+  const staticFrame = disableAnimation || reduce;
 
   useEffect(() => {
     const ctn = ctnRef.current;
@@ -301,6 +306,8 @@ export function Galaxy({
 
     resize();
     window.addEventListener("resize", resize);
+    const ro = new ResizeObserver(resize);
+    ro.observe(ctn);
 
     const mesh = new Mesh(gl, { geometry, program });
 
@@ -325,8 +332,22 @@ export function Galaxy({
       raf = requestAnimationFrame(frame);
     }
 
-    function onMouseMove(e: MouseEvent) {
+    // Window-level pointer tracking so the canvas still reacts to
+    // the cursor when foreground UI sits on top with default
+    // pointer-events. We hit-test against the container's bounding
+    // rect each event — outside the rect, the cursor is treated as
+    // "inactive" so the parallax decays back to centered.
+    function onMouseMove(e: PointerEvent | MouseEvent) {
       const rect = ctn!.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+      if (!inside) {
+        targetActive.current = 0.0;
+        return;
+      }
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1.0 - (e.clientY - rect.top) / rect.height;
       targetMouse.current = { x, y };
@@ -337,18 +358,20 @@ export function Galaxy({
     }
 
     if (mouseInteraction) {
-      ctn.addEventListener("mousemove", onMouseMove);
-      ctn.addEventListener("mouseleave", onMouseLeave);
+      window.addEventListener("pointermove", onMouseMove, { passive: true });
+      window.addEventListener("blur", onMouseLeave);
     }
 
     ctn.appendChild(gl.canvas);
 
-    if (reduce) {
-      // Single static frame, then stop.
+    let io: IntersectionObserver | null = null;
+
+    if (staticFrame) {
+      // Paint one static frame; skip the RAF loop entirely.
       program.uniforms.uTime.value = 0;
       renderer.render({ scene: mesh });
     } else {
-      const io = new IntersectionObserver(
+      io = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting && !running) {
             running = true;
@@ -361,26 +384,17 @@ export function Galaxy({
         { threshold: 0 },
       );
       io.observe(ctn);
-
-      return () => {
-        io.disconnect();
-        cancelAnimationFrame(raf);
-        running = false;
-        window.removeEventListener("resize", resize);
-        if (mouseInteraction) {
-          ctn.removeEventListener("mousemove", onMouseMove);
-          ctn.removeEventListener("mouseleave", onMouseLeave);
-        }
-        if (gl.canvas.parentNode === ctn) ctn.removeChild(gl.canvas);
-        gl.getExtension("WEBGL_lose_context")?.loseContext();
-      };
     }
 
     return () => {
+      io?.disconnect();
+      cancelAnimationFrame(raf);
+      running = false;
       window.removeEventListener("resize", resize);
+      ro.disconnect();
       if (mouseInteraction) {
-        ctn.removeEventListener("mousemove", onMouseMove);
-        ctn.removeEventListener("mouseleave", onMouseLeave);
+        window.removeEventListener("pointermove", onMouseMove);
+        window.removeEventListener("blur", onMouseLeave);
       }
       if (gl.canvas.parentNode === ctn) ctn.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
@@ -401,14 +415,17 @@ export function Galaxy({
     repulsionStrength,
     autoCenterRepulsion,
     transparent,
-    reduce,
+    staticFrame,
   ]);
 
   return (
     <div
       ref={ctnRef}
       aria-hidden="true"
-      className={cn("pointer-events-auto absolute inset-0 size-full", className)}
+      className={cn(
+        "pointer-events-none absolute inset-0 size-full",
+        className,
+      )}
     />
   );
 }

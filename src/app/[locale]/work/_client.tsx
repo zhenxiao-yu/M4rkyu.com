@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, FilterX, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ProjectCard } from "@/components/cards/project-card";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,7 @@ import {
 import { WorkDeckReveal } from "@/components/sections/work-deck-reveal";
 import type { Project } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
   { labelKey: "all", value: null },
@@ -124,28 +125,47 @@ export function ProjectsClient({
     [filtered],
   );
 
+  // True when the user has narrowed from the default view — drives
+  // both the empty-state CTA and the chip-row "Clear" affordance.
+  const hasActiveFilters =
+    activeCategory !== null || activeYear !== ALL_YEARS || query.trim() !== "";
+
+  function clearAllFilters() {
+    setQuery("");
+    startTransition(() => {
+      router.replace(pathname, { scroll: false });
+    });
+  }
+
   return (
     <>
       <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
         <div className="flex flex-wrap items-center gap-2">
-          {FILTERS.map(({ labelKey, value }) => (
-            <Button
-              key={labelKey}
-              onClick={() => updateUrl({ category: value })}
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-auto p-0 hover:bg-transparent"
-              aria-pressed={activeCategory === value}
-            >
-              <Badge
-                variant={activeCategory === value ? "success" : "outline"}
-                className="cursor-pointer transition-colors"
+          {FILTERS.map(({ labelKey, value }) => {
+            const active = activeCategory === value;
+            return (
+              <Button
+                key={labelKey}
+                onClick={() => updateUrl({ category: value })}
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
+                aria-pressed={active}
               >
-                {value === null ? t("filterAll") : tCategories(value)}
-              </Badge>
-            </Button>
-          ))}
+                <Badge
+                  variant={active ? "success" : "outline"}
+                  className={cn(
+                    "cursor-pointer transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
+                    !active &&
+                      "hover:border-foreground/40 hover:text-foreground",
+                  )}
+                >
+                  {value === null ? t("filterAll") : tCategories(value)}
+                </Badge>
+              </Button>
+            );
+          })}
           <span className="ml-2 font-mono text-xs text-muted-foreground">
             {filtered.length} / {projects.length}
           </span>
@@ -180,11 +200,11 @@ export function ProjectsClient({
             </span>
             <span className="relative">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2"
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
               />
               <Input
-                className="pl-9"
+                className="pl-9 pr-9"
                 name="project-search"
                 autoComplete="off"
                 placeholder={t("searchPlaceholder")}
@@ -194,15 +214,52 @@ export function ProjectsClient({
                   updateUrl({ q: e.target.value });
                 }}
               />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    updateUrl({ q: "" });
+                  }}
+                  aria-label={t("clearSearch")}
+                  className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
+                >
+                  <X aria-hidden="true" className="size-3.5" />
+                </button>
+              ) : null}
             </span>
           </label>
         </div>
       </div>
 
       {production.length === 0 && drafts.length === 0 ? (
-        <p className="mt-16 text-center font-mono text-sm text-muted-foreground">
-          {t("noMatches")}
-        </p>
+        <div className="mx-auto mt-16 flex max-w-md flex-col items-center gap-4 rounded-xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center">
+          <div
+            aria-hidden="true"
+            className="grid size-12 place-items-center rounded-full border border-border bg-background text-muted-foreground"
+          >
+            <FilterX className="size-5" />
+          </div>
+          <div className="space-y-1.5">
+            <p className="font-mono text-sm uppercase tracking-[0.16em] text-foreground">
+              {t("noMatches")}
+            </p>
+            <p className="text-sm leading-6 text-muted-foreground">
+              {t("noMatchesHint")}
+            </p>
+          </div>
+          {hasActiveFilters ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={clearAllFilters}
+              className="mt-1"
+            >
+              {t("clearFilters")}
+            </Button>
+          ) : null}
+        </div>
       ) : null}
 
       {production.length > 0 ? (

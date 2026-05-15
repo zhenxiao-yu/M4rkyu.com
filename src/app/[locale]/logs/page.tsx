@@ -65,7 +65,7 @@ export default async function BlogPage({
                     href={`https://dev.to/${DEVTO_USERNAME}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-foreground underline-offset-4 hover:underline"
+                    className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     dev.to / @{DEVTO_USERNAME}
                   </a>

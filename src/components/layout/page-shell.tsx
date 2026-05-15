@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { PageFade } from "@/components/motion/page-fade";
 import { RouteAttribute } from "@/components/system/route-attribute";
+import { ScrollProgress } from "@/components/system/scroll-progress";
 import { ClickSpark } from "@/components/ui/magic/click-spark";
 
 export async function PageShell({
@@ -16,6 +17,7 @@ export async function PageShell({
   return (
     <div className="flex min-h-dvh flex-col">
       <RouteAttribute />
+      <ScrollProgress />
       {/* Site-wide click sparks only. The MouseFollower ring was
         * removed in the polish pass — its mix-blend-difference circle
         * read as a random floating artifact against typographic

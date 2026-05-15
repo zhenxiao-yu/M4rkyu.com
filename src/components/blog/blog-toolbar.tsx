@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
+import { LayoutGrid, List, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import type { BlogViewMode } from "./use-view-mode";
 
 interface TagEntry {
   tag: string;
@@ -26,6 +28,9 @@ interface BlogToolbarProps {
   /** Visible-count display: "n / total". */
   filteredCount: number;
   totalCount: number;
+  /** Persisted view-mode (list vs grid). */
+  viewMode: BlogViewMode;
+  onViewModeChange: (mode: BlogViewMode) => void;
 }
 
 const TOP_N = 6;
@@ -45,6 +50,8 @@ export function BlogToolbar({
   onTagChange,
   filteredCount,
   totalCount,
+  viewMode,
+  onViewModeChange,
 }: BlogToolbarProps) {
   const t = useTranslations("Blog");
   const searchId = useId();
@@ -81,38 +88,18 @@ export function BlogToolbar({
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-start">
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="h-auto p-0 hover:bg-transparent"
-          aria-pressed={activeTag === null}
+        <TagChip
+          active={activeTag === null}
           onClick={() => onTagChange(null)}
-        >
-          <Badge
-            variant={activeTag === null ? "success" : "outline"}
-            className="cursor-pointer transition-colors"
-          >
-            {t("tagAll")}
-          </Badge>
-        </Button>
+          label={t("tagAll")}
+        />
         {topTags.map(({ tag }) => (
-          <Button
+          <TagChip
             key={tag}
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-auto p-0 hover:bg-transparent"
-            aria-pressed={activeTag === tag}
+            active={activeTag === tag}
             onClick={() => onTagChange(tag)}
-          >
-            <Badge
-              variant={activeTag === tag ? "success" : "outline"}
-              className="cursor-pointer transition-colors"
-            >
-              {tag}
-            </Badge>
-          </Button>
+            label={tag}
+          />
         ))}
         {restTags.length > 0 ? (
           <div ref={moreRef} className="relative">
@@ -120,7 +107,7 @@ export function BlogToolbar({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-auto p-0 hover:bg-transparent"
+              className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
               aria-expanded={moreOpen}
               aria-controls={moreId}
               aria-label={t("tagMoreOpen")}
@@ -128,7 +115,11 @@ export function BlogToolbar({
             >
               <Badge
                 variant={activeInRest ? "success" : "outline"}
-                className="cursor-pointer transition-colors"
+                className={cn(
+                  "cursor-pointer transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
+                  !activeInRest &&
+                    "hover:border-foreground/40 hover:text-foreground",
+                )}
               >
                 {t("tagMore")} +{restTags.length}
               </Badge>
@@ -140,28 +131,23 @@ export function BlogToolbar({
                 className="absolute left-0 top-full z-20 mt-2 flex max-h-72 w-64 flex-wrap gap-1.5 overflow-y-auto rounded-md border border-border bg-popover p-3 shadow-md"
               >
                 {restTags.map(({ tag, count }) => (
-                  <Button
+                  <TagChip
                     key={tag}
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 hover:bg-transparent"
-                    aria-pressed={activeTag === tag}
+                    active={activeTag === tag}
                     onClick={() => {
                       onTagChange(tag);
                       setMoreOpen(false);
                     }}
-                  >
-                    <Badge
-                      variant={activeTag === tag ? "success" : "outline"}
-                      className="cursor-pointer gap-1.5 transition-colors"
-                    >
-                      <span>{tag}</span>
-                      <span className="font-mono text-[0.55rem] text-muted-foreground">
-                        {count}
-                      </span>
-                    </Badge>
-                  </Button>
+                    label={
+                      <>
+                        <span>{tag}</span>
+                        <span className="font-mono text-[0.55rem] text-muted-foreground">
+                          {count}
+                        </span>
+                      </>
+                    }
+                    extraBadgeClass="gap-1.5"
+                  />
                 ))}
               </div>
             ) : null}
@@ -172,9 +158,17 @@ export function BlogToolbar({
         </span>
       </div>
 
-      <label htmlFor={searchId} className="block">
-        <span className="sr-only">{t("searchLabel")}</span>
-        <span className="relative block lg:w-72">
+      <div className="flex items-center gap-2 lg:justify-end">
+        <ViewModeToggle
+          value={viewMode}
+          onChange={onViewModeChange}
+          label={t("viewModeLabel")}
+          listLabel={t("viewModeList")}
+          gridLabel={t("viewModeGrid")}
+        />
+        <label htmlFor={searchId} className="block flex-1 lg:flex-initial">
+          <span className="sr-only">{t("searchLabel")}</span>
+          <span className="relative block lg:w-72">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
@@ -193,15 +187,127 @@ export function BlogToolbar({
               type="button"
               variant="ghost"
               size="sm"
-              aria-label="Clear search"
+              aria-label={t("clearSearch")}
               className="absolute right-1 top-1/2 size-7 -translate-y-1/2 rounded-sm p-0 hover:bg-muted"
               onClick={() => onQueryChange("")}
             >
               <X aria-hidden="true" className="size-3.5" />
             </Button>
           ) : null}
-        </span>
-      </label>
+          </span>
+        </label>
+      </div>
     </div>
+  );
+}
+
+/**
+ * Three-state segmented toggle: List ↔ Grid. Persists via the parent
+ * (which owns `useViewMode`). Hidden below `sm` because mobile only
+ * has room for the list layout regardless of preference.
+ */
+function ViewModeToggle({
+  value,
+  onChange,
+  label,
+  listLabel,
+  gridLabel,
+}: {
+  value: BlogViewMode;
+  onChange: (next: BlogViewMode) => void;
+  label: string;
+  listLabel: string;
+  gridLabel: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={label}
+      className="hidden items-center gap-0.5 rounded-md border border-border bg-muted/30 p-0.5 sm:flex"
+    >
+      <ToggleButton
+        active={value === "list"}
+        onClick={() => onChange("list")}
+        aria-label={listLabel}
+      >
+        <List aria-hidden="true" className="size-3.5" />
+      </ToggleButton>
+      <ToggleButton
+        active={value === "grid"}
+        onClick={() => onChange("grid")}
+        aria-label={gridLabel}
+      >
+        <LayoutGrid aria-hidden="true" className="size-3.5" />
+      </ToggleButton>
+    </div>
+  );
+}
+
+function ToggleButton({
+  active,
+  onClick,
+  children,
+  ...rest
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "children">) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "grid size-7 place-items-center rounded-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        active
+          ? "bg-foreground text-background"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+      )}
+      {...rest}
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
+ * Single filter chip used by both the inline tag rail and the
+ * "More" dropdown. Centralising avoids the focus-ring + hover-state
+ * drift that crept in across the three previous inline copies.
+ */
+function TagChip({
+  active,
+  onClick,
+  label,
+  extraBadgeClass,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: React.ReactNode;
+  extraBadgeClass?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      // rounded-full so the focus ring traces the chip shape; ring-
+      // offset tightened to 1 so the ring doesn't visually detach.
+      className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
+      aria-pressed={active}
+      onClick={onClick}
+    >
+      <Badge
+        variant={active ? "success" : "outline"}
+        className={cn(
+          "cursor-pointer transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
+          !active && "hover:border-foreground/40 hover:text-foreground",
+          extraBadgeClass,
+        )}
+      >
+        {label}
+      </Badge>
+    </Button>
   );
 }

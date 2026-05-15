@@ -1,4 +1,5 @@
 import { ArrowUpRight, Heart, MessageSquare } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
@@ -22,7 +23,7 @@ interface PostHeaderProps {
  * reactions, and comments. Renders a ring-color reading-progress
  * bar fixed to the bottom edge of the sticky site header.
  */
-export function PostHeader({
+export async function PostHeader({
   title,
   description,
   date,
@@ -33,6 +34,7 @@ export function PostHeader({
   commentsCount,
   username,
 }: PostHeaderProps) {
+  const t = await getTranslations("Blog");
   return (
     <header className="relative overflow-hidden border-b">
       <ReadingProgress />
@@ -43,7 +45,7 @@ export function PostHeader({
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-          syndicated · dev.to / @{username}
+          {t("syndicatedHeader", { username })}
         </p>
 
         <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl">
@@ -59,7 +61,7 @@ export function PostHeader({
          * never orphans the reactions count on the next line. */}
         <dl className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-5 sm:gap-y-2 sm:text-[0.65rem] sm:tracking-[0.2em]">
           <div className="flex items-center gap-2">
-            <dt className="sr-only">Published</dt>
+            <dt className="sr-only">{t("metaPublished")}</dt>
             <dd>{date}</dd>
           </div>
           <span
@@ -69,7 +71,7 @@ export function PostHeader({
             ·
           </span>
           <div className="flex items-center gap-2">
-            <dt className="sr-only">Reading time</dt>
+            <dt className="sr-only">{t("metaReadingTime")}</dt>
             <dd>{readingTime}</dd>
           </div>
           {reactionsCount > 0 ? (
@@ -82,7 +84,7 @@ export function PostHeader({
               </span>
               <div className="flex items-center gap-1.5">
                 <Heart aria-hidden="true" className="size-3 text-signal" />
-                <dt className="sr-only">Reactions</dt>
+                <dt className="sr-only">{t("metaReactions")}</dt>
                 <dd>{reactionsCount}</dd>
               </div>
             </>
@@ -100,7 +102,7 @@ export function PostHeader({
                   aria-hidden="true"
                   className="size-3 text-muted-foreground"
                 />
-                <dt className="sr-only">Comments</dt>
+                <dt className="sr-only">{t("metaComments")}</dt>
                 <dd>{commentsCount}</dd>
               </div>
             </>
@@ -128,7 +130,7 @@ export function PostHeader({
               target="_blank"
               rel="noopener noreferrer"
             >
-              View on dev.to
+              {t("viewOnDevto")}
               <ArrowUpRight aria-hidden="true" className="size-3.5" />
             </a>
           </Button>
@@ -143,7 +145,7 @@ export function PostHeader({
                   aria-hidden="true"
                   className="size-3.5"
                 />
-                Discuss
+                {t("discuss")}
               </a>
             </Button>
           ) : null}

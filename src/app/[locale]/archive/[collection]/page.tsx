@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageShell } from "@/components/layout/page-shell";
@@ -41,21 +42,23 @@ export default async function GalleryCollectionPage({
   const item = galleryCollections.find((entry) => entry.slug === collection);
   if (!item) notFound();
   const items = galleryItems.filter((entry) => entry.collection === item.slug);
+  const t = await getTranslations({ locale, namespace: "Gallery" });
+  const tbdLabel = t("frameTbd");
 
   return (
     <PageShell locale={locale}>
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading as="h1" eyebrow="collection" title={item.title} description={item.description} />
+        <SectionHeading as="h1" eyebrow={t("collectionEyebrow")} title={item.title} description={item.description} />
         <div className="mt-8 flex flex-wrap gap-2">
-          <Badge variant="outline">{item.count} planned frames</Badge>
+          <Badge variant="outline">{t("plannedFramesCount", { count: item.count })}</Badge>
           <Badge variant="warning">{item.status}</Badge>
-          <Badge variant="outline">Final images TBD</Badge>
+          <Badge variant="outline">{t("finalImagesTbd")}</Badge>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((entry, index) => (
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {items.map((entry) => (
             <Card key={entry.slug} className="overflow-hidden bg-card/80">
               <PlaceholderImage
-                label={index % 2 === 0 ? "COLLECTION IMAGE TBD" : "PROCESS FRAME TBD"}
+                label={tbdLabel}
                 aspect="aspect-4/5"
                 className="rounded-none border-0 border-b"
               />
@@ -74,7 +77,7 @@ export default async function GalleryCollectionPage({
           {Array.from({ length: Math.max(0, Math.min(item.count, 8) - items.length) }).map((_, index) => (
             <PlaceholderImage
               key={index}
-              label="MEDIA TBD"
+              label={tbdLabel}
               aspect="aspect-4/5"
               className="rounded-lg"
             />
@@ -83,8 +86,8 @@ export default async function GalleryCollectionPage({
         {items.length === 0 ? (
           <div className="mt-10">
             <EmptyArchiveState
-              title="Collection media pending"
-              description="Placeholder empty state: final gallery images will be added after optimization and metadata review."
+              title={t("collectionMediaPendingTitle")}
+              description={t("collectionMediaPendingDescription")}
             />
           </div>
         ) : null}

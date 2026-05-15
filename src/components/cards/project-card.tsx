@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { motion } from "motion/react"
+import { motion, useReducedMotion } from "motion/react"
 import { ArrowUpRight, Code } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
@@ -31,6 +31,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, locale, highlighted = false }: ProjectCardProps) {
   const t = useTranslations("Projects")
+  const reduce = useReducedMotion()
   const localized = localize(project, locale)
   const cover = project.screenshots[0]
   const isDraft = project.contentStatus !== "ready"
@@ -40,7 +41,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
 
   return (
     <motion.div
-      whileHover={{ y: -5 }}
+      whileHover={reduce ? undefined : { y: -5 }}
       transition={{ duration: 0.22, ease }}
       className="relative h-full"
     >
@@ -53,7 +54,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
               alt={cover.alt}
               fill
               sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover grayscale transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+              className="object-cover grayscale transition duration-500 group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
             />
           ) : (
             <PlaceholderImage label={t("mediaTbd")} aspect="h-full" className="rounded-none border-0" />

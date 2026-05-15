@@ -102,6 +102,16 @@ export function DecryptedText({
     setIsAnimating(true);
   }, [reduce, text]);
 
+  // Hover mode: re-arm (text returns to its resting decrypted state)
+  // so a subsequent hover replays the scramble cleanly.
+  const reset = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsAnimating(false);
+    setDisplayText(text);
+    setRevealedIndices(new Set());
+    setIsDecrypted(true);
+  }, [text]);
+
   // mount trigger
   useEffect(() => {
     if (animateOn !== "mount") return;
@@ -190,8 +200,22 @@ export function DecryptedText({
     };
   }, [isAnimating, text, speed, maxIterations, sequential, revealDirection, shuffleText]);
 
+  const hoverHandlers =
+    animateOn === "hover"
+      ? {
+          onMouseEnter: trigger,
+          onMouseLeave: reset,
+          onFocus: trigger,
+          onBlur: reset,
+        }
+      : undefined;
+
   return (
-    <motion.span ref={containerRef} className={cn("inline-block whitespace-pre-wrap", parentClassName)}>
+    <motion.span
+      ref={containerRef}
+      {...hoverHandlers}
+      className={cn("inline-block whitespace-pre-wrap", parentClassName)}
+    >
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {displayText.split("").map((char, i) => {

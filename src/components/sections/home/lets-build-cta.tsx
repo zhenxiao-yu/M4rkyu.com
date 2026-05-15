@@ -79,20 +79,23 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
           {t("body")}
         </p>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild variant="default" size="lg">
+        {/* CTA cluster. Below sm the buttons stack full-width so each
+          * primary action is a comfortable tap target on phones; from
+          * sm up they wrap inline with breathing room. */}
+        <div className="mt-10 flex flex-col items-stretch justify-center gap-2.5 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+          <Button asChild variant="default" size="lg" className="w-full sm:w-auto">
             <a href={`mailto:${profile.email}`}>
               <Mail className="size-4" aria-hidden="true" />
               {t("emailDirect")}
             </a>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
             <a href={githubHref} target="_blank" rel="noopener noreferrer">
               <Code2 className="size-4" aria-hidden="true" />
               GitHub
             </a>
           </Button>
-          <Button asChild variant="ghost" size="lg">
+          <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
             <Link href="/contact" locale={locale}>
               {t("sendBrief")}
               <ArrowRight className="size-4" aria-hidden="true" />
