@@ -130,33 +130,55 @@ export function CommandPalette({
     [],
   );
 
-  // Gold-standard iOS Safari modal lock. Radix's internal
-  // `react-remove-scroll` *should* already lock the page, but on
-  // mobile preview and some Safari versions the lock leaks — the page
-  // behind the palette scrolls when the user drags inside the result
-  // list. Belt and suspenders: pin <body> to position:fixed at the
-  // negative current scroll offset, so the page can't physically move
-  // while the dialog is mounted; restore on close and jump back.
+  // Maximum-aggression scroll lock. Three independent layers because
+  // each one has been observed to leak on its own:
+  //   1. `!important` inline body styles (position:fixed at -scrollY)
+  //      win specificity wars against react-remove-scroll's plain
+  //      inline styles.
+  //   2. `<html>` overflow:hidden as a secondary safeguard.
+  //   3. A capture-phase wheel + touchmove blocker on window that
+  //      preventDefault()s anything not targeting the modal content.
+  //      The capture phase runs *before* Lenis's own listeners, so
+  //      Lenis can't animate body.transform behind the modal.
   useEffect(() => {
     if (!open) return;
     const scrollY = window.scrollY;
     const body = document.body;
     const html = document.documentElement;
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    body.style.overflow = "hidden";
-    html.style.overflow = "hidden";
+
+    body.style.setProperty("position", "fixed", "important");
+    body.style.setProperty("top", `-${scrollY}px`, "important");
+    body.style.setProperty("left", "0", "important");
+    body.style.setProperty("right", "0", "important");
+    body.style.setProperty("width", "100%", "important");
+    body.style.setProperty("overflow", "hidden", "important");
+    html.style.setProperty("overflow", "hidden", "important");
+
+    const preventScroll = (event: Event) => {
+      const target = event.target as Node | null;
+      const content = document.querySelector(".m4-dialog-content");
+      if (target && content && content.contains(target)) return;
+      event.preventDefault();
+    };
+    window.addEventListener("wheel", preventScroll, {
+      passive: false,
+      capture: true,
+    });
+    window.addEventListener("touchmove", preventScroll, {
+      passive: false,
+      capture: true,
+    });
+
     return () => {
-      body.style.position = "";
-      body.style.top = "";
-      body.style.left = "";
-      body.style.right = "";
-      body.style.width = "";
-      body.style.overflow = "";
-      html.style.overflow = "";
+      body.style.removeProperty("position");
+      body.style.removeProperty("top");
+      body.style.removeProperty("left");
+      body.style.removeProperty("right");
+      body.style.removeProperty("width");
+      body.style.removeProperty("overflow");
+      html.style.removeProperty("overflow");
+      window.removeEventListener("wheel", preventScroll, { capture: true });
+      window.removeEventListener("touchmove", preventScroll, { capture: true });
       window.scrollTo(0, scrollY);
     };
   }, [open]);
