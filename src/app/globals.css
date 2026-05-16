@@ -347,6 +347,50 @@ html {
    * to a short page (without) shifts the layout horizontally by the
    * scrollbar's width — reads as a content "twitch" between routes. */
   scrollbar-gutter: stable;
+
+  /* Firefox custom scrollbar — thin, theme-aware. WebKit handled below. */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent)
+    transparent;
+}
+
+/* Radix Select/Dialog/Popover uses react-remove-scroll under the hood,
+ * which adds an inline `padding-right` to <body> when a popover opens
+ * so content does not jump as the scrollbar disappears. Because we
+ * already keep a stable gutter on <html>, that compensation reads as
+ * a horizontal twitch. Cancel it — the gutter is reserved either way. */
+body[data-scroll-locked] {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Site-wide WebKit scrollbar. Thin track, theme-token thumb with a
+ * subtle hover state. Pure cosmetic — does not affect scroll behavior
+ * or scrollbar-gutter reservation. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 18%, transparent);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  transition: background-color var(--motion-fast) var(--ease-premium);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--foreground) 34%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: color-mix(in srgb, var(--ring) 60%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 h1 {

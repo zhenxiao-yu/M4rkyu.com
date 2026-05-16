@@ -31,13 +31,17 @@ export function SelectTrigger({
 export function SelectContent({
   className,
   children,
+  position = "popper",
+  sideOffset = 6,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
+        position={position}
+        sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-32 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-xl shadow-black/10 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "z-50 max-h-[min(22rem,var(--radix-select-content-available-height))] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-border/80 bg-popover/95 text-popover-foreground shadow-xl shadow-black/15 backdrop-blur-xl dark:shadow-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1",
           className,
         )}
         {...props}
