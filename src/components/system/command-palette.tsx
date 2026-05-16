@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   BookOpen,
   Briefcase,
@@ -13,6 +13,7 @@ import {
   Mail,
   Moon,
   NotebookPen,
+  SearchX,
   ShoppingBag,
   Sun,
   Terminal,
@@ -40,6 +41,7 @@ import {
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { galleryItems } from "@/content/gallery";
+import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 /**
@@ -79,6 +81,30 @@ const THEMES = [
   { value: "dark", icon: Moon, key: "themeDark" },
 ] as const;
 
+/**
+ * Tiered scoring filter. Beats cmdk's default substring match by
+ * promoting exact prefix and word-boundary hits ahead of mid-string
+ * substrings, then falls back to in-order fuzzy as a last resort.
+ * Returning 0 hides the row — cmdk re-runs this for every keystroke
+ * across the full item set, so it stays a pure function.
+ */
+function rankCommand(value: string, search: string): number {
+  const needle = search.trim().toLowerCase();
+  if (!needle) return 1;
+  const haystack = value.toLowerCase();
+  if (haystack.startsWith(needle)) return 1;
+  for (const word of haystack.split(/\s+/)) {
+    if (word.startsWith(needle)) return 0.85;
+  }
+  if (haystack.includes(needle)) return 0.6;
+  // Fuzzy: every needle char appears in order somewhere in haystack.
+  let i = 0;
+  for (let j = 0; j < haystack.length && i < needle.length; j++) {
+    if (haystack[j] === needle[i]) i++;
+  }
+  return i === needle.length ? 0.3 : 0;
+}
+
 export function CommandPalette({
   open,
   onOpenChange,
@@ -93,16 +119,15 @@ export function CommandPalette({
   const { setTheme } = useTheme();
 
   const recentFrames = useMemo(
-    () =>
-      galleryItems
-        .filter((item) => item.status === "ready")
-        .slice(0, 6),
+    () => galleryItems.filter((item) => item.status === "ready").slice(0, 6),
     [],
   );
 
-  const writingItems = useMemo(
-    () => (posts ?? []).slice(0, 20),
-    [posts],
+  const writingItems = useMemo(() => (posts ?? []).slice(0, 20), [posts]);
+
+  const filter = useCallback(
+    (value: string, search: string) => rankCommand(value, search),
+    [],
   );
 
   function go(href: string) {
@@ -129,33 +154,78 @@ export function CommandPalette({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hideCloseButton
-        // Below md: bottom-anchored sheet (full-width, top-rounded only).
-        // md+: keep the centered modal layout from DialogContent's defaults.
-        className="max-w-xl gap-0 overflow-hidden p-0 max-md:left-0 max-md:right-0 max-md:bottom-0 max-md:top-auto max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none"
+        className={cn(
+          // Shared frame — flex column so CommandList can fill remaining
+          // vertical space after the input + (mobile) drag handle.
+          "flex flex-col gap-0 overflow-hidden p-0",
+          // Desktop modal — wider list, capped height so very tall
+          // viewports don't waste space.
+          "md:max-w-2xl md:max-h-[min(70dvh,38rem)]",
+          // Mobile bottom sheet — anchored to the bottom of the screen
+          // with rounded top corners, leaving a sliver of overlay above
+          // so the user can tap-to-dismiss. Cancel DialogContent's
+          // centered transforms via translate-x/y-0.
+          "max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:top-auto",
+          "max-md:h-[85dvh] max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0",
+          "max-md:rounded-b-none max-md:rounded-t-2xl",
+        )}
       >
         <VisuallyHidden>
           <DialogTitle>{tPalette("title")}</DialogTitle>
           <DialogDescription>{tPalette("description")}</DialogDescription>
         </VisuallyHidden>
-        <Command label={tPalette("title")} className="rounded-md max-md:rounded-b-none">
-          <CommandInput placeholder={tPalette("searchPlaceholder")} />
+
+        {/* Drag handle — mobile only. Purely visual cue that this is a
+         * sheet; Radix Dialog doesn't implement swipe-to-close, so
+         * dismissal stays via overlay tap or the Esc key. */}
+        <div
+          aria-hidden="true"
+          className="grid shrink-0 place-items-center pb-1 pt-2.5 md:hidden"
+        >
+          <span className="h-1.5 w-12 rounded-full bg-border" />
+        </div>
+
+        <Command
+          label={tPalette("title")}
+          filter={filter}
+          className="flex min-h-0 flex-1 flex-col rounded-md max-md:rounded-b-none"
+        >
+          <CommandInput
+            placeholder={tPalette("searchPlaceholder")}
+            // The input is the natural autofocus target — cmdk handles
+            // this for us, but we ensure the CSS height stays large
+            // enough for a tappable surface on touch.
+            className="h-12 text-base sm:h-11 sm:text-sm"
+          />
           <CommandList>
-            <CommandEmpty>{tPalette("noResults")}</CommandEmpty>
+            <CommandEmpty>
+              <div className="grid place-items-center gap-3 py-10 text-center text-muted-foreground">
+                <SearchX aria-hidden="true" className="size-5 opacity-60" />
+                <span className="text-sm">{tPalette("noResults")}</span>
+              </div>
+            </CommandEmpty>
 
             <CommandGroup heading={tPalette("pagesGroup")}>
               {PAGES.map((page) => {
                 const Icon = page.icon;
+                const label = tNav(page.key);
                 return (
                   <CommandItem
                     key={page.href}
-                    value={`${tNav(page.key)} ${page.key}`}
+                    value={`${label} ${page.key} ${page.href}`}
                     onSelect={() => go(page.href)}
                   >
                     <Icon
                       aria-hidden="true"
-                      className="size-4 text-muted-foreground"
+                      className="size-4 shrink-0 opacity-70"
                     />
-                    <span>{tNav(page.key)}</span>
+                    <span className="truncate">{label}</span>
+                    <span
+                      aria-hidden="true"
+                      className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                    >
+                      {page.href}
+                    </span>
                   </CommandItem>
                 );
               })}
@@ -173,10 +243,13 @@ export function CommandPalette({
                     >
                       <Layers
                         aria-hidden="true"
-                        className="size-4 text-muted-foreground"
+                        className="size-4 shrink-0 opacity-70"
                       />
                       <span className="truncate">{item.title}</span>
-                      <span className="ml-auto truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                      >
                         {item.collection}
                       </span>
                     </CommandItem>
@@ -197,10 +270,13 @@ export function CommandPalette({
                     >
                       <BookOpen
                         aria-hidden="true"
-                        className="size-4 text-muted-foreground"
+                        className="size-4 shrink-0 opacity-70"
                       />
                       <span className="truncate">{post.title}</span>
-                      <span className="ml-auto truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                      >
                         {post.category}
                       </span>
                     </CommandItem>
@@ -222,9 +298,9 @@ export function CommandPalette({
                   >
                     <Icon
                       aria-hidden="true"
-                      className="size-4 text-muted-foreground"
+                      className="size-4 shrink-0 opacity-70"
                     />
-                    <span>{tPalette(entry.key)}</span>
+                    <span className="truncate">{tPalette(entry.key)}</span>
                   </CommandItem>
                 );
               })}
@@ -234,10 +310,13 @@ export function CommandPalette({
               >
                 <Languages
                   aria-hidden="true"
-                  className="size-4 text-muted-foreground"
+                  className="size-4 shrink-0 opacity-70"
                 />
-                <span>{tPalette("toggleLocale")}</span>
-                <span className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                <span className="truncate">{tPalette("toggleLocale")}</span>
+                <span
+                  aria-hidden="true"
+                  className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                >
                   {locale === "en" ? "中文" : "EN"}
                 </span>
               </CommandItem>
@@ -245,14 +324,22 @@ export function CommandPalette({
           </CommandList>
 
           {/* Keyboard hint strip — hidden on touch / small screens since
-              the kbd shortcuts don't apply there. */}
-          <div className="hidden items-center justify-end gap-2 border-t px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground md:flex">
-            <span>{tPalette("hintNavigate")}</span>
-            <kbd className="rounded border px-1.5 py-0.5">↑↓</kbd>
-            <span>{tPalette("hintSelect")}</span>
-            <kbd className="rounded border px-1.5 py-0.5">↵</kbd>
-            <span>{tPalette("hintClose")}</span>
-            <kbd className="rounded border px-1.5 py-0.5">esc</kbd>
+           * the kbd shortcuts don't apply there. */}
+          <div className="hidden shrink-0 items-center gap-3 border-t px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground md:flex">
+            <span className="inline-flex items-center gap-1.5">
+              <kbd className="rounded border bg-background px-1.5 py-0.5">↑↓</kbd>
+              {tPalette("hintNavigate")}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <kbd className="rounded border bg-background px-1.5 py-0.5">↵</kbd>
+              {tPalette("hintSelect")}
+            </span>
+            <span className="ml-auto inline-flex items-center gap-1.5">
+              <kbd className="rounded border bg-background px-1.5 py-0.5">
+                esc
+              </kbd>
+              {tPalette("hintClose")}
+            </span>
           </div>
         </Command>
       </DialogContent>

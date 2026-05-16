@@ -46,8 +46,14 @@ export const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
+    // `flex-1 min-h-0` lets the list fill whatever vertical space the
+    // parent gives it — works for both the desktop modal (Dialog caps
+    // its own height) and the mobile bottom sheet (Dialog is dvh-tall).
+    // `overscroll-contain` + `touch-pan-y` stop touch/wheel scrolls from
+    // chaining out to the page underneath when the user reaches the top
+    // or bottom of the list.
     className={cn(
-      "max-h-[60vh] overflow-y-auto overflow-x-hidden p-1",
+      "flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y p-1 scroll-smooth",
       className,
     )}
     {...props}
@@ -102,7 +108,9 @@ export const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-2 text-sm outline-none transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+      // min-h-10 keeps the row comfortably tappable on touch
+      // (matches Apple/Material 44px-ish target after padding).
+      "relative flex min-h-10 cursor-default select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm outline-none transition-colors duration-(--motion-fast) ease-(--ease-premium)",
       "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground",
       "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
       className,
