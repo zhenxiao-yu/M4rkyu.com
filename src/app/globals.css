@@ -354,16 +354,6 @@ html {
     transparent;
 }
 
-/* Radix Select/Dialog/Popover uses react-remove-scroll under the hood,
- * which adds an inline `padding-right` to <body> when a popover opens
- * so content does not jump as the scrollbar disappears. Because we
- * already keep a stable gutter on <html>, that compensation reads as
- * a horizontal twitch. Cancel it — the gutter is reserved either way. */
-body[data-scroll-locked] {
-  padding-right: 0 !important;
-  margin-right: 0 !important;
-}
-
 /* Site-wide WebKit scrollbar. Thin track, theme-token thumb with a
  * subtle hover state. Pure cosmetic — does not affect scroll behavior
  * or scrollbar-gutter reservation. */
@@ -429,23 +419,8 @@ body[data-scroll-locked] {
   }
 }
 
-/* `touch-action: none` on the overlay stops touch gestures over the
- * dim backdrop from rubber-band-scrolling the page underneath on iOS.
- * react-remove-scroll already locks <body>, but Safari has historic
- * bugs where touchmove on a fixed-position overlay still pans the
- * document. Belt and suspenders. */
-.m4-dialog-overlay {
-  touch-action: none;
-}
 .m4-dialog-overlay[data-state="open"] {
   animation: m4-dialog-overlay-in 180ms ease-out;
-}
-/* When any dialog overlay is open, lock the root scroll container.
- * Modern :has() support covers Safari 15.4+ / Chrome 105+ — older
- * browsers fall back to react-remove-scroll's body lock alone. */
-html:has(.m4-dialog-overlay[data-state="open"]) {
-  overflow: hidden;
-  overscroll-behavior: contain;
 }
 .m4-dialog-content[data-state="open"] {
   animation: m4-dialog-content-in 220ms var(--ease-premium);
