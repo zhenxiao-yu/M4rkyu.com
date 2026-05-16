@@ -5,6 +5,21 @@ import {
   writeStoredString,
 } from "@/lib/browser/safe-storage";
 
+// Storage key the audio-player dialog writes the SFX slider into.
+// Kept inline (not imported from audio-player-context) to keep this
+// module dependency-free and SSR-safe — it's imported by both server
+// and client code paths. Default matches the provider's DEFAULTS.sfxVolume.
+const SFX_VOLUME_KEY = "m4rkyu.audio.sfxVolume";
+const SFX_VOLUME_DEFAULT = 0.6;
+
+function readSfxVolume(): number {
+  const raw = readStoredString(SFX_VOLUME_KEY);
+  if (!raw) return SFX_VOLUME_DEFAULT;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) return SFX_VOLUME_DEFAULT;
+  return Math.min(1, Math.max(0, parsed));
+}
+
 /**
  * UI sound module — phase 7 of docs/UNIFIED_VISUAL_DIRECTION.md (§4.10 + §8).
  *
@@ -142,7 +157,13 @@ export function playCue(cue: SoundCue): void {
   }
 
   // Tiny attack + exponential decay → a percussive blip rather than a tone.
-  gain.gain.setValueAtTime(config.volume, now);
+  // User SFX volume scales the cue's intrinsic gain (which itself stays
+  // ≤ 0.08 to keep cues below ~-18 LUFS at full volume).
+  const userVolume = readSfxVolume();
+  // exponentialRampToValueAtTime can't ramp to 0; floor at 0.0001 the
+  // same way we floor the decay target.
+  const peak = Math.max(0.0001, config.volume * userVolume);
+  gain.gain.setValueAtTime(peak, now);
   gain.gain.exponentialRampToValueAtTime(0.0001, end);
 
   osc.connect(gain).connect(ctx.destination);

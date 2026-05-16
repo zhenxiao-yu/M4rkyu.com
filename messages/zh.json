@@ -529,5 +529,24 @@
     "hintNavigate": "导航",
     "hintSelect": "选择",
     "hintClose": "关闭"
+  },
+  "AudioPlayer": {
+    "title": "音频设置",
+    "description": "背景音乐与音效控制。",
+    "openLabel": "音频设置",
+    "nowPlaying": "正在播放",
+    "noTrack": "未加载曲目",
+    "play": "播放",
+    "pause": "暂停",
+    "prev": "上一曲",
+    "next": "下一曲",
+    "shuffle": "随机",
+    "loopOff": "不循环",
+    "loopTrack": "单曲循环",
+    "loopPlaylist": "列表循环",
+    "seekLabel": "进度",
+    "bgmVolume": "音乐",
+    "sfxVolume": "音效",
+    "playlist": "播放列表"
   }
 }

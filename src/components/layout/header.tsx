@@ -3,8 +3,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
-import { SoundToggle } from "@/components/system/sound-toggle";
-import { MusicToggle } from "@/components/system/music-toggle";
+import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
@@ -55,7 +54,7 @@ export async function Header({ locale }: { locale: Locale }) {
         <Link
           href="/"
           locale={locale}
-          className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-md px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-md px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:justify-self-start"
         >
           <span className="grid size-8 shrink-0 place-items-center rounded-md border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100">
             M4
@@ -75,16 +74,18 @@ export async function Header({ locale }: { locale: Locale }) {
           ariaLabel={t("navigateLabel")}
         />
 
-        {/* Desktop right rail (lg+) */}
-        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex">
+        {/* Desktop right rail (lg+) — positioned at the end of its
+         * grid column so the centered DesktopNav stays viewport-anchored. */}
+        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex lg:justify-self-end">
           <CommandPaletteTrigger />
-          {/* Tinted utility cluster — bell, lang, theme, sound, music, QR. */}
+          {/* Tinted utility cluster — bell, lang, theme, single sound
+           * settings button (replaces the old SoundToggle + MusicToggle
+           * pair; opens the media-player dialog), QR. */}
           <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
             <NotificationBell posts={notificationFeed} locale={locale} />
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <SoundToggle />
-            <MusicToggle />
+            <SoundSettingsButton />
             <QrCodeButton url="https://m4rkyu.com" />
           </div>
         </div>

@@ -16,8 +16,7 @@ import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
-import { SoundToggle } from "@/components/system/sound-toggle";
-import { MusicToggle } from "@/components/system/music-toggle";
+import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 import { cn } from "@/lib/utils";
@@ -313,8 +312,7 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
           <div className="ml-auto flex items-center gap-2">
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <SoundToggle />
-            <MusicToggle />
+            <SoundSettingsButton />
           </div>
         </div>
       </SheetContent>

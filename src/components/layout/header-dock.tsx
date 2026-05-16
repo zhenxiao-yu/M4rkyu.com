@@ -31,7 +31,13 @@ export function HeaderDock({ children }: { children: ReactNode }) {
     <div
       data-scrolled={scrolled ? "true" : "false"}
       className={cn(
-        "pointer-events-auto relative flex min-h-14 w-full items-center gap-2 border-b border-t px-3 backdrop-blur-2xl backdrop-saturate-150 transition-[background-color,border-color,box-shadow] duration-(--motion-medium) ease-(--ease-premium) sm:min-h-16 sm:gap-3 sm:px-5 lg:px-6",
+        // Mobile / tablet: simple flex row — logo on the left, mobile
+        // rail uses `ml-auto` to stick right. Desktop (lg+): switch to
+        // a three-track grid where the middle column auto-sizes to the
+        // nav and the 1fr columns on either side balance, so the nav
+        // is truly centered relative to the viewport instead of just
+        // centered within its flex track.
+        "pointer-events-auto relative flex min-h-14 w-full items-center gap-2 border-b border-t px-3 backdrop-blur-2xl backdrop-saturate-150 transition-[background-color,border-color,box-shadow] duration-(--motion-medium) ease-(--ease-premium) sm:min-h-16 sm:gap-3 sm:px-5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4 lg:px-6",
         scrolled
           ? "border-ring/35 bg-background/90 shadow-lg shadow-black/10 dark:shadow-black/35"
           : "border-border/65 bg-background/72 shadow-sm shadow-black/5 dark:shadow-black/20",

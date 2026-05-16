@@ -6,6 +6,7 @@ import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner"
 import { ConsentAwareAnalytics } from "@/components/privacy/consent-aware-analytics";
 import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
+import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { routing, type Locale } from "@/i18n/routing";
@@ -47,7 +48,8 @@ export default async function LocaleLayout({
       <JsonLd data={buildSiteJsonLd(activeLocale)} />
       <ThemeProvider>
         <TooltipProvider delayDuration={400} skipDelayDuration={150}>
-          <CommandPaletteProvider posts={palettePosts}>
+          <AudioPlayerProvider>
+            <CommandPaletteProvider posts={palettePosts}>
             {/*
              * `lang={locale}` lives on a `display: contents` wrapper so
              * the DOM exposes the active locale without altering layout.
@@ -66,6 +68,7 @@ export default async function LocaleLayout({
              * `toast.success(...)` from this point onward. */}
             <Toaster />
           </CommandPaletteProvider>
+          </AudioPlayerProvider>
         </TooltipProvider>
       </ThemeProvider>
     </NextIntlClientProvider>

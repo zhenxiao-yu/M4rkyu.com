@@ -37,7 +37,7 @@ export function DesktopNav({
   return (
     <nav
       aria-label={ariaLabel}
-      className="hidden min-w-0 flex-1 justify-center px-4 lg:flex"
+      className="hidden min-w-0 justify-center px-4 lg:flex lg:justify-self-center"
     >
       <ul className="flex items-center gap-0.5 rounded-full border border-border/55 bg-muted/25 p-1 shadow-inner shadow-black/5 dark:shadow-black/20">
         {groups.map((group) => {

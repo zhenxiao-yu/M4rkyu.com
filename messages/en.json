@@ -529,5 +529,24 @@
     "hintNavigate": "Navigate",
     "hintSelect": "Select",
     "hintClose": "Close"
+  },
+  "AudioPlayer": {
+    "title": "Audio settings",
+    "description": "Background music and sound effect controls.",
+    "openLabel": "Audio settings",
+    "nowPlaying": "Now playing",
+    "noTrack": "No track loaded",
+    "play": "Play",
+    "pause": "Pause",
+    "prev": "Previous track",
+    "next": "Next track",
+    "shuffle": "Shuffle",
+    "loopOff": "Loop off",
+    "loopTrack": "Loop track",
+    "loopPlaylist": "Loop playlist",
+    "seekLabel": "Seek",
+    "bgmVolume": "Music",
+    "sfxVolume": "Effects",
+    "playlist": "Playlist"
   }
 }

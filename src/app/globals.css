@@ -383,6 +383,78 @@ html {
   background: transparent;
 }
 
+/* Range-input theming for the audio player sliders. Each input sets a
+ * `--progress` custom property (0–100%) so the filled portion of the
+ * track mirrors the current value via a linear-gradient on the track
+ * itself. Native input means zero JS overhead beyond `onChange` —
+ * good for the seek bar which fires per timeupdate (~4 Hz). */
+.m4-range,
+input[type="range"].m4-range,
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--foreground) 0,
+    var(--foreground) var(--progress, 0%),
+    color-mix(in srgb, var(--foreground) 15%, transparent) var(--progress, 0%),
+    color-mix(in srgb, var(--foreground) 15%, transparent) 100%
+  );
+}
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--foreground);
+}
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  margin-top: -5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--foreground);
+  border: 2px solid var(--background);
+  box-shadow: 0 1px 2px color-mix(in srgb, black 18%, transparent);
+  transition:
+    transform var(--motion-fast) var(--ease-premium),
+    background-color var(--motion-fast) var(--ease-premium);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--foreground);
+  border: 2px solid var(--background);
+  box-shadow: 0 1px 2px color-mix(in srgb, black 18%, transparent);
+}
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.12);
+  background: var(--ring);
+}
+input[type="range"]:focus-visible {
+  outline: none;
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 3px var(--background),
+    0 0 0 5px var(--ring);
+}
+
 /* Dialog enter animations. Tailwind v4 has no `tailwindcss-animate`
  * preset installed, so the data-state-driven `animate-in` /
  * `slide-in-from-*` utilities seen in older shadcn snippets silently
