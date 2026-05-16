@@ -164,9 +164,12 @@ export function CommandPalette({
           // Mobile bottom sheet — anchored to the bottom of the screen
           // with rounded top corners, leaving a sliver of overlay above
           // so the user can tap-to-dismiss. Cancel DialogContent's
-          // centered transforms via translate-x/y-0.
+          // centered transforms via translate-x/y-0. `w-full` overrides
+          // the base `w-[calc(100vw-2rem)]` so the sheet spans edge to
+          // edge instead of leaving a 32px gutter that lets background
+          // chrome poke through.
           "max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:top-auto",
-          "max-md:h-[85dvh] max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0",
+          "max-md:h-[88dvh] max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0",
           "max-md:rounded-b-none max-md:rounded-t-2xl",
         )}
       >
