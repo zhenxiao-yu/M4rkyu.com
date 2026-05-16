@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Menu, Search } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Menu, Search, X } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import {
   Sheet,
@@ -21,6 +22,7 @@ import type { Locale } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundToggle } from "@/components/system/sound-toggle";
 import { MusicToggle } from "@/components/system/music-toggle";
+import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 import { cn } from "@/lib/utils";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
@@ -36,6 +38,7 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
   const tPalette = useTranslations("CommandPalette");
   const { setOpen: setPaletteOpen } = useCommandPalette();
   const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // Default-open the group containing the active route so the user
@@ -53,6 +56,18 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
   }
 
+  const allEntries = [
+    ...groups.map((group) => ({ type: "group" as const, group })),
+    ...flatLinks.map((link) => ({ type: "link" as const, link })),
+  ];
+  const itemMotion = reduceMotion
+    ? undefined
+    : {
+        initial: { opacity: 0, y: 18 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.34, ease: [0.2, 0.7, 0.2, 1] as const },
+      };
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <button
@@ -63,131 +78,201 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
       >
         <Menu aria-hidden="true" className="size-4" />
       </button>
-      <SheetContent className="top-0 flex h-dvh translate-y-0 flex-col gap-0 p-0 sm:max-w-sm">
-        <SheetHeader className="border-b px-5 py-4">
-          <SheetTitle className="font-mono text-sm tracking-wide">
-            M4RKYU.SYS
-          </SheetTitle>
+      <SheetContent
+        hideCloseButton
+        className="!fixed !inset-0 !left-0 !top-0 flex !h-dvh !w-screen !max-w-none !translate-x-0 !translate-y-0 flex-col gap-0 overflow-hidden !rounded-none !border-0 bg-background/95 p-0 text-foreground backdrop-blur-2xl"
+      >
+        <SheetHeader className="sr-only">
+          <SheetTitle>M4RKYU.SYS</SheetTitle>
           <SheetDescription className="sr-only">
             {t("menuDescription")}
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="pointer-events-none absolute inset-0 bg-cyber-grid opacity-15" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-background via-background/94 to-muted/35" />
+
+        <div className="relative flex h-16 shrink-0 items-center justify-between border-b border-border/70 px-4 sm:px-6">
+          <Link
+            href="/"
+            locale={locale}
+            onClick={() => setSheetOpen(false)}
+            className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span className="grid size-8 place-items-center rounded-md border bg-foreground font-mono text-xs font-bold text-background">
+              M4
+            </span>
+            <span className="font-mono text-sm uppercase tracking-[0.2em]">
+              M4RKYU.SYS
+            </span>
+          </Link>
           <SheetClose asChild>
             <button
               type="button"
-              onClick={() => {
-                // Sheet close runs an exit animation + focus-trap detach.
-                // Defer the palette open until two animation frames after
-                // the click so Radix has fully released focus before
-                // we mount a new dialog.
-                requestAnimationFrame(() =>
-                  requestAnimationFrame(() => setPaletteOpen(true)),
-                );
-              }}
-              className="inline-flex h-10 w-full items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-sm text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              aria-label={tPalette("title")}
+              aria-label="Close menu"
+              className="inline-flex size-10 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <Search aria-hidden="true" className="size-4" />
-              <span>{tPalette("trigger")}</span>
+              <X aria-hidden="true" className="size-4" />
             </button>
           </SheetClose>
+        </div>
 
-          <p className="mt-6 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-            {t("navigateLabel")}
-          </p>
+        <div className="relative flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+          <motion.div
+            {...itemMotion}
+            transition={
+              itemMotion ? { ...itemMotion.transition, delay: 0.03 } : undefined
+            }
+          >
+            <SheetClose asChild>
+              <button
+                type="button"
+                onClick={() => {
+                  // Defer until Radix releases the menu focus trap, then
+                  // mount the command palette without focus contention.
+                  requestAnimationFrame(() =>
+                    requestAnimationFrame(() => setPaletteOpen(true)),
+                  );
+                }}
+                className="inline-flex h-12 w-full items-center justify-between rounded-md border border-border bg-background/80 px-4 text-sm text-muted-foreground shadow-sm transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={tPalette("title")}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Search aria-hidden="true" className="size-4" />
+                  <span>{tPalette("trigger")}</span>
+                </span>
+                <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-[0.62rem] uppercase tracking-[0.18em]">
+                  ⌘K
+                </kbd>
+              </button>
+            </SheetClose>
+          </motion.div>
 
           <nav
             aria-label="Mobile navigation"
-            className="mt-3 flex flex-col gap-1"
+            className="mt-6 flex flex-col gap-2"
           >
-            {groups.map((group) => {
+            {allEntries.map((entry, index) => {
+              if (entry.type === "link") {
+                const { link } = entry;
+                return (
+                  <motion.div
+                    key={link.id}
+                    {...itemMotion}
+                    transition={
+                      itemMotion
+                        ? {
+                            ...itemMotion.transition,
+                            delay: 0.08 + index * 0.045,
+                          }
+                        : undefined
+                    }
+                  >
+                    <SheetClose asChild>
+                      <Link
+                        href={link.href}
+                        locale={locale}
+                        className={cn(
+                          "group flex min-h-16 items-center justify-between rounded-md border border-border/70 bg-background/65 px-4 py-3 transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                          isActive(link.href)
+                            ? "border-ring/45 text-foreground"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        <span className="font-display text-3xl font-black leading-none tracking-normal">
+                          {link.label}
+                        </span>
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="size-5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
+                      </Link>
+                    </SheetClose>
+                  </motion.div>
+                );
+              }
+
+              const { group } = entry;
               const open = openGroup === group.id;
               const groupActive = group.items.some((item) =>
                 isActive(item.href),
               );
+
               return (
-                <Collapsible
+                <motion.div
                   key={group.id}
-                  open={open}
-                  onOpenChange={(next) => setOpenGroup(next ? group.id : null)}
+                  {...itemMotion}
+                  transition={
+                    itemMotion
+                      ? {
+                          ...itemMotion.transition,
+                          delay: 0.08 + index * 0.045,
+                        }
+                      : undefined
+                  }
                 >
-                  <CollapsibleTrigger
-                    className={cn(
-                      "flex w-full items-center justify-between rounded-md border border-transparent px-3 py-2.5 text-sm font-medium transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                      groupActive ? "text-foreground" : "text-muted-foreground",
-                    )}
+                  <Collapsible
+                    open={open}
+                    onOpenChange={(next) =>
+                      setOpenGroup(next ? group.id : null)
+                    }
                   >
-                    <span>{group.label}</span>
-                    <ChevronDown
-                      aria-hidden="true"
+                    <CollapsibleTrigger
                       className={cn(
-                        "size-4 transition-transform duration-(--motion-fast) ease-(--ease-premium)",
-                        open && "rotate-180",
+                        "flex min-h-16 w-full items-center justify-between rounded-md border border-border/70 bg-background/65 px-4 py-3 text-left transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-muted/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        groupActive
+                          ? "border-ring/45 text-foreground"
+                          : "text-muted-foreground",
                       )}
-                    />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
-                    <ul className="mt-1 flex flex-col gap-1 border-l border-border/60 pl-3">
-                      {group.items.map((item) => (
-                        <li key={item.id}>
-                          <SheetClose asChild>
-                            <Link
-                              href={item.href}
-                              locale={locale}
-                              className={cn(
-                                "flex items-center justify-between rounded-md border border-transparent px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                                isActive(item.href)
-                                  ? "text-foreground"
-                                  : "text-muted-foreground",
-                              )}
-                            >
-                              <span>{item.label}</span>
-                              <span
-                                aria-hidden="true"
-                                className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground/70"
+                    >
+                      <span className="font-display text-3xl font-black leading-none tracking-normal">
+                        {group.label}
+                      </span>
+                      <ChevronDown
+                        aria-hidden="true"
+                        className={cn(
+                          "size-5 transition-transform duration-(--motion-fast) ease-(--ease-premium)",
+                          open && "rotate-180",
+                        )}
+                      />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
+                      <ul className="grid gap-1 border-x border-b border-border/60 bg-background/45 p-2">
+                        {group.items.map((item) => (
+                          <li key={item.id}>
+                            <SheetClose asChild>
+                              <Link
+                                href={item.href}
+                                locale={locale}
+                                className={cn(
+                                  "flex min-h-11 items-center justify-between gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                                  isActive(item.href)
+                                    ? "text-foreground"
+                                    : "text-muted-foreground",
+                                )}
                               >
-                                {item.href}
-                              </span>
-                            </Link>
-                          </SheetClose>
-                        </li>
-                      ))}
-                    </ul>
-                  </CollapsibleContent>
-                </Collapsible>
+                                <span className="font-medium">
+                                  {item.label}
+                                </span>
+                                <span className="truncate font-mono text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground/75">
+                                  {item.href}
+                                </span>
+                              </Link>
+                            </SheetClose>
+                          </li>
+                        ))}
+                      </ul>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </motion.div>
               );
             })}
-
-            {flatLinks.map((link) => (
-              <SheetClose asChild key={link.id}>
-                <Link
-                  href={link.href}
-                  locale={locale}
-                  className={cn(
-                    "flex items-center justify-between rounded-md border border-transparent px-3 py-2.5 text-sm font-medium transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                    isActive(link.href)
-                      ? "text-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  <span>{link.label}</span>
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/70"
-                  >
-                    {link.href}
-                  </span>
-                </Link>
-              </SheetClose>
-            ))}
 
             <SheetClose asChild>
               <Link
                 href="/portal"
                 locale={locale}
-                className="mt-3 flex items-center justify-between rounded-md border border-ring/40 bg-ring/5 px-3 py-2.5 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:bg-ring/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="mt-2 flex min-h-13 items-center justify-between rounded-md border border-ring/40 bg-ring/5 px-4 py-3 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:bg-ring/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span>{t("portal")}</span>
                 <span
@@ -201,12 +286,13 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
           </nav>
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t px-5 py-4">
-          <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+        <div className="relative flex shrink-0 items-center justify-between gap-3 border-t border-border/70 bg-background/80 px-4 py-4 sm:px-6">
+          <span className="hidden font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground sm:inline">
             {locale.toUpperCase()} · m4rkyu
           </span>
-          <div className="flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2">
             <LanguageSwitcher />
+            <ThemeSwitcher />
             <SoundToggle />
             <MusicToggle />
           </div>

@@ -212,7 +212,7 @@
   /* Sticky floating-dock reserved flow height. Page-shell pulls
    * `<main>` up by this amount so each page's first section extends
    * to y=0 behind the glass dock. Change here, both sides update. */
-  --dock-h: 60px;
+  --dock-h: 56px;
 
   /* Cyber-pixel foundation tokens — phase 1 of
    * docs/UNIFIED_VISUAL_DIRECTION.md §5.2. Theme-aware values reference
@@ -227,6 +227,12 @@
   --noise-opacity: 12%;
   --panel-depth: 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
   --game-accent: var(--ring);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --dock-h: 64px;
+  }
 }
 
 @theme inline {

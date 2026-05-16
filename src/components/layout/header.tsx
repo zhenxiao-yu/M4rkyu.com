@@ -9,10 +9,10 @@ import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
-import { PillNav } from "@/components/ui/magic/pill-nav";
 import { getPosts } from "@/lib/blog/get-posts";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
+import { DesktopNav } from "./desktop-nav";
 import { buildNavStructure, type NavLabels } from "./nav-structure";
 
 export async function Header({ locale }: { locale: Locale }) {
@@ -52,47 +52,34 @@ export async function Header({ locale }: { locale: Locale }) {
     canonicalUrl: post.canonicalUrl,
   }));
 
-  // Flat nav for the GooeyNav. Sub-categories (work categories,
-  // archive collections, etc.) are reachable from each landing page
-  // and the command palette — keeping the header flat matches the
-  // wodniack reference and lets the goo pill be the focal point.
-  const navItems = [
-    { label: t("work"), href: "/work" },
-    { label: t("archive"), href: "/archive" },
-    { label: t("logs"), href: "/logs" },
-    { label: t("about"), href: "/about" },
-    { label: t("contact"), href: "/contact" },
-  ];
-
   return (
-    // Sticky header. Outer wrapper reserves `var(--dock-h)` (60px) of
-    // flow space; page-shell pulls `<main>` up by that much so each
-    // page's first section renders behind the glass dock.
-    // `pointer-events-none` keeps the gutter click-through; the dock
-    // itself re-enables clicks.
-    <header className="pointer-events-none sticky top-0 z-40 px-3 pt-3 sm:px-4">
+    // Sticky full-width system bar. `pointer-events-none` keeps only
+    // the glass dock interactive while the surrounding header gutter
+    // remains click-through over immersive first sections.
+    <header className="pointer-events-none sticky top-0 z-40 w-full">
       <HeaderDock>
         <Link
           href="/"
           locale={locale}
-          className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-xl px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-md px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100">
+          <span className="grid size-8 shrink-0 place-items-center rounded-md border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100">
             M4
           </span>
-          <span className="hidden truncate tracking-wide sm:inline">
-            M4RKYU.SYS
+          <span className="hidden min-w-0 flex-col leading-none sm:flex">
+            <span className="truncate tracking-wide">M4RKYU.SYS</span>
+            <span className="mt-1 text-[0.55rem] uppercase tracking-[0.2em] text-muted-foreground">
+              portfolio
+            </span>
           </span>
         </Link>
 
-        {/* Center: PillNav (lg+ only — mobile uses the sheet via
-         * MobileNav). The pill snaps to the active route on first
-         * paint via pathname-driven activeIndex; clicking another
-         * item slides the pill across via motion's shared layout
-         * transition. */}
-        <div className="hidden flex-1 justify-center lg:flex">
-          <PillNav items={navItems} />
-        </div>
+        <DesktopNav
+          locale={locale}
+          groups={structure.groups}
+          flatLinks={structure.flatLinks}
+          ariaLabel={t("navigateLabel")}
+        />
 
         {/* Desktop right rail (lg+) */}
         <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex">

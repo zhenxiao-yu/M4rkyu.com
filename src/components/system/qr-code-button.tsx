@@ -3,21 +3,25 @@
 import { useState } from "react";
 import { QrCode, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface QrCodeButtonProps {
   /** Site URL displayed in the popover. */
   url?: string;
+  /** Public asset path for the scannable QR image. */
+  assetSrc?: string;
 }
 
 /**
- * QR-code icon button. Click toggles a small popover showing the
- * site URL + a placeholder QR slot. The actual QR rendering is left
- * as a future swap-in (e.g. drop a <QRCodeSVG value={url}/> from
- * `qrcode.react` once that dep is added — the slot's dimensions
- * already match the standard ~140×140 QR canvas).
+ * QR-code icon button. Click toggles a compact popover with a real,
+ * static QR asset so the header share affordance is useful without
+ * adding a QR-generation dependency to the client bundle.
  */
-export function QrCodeButton({ url = "https://m4rkyu.com" }: QrCodeButtonProps) {
+export function QrCodeButton({
+  url = "https://m4rkyu.com",
+  assetSrc = "/qr-code.svg",
+}: QrCodeButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -62,20 +66,14 @@ export function QrCodeButton({ url = "https://m4rkyu.com" }: QrCodeButtonProps) 
               </button>
             </div>
 
-            {/* QR slot — placeholder grid until a real renderer is wired.
-              * Dimensions match the standard 140px QR canvas so swapping
-              * in `<QRCodeSVG value={url} size={140} />` is a one-liner. */}
-            <div
-              aria-hidden="true"
-              className="mt-3 grid h-[140px] place-items-center rounded-md border border-dashed border-border bg-card/40 text-[0.55rem] uppercase tracking-[0.22em] text-muted-foreground"
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, color-mix(in srgb, var(--foreground) 10%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in srgb, var(--foreground) 10%, transparent) 25%, transparent 25%)",
-                backgroundSize: "8px 8px",
-              }}
-            >
-              <span className="rounded-sm bg-background/85 px-2 py-1">qr · pending</span>
-            </div>
+            <Image
+              src={assetSrc}
+              alt=""
+              width={140}
+              height={140}
+              className="mt-3 size-[140px] rounded-md border border-border bg-white p-2"
+              loading="lazy"
+            />
 
             <p className="mt-3 break-all font-mono text-[0.6rem] uppercase tracking-[0.2em] text-foreground/80">
               {url.replace(/^https?:\/\//, "")}
