@@ -14,6 +14,29 @@ interface PostBodyProps {
   className?: string;
 }
 
+// Hosts whitelisted in next.config.ts under `images.remotePatterns`.
+// MDX images from one of these get the full `next/image` optimizer;
+// images from other hosts (dev.to posts often embed author CDNs like
+// blog.openreplay.com) fall back to a plain `<img>` so they always
+// render instead of failing the next/image host check. Keep this in
+// sync with next.config.ts — divergence means a configured host
+// silently loses optimization here.
+const OPTIMIZED_IMAGE_HOSTS = new Set([
+  "media.dev.to",
+  "media2.dev.to",
+  "media3.dev.to",
+  "dev-to-uploads.s3.amazonaws.com",
+]);
+
+function canOptimize(src: string): boolean {
+  if (src.startsWith("/")) return true; // local /public asset
+  try {
+    return OPTIMIZED_IMAGE_HOSTS.has(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Renders dev.to-syndicated post bodies with the site's editorial
  * prose vocabulary instead of dev.to's defaults.
@@ -232,19 +255,36 @@ const components = {
       trimmed,
     );
     const showCaption = trimmed.length > 0 && !isPlaceholderAlt;
+    const figureClass = cn(
+      "h-auto w-full rounded-md border border-border bg-muted",
+      className,
+    );
+
     return (
       <span className="mt-6 block">
-        <Image
-          src={src}
-          alt={trimmed}
-          width={1280}
-          height={720}
-          sizes="(min-width: 1024px) 800px, 100vw"
-          className={cn(
-            "h-auto w-full rounded-md border border-border bg-muted",
-            className,
-          )}
-        />
+        {canOptimize(src) ? (
+          <Image
+            src={src}
+            alt={trimmed}
+            width={1280}
+            height={720}
+            sizes="(min-width: 1024px) 800px, 100vw"
+            className={figureClass}
+          />
+        ) : (
+          // External-host fallback — author CDNs embedded in dev.to
+          // posts can't all be whitelisted in next.config without
+          // turning that file into a maintenance log. Plain <img>
+          // loses Next's AVIF conversion for these but always renders.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={trimmed}
+            loading="lazy"
+            decoding="async"
+            className={figureClass}
+          />
+        )}
         {showCaption ? (
           <span className="mt-2 block text-center font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
             {trimmed}
