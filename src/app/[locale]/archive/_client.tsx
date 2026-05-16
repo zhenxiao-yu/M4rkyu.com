@@ -182,7 +182,7 @@ function FrameThumb({
           alt={item.src.alt}
           fill
           sizes="(min-width: 1024px) 25vw, 50vw"
-          className="object-cover grayscale transition duration-500 group-hover:scale-[1.02] group-hover:grayscale-0"
+          className="object-cover grayscale transition duration-300 group-hover:scale-[1.02] group-hover:grayscale-0"
         />
       ) : (
         <PlaceholderImage

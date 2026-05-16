@@ -58,7 +58,7 @@ export function PostCard({ post, priority = false }: PostCardProps) {
               fill
               fetchPriority={priority ? "high" : "auto"}
               sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover grayscale transition duration-500 group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
+              className="object-cover grayscale transition duration-300 group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
             />
           ) : (
             <PlaceholderImage

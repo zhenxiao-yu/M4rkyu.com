@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useDeferredValue, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, FilterX, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -57,6 +57,11 @@ export function ProjectsClient({
     : null;
   const yearParam = searchParams.get("year");
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  // Filter against the deferred value so typing fast doesn't re-run
+  // the full project filter + re-mount cards on every keystroke. The
+  // URL sync below is also debounced — router.replace was firing per
+  // keystroke and dropping a frame each time on slower machines.
+  const deferredQuery = useDeferredValue(query);
 
   const yearOptions = useMemo(
     () =>
@@ -104,8 +109,8 @@ export function ProjectsClient({
     if (activeYear !== ALL_YEARS) {
       result = result.filter((p) => p.year === activeYear);
     }
-    if (query.trim()) {
-      const q = query.toLowerCase();
+    if (deferredQuery.trim()) {
+      const q = deferredQuery.toLowerCase();
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
@@ -114,7 +119,26 @@ export function ProjectsClient({
       );
     }
     return result;
-  }, [projects, activeCategory, activeYear, query]);
+  }, [projects, activeCategory, activeYear, deferredQuery]);
+
+  // Debounce the URL sync so router.replace doesn't fire per keystroke.
+  // The filter above already runs near-instantly via the deferred value;
+  // this just keeps the URL eventually consistent + shareable.
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const trimmed = query.trim();
+      if (trimmed) params.set("q", trimmed);
+      else params.delete("q");
+      startTransition(() => {
+        const nextQuery = params.toString();
+        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+          scroll: false,
+        });
+      });
+    }, 250);
+    return () => clearTimeout(id);
+  }, [query, pathname, router]);
 
   const production = useMemo(
     () => filtered.filter((p) => p.contentStatus === "ready"),
@@ -209,18 +233,12 @@ export function ProjectsClient({
                 autoComplete="off"
                 placeholder={t("searchPlaceholder")}
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  updateUrl({ q: e.target.value });
-                }}
+                onChange={(e) => setQuery(e.target.value)}
               />
               {query ? (
                 <button
                   type="button"
-                  onClick={() => {
-                    setQuery("");
-                    updateUrl({ q: "" });
-                  }}
+                  onClick={() => setQuery("")}
                   aria-label={t("clearSearch")}
                   className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
                 >

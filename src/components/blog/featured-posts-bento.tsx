@@ -122,7 +122,7 @@ function FeaturedPostCard({
                     ? "(min-width: 1024px) 66vw, 100vw"
                     : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 }
-                className="object-cover grayscale transition duration-700 ease-(--ease-premium) group-hover:scale-[1.035] group-hover:grayscale-0"
+                className="object-cover grayscale transition duration-300 ease-(--ease-premium) group-hover:scale-[1.035] group-hover:grayscale-0"
               />
             ) : (
               <PlaceholderImage

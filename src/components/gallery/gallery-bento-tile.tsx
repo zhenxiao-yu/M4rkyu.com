@@ -37,7 +37,7 @@ export function GalleryBentoTile({ item, span }: GalleryBentoTileProps) {
               fill
               sizes="(min-width: 1024px) 33vw, 50vw"
               className={cn(
-                "object-cover grayscale transition duration-500",
+                "object-cover grayscale transition duration-300",
                 "group-hover:scale-[1.02] group-hover:grayscale-0",
               )}
             />

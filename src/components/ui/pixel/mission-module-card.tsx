@@ -72,7 +72,7 @@ export async function MissionModuleCard({
                 alt={cover.alt}
                 fill
                 sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                className="object-cover grayscale transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+                className="object-cover grayscale transition duration-300 group-hover:scale-[1.03] group-hover:grayscale-0"
               />
             ) : (
               <PlaceholderImage

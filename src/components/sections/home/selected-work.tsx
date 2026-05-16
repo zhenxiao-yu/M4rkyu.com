@@ -203,7 +203,7 @@ function ProjectTile({
             priority={priority}
             sizes={isHero ? "(max-width: 768px) 100vw, 60vw" : "(max-width: 768px) 50vw, 30vw"}
             className={cn(
-              "object-cover transition-transform duration-700 ease-(--ease-premium)",
+              "object-cover transition-transform duration-300 ease-(--ease-premium)",
               isReady && "group-hover:scale-105",
             )}
           />

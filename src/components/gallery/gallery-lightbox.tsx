@@ -200,7 +200,7 @@ export function GalleryLightbox({
                   {tGallery("fromCollection")}
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {related.map((item) => (
+                  {related.map((item, index) => (
                     <button
                       key={item.slug}
                       type="button"
@@ -220,6 +220,11 @@ export function GalleryLightbox({
                             alt={item.src.alt}
                             fill
                             sizes="(min-width: 768px) 220px, 33vw"
+                            // First three thumbs are the most likely
+                            // next-tap targets, so we don't lazy-load
+                            // them — they're already on-screen when the
+                            // lightbox opens.
+                            loading={index < 3 ? "eager" : "lazy"}
                             className="object-cover transition duration-300 group-hover:scale-[1.03]"
                           />
                         ) : (
