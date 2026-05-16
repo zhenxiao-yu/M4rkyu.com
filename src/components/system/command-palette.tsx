@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   BookOpen,
   Briefcase,
@@ -129,6 +129,37 @@ export function CommandPalette({
     (value: string, search: string) => rankCommand(value, search),
     [],
   );
+
+  // Gold-standard iOS Safari modal lock. Radix's internal
+  // `react-remove-scroll` *should* already lock the page, but on
+  // mobile preview and some Safari versions the lock leaks — the page
+  // behind the palette scrolls when the user drags inside the result
+  // list. Belt and suspenders: pin <body> to position:fixed at the
+  // negative current scroll offset, so the page can't physically move
+  // while the dialog is mounted; restore on close and jump back.
+  useEffect(() => {
+    if (!open) return;
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const html = document.documentElement;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+    return () => {
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body.style.overflow = "";
+      html.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [open]);
 
   function go(href: string) {
     onOpenChange(false);
