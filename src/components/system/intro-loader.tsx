@@ -3,6 +3,10 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
+import {
+  readStoredString,
+  writeStoredString,
+} from "@/lib/browser/safe-storage";
 
 // Bump the suffix when the boot scene is reworked so existing visitors
 // see the new version once before the session-storage gate caches it
@@ -31,30 +35,57 @@ export function IntroLoader() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY) === "1") return;
+    if (readStoredString(SESSION_KEY, "", "session") === "1") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      sessionStorage.setItem(SESSION_KEY, "1");
+      writeStoredString(SESSION_KEY, "1", "session");
       return;
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);
-    sessionStorage.setItem(SESSION_KEY, "1");
 
     const start = performance.now();
     const duration = 1800;
-    let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
+    let done = false;
+    let progressTimer = 0;
+    let exitTimer = 0;
+    let failsafeTimer = 0;
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.clearInterval(progressTimer);
+      window.clearTimeout(exitTimer);
+      window.clearTimeout(failsafeTimer);
+      window.removeEventListener("keydown", finish);
+      window.removeEventListener("pointerdown", finish);
+      writeStoredString(SESSION_KEY, "1", "session");
+      setCount(100);
+      setVisible(false);
+    };
+
+    // Use an interval plus a failsafe timer so the home page is never
+    // held hostage by a throttled or paused requestAnimationFrame loop.
+    progressTimer = window.setInterval(() => {
+      const t = Math.min(1, (performance.now() - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
       setCount(Math.round(eased * 100));
-      if (t < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        setTimeout(() => setVisible(false), 260);
+      if (t >= 1 && !done) {
+        window.clearInterval(progressTimer);
+        exitTimer = window.setTimeout(finish, 260);
       }
+    }, 40);
+    failsafeTimer = window.setTimeout(finish, duration + 1200);
+
+    window.addEventListener("keydown", finish);
+    window.addEventListener("pointerdown", finish);
+
+    return () => {
+      window.clearInterval(progressTimer);
+      window.clearTimeout(exitTimer);
+      window.clearTimeout(failsafeTimer);
+      window.removeEventListener("keydown", finish);
+      window.removeEventListener("pointerdown", finish);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono, Noto_Sans_SC, VT323 } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SmoothScroll } from "@/providers/smooth-scroll";
 import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
@@ -68,6 +66,21 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: "M4rkyu.com",
+  authors: [{ name: "ZhenXiao Mark Yu", url: SITE_URL }],
+  creator: "ZhenXiao Mark Yu",
+  publisher: "ZhenXiao Mark Yu",
+  category: "portfolio",
+  keywords: [
+    "ZhenXiao Mark Yu",
+    "M4rkyu",
+    "software engineer",
+    "frontend developer",
+    "game developer",
+    "digital artist",
+    "Next.js portfolio",
+  ],
+  manifest: "/manifest.webmanifest",
   title: {
     default: "M4rkyu.com 2027",
     template: "%s | ZhenXiao Mark Yu",
@@ -83,18 +96,39 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
+    locale: "en_CA",
+    alternateLocale: ["zh_CN"],
     siteName: "M4rkyu.com",
     title: "M4rkyu.com 2027",
     description:
       "Software engineering, game development, and digital art case studies by ZhenXiao Mark Yu.",
     url: SITE_URL,
+    images: [
+      {
+        url: "/-/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "M4rkyu.com portfolio archive",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "M4rkyu.com 2027",
+    description:
+      "Software engineering, game development, and digital art case studies by ZhenXiao Mark Yu.",
+    images: ["/-/opengraph-image"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
@@ -114,8 +148,6 @@ export default function RootLayout({
         className="min-h-full bg-background text-foreground"
       >
         <SmoothScroll>{children}</SmoothScroll>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

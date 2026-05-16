@@ -1,6 +1,12 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import {
+  dispatchStoredValueChanged,
+  readStoredString,
+  subscribeStoredValue,
+  writeStoredString,
+} from "@/lib/browser/safe-storage";
 
 /**
  * `useSyncExternalStore`-backed timestamp persisted to `localStorage`.
@@ -29,14 +35,10 @@ export function useLastSeen(storageKey: string): {
 
   const markSeen = useCallback(() => {
     const now = Date.now();
-    try {
-      window.localStorage.setItem(storageKey, String(now));
-      // Same-tab writes don't fire `storage`; broadcast via a custom
-      // event scoped to this key so other subscribers re-compute.
-      window.dispatchEvent(new CustomEvent(eventNameFor(storageKey)));
-    } catch {
-      /* localStorage unavailable (private mode, quota, …) — silent. */
-    }
+    writeStoredString(storageKey, String(now));
+    // Same-tab writes don't fire `storage`; broadcast via a custom
+    // event scoped to this key so other subscribers re-compute.
+    dispatchStoredValueChanged(eventNameFor(storageKey));
   }, [storageKey]);
 
   return { lastSeen, markSeen };
@@ -47,26 +49,13 @@ function eventNameFor(storageKey: string): string {
 }
 
 function subscribe(storageKey: string, callback: () => void): () => void {
-  const customEvent = eventNameFor(storageKey);
-  function onStorage(event: StorageEvent) {
-    if (event.key === storageKey) callback();
-  }
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(customEvent, callback);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(customEvent, callback);
-  };
+  return subscribeStoredValue(storageKey, eventNameFor(storageKey), callback);
 }
 
 function readTimestamp(storageKey: string): number {
-  try {
-    const raw = window.localStorage.getItem(storageKey);
-    const parsed = raw ? Number.parseInt(raw, 10) : 0;
-    return Number.isFinite(parsed) ? parsed : 0;
-  } catch {
-    return 0;
-  }
+  const raw = readStoredString(storageKey);
+  const parsed = raw ? Number.parseInt(raw, 10) : 0;
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function serverSnapshot(): number {

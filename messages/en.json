@@ -473,6 +473,19 @@
     "status": "Status",
     "replaceFinalContent": "Replace with final content"
   },
+  "Privacy": {
+    "bannerLabel": "Cookie preferences",
+    "title": "Privacy preferences",
+    "description": "This site uses essential storage for settings like theme, saves, and sound. Analytics only loads after you opt in.",
+    "acceptAll": "Accept all",
+    "essentialOnly": "Essential only",
+    "settings": "Settings",
+    "analyticsTitle": "Analytics",
+    "analyticsDescription": "Anonymous page and performance signals that help improve the site.",
+    "personalizationTitle": "Personalization",
+    "personalizationDescription": "Remember optional interface preferences on this device.",
+    "save": "Save preferences"
+  },
   "Notifications": {
     "label": "Notifications",
     "open": "Open notifications",

@@ -2,42 +2,32 @@
 // A future backend sync (see docs/GALLERY_SOCIAL_SPEC.md §7) will replace
 // the body of these functions; UI code never imports localStorage directly.
 
+import {
+  dispatchStoredValueChanged,
+  readStoredJson,
+  subscribeStoredValue,
+  writeStoredJson,
+} from "@/lib/browser/safe-storage";
+
 const STORAGE_KEY = "m4_saved_frames";
 const MAX_SAVED = 200;
+const CHANGE_EVENT = "m4:saves-changed";
 
 let cachedList: string[] | null = null;
 
 function readList(): string[] {
   if (cachedList) return cachedList;
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      cachedList = [];
-      return cachedList;
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      cachedList = [];
-      return cachedList;
-    }
-    cachedList = parsed.filter((value): value is string => typeof value === "string");
-    return cachedList;
-  } catch {
-    cachedList = [];
-    return cachedList;
-  }
+  cachedList = readStoredJson(STORAGE_KEY, [], isStringList).slice(
+    0,
+    MAX_SAVED,
+  );
+  return cachedList;
 }
 
 function writeList(list: string[]): void {
   cachedList = list;
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    window.dispatchEvent(new CustomEvent("m4:saves-changed"));
-  } catch {
-    // ignore quota / private-mode failures
-  }
+  writeStoredJson(STORAGE_KEY, list);
+  dispatchStoredValueChanged(CHANGE_EVENT);
 }
 
 function invalidateCache(): void {
@@ -71,22 +61,16 @@ export function toggleSave(slug: string): boolean {
 }
 
 export function subscribe(listener: () => void): () => void {
-  if (typeof window === "undefined") return () => {};
-  const storageHandler = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY) {
-      invalidateCache();
-      listener();
-    }
-  };
-  const localHandler = () => {
+  return subscribeStoredValue(STORAGE_KEY, CHANGE_EVENT, () => {
+    invalidateCache();
     listener();
-  };
-  window.addEventListener("storage", storageHandler);
-  window.addEventListener("m4:saves-changed", localHandler);
-  return () => {
-    window.removeEventListener("storage", storageHandler);
-    window.removeEventListener("m4:saves-changed", localHandler);
-  };
+  });
 }
 
 export const SAVES_STORAGE_KEY = STORAGE_KEY;
+
+function isStringList(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) && value.every((entry) => typeof entry === "string")
+  );
+}

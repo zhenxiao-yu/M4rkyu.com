@@ -473,6 +473,19 @@
     "status": "状态",
     "replaceFinalContent": "正式内容替换中"
   },
+  "Privacy": {
+    "bannerLabel": "Cookie 偏好",
+    "title": "隐私偏好",
+    "description": "本站会使用必要的本地存储来保存主题、收藏和声音等设置。分析脚本只会在你同意后加载。",
+    "acceptAll": "全部同意",
+    "essentialOnly": "仅必要",
+    "settings": "设置",
+    "analyticsTitle": "分析",
+    "analyticsDescription": "匿名页面与性能信号，用于改进网站。",
+    "personalizationTitle": "个性化",
+    "personalizationDescription": "在此设备上记住可选界面偏好。",
+    "save": "保存偏好"
+  },
   "Notifications": {
     "label": "通知",
     "open": "打开通知",

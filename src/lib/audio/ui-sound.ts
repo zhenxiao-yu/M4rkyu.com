@@ -1,3 +1,10 @@
+import {
+  dispatchStoredValueChanged,
+  readStoredString,
+  subscribeStoredValue,
+  writeStoredString,
+} from "@/lib/browser/safe-storage";
+
 /**
  * UI sound module — phase 7 of docs/UNIFIED_VISUAL_DIRECTION.md (§4.10 + §8).
  *
@@ -86,12 +93,7 @@ function prefersReducedMotion(): boolean {
 
 /** Returns `true` only when the user has explicitly enabled UI sound. */
 export function isSoundEnabled(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) === "on";
-  } catch {
-    return false;
-  }
+  return readStoredString(STORAGE_KEY) === "on";
 }
 
 /**
@@ -101,24 +103,13 @@ export function isSoundEnabled(): boolean {
  */
 export function setSoundEnabled(enabled: boolean): void {
   if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, enabled ? "on" : "off");
-    window.dispatchEvent(new Event(CHANGE_EVENT));
-  } catch {
-    // localStorage unavailable (private mode, quota, …) — silently
-    // skip; the toggle becomes session-only.
-  }
+  writeStoredString(STORAGE_KEY, enabled ? "on" : "off");
+  dispatchStoredValueChanged(CHANGE_EVENT);
 }
 
 /** Subscribe to in-tab + cross-tab toggle changes. Used by useSoundEnabled. */
 export function subscribeSoundEnabled(callback: () => void): () => void {
-  if (typeof window === "undefined") return () => undefined;
-  window.addEventListener("storage", callback);
-  window.addEventListener(CHANGE_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(CHANGE_EVENT, callback);
-  };
+  return subscribeStoredValue(STORAGE_KEY, CHANGE_EVENT, callback);
 }
 
 /**

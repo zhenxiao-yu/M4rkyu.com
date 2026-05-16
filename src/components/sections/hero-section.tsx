@@ -40,6 +40,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
   const [titleA, titleB] = title.includes("+")
     ? title.split("+").map((s) => s.trim())
     : [title, ""];
+  const spokenTitle = title.replace("+", " ").replace(/\s+/g, " ").trim();
 
   return (
     <section
@@ -130,18 +131,22 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           <div className="flex w-full justify-center sm:overflow-hidden">
             <h1
               data-boot="headline"
+              aria-label={spokenTitle}
               className="font-display w-full px-2 pt-4 pb-3 text-center text-[clamp(2.25rem,6.25vw,7.5rem)] font-black leading-[0.9] tracking-[-0.04em] sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pt-5 sm:pb-5"
             >
               {/* Mobile: plain text + star, wraps. Desktop: Shuffle reel
                 * around each word, with the star between, all on one line.
                 * StarGlyph drops to currentColor so it tracks the headline
                 * across themes. */}
-              <span className="sm:hidden">
+              <span aria-hidden="true" className="sm:hidden">
                 {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}{" "}
                 <StarGlyph className="-mt-1 inline-block size-[0.65em] align-middle" />{" "}
                 {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
               </span>
-              <span className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]">
+              <span
+                aria-hidden="true"
+                className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]"
+              >
                 {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
                 <StarGlyph className="inline-block size-[0.55em] shrink-0 self-center" />
                 {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}

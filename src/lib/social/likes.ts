@@ -6,43 +6,28 @@
 // backend lands, swap the body of the four exported functions and leave the
 // signatures intact.
 
+import {
+  dispatchStoredValueChanged,
+  readStoredJson,
+  subscribeStoredValue,
+  writeStoredJson,
+} from "@/lib/browser/safe-storage";
+
 const STORAGE_KEY = "m4_liked_frames";
+const CHANGE_EVENT = "m4:likes-changed";
 
 let cachedSet: Set<string> | null = null;
 
 function readSet(): Set<string> {
   if (cachedSet) return cachedSet;
-  if (typeof window === "undefined") return new Set();
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      cachedSet = new Set();
-      return cachedSet;
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      cachedSet = new Set();
-      return cachedSet;
-    }
-    cachedSet = new Set(
-      parsed.filter((value): value is string => typeof value === "string"),
-    );
-    return cachedSet;
-  } catch {
-    cachedSet = new Set();
-    return cachedSet;
-  }
+  cachedSet = new Set(readStoredJson(STORAGE_KEY, [], isStringList));
+  return cachedSet;
 }
 
 function writeSet(set: Set<string>): void {
   cachedSet = set;
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(set)));
-    window.dispatchEvent(new CustomEvent("m4:likes-changed"));
-  } catch {
-    // Storage may be unavailable (private mode, quota); fail soft.
-  }
+  writeStoredJson(STORAGE_KEY, Array.from(set));
+  dispatchStoredValueChanged(CHANGE_EVENT);
 }
 
 function invalidateCache(): void {
@@ -71,22 +56,16 @@ export function toggleLike(slug: string): boolean {
 }
 
 export function subscribe(listener: () => void): () => void {
-  if (typeof window === "undefined") return () => {};
-  const storageHandler = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY) {
-      invalidateCache();
-      listener();
-    }
-  };
-  const localHandler = () => {
+  return subscribeStoredValue(STORAGE_KEY, CHANGE_EVENT, () => {
+    invalidateCache();
     listener();
-  };
-  window.addEventListener("storage", storageHandler);
-  window.addEventListener("m4:likes-changed", localHandler);
-  return () => {
-    window.removeEventListener("storage", storageHandler);
-    window.removeEventListener("m4:likes-changed", localHandler);
-  };
+  });
 }
 
 export const LIKES_STORAGE_KEY = STORAGE_KEY;
+
+function isStringList(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) && value.every((entry) => typeof entry === "string")
+  );
+}
