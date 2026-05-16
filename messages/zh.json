@@ -18,7 +18,10 @@
     "logs": "日志",
     "allWork": "全部作品",
     "visualArchive": "视觉档案",
-    "writing": "写作"
+    "writing": "写作",
+    "blogs": "博客",
+    "notes": "笔记",
+    "shop": "商店"
   },
   "Theme": {
     "label": "主题",
@@ -438,6 +441,16 @@
     "indexPendingTitle": "资源搜索索引待上线",
     "indexPendingDescription": "待办：等正式资源与笔记确定后，会接入 Pagefind 索引与标签搜索。"
   },
+  "Shop": {
+    "eyebrow": "小批量出品",
+    "pendingTitle": "店铺即将开张",
+    "pendingDescription": "海报、印刷品与小批量物件会在第一批签名打包完成后上架。"
+  },
+  "Notes": {
+    "eyebrow": "随手笔记",
+    "pendingTitle": "笔记还压在页边",
+    "pendingDescription": "等到积累了几条值得放出来的短笔记，再在这里逐条展开 —— 设计问题、草图、阅读旁注。"
+  },
   "Meta": {
     "galleryTitle": "影像",
     "galleryDescription": "黑白摄影、数字艺术与样片 —— 于震潇的视觉档案。",
@@ -446,7 +459,11 @@
     "contactTitle": "联系",
     "contactDescription": "项目咨询与合作。当前提供邮件与表单回退，后续接入服务端表单服务。",
     "mediaTitle": "媒体",
-    "mediaDescription": "视频与流程档案 —— 占位帧先撑住版面，正式片段与海报随后替换。"
+    "mediaDescription": "视频与流程档案 —— 占位帧先撑住版面，正式片段与海报随后替换。",
+    "shopTitle": "商店",
+    "shopDescription": "限量印刷、海报与小批量物件 —— 第一批准备就绪后即开放。",
+    "notesTitle": "笔记",
+    "notesDescription": "短篇笔记 —— 设计片段、随手想法与读书旁注，简短并标注日期。"
   },
   "Portal": {
     "title": "Portal",

@@ -17,26 +17,20 @@ import { buildNavStructure, type NavLabels } from "./nav-structure";
 
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Navigation" });
-  const tCategories = await getTranslations({
-    locale,
-    namespace: "Categories",
-  });
 
   const labels: NavLabels = {
+    projects: t("projects"),
     work: t("work"),
-    archive: t("archive"),
-    logs: t("logs"),
-    allWork: t("allWork"),
-    visualArchive: t("visualArchive"),
-    writing: t("writing"),
     games: t("games"),
-    media: t("media"),
+    gallery: t("gallery"),
+    archive: t("archive"),
+    shop: t("shop"),
+    logs: t("logs"),
+    blogs: t("blogs"),
+    notes: t("notes"),
     resources: t("resources"),
     about: t("about"),
     contact: t("contact"),
-    categoryWebApp: tCategories("web-app"),
-    categoryAiTool: tCategories("ai-tool"),
-    categoryExperiment: tCategories("experiment"),
   };
 
   const structure = buildNavStructure(labels);

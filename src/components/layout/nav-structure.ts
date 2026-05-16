@@ -1,9 +1,9 @@
 /**
  * Shared navigation structure for desktop dropdowns + mobile sheet.
  *
- * Sub-items that depend on URL params (e.g. `/work?category=ai-tool`)
- * ride on the in-page filter wired up in
- * `app/[locale]/work/_client.tsx`.
+ * Each group has its own `href` so clicking the parent label always
+ * navigates to its primary destination (the dropdown is a secondary
+ * disclosure, not the only way in).
  */
 
 export interface NavDropdownItem {
@@ -16,6 +16,8 @@ export interface NavDropdownItem {
 export interface NavDropdownGroup {
   id: string;
   label: string;
+  /** Primary destination when the group's label is clicked. */
+  href: string;
   items: NavDropdownItem[];
 }
 
@@ -31,73 +33,59 @@ export interface NavStructure {
 }
 
 /**
- * Label bag the header passes in. Splitting Navigation vs Categories
- * keeps each side free of cross-namespace `t()` calls.
+ * Label bag the header passes in. The header is the only place
+ * `next-intl` translation calls happen for the nav so each rendering
+ * surface (desktop + mobile + palette) stays free of cross-namespace
+ * `t()` plumbing.
  */
 export interface NavLabels {
+  projects: string;
   work: string;
-  archive: string;
-  logs: string;
-  allWork: string;
-  visualArchive: string;
-  writing: string;
   games: string;
-  media: string;
+  gallery: string;
+  archive: string;
+  shop: string;
+  logs: string;
+  blogs: string;
+  notes: string;
   resources: string;
   about: string;
   contact: string;
-  // Categories namespace — used for /work?category= deep links.
-  categoryWebApp: string;
-  categoryAiTool: string;
-  categoryExperiment: string;
 }
 
 export function buildNavStructure(labels: NavLabels): NavStructure {
   return {
     groups: [
       {
-        id: "work",
-        label: labels.work,
+        id: "projects",
+        label: labels.projects,
+        href: "/work",
         items: [
-          { id: "all-work", label: labels.allWork, href: "/work" },
+          { id: "work", label: labels.work, href: "/work" },
           { id: "games", label: labels.games, href: "/games" },
-          // Project filters ride on `?category=` already parsed by
-          // app/[locale]/work/_client.tsx — safe to deep-link.
-          {
-            id: "software",
-            label: labels.categoryWebApp,
-            href: "/work?category=web-app",
-          },
-          {
-            id: "ai-tools",
-            label: labels.categoryAiTool,
-            href: "/work?category=ai-tool",
-          },
-          {
-            id: "experiments",
-            label: labels.categoryExperiment,
-            href: "/work?category=experiment",
-          },
         ],
       },
       {
-        id: "archive",
-        label: labels.archive,
+        id: "gallery",
+        label: labels.gallery,
+        href: "/archive",
         items: [
-          { id: "visual-archive", label: labels.visualArchive, href: "/archive" },
-          { id: "media", label: labels.media, href: "/media" },
+          { id: "archive", label: labels.archive, href: "/archive" },
+          { id: "shop", label: labels.shop, href: "/shop" },
         ],
       },
       {
         id: "logs",
         label: labels.logs,
+        href: "/logs",
         items: [
-          { id: "writing", label: labels.writing, href: "/logs" },
-          { id: "resources", label: labels.resources, href: "/resources" },
+          { id: "blogs", label: labels.blogs, href: "/logs" },
+          { id: "notes", label: labels.notes, href: "/notes" },
         ],
       },
     ],
     flatLinks: [
+      { id: "resources", label: labels.resources, href: "/resources" },
       { id: "about", label: labels.about, href: "/about" },
       { id: "contact", label: labels.contact, href: "/contact" },
     ],

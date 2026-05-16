@@ -12,11 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
@@ -217,27 +213,51 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                       setOpenGroup(next ? group.id : null)
                     }
                   >
-                    <CollapsibleTrigger
+                    {/* Split row: the label is a Link that navigates
+                     * to the group's primary destination; the chevron
+                     * on the right is a separate button that toggles
+                     * the submenu. Two distinct affordances, one row. */}
+                    <div
                       className={cn(
-                        "flex min-h-16 w-full items-center justify-between rounded-md border border-border/70 bg-background/65 px-4 py-3 text-left transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-muted/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        "flex min-h-16 items-stretch rounded-md border border-border/70 bg-background/65 transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 focus-within:border-ring/45",
                         groupActive
                           ? "border-ring/45 text-foreground"
                           : "text-muted-foreground",
                       )}
                     >
-                      <span className="font-display text-3xl font-black leading-none tracking-normal">
-                        {group.label}
-                      </span>
-                      <ChevronDown
-                        aria-hidden="true"
-                        className={cn(
-                          "size-5 transition-transform duration-(--motion-fast) ease-(--ease-premium)",
-                          open && "rotate-180",
-                        )}
-                      />
-                    </CollapsibleTrigger>
+                      <SheetClose asChild>
+                        <Link
+                          href={group.href}
+                          locale={locale}
+                          className="flex flex-1 items-center px-4 py-3 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          <span className="font-display text-3xl font-black leading-none tracking-normal">
+                            {group.label}
+                          </span>
+                        </Link>
+                      </SheetClose>
+                      <button
+                        type="button"
+                        aria-label={
+                          open
+                            ? `Collapse ${group.label}`
+                            : `Expand ${group.label}`
+                        }
+                        aria-expanded={open}
+                        onClick={() => setOpenGroup(open ? null : group.id)}
+                        className="flex w-14 shrink-0 items-center justify-center border-l border-border/60 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <ChevronDown
+                          aria-hidden="true"
+                          className={cn(
+                            "size-5 transition-transform duration-(--motion-fast) ease-(--ease-premium)",
+                            open && "rotate-180",
+                          )}
+                        />
+                      </button>
+                    </div>
                     <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
-                      <ul className="grid gap-1 border-x border-b border-border/60 bg-background/45 p-2">
+                      <ul className="mt-1 grid gap-1 rounded-md border border-border/60 bg-background/45 p-2">
                         {group.items.map((item) => (
                           <li key={item.id}>
                             <SheetClose asChild>

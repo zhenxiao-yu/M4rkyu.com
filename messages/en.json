@@ -18,7 +18,10 @@
     "logs": "Logs",
     "allWork": "All Work",
     "visualArchive": "Visual Archive",
-    "writing": "Writing"
+    "writing": "Writing",
+    "blogs": "Blog",
+    "notes": "Notes",
+    "shop": "Shop"
   },
   "Theme": {
     "label": "Theme",
@@ -438,6 +441,16 @@
     "indexPendingTitle": "Resource search index pending",
     "indexPendingDescription": "TBD: Pagefind index and tag search will be wired after final resources and posts are selected."
   },
+  "Shop": {
+    "eyebrow": "small editions",
+    "pendingTitle": "Storefront opening soon",
+    "pendingDescription": "Posters, prints, and small-run objects will list here once the first edition is signed and packed."
+  },
+  "Notes": {
+    "eyebrow": "field notes",
+    "pendingTitle": "Notes are still in the margin",
+    "pendingDescription": "Short, dated fragments will land here once a few are worth surfacing — design questions, sketches, reading marginalia."
+  },
   "Meta": {
     "galleryTitle": "Gallery",
     "galleryDescription": "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
@@ -446,7 +459,11 @@
     "contactTitle": "Contact",
     "contactDescription": "Project inquiries and collaboration. Mailto and form fallback now, server-side provider later.",
     "mediaTitle": "Media",
-    "mediaDescription": "Video and process archive — draft frames hold the layout while final clips and posters land."
+    "mediaDescription": "Video and process archive — draft frames hold the layout while final clips and posters land.",
+    "shopTitle": "Shop",
+    "shopDescription": "Limited prints, posters, and small editions — the storefront opens once the first run is ready.",
+    "notesTitle": "Notes",
+    "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated."
   },
   "Portal": {
     "title": "Portal",
