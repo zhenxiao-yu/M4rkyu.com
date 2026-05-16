@@ -7,6 +7,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -19,6 +20,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundToggle } from "@/components/system/sound-toggle";
+import { MusicToggle } from "@/components/system/music-toggle";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 import { cn } from "@/lib/utils";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
@@ -66,6 +68,9 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
           <SheetTitle className="font-mono text-sm tracking-wide">
             M4RKYU.SYS
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            {t("menuDescription")}
+          </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
@@ -203,6 +208,7 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <SoundToggle />
+            <MusicToggle />
           </div>
         </div>
       </SheetContent>

@@ -12,11 +12,15 @@ import { NotificationBell } from "@/components/system/notification-bell";
 import { PillNav } from "@/components/ui/magic/pill-nav";
 import { getPosts } from "@/lib/blog/get-posts";
 import { MobileNav } from "./mobile-nav";
+import { HeaderDock } from "./header-dock";
 import { buildNavStructure, type NavLabels } from "./nav-structure";
 
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Navigation" });
-  const tCategories = await getTranslations({ locale, namespace: "Categories" });
+  const tCategories = await getTranslations({
+    locale,
+    namespace: "Categories",
+  });
 
   const labels: NavLabels = {
     work: t("work"),
@@ -67,7 +71,7 @@ export async function Header({ locale }: { locale: Locale }) {
     // `pointer-events-none` keeps the gutter click-through; the dock
     // itself re-enables clicks.
     <header className="pointer-events-none sticky top-0 z-40 px-3 pt-3 sm:px-4">
-      <div className="pointer-events-auto mx-auto flex h-12 w-full max-w-7xl items-center gap-2 rounded-2xl border border-border/70 bg-background/70 px-2 shadow-lg shadow-black/5 backdrop-blur-2xl sm:gap-3 sm:px-3 dark:shadow-black/20">
+      <HeaderDock>
         <Link
           href="/"
           locale={locale}
@@ -82,10 +86,10 @@ export async function Header({ locale }: { locale: Locale }) {
         </Link>
 
         {/* Center: PillNav (lg+ only — mobile uses the sheet via
-          * MobileNav). The pill snaps to the active route on first
-          * paint via pathname-driven activeIndex; clicking another
-          * item slides the pill across via motion's shared layout
-          * transition. */}
+         * MobileNav). The pill snaps to the active route on first
+         * paint via pathname-driven activeIndex; clicking another
+         * item slides the pill across via motion's shared layout
+         * transition. */}
         <div className="hidden flex-1 justify-center lg:flex">
           <PillNav items={navItems} />
         </div>
@@ -104,12 +108,13 @@ export async function Header({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        {/* Compact rail (<lg): palette icon + bell + theme + menu sheet.
-          * Lang, sound, music, QR move into the sheet to keep the dock
-          * under five touch targets. */}
+        {/* Compact rail (<lg): the language and theme controls stay
+         * directly reachable; secondary sound/music/QR controls move
+         * into the sheet to keep the dock readable on 360px screens. */}
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
           <CommandPaletteIconTrigger />
           <NotificationBell posts={notificationFeed} locale={locale} />
+          <LanguageSwitcher />
           <ThemeSwitcher />
           <MobileNav
             locale={locale}
@@ -117,7 +122,7 @@ export async function Header({ locale }: { locale: Locale }) {
             flatLinks={structure.flatLinks}
           />
         </div>
-      </div>
+      </HeaderDock>
     </header>
   );
 }

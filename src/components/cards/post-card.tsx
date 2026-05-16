@@ -12,7 +12,7 @@ import type { Post } from "@/content/schemas";
 
 interface PostCardProps {
   post: Post;
-  /** First N cards on the page get `priority` so the cover preloads. */
+  /** First N cards get high fetch priority for likely LCP candidates. */
   priority?: boolean;
 }
 
@@ -56,7 +56,7 @@ export function PostCard({ post, priority = false }: PostCardProps) {
               src={cover.src}
               alt=""
               fill
-              priority={priority}
+              fetchPriority={priority ? "high" : "auto"}
               sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
               className="object-cover grayscale transition duration-500 group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
             />

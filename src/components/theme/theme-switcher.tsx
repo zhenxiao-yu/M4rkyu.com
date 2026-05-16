@@ -27,15 +27,17 @@ export function ThemeSwitcher() {
   const { resolvedTheme, setTheme } = useTheme();
 
   function toggle(event: MouseEvent<HTMLButtonElement>) {
-    // Read at click time so we always flip from the current resolved
-    // value, not from a stale render.
-    const next = resolvedTheme === "dark" ? "light" : "dark";
-
     if (typeof document === "undefined") {
-      setTheme(next);
+      setTheme(resolvedTheme === "dark" ? "light" : "dark");
       return;
     }
 
+    // Read the attribute at click time so tests, fast double-clicks,
+    // and system-theme changes all flip from the DOM's real state
+    // instead of a stale React render.
+    const activeTheme =
+      document.documentElement.getAttribute("data-theme") ?? resolvedTheme;
+    const next = activeTheme === "dark" ? "light" : "dark";
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -75,18 +77,16 @@ export function ThemeSwitcher() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="inline-flex">
-          <button
-            type="button"
-            aria-label="Toggle theme"
-            data-testid="theme-toggle"
-            onClick={toggle}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 p-0 text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:bg-background/70 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <Sun className="size-4 hidden dark:block" aria-hidden="true" />
-            <Moon className="size-4 block dark:hidden" aria-hidden="true" />
-          </button>
-        </span>
+        <button
+          type="button"
+          aria-label="Toggle theme"
+          data-testid="theme-toggle"
+          onClick={toggle}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 p-0 text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:bg-background/70 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          <Sun className="size-4 hidden dark:block" aria-hidden="true" />
+          <Moon className="size-4 block dark:hidden" aria-hidden="true" />
+        </button>
       </TooltipTrigger>
       <TooltipContent>Toggle theme</TooltipContent>
     </Tooltip>

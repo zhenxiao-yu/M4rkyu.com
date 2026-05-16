@@ -3,12 +3,13 @@ import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { PinnedPostCard } from "@/components/cards/pinned-post-card";
+import { FeaturedPostsBento } from "@/components/blog/featured-posts-bento";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getPosts, DEVTO_USERNAME } from "@/lib/blog/get-posts";
+import { selectFeaturedPosts } from "@/lib/blog/filter-posts";
 import { BlogTimeline } from "./_client";
 
 export async function generateMetadata({
@@ -34,7 +35,10 @@ export default async function BlogPage({
   const t = await getTranslations({ locale, namespace: "Blog" });
   const posts = await getPosts();
   const pinned = posts.find((post) => post.pinned);
-  const timelinePosts = posts.filter((post) => !post.pinned);
+  const featuredPosts = selectFeaturedPosts(posts, pinned);
+  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug));
+  // Keep featured posts out of the archive timeline so readers do not see duplicates.
+  const archivePosts = posts.filter((post) => !featuredSlugs.has(post.slug));
 
   return (
     <PageShell locale={locale}>
@@ -69,17 +73,20 @@ export default async function BlogPage({
         </Card>
       </PageHero>
 
-      {pinned ? (
-        <PageSection width="narrow" innerClassName="pb-0">
-          <FadeIn>
-            <PinnedPostCard post={pinned} />
-          </FadeIn>
-        </PageSection>
-      ) : null}
-
-      <PageSection width="narrow" innerClassName={pinned ? "pt-10" : undefined}>
+      <PageSection innerClassName="pb-0">
         <FadeIn>
-          <BlogTimeline posts={timelinePosts} />
+          <FeaturedPostsBento
+            posts={featuredPosts}
+            heading={t("featuredHeading")}
+            description={t("featuredDescription")}
+            ctaLabel={t("featuredCta")}
+          />
+        </FadeIn>
+      </PageSection>
+
+      <PageSection innerClassName="pt-10">
+        <FadeIn>
+          <BlogTimeline posts={archivePosts} />
         </FadeIn>
       </PageSection>
     </PageShell>

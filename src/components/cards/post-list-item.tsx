@@ -67,8 +67,8 @@ export function PostListItem({ post }: PostListItemProps) {
       <RowLink
         post={post}
         className={cn(
-          "group grid gap-3 rounded-lg border border-transparent px-4 py-5 transition-colors duration-(--motion-fast) ease-(--ease-premium)",
-          "hover:border-border hover:bg-muted/30",
+          "group grid gap-3 rounded-md border border-transparent px-4 py-5 transition-[background-color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) sm:px-5 lg:px-6",
+          "hover:border-border/80 hover:bg-background/70",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "md:items-center md:gap-6",
           hasCover

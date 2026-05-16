@@ -46,7 +46,9 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       if (!root) return;
 
       const eyebrow = root.querySelector<HTMLElement>('[data-boot="eyebrow"]');
-      const subtitle = root.querySelector<HTMLElement>('[data-boot="subtitle"]');
+      const subtitle = root.querySelector<HTMLElement>(
+        '[data-boot="subtitle"]',
+      );
       const ctas = root.querySelectorAll<HTMLElement>('[data-boot="ctas"] > *');
       const hud = root.querySelector<HTMLElement>('[data-boot="hud"]');
 
@@ -62,19 +64,22 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
       //   t=0.50  ctas (stagger)
       //   t=0.80  hud strip
       const eased = motionTokens.easePremium;
-      gsap.set(eyebrow, { opacity: 0, y: 8 });
-      gsap.set(subtitle, { opacity: 0, y: 12 });
-      gsap.set(ctas, { opacity: 0, y: 12 });
-      gsap.set(hud, { opacity: 0, y: 8 });
+      if (eyebrow) gsap.set(eyebrow, { opacity: 0, y: 8 });
+      if (subtitle) gsap.set(subtitle, { opacity: 0, y: 12 });
+      if (ctas.length > 0) gsap.set(ctas, { opacity: 0, y: 12 });
+      if (hud) gsap.set(hud, { opacity: 0, y: 8 });
 
       const tl = gsap.timeline();
-      tl.to(eyebrow, {
-        opacity: 1,
-        y: 0,
-        duration: motionTokens.fast,
-        ease: eased,
-      })
-        .to(
+      if (eyebrow) {
+        tl.to(eyebrow, {
+          opacity: 1,
+          y: 0,
+          duration: motionTokens.fast,
+          ease: eased,
+        });
+      }
+      if (subtitle) {
+        tl.to(
           subtitle,
           {
             opacity: 1,
@@ -83,8 +88,10 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             ease: eased,
           },
           0.35,
-        )
-        .to(
+        );
+      }
+      if (ctas.length > 0) {
+        tl.to(
           ctas,
           {
             opacity: 1,
@@ -94,8 +101,10 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
             ease: eased,
           },
           0.5,
-        )
-        .to(
+        );
+      }
+      if (hud) {
+        tl.to(
           hud,
           {
             opacity: 1,
@@ -105,6 +114,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
           },
           0.8,
         );
+      }
     },
     { dependencies: [reduceMotion], scope: scopeRef },
   );

@@ -1,73 +1,114 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { BlogResults } from "@/components/blog/blog-results";
 import { BlogToolbar } from "@/components/blog/blog-toolbar";
 import { useViewMode } from "@/components/blog/use-view-mode";
-import { PostListItem } from "@/components/cards/post-list-item";
-import { PostCard } from "@/components/cards/post-card";
+import type { BlogSortMode } from "@/content/blog-page";
 import type { Post } from "@/content/schemas";
+import {
+  DEFAULT_BLOG_SORT,
+  countValues,
+  filterAndSortPosts,
+  isBlogSortMode,
+  sanitizeBlogQuery,
+  type BlogFilterState,
+} from "@/lib/blog/filter-posts";
 
 interface BlogTimelineProps {
   posts: Post[];
 }
 
 /**
- * Client wrapper around the `/logs` timeline. Owns:
- *
- * - URL-synced filter state (`?q=` + `?tag=`).
- * - Substring search over `title + excerpt + tags`.
- *
- * All filtered posts render at once. The previous IntersectionObserver
- * batched-paging approach grew the document height as the user scrolled,
- * which made the scrollbar handle deceptive — the user would scroll to
- * what looked like the end, only for more cards to load below them.
- * Stable layout > marginal initial-render savings for ~50-post archives.
+ * Client wrapper around the `/logs` timeline. Data stays server-loaded;
+ * this island owns only URL-synced filtering, sorting, and view state.
  */
 export function BlogTimeline({ posts }: BlogTimelineProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const t = useTranslations("Blog");
   const [viewMode, setViewMode] = useViewMode();
 
-  // Rank tags by frequency so the toolbar's top-N slot picks the
-  // ones that actually filter useful slices of the archive.
-  const rankedTags = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const post of posts) {
-      for (const tag of post.tags) {
-        counts.set(tag, (counts.get(tag) ?? 0) + 1);
-      }
-    }
-    return Array.from(counts.entries())
-      .map(([tag, count]) => ({ tag, count }))
-      .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
-  }, [posts]);
-
+  const rankedTags = useMemo(
+    () => countValues(posts.flatMap((post) => post.tags)),
+    [posts],
+  );
+  const categories = useMemo(
+    () => countValues(posts.map((post) => post.category)),
+    [posts],
+  );
   const knownTags = useMemo(
-    () => new Set(rankedTags.map((entry) => entry.tag)),
+    () => new Set(rankedTags.map((entry) => entry.value)),
     [rankedTags],
+  );
+  const knownCategories = useMemo(
+    () => new Set(categories.map((entry) => entry.value)),
+    [categories],
   );
 
   const tagParam = searchParams.get("tag");
-  const activeTag = tagParam && knownTags.has(tagParam) ? tagParam : null;
-  const initialQuery = searchParams.get("q") ?? "";
-  const [query, setQuery] = useState(initialQuery);
+  const categoryParam = searchParams.get("category");
+  const sortParam = searchParams.get("sort");
+  const queryParam = sanitizeBlogQuery(searchParams.get("q") ?? "");
 
-  function updateUrl(next: { tag?: string | null; q?: string }) {
-    const params = new URLSearchParams(searchParams);
+  const activeTag = tagParam && knownTags.has(tagParam) ? tagParam : null;
+  const activeCategory =
+    categoryParam && knownCategories.has(categoryParam) ? categoryParam : null;
+  const sortMode = isBlogSortMode(sortParam) ? sortParam : DEFAULT_BLOG_SORT;
+  const [query, setQueryState] = useState(queryParam);
+  const deferredQuery = useDeferredValue(query);
+
+  useEffect(() => {
+    function syncQueryFromHistory() {
+      const params = new URLSearchParams(window.location.search);
+      setQueryState(sanitizeBlogQuery(params.get("q") ?? ""));
+    }
+
+    window.addEventListener("popstate", syncQueryFromHistory);
+    return () => {
+      window.removeEventListener("popstate", syncQueryFromHistory);
+    };
+  }, []);
+
+  function updateUrl(next: {
+    tag?: string | null;
+    category?: string | null;
+    q?: string;
+    sort?: BlogSortMode;
+  }) {
+    const params = new URLSearchParams(window.location.search);
+
     if ("tag" in next) {
       if (next.tag) params.set("tag", next.tag);
       else params.delete("tag");
     }
+    if ("category" in next) {
+      if (next.category) params.set("category", next.category);
+      else params.delete("category");
+    }
     if ("q" in next) {
-      const value = next.q?.trim();
+      const value = sanitizeBlogQuery(next.q ?? "").trim();
       if (value) params.set("q", value);
       else params.delete("q");
     }
+    if ("sort" in next) {
+      if (next.sort && next.sort !== DEFAULT_BLOG_SORT) {
+        params.set("sort", next.sort);
+      } else {
+        params.delete("sort");
+      }
+    }
+
     startTransition(() => {
       const nextQuery = params.toString();
       router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
@@ -76,73 +117,76 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
     });
   }
 
-  function setTag(tag: string | null) {
-    updateUrl({ tag });
+  function setQuery(value: string) {
+    const next = sanitizeBlogQuery(value);
+    setQueryState(next);
+    updateUrl({ q: next });
   }
 
-  function setQ(value: string) {
-    setQuery(value);
-    updateUrl({ q: value });
-  }
-
-  const filtered = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    return posts.filter((post) => {
-      if (activeTag && !post.tags.includes(activeTag)) return false;
-      if (!normalized) return true;
-      const hay = [post.title, post.excerpt, post.tags.join(" ")]
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(normalized);
+  function clearFilters() {
+    setQueryState("");
+    startTransition(() => {
+      router.replace(pathname, { scroll: false });
     });
-  }, [posts, activeTag, query]);
+  }
+
+  const filters = useMemo<BlogFilterState>(
+    () => ({
+      query: deferredQuery,
+      activeTag,
+      activeCategory,
+      sortMode,
+    }),
+    [deferredQuery, activeTag, activeCategory, sortMode],
+  );
+  const filtered = useMemo(
+    () => filterAndSortPosts(posts, filters),
+    [posts, filters],
+  );
+  const hasActiveFilters =
+    Boolean(query.trim()) ||
+    activeTag !== null ||
+    activeCategory !== null ||
+    sortMode !== DEFAULT_BLOG_SORT;
 
   return (
-    <>
+    <div className="grid gap-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-2xl">
+          <h2 className="font-heading text-2xl font-semibold tracking-normal text-foreground sm:text-3xl">
+            {t("allPostsHeading")}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
+            {t("allPostsDescription")}
+          </p>
+        </div>
+      </div>
+
       <BlogToolbar
         query={query}
-        onQueryChange={setQ}
+        onQueryChange={setQuery}
         rankedTags={rankedTags}
+        categories={categories}
         activeTag={activeTag}
-        onTagChange={setTag}
+        onTagChange={(tag) => updateUrl({ tag })}
+        activeCategory={activeCategory}
+        onCategoryChange={(category) => updateUrl({ category })}
+        sortMode={sortMode}
+        onSortModeChange={(sort) => updateUrl({ sort })}
         filteredCount={filtered.length}
         totalCount={posts.length}
+        isPending={isPending || deferredQuery !== query}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
 
-      {filtered.length === 0 ? (
-        <p className="mt-12 text-center font-mono text-sm text-muted-foreground">
-          {t("noMatches")}
-        </p>
-      ) : (
-        <>
-          {viewMode === "grid" ? (
-            <ol className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {filtered.map((post, i) => (
-                <li key={post.slug} className="h-full">
-                  {/* First two cards above the fold get priority cover
-                      preloads; the rest fall back to next/image's
-                      default lazy-loading. */}
-                  <PostCard post={post} priority={i < 2} />
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <ol className="mt-8 grid gap-1 divide-y divide-border/60">
-              {filtered.map((post) => (
-                <li key={post.slug}>
-                  <PostListItem post={post} />
-                </li>
-              ))}
-            </ol>
-          )}
-          <p className="mt-8 text-center font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-            {t("endOfResults", { count: filtered.length })}
-          </p>
-        </>
-      )}
-    </>
+      <BlogResults
+        posts={filtered}
+        viewMode={viewMode}
+        onClearFilters={clearFilters}
+      />
+    </div>
   );
 }
-

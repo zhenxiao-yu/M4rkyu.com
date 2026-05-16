@@ -1,313 +1,217 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { LayoutGrid, List, Search, X } from "lucide-react";
+import { useId } from "react";
+import { RotateCcw, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/badge";
+import { BlogActiveFilters } from "@/components/blog/blog-active-filters";
+import { BlogTagRail } from "@/components/blog/blog-tag-rail";
+import { BlogViewModeToggle } from "@/components/blog/blog-view-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DEFAULT_BLOG_SORT, type BlogSortMode } from "@/content/blog-page";
+import type { CountEntry } from "@/lib/blog/filter-posts";
 import type { BlogViewMode } from "./use-view-mode";
 
-interface TagEntry {
-  tag: string;
-  count: number;
-}
-
 interface BlogToolbarProps {
-  /** Query string controlled by the parent (URL-synced). */
   query: string;
-  /** Setter — receives the raw input value. */
   onQueryChange: (value: string) => void;
-  /** All known tags ordered by frequency (most-used first). */
-  rankedTags: TagEntry[];
-  /** Currently active tag, or `null` for "All". */
+  rankedTags: CountEntry[];
+  categories: CountEntry[];
   activeTag: string | null;
-  /** Setter — `null` clears the filter. */
   onTagChange: (tag: string | null) => void;
-  /** Visible-count display: "n / total". */
+  activeCategory: string | null;
+  onCategoryChange: (category: string | null) => void;
+  sortMode: BlogSortMode;
+  onSortModeChange: (sort: BlogSortMode) => void;
   filteredCount: number;
   totalCount: number;
-  /** Persisted view-mode (list vs grid). */
+  isPending: boolean;
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
   viewMode: BlogViewMode;
   onViewModeChange: (mode: BlogViewMode) => void;
 }
 
-const TOP_N = 6;
+const ALL_CATEGORIES_VALUE = "__all_categories__";
 
-/**
- * Search + tag filter strip for /blog. Top-`TOP_N` tags render
- * inline as Badge buttons; the remainder collapse behind a "More"
- * dropdown that dismisses on click-outside and Escape. URL state is
- * owned by the parent (`BlogTimeline`) so reload restores both
- * `?q=` and `?tag=`.
- */
 export function BlogToolbar({
   query,
   onQueryChange,
   rankedTags,
+  categories,
   activeTag,
   onTagChange,
+  activeCategory,
+  onCategoryChange,
+  sortMode,
+  onSortModeChange,
   filteredCount,
   totalCount,
+  isPending,
+  hasActiveFilters,
+  onClearFilters,
   viewMode,
   onViewModeChange,
 }: BlogToolbarProps) {
   const t = useTranslations("Blog");
   const searchId = useId();
-  const moreId = useId();
-  const [moreOpen, setMoreOpen] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
-
-  const topTags = rankedTags.slice(0, TOP_N);
-  const restTags = rankedTags.slice(TOP_N);
-  const activeInRest =
-    activeTag !== null && restTags.some((entry) => entry.tag === activeTag);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    function onPointer(event: MouseEvent | TouchEvent) {
-      if (!moreRef.current) return;
-      if (!moreRef.current.contains(event.target as Node)) {
-        setMoreOpen(false);
-      }
-    }
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setMoreOpen(false);
-    }
-    document.addEventListener("mousedown", onPointer);
-    document.addEventListener("touchstart", onPointer);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onPointer);
-      document.removeEventListener("touchstart", onPointer);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [moreOpen]);
+  const categoryValue = activeCategory ?? ALL_CATEGORIES_VALUE;
+  const sortLabels: Record<BlogSortMode, string> = {
+    newest: t("sortNewest"),
+    popular: t("sortPopular"),
+    discussed: t("sortDiscussed"),
+    quick: t("sortQuick"),
+  };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-start">
-      <div className="flex flex-wrap items-center gap-2">
-        <TagChip
-          active={activeTag === null}
-          onClick={() => onTagChange(null)}
-          label={t("tagAll")}
-        />
-        {topTags.map(({ tag }) => (
-          <TagChip
-            key={tag}
-            active={activeTag === tag}
-            onClick={() => onTagChange(tag)}
-            label={tag}
-          />
-        ))}
-        {restTags.length > 0 ? (
-          <div ref={moreRef} className="relative">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
-              aria-expanded={moreOpen}
-              aria-controls={moreId}
-              aria-label={t("tagMoreOpen")}
-              onClick={() => setMoreOpen((value) => !value)}
-            >
-              <Badge
-                variant={activeInRest ? "success" : "outline"}
-                className={cn(
-                  "cursor-pointer transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
-                  !activeInRest &&
-                    "hover:border-foreground/40 hover:text-foreground",
-                )}
-              >
-                {t("tagMore")} +{restTags.length}
-              </Badge>
-            </Button>
-            {moreOpen ? (
-              <div
-                id={moreId}
-                role="group"
-                className="absolute left-0 top-full z-20 mt-2 flex max-h-72 w-64 flex-wrap gap-1.5 overflow-y-auto rounded-md border border-border bg-popover p-3 shadow-md"
-              >
-                {restTags.map(({ tag, count }) => (
-                  <TagChip
-                    key={tag}
-                    active={activeTag === tag}
-                    onClick={() => {
-                      onTagChange(tag);
-                      setMoreOpen(false);
-                    }}
-                    label={
-                      <>
-                        <span>{tag}</span>
-                        <span className="font-mono text-[0.55rem] text-muted-foreground">
-                          {count}
-                        </span>
-                      </>
-                    }
-                    extraBadgeClass="gap-1.5"
-                  />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-        <span className="ml-2 font-mono text-xs text-muted-foreground">
-          {filteredCount} / {totalCount}
-        </span>
-      </div>
-
-      <div className="flex items-center gap-2 lg:justify-end">
-        <ViewModeToggle
-          value={viewMode}
-          onChange={onViewModeChange}
-          label={t("viewModeLabel")}
-          listLabel={t("viewModeList")}
-          gridLabel={t("viewModeGrid")}
-        />
-        <label htmlFor={searchId} className="block flex-1 lg:flex-initial">
+    <section
+      aria-label={t("filterPanelLabel")}
+      aria-busy={isPending}
+      className="rounded-lg border border-border bg-card/85 p-3 shadow-sm backdrop-blur-xl transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) sm:p-4"
+    >
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
+        <label htmlFor={searchId} className="block min-w-0">
           <span className="sr-only">{t("searchLabel")}</span>
-          <span className="relative block lg:w-72">
-          <Search
-            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            id={searchId}
-            type="search"
-            autoComplete="off"
-            placeholder={t("searchPlaceholder")}
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            className="pl-9 pr-9"
-          />
-          {query ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              aria-label={t("clearSearch")}
-              className="absolute right-1 top-1/2 size-7 -translate-y-1/2 rounded-sm p-0 hover:bg-muted"
-              onClick={() => onQueryChange("")}
-            >
-              <X aria-hidden="true" className="size-3.5" />
-            </Button>
-          ) : null}
+          <span className="relative block">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id={searchId}
+              type="search"
+              autoComplete="off"
+              placeholder={t("searchPlaceholder")}
+              value={query}
+              onChange={(event) => onQueryChange(event.target.value)}
+              className="h-11 rounded-lg border-border/80 bg-background/70 pl-9 pr-10 text-base shadow-inner shadow-black/0 transition-shadow focus-visible:shadow-black/5 sm:text-sm"
+            />
+            {query ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-label={t("clearSearch")}
+                className="absolute right-1.5 top-1/2 size-8 -translate-y-1/2 rounded-md p-0 hover:bg-muted"
+                onClick={() => onQueryChange("")}
+              >
+                <X aria-hidden="true" className="size-3.5" />
+              </Button>
+            ) : null}
           </span>
         </label>
+
+        <div className="grid gap-2 sm:grid-cols-[minmax(11rem,1fr)_minmax(10rem,0.8fr)_auto] xl:w-[31rem]">
+          <Select
+            value={categoryValue}
+            onValueChange={(value) =>
+              onCategoryChange(value === ALL_CATEGORIES_VALUE ? null : value)
+            }
+          >
+            <SelectTrigger
+              aria-label={t("categoryLabel")}
+              className="h-11 rounded-lg bg-background/70"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_CATEGORIES_VALUE}>
+                {t("categoryAll")}
+              </SelectItem>
+              {categories.map(({ value, count }) => (
+                <SelectItem key={value} value={value}>
+                  {value} ({count})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={sortMode}
+            onValueChange={(value) => onSortModeChange(value as BlogSortMode)}
+          >
+            <SelectTrigger
+              aria-label={t("sortLabel")}
+              className="h-11 rounded-lg bg-background/70"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">{sortLabels.newest}</SelectItem>
+              <SelectItem value="popular">{sortLabels.popular}</SelectItem>
+              <SelectItem value="discussed">{sortLabels.discussed}</SelectItem>
+              <SelectItem value="quick">{sortLabels.quick}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <BlogViewModeToggle
+            value={viewMode}
+            onChange={onViewModeChange}
+            label={t("viewModeLabel")}
+            listLabel={t("viewModeList")}
+            gridLabel={t("viewModeGrid")}
+          />
+        </div>
       </div>
-    </div>
-  );
-}
 
-/**
- * Three-state segmented toggle: List ↔ Grid. Persists via the parent
- * (which owns `useViewMode`). Hidden below `sm` because mobile only
- * has room for the list layout regardless of preference.
- */
-function ViewModeToggle({
-  value,
-  onChange,
-  label,
-  listLabel,
-  gridLabel,
-}: {
-  value: BlogViewMode;
-  onChange: (next: BlogViewMode) => void;
-  label: string;
-  listLabel: string;
-  gridLabel: string;
-}) {
-  return (
-    <div
-      role="group"
-      aria-label={label}
-      className="hidden items-center gap-0.5 rounded-md border border-border bg-muted/30 p-0.5 sm:flex"
-    >
-      <ToggleButton
-        active={value === "list"}
-        onClick={() => onChange("list")}
-        aria-label={listLabel}
-      >
-        <List aria-hidden="true" className="size-3.5" />
-      </ToggleButton>
-      <ToggleButton
-        active={value === "grid"}
-        onClick={() => onChange("grid")}
-        aria-label={gridLabel}
-      >
-        <LayoutGrid aria-hidden="true" className="size-3.5" />
-      </ToggleButton>
-    </div>
-  );
-}
+      <div className="mt-4 flex flex-col gap-3 border-t border-border/70 pt-4 lg:flex-row lg:items-start lg:justify-between">
+        <BlogTagRail
+          rankedTags={rankedTags}
+          activeTag={activeTag}
+          onTagChange={onTagChange}
+          labels={{
+            all: t("tagAll"),
+            more: t("tagMore"),
+            moreOpen: t("tagMoreOpen"),
+          }}
+        />
 
-function ToggleButton({
-  active,
-  onClick,
-  children,
-  ...rest
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "children">) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "grid size-7 place-items-center rounded-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        active
-          ? "bg-foreground text-background"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
-      )}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
-}
+        <div className="flex shrink-0 items-center gap-2 text-left lg:justify-end">
+          <span
+            className="rounded-full border border-border bg-background/70 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground"
+            aria-live="polite"
+          >
+            {t("resultsSummary", {
+              filtered: filteredCount,
+              total: totalCount,
+            })}
+          </span>
+          {hasActiveFilters ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onClearFilters}
+              className="h-8 rounded-full px-3 text-[0.7rem]"
+            >
+              <RotateCcw aria-hidden="true" className="size-3.5" />
+              {t("clearFilters")}
+            </Button>
+          ) : null}
+        </div>
+      </div>
 
-/**
- * Single filter chip used by both the inline tag rail and the
- * "More" dropdown. Centralising avoids the focus-ring + hover-state
- * drift that crept in across the three previous inline copies.
- */
-function TagChip({
-  active,
-  onClick,
-  label,
-  extraBadgeClass,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: React.ReactNode;
-  extraBadgeClass?: string;
-}) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="sm"
-      // rounded-full so the focus ring traces the chip shape; ring-
-      // offset tightened to 1 so the ring doesn't visually detach.
-      className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
-      aria-pressed={active}
-      onClick={onClick}
-    >
-      <Badge
-        variant={active ? "success" : "outline"}
-        className={cn(
-          "cursor-pointer transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
-          !active && "hover:border-foreground/40 hover:text-foreground",
-          extraBadgeClass,
-        )}
-      >
-        {label}
-      </Badge>
-    </Button>
+      {hasActiveFilters ? (
+        <BlogActiveFilters
+          activeCategory={activeCategory}
+          activeTag={activeTag}
+          query={query}
+          sortMode={sortMode}
+          sortLabel={sortLabels[sortMode]}
+          labels={{ activeFilters: t("activeFilters") }}
+          onCategoryClear={() => onCategoryChange(null)}
+          onTagClear={() => onTagChange(null)}
+          onQueryClear={() => onQueryChange("")}
+          onSortClear={() => onSortModeChange(DEFAULT_BLOG_SORT)}
+        />
+      ) : null}
+    </section>
   );
 }

@@ -87,18 +87,18 @@ export function PillNav({
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "relative inline-flex items-center rounded-full px-3.5 py-1.5 text-[0.8125rem] font-medium leading-none whitespace-nowrap",
-                  "transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+                  "transition-[background-color,color,transform] duration-(--motion-fast) ease-(--ease-premium)",
                   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                   isActive
                     ? "text-background"
-                    : "text-muted-foreground hover:text-foreground",
+                    : "text-muted-foreground hover:bg-muted/70 hover:text-foreground motion-safe:hover:-translate-y-0.5",
                 )}
               >
                 {isActive && (
                   <motion.span
                     layoutId={ACTIVE_PILL_LAYOUT_ID}
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 rounded-full bg-foreground"
+                    className="absolute inset-0 -z-10 rounded-full bg-foreground shadow-sm shadow-foreground/20"
                     transition={
                       reduce
                         ? { duration: 0 }
