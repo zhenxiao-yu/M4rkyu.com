@@ -44,11 +44,13 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
       raf: (t: number) => void;
       stop: () => void;
       start: () => void;
+      resize: () => void;
     } | null = null;
     let scrollTriggerRef:
       | typeof import("gsap/ScrollTrigger").ScrollTrigger
       | null = null;
     let dialogObserver: MutationObserver | null = null;
+    let resizeObserver: ResizeObserver | null = null;
 
     (async () => {
       const [{ default: Lenis }, ST] = await Promise.all([
@@ -76,6 +78,19 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
       scrollTriggerRef = ST;
       ST?.refresh();
 
+      // Re-measure Lenis + ScrollTrigger when document height changes.
+      // Without this, content that grows after mount (images, fonts,
+      // dynamic sections) leaves Lenis with a stale scroll limit —
+      // the wheel feels like it bottoms out before the page does.
+      // ScrollTrigger.refresh() also recomputes scrub positions so
+      // pinned sections stay anchored to their content as it shifts.
+      resizeObserver = new ResizeObserver(() => {
+        lenisInstance?.resize();
+        scrollTriggerRef?.refresh();
+      });
+      resizeObserver.observe(document.body);
+      resizeObserver.observe(document.documentElement);
+
       // Pause Lenis whenever a dialog overlay is mounted+open. Without
       // this, Lenis keeps intercepting wheel events and animating
       // `body`'s transform — the page behind the modal visibly
@@ -102,6 +117,7 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
     return () => {
       cancelled = true;
       dialogObserver?.disconnect();
+      resizeObserver?.disconnect();
       lenisInstance?.destroy();
       scrollTriggerRef?.killAll();
     };
