@@ -17,6 +17,9 @@ interface HomeSmoothScrollProps {
  *     read the lerped scroll position.
  *   - Reduced-motion + coarse-pointer: skips Lenis entirely (native
  *     scroll, no scrub).
+ *   - Lenis is paused whenever a dialog overlay opens so the modal's
+ *     own scroll lock isn't undone by Lenis still hijacking wheel
+ *     events on the page underneath.
  *
  * Snap removed — sections are `min-h-dvh` so they self-anchor when the
  * user scrolls; an explicit snap layer (mandatory or proximity) was
@@ -39,8 +42,13 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
     let lenisInstance: {
       destroy: () => void;
       raf: (t: number) => void;
+      stop: () => void;
+      start: () => void;
     } | null = null;
-    let scrollTriggerRef: typeof import("gsap/ScrollTrigger").ScrollTrigger | null = null;
+    let scrollTriggerRef:
+      | typeof import("gsap/ScrollTrigger").ScrollTrigger
+      | null = null;
+    let dialogObserver: MutationObserver | null = null;
 
     (async () => {
       const [{ default: Lenis }, ST] = await Promise.all([
@@ -67,10 +75,33 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
 
       scrollTriggerRef = ST;
       ST?.refresh();
+
+      // Pause Lenis whenever a dialog overlay is mounted+open. Without
+      // this, Lenis keeps intercepting wheel events and animating
+      // `body`'s transform — the page behind the modal visibly
+      // scrolls even though our explicit body lock pinned `position:
+      // fixed`. Resume when the last overlay unmounts.
+      const sync = () => {
+        if (!lenisInstance) return;
+        const anyOpen = !!document.querySelector(
+          '.m4-dialog-overlay[data-state="open"]',
+        );
+        if (anyOpen) lenisInstance.stop();
+        else lenisInstance.start();
+      };
+      dialogObserver = new MutationObserver(sync);
+      dialogObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["data-state"],
+      });
+      sync();
     })();
 
     return () => {
       cancelled = true;
+      dialogObserver?.disconnect();
       lenisInstance?.destroy();
       scrollTriggerRef?.killAll();
     };
