@@ -147,6 +147,15 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full bg-background text-foreground"
       >
+        {/* Apply the stored / system theme BEFORE the first paint so
+         * dark-mode loads don't flash light first. Rendered by the
+         * server layout (not inside a client component) — keeps it
+         * out of React's client-render warning path. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=(!s||s==='system')?m:s;document.documentElement.setAttribute('data-theme',r);}catch(e){}})()`,
+          }}
+        />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

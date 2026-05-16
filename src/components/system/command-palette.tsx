@@ -21,7 +21,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme/theme-provider";
 import { usePathname } from "next/navigation";
 import {
   Dialog,
@@ -135,7 +135,7 @@ export function CommandPalette({
     router.push(href);
   }
 
-  function pickTheme(value: string) {
+  function pickTheme(value: "light" | "dark") {
     setTheme(value);
     onOpenChange(false);
   }
