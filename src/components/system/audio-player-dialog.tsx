@@ -5,6 +5,7 @@ import {
   Music2,
   Pause,
   Play,
+  Play as PlayTest,
   Repeat,
   Repeat1,
   Shuffle,
@@ -22,8 +23,10 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useSoundEnabled } from "@/hooks/use-sound-enabled";
 import { cn } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
+import { playCue } from "@/lib/audio/ui-sound";
 import type { LoopMode } from "@/content/music";
 
 function formatTime(seconds: number): string {
@@ -49,11 +52,13 @@ export function AudioPlayerDialog({
   onOpenChange,
 }: AudioPlayerDialogProps) {
   const t = useTranslations("AudioPlayer");
+  const soundEnabled = useSoundEnabled();
   const {
     tracks,
     currentTrack,
     currentTrackIndex,
     isPlaying,
+    playerState,
     currentTime,
     duration,
     loopMode,
@@ -83,6 +88,9 @@ export function AudioPlayerDialog({
   }
 
   const LoopIcon = loopMode === "track" ? Repeat1 : Repeat;
+  const isLoading = playerState === "loading";
+  const hasTracks = tracks.length > 0;
+  const isUnavailable = hasTracks && playerState === "error";
   const loopLabelKey =
     loopMode === "off"
       ? "loopOff"
@@ -132,10 +140,14 @@ export function AudioPlayerDialog({
               {t("nowPlaying")}
             </p>
             <p className="truncate text-sm font-medium text-foreground">
-              {currentTrack?.title ?? t("noTrack")}
+              {isUnavailable
+                ? t("trackUnavailable")
+                : (currentTrack?.title ?? t("noTrack"))}
             </p>
             <p className="truncate text-xs text-muted-foreground">
-              {currentTrack?.artist ?? "—"}
+              {hasTracks
+                ? (currentTrack?.artist ?? "—")
+                : t("noEnabledTracks")}
             </p>
           </div>
         </div>
@@ -171,31 +183,36 @@ export function AudioPlayerDialog({
           <TransportButton
             label={t("shuffle")}
             active={shuffle}
+            disabled={!hasTracks}
             onClick={toggleShuffle}
           >
             <Shuffle className="size-4" />
           </TransportButton>
-          <TransportButton label={t("prev")} onClick={prev}>
+          <TransportButton label={t("prev")} disabled={!hasTracks} onClick={prev}>
             <SkipBack className="size-5" />
           </TransportButton>
           <button
             type="button"
             onClick={togglePlay}
             aria-label={isPlaying ? t("pause") : t("play")}
-            className="grid size-14 place-items-center rounded-full border border-border bg-foreground text-background shadow-sm transition-[transform,background-color] duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:active:scale-95"
+            disabled={isLoading || !hasTracks}
+            className="grid size-14 place-items-center rounded-full border border-border bg-foreground text-background shadow-sm transition-[transform,background-color] duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:active:scale-95"
           >
-            {isPlaying ? (
+            {isLoading ? (
+              <Waves className="size-6 animate-pulse" />
+            ) : isPlaying ? (
               <Pause className="size-6" />
             ) : (
               <Play className="size-6 translate-x-px" />
             )}
           </button>
-          <TransportButton label={t("next")} onClick={next}>
+          <TransportButton label={t("next")} disabled={!hasTracks} onClick={next}>
             <SkipForward className="size-5" />
           </TransportButton>
           <TransportButton
             label={t(loopLabelKey)}
             active={loopMode !== "off"}
+            disabled={!hasTracks}
             onClick={() => setLoopMode(LOOP_ROTATION[loopMode])}
           >
             <LoopIcon className="size-4" />
@@ -221,6 +238,24 @@ export function AudioPlayerDialog({
             label={t("sfxVolume")}
             value={sfxVolume}
             onChange={setSfxVolume}
+            trailing={
+              <button
+                type="button"
+                onClick={() => playCue("confirm")}
+                aria-label={t("sfxTestAria")}
+                disabled={!soundEnabled}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-sm border border-border bg-background/40 px-2 py-1",
+                  "font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground",
+                  "transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium)",
+                  "hover:border-ring/60 hover:bg-ring/10 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                )}
+              >
+                <PlayTest aria-hidden="true" className="size-2.5" />
+                {t("sfxTest")}
+              </button>
+            }
           />
         </div>
 
@@ -230,6 +265,11 @@ export function AudioPlayerDialog({
             {t("playlist")}
           </p>
           <ul className="grid gap-0.5">
+            {tracks.length === 0 ? (
+              <li className="px-3 pb-3 text-xs text-muted-foreground">
+                {t("noEnabledTracks")}
+              </li>
+            ) : null}
             {tracks.map((track, index) => {
               const active = index === currentTrackIndex;
               return (
@@ -280,11 +320,13 @@ export function AudioPlayerDialog({
 function TransportButton({
   label,
   active,
+  disabled,
   onClick,
   children,
 }: {
   label: string;
   active?: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 }) {
@@ -294,8 +336,9 @@ function TransportButton({
       onClick={onClick}
       aria-label={label}
       aria-pressed={active}
+      disabled={disabled}
       className={cn(
-        "grid size-10 place-items-center rounded-full border border-transparent text-muted-foreground transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "grid size-10 place-items-center rounded-full border border-transparent text-muted-foreground transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active && "border-ring/45 bg-ring/10 text-foreground",
       )}
     >
@@ -309,14 +352,16 @@ function VolumeRow({
   label,
   value,
   onChange,
+  trailing,
 }: {
   icon: React.ReactNode;
   label: string;
   value: number;
   onChange: (value: number) => void;
+  trailing?: React.ReactNode;
 }) {
   return (
-    <label className="flex items-center gap-3">
+    <div className="flex items-center gap-3">
       <span className="text-muted-foreground" aria-hidden="true">
         {icon}
       </span>
@@ -341,6 +386,7 @@ function VolumeRow({
       <span className="w-9 text-right font-mono text-[0.62rem] tabular-nums text-muted-foreground">
         {Math.round(value * 100)}
       </span>
-    </label>
+      {trailing ?? null}
+    </div>
   );
 }

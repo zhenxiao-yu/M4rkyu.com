@@ -23,7 +23,7 @@ function readSfxVolume(): number {
 /**
  * UI sound module — phase 7 of docs/UNIFIED_VISUAL_DIRECTION.md (§4.10 + §8).
  *
- * Generates four short procedural cues via the browser Web Audio API. No
+ * Generates short procedural cues via the browser Web Audio API. No
  * audio files are shipped, no dependency added; all tones are synthesized
  * from a single Oscillator + Gain envelope per cue.
  *
@@ -40,7 +40,17 @@ function readSfxVolume(): number {
 const STORAGE_KEY = "m4rkyu.sound";
 const CHANGE_EVENT = "m4rkyu:sound:change";
 
-export type SoundCue = "click" | "confirm" | "scene-enter" | "error";
+export type SoundCue =
+  | "hover-soft"
+  | "click"
+  | "open"
+  | "close"
+  | "confirm"
+  | "save"
+  | "unsave"
+  | "unlock"
+  | "error-soft"
+  | "scene-enter";
 
 interface CueConfig {
   type: OscillatorType;
@@ -50,40 +60,90 @@ interface CueConfig {
   volume: number;
 }
 
-// Each cue clamps below ~-18 LUFS-equivalent (volume ≤ 0.08). Pitches
-// stay in the comfortable mid-band so the UI never feels harsh.
+// Cues stay short, quiet, and mostly mid-band: muted mechanical,
+// soft-pixel, warm-terminal. Silence is part of the design.
 const CUES: Record<SoundCue, CueConfig> = {
+  "hover-soft": {
+    type: "sine",
+    freqStart: 520,
+    freqEnd: 560,
+    durationMs: 32,
+    volume: 0.018,
+  },
   click: {
-    type: "square",
-    freqStart: 880,
-    freqEnd: 660,
-    durationMs: 60,
-    volume: 0.06,
+    type: "triangle",
+    freqStart: 520,
+    freqEnd: 360,
+    durationMs: 58,
+    volume: 0.045,
+  },
+  open: {
+    type: "triangle",
+    freqStart: 420,
+    freqEnd: 680,
+    durationMs: 125,
+    volume: 0.04,
+  },
+  close: {
+    type: "triangle",
+    freqStart: 620,
+    freqEnd: 360,
+    durationMs: 105,
+    volume: 0.034,
   },
   confirm: {
     type: "triangle",
-    freqStart: 660,
-    freqEnd: 880,
-    durationMs: 120,
-    volume: 0.08,
+    freqStart: 520,
+    freqEnd: 780,
+    durationMs: 155,
+    volume: 0.045,
+  },
+  save: {
+    type: "triangle",
+    freqStart: 560,
+    freqEnd: 820,
+    durationMs: 135,
+    volume: 0.046,
+  },
+  unsave: {
+    type: "sine",
+    freqStart: 520,
+    freqEnd: 340,
+    durationMs: 115,
+    volume: 0.032,
+  },
+  unlock: {
+    type: "sine",
+    freqStart: 480,
+    freqEnd: 920,
+    durationMs: 420,
+    volume: 0.04,
+  },
+  "error-soft": {
+    type: "triangle",
+    freqStart: 210,
+    freqEnd: 185,
+    durationMs: 125,
+    volume: 0.046,
   },
   "scene-enter": {
-    type: "square",
-    freqStart: 440,
-    freqEnd: 880,
-    durationMs: 160,
-    volume: 0.06,
-  },
-  error: {
-    type: "square",
-    freqStart: 220,
-    freqEnd: 220,
-    durationMs: 90,
-    volume: 0.08,
+    type: "sine",
+    freqStart: 300,
+    freqEnd: 620,
+    durationMs: 260,
+    volume: 0.03,
   },
 };
 
 let audioContext: AudioContext | null = null;
+const lastPlayedAt = new Map<SoundCue, number>();
+const CUE_COOLDOWNS_MS: Partial<Record<SoundCue, number>> = {
+  "hover-soft": 140,
+  click: 35,
+  unlock: 2000,
+  "error-soft": 160,
+  "scene-enter": 3000,
+};
 
 function getContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
@@ -130,9 +190,19 @@ export function subscribeSoundEnabled(callback: () => void): () => void {
 /**
  * Plays one cue. No-op when sound is disabled, reduced-motion is set,
  * the page is server-rendered, or the AudioContext fails to initialize.
+ *
+ * This always honors the global sound-enabled toggle and reduced-motion.
  */
 export function playCue(cue: SoundCue): void {
-  if (!isSoundEnabled() || prefersReducedMotion()) return;
+  if (!isSoundEnabled()) return;
+  if (prefersReducedMotion()) return;
+  const elapsed =
+    typeof performance === "undefined" ? Date.now() : performance.now();
+  const cooldown = CUE_COOLDOWNS_MS[cue] ?? 0;
+  const previous = lastPlayedAt.get(cue) ?? -Infinity;
+  if (elapsed - previous < cooldown) return;
+  lastPlayedAt.set(cue, elapsed);
+
   const ctx = getContext();
   if (!ctx) return;
 
@@ -169,4 +239,20 @@ export function playCue(cue: SoundCue): void {
   osc.connect(gain).connect(ctx.destination);
   osc.start(now);
   osc.stop(end);
+}
+
+export function playBadgeUnlockCue(): void {
+  playCue("unlock");
+}
+
+export function playContactSentCue(): void {
+  playCue("confirm");
+}
+
+export function playNotificationCue(options?: { highValue?: boolean }): void {
+  playCue(options?.highValue ? "unlock" : "confirm");
+}
+
+export function playAdminSuccessCue(): void {
+  playCue("confirm");
 }

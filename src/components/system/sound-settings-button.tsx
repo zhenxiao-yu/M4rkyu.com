@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
+import { playCue } from "@/lib/audio/ui-sound";
 import { AudioPlayerDialog } from "./audio-player-dialog";
 
 /**
@@ -24,6 +25,11 @@ export function SoundSettingsButton() {
   const { isPlaying } = useAudioPlayer();
 
   const Icon = isPlaying ? Pause : Headphones;
+  function handleOpenChange(nextOpen: boolean) {
+    if (nextOpen === open) return;
+    setOpen(nextOpen);
+    playCue(nextOpen ? "open" : "close");
+  }
 
   return (
     <>
@@ -33,7 +39,7 @@ export function SoundSettingsButton() {
             type="button"
             data-state={isPlaying ? "playing" : "paused"}
             aria-label={t("openLabel")}
-            onClick={() => setOpen(true)}
+            onClick={() => handleOpenChange(true)}
             className={cn(
               "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
               "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
@@ -52,7 +58,7 @@ export function SoundSettingsButton() {
         </TooltipTrigger>
         <TooltipContent>{t("openLabel")}</TooltipContent>
       </Tooltip>
-      <AudioPlayerDialog open={open} onOpenChange={setOpen} />
+      <AudioPlayerDialog open={open} onOpenChange={handleOpenChange} />
     </>
   );
 }

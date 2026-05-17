@@ -1,45 +1,71 @@
-/**
- * Site-wide background music playlist.
- *
- * Three demo tracks are wired in by default — SoundHelix's algorithmic
- * instrumentals, hot-linkable CC and used widely in JS audio examples.
- * Swap in self-hosted files under `public/audio/` and update `src` to a
- * leading-slash path (`"/audio/your-track.mp3"`) when you have final
- * audio. The schema below stays stable.
- */
-
 export interface MusicTrack {
   id: string;
   title: string;
   artist: string;
-  /** Public URL or `/audio/...` path served from `public/`. */
+  /** Public `/audio/...` path served from `public/`. */
   src: string;
-  /** Approx track length in seconds — informational only; the actual
-   * duration is read from the audio element once metadata loads. */
+  mood?: "calm" | "dark" | "playful" | "ambient" | "focus";
+  pageFit?: Array<"home" | "work" | "archive" | "games" | "logs">;
   approxSeconds?: number;
+  loopSafe?: boolean;
+  enabled?: boolean;
+  sourceNote?: string;
 }
 
-export const musicTracks: MusicTrack[] = [
+export const musicManifest: MusicTrack[] = [
+  {
+    id: "signal-garden-01",
+    title: "Signal Garden 01",
+    artist: "M4rkyu",
+    src: "/audio/music/signal-garden-01.mp3",
+    mood: "ambient",
+    pageFit: ["home", "work"],
+    approxSeconds: 72,
+    loopSafe: true,
+    enabled: false,
+    sourceNote: "Planned self-hosted site loop.",
+  },
+  {
+    id: "archive-lantern-01",
+    title: "Archive Lantern 01",
+    artist: "M4rkyu",
+    src: "/audio/music/archive-lantern-01.mp3",
+    mood: "calm",
+    pageFit: ["archive", "logs"],
+    approxSeconds: 64,
+    loopSafe: true,
+    enabled: false,
+    sourceNote: "Planned self-hosted site loop.",
+  },
+  {
+    id: "pixel-room-01",
+    title: "Pixel Room 01",
+    artist: "M4rkyu",
+    src: "/audio/music/pixel-room-01.mp3",
+    mood: "playful",
+    pageFit: ["games"],
+    approxSeconds: 58,
+    loopSafe: true,
+    enabled: false,
+    sourceNote: "Planned self-hosted site loop.",
+  },
+];
+
+export const musicTracks = musicManifest.filter(
+  (track) => track.enabled === true,
+);
+
+export const demoMusicTracks: MusicTrack[] = [
   {
     id: "soundhelix-1",
     title: "Algorithmic Drift",
     artist: "SoundHelix",
     src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    mood: "focus",
     approxSeconds: 372,
-  },
-  {
-    id: "soundhelix-2",
-    title: "Cascade Bay",
-    artist: "SoundHelix",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    approxSeconds: 425,
-  },
-  {
-    id: "soundhelix-3",
-    title: "Halftone Bloom",
-    artist: "SoundHelix",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    approxSeconds: 348,
+    loopSafe: false,
+    enabled: false,
+    sourceNote: "Remote demo fallback only; do not use for production audio.",
   },
 ];
 

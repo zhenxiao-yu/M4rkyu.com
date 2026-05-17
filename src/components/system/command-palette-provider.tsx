@@ -69,6 +69,7 @@ export function CommandPaletteProvider({
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.repeat || event.defaultPrevented) return;
+      if (typeof event.key !== "string") return;
       if (
         event.key.toLowerCase() === "k" &&
         (event.metaKey || event.ctrlKey)

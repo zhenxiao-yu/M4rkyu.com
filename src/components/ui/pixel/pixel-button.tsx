@@ -3,11 +3,11 @@
 import * as React from "react";
 import { Button, type ButtonProps } from "../button";
 import { Link } from "@/i18n/navigation";
-import { playCue } from "@/lib/audio/ui-sound";
+import { playCue, type SoundCue } from "@/lib/audio/ui-sound";
 import { cn } from "@/lib/utils";
 
 type Glyph = "caret" | "play" | "send";
-type Sound = "click" | "confirm";
+type Sound = Extract<SoundCue, "click" | "confirm" | "save" | "error-soft">;
 
 const GLYPHS: Record<Glyph, string> = {
   caret: ">",
