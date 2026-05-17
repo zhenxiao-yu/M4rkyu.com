@@ -12,6 +12,8 @@ import { Link } from "@/i18n/navigation";
 import { galleryCollections, galleryItems } from "@/content/gallery";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { getSavedKeysOfType } from "@/lib/social/saves";
 import { GalleryGrid } from "./_client";
 
 export async function generateMetadata({
@@ -36,6 +38,11 @@ export default async function ArchivePage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Gallery" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
+  const [user, savedSlugs] = await Promise.all([
+    getCurrentUser(),
+    getSavedKeysOfType("gallery"),
+  ]);
+  const signedIn = Boolean(user);
 
   return (
     <PageShell locale={locale}>
@@ -75,7 +82,12 @@ export default async function ArchivePage({
         <div className="mt-8">
           {/* GalleryGrid renders its own EmptyArchiveState when the
            * collection is empty — no separate empty branch needed. */}
-          <GalleryGrid items={galleryItems} locale={locale} />
+          <GalleryGrid
+            items={galleryItems}
+            locale={locale}
+            savedSlugs={savedSlugs}
+            signedIn={signedIn}
+          />
         </div>
       </PageSection>
 

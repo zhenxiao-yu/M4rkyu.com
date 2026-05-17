@@ -9,7 +9,6 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
-import { useIsSaved } from "@/lib/social/hooks";
 import type { GalleryItem } from "@/content/schemas";
 import { cn } from "@/lib/utils";
 
@@ -26,9 +25,13 @@ const GalleryLightbox = dynamic(
 interface GalleryGridProps {
   items: GalleryItem[];
   locale: string;
+  /** Slugs the current user has saved (gallery item_type). Empty when guest. */
+  savedSlugs: string[];
+  signedIn: boolean;
 }
 
-export function GalleryGrid({ items, locale }: GalleryGridProps) {
+export function GalleryGrid({ items, locale, savedSlugs, signedIn }: GalleryGridProps) {
+  const savedSet = useMemo(() => new Set(savedSlugs), [savedSlugs]);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -80,6 +83,7 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
           <FrameTile
             key={item.slug}
             item={item}
+            saved={savedSet.has(item.slug)}
             onOpen={() => setOpenSlug(item.slug)}
             openLabel={t("openFrame", { title: item.title })}
             frameTbdLabel={t("frameTbd")}
@@ -95,6 +99,8 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
           openSlug={frame}
           locale={locale}
           onChange={setOpenSlug}
+          savedSlugs={savedSet}
+          signedIn={signedIn}
         />
       ) : null}
     </>
@@ -103,6 +109,7 @@ export function GalleryGrid({ items, locale }: GalleryGridProps) {
 
 interface FrameTileProps {
   item: GalleryItem;
+  saved: boolean;
   onOpen: () => void;
   openLabel: string;
   frameTbdLabel: string;
@@ -112,13 +119,13 @@ interface FrameTileProps {
 
 function FrameTile({
   item,
+  saved,
   onOpen,
   openLabel,
   frameTbdLabel,
   featuredLabel,
   savedLabel,
 }: FrameTileProps) {
-  const saved = useIsSaved(item.slug);
   const isDimmed = item.status === "coming-soon" || item.status === "draft";
 
   return (

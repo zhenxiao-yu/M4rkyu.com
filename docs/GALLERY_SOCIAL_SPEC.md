@@ -1,11 +1,48 @@
 ---
 title: M4rkyu.com — Gallery Social Spec
-status: living
+status: SUPERSEDED — see docs/BACKEND_ARCHITECTURE.md
 audience: implementation agents (Claude, Codex), reviewers
-last_updated: 2026-05-10
+last_updated: 2026-05-16
 ---
 
-# Gallery Social Spec
+# ⚠️ SUPERSEDED — DO NOT FOLLOW THE BODY OF THIS DOC
+
+> **2026-05-16 — Doctrine update.** The anonymous-cookie identity model
+> below has been **retired** by author decision. The new social layer
+> is account-bound: real OAuth login (Google + GitHub) + email
+> magic-link, user profiles, authenticated saves/bookmarks, and
+> moderated comments — all backed by Supabase with row-level security.
+>
+> **Current source of truth:** [docs/BACKEND_ARCHITECTURE.md](./BACKEND_ARCHITECTURE.md).
+>
+> The body of this document is preserved for historical context only.
+> Specific rules below that are **explicitly retired**:
+>
+> - §5 _Likes UI_ — anonymous likes feature **dropped**. No
+>   replacement; "save" covers the same intent for signed-in users.
+> - §6 _Comments UI_ — anonymous comments **retired**; comments now
+>   require sign-in. The "Forbidden: Login walls" line below is no
+>   longer policy.
+> - §7 _Save / Favorite_ — visitor-cookie identity **retired**; saves
+>   are keyed on `auth.users.id` and persisted in Supabase. The
+>   localStorage path becomes a one-time migration helper for visitors
+>   who already saved frames before the auth system landed.
+> - §13 _Future Backend Boundary_ + §14 _Backend Options_ — the
+>   Upstash KV recommendation is **retired** in favor of Supabase as
+>   the single backend for auth + saves + comments + admin.
+> - §15 _Anti-Spam_ — cookie-keyed rate limits **retired**; auth is
+>   the new rate gate, with Postgres-level per-user limits if abuse
+>   appears.
+> - §17 _Admin Controls_ — env-secret bearer-token admin **retired**;
+>   admin access is now gated by `profiles.role = 'admin'` enforced by
+>   RLS.
+>
+> The vocabulary (frames, collections, captions) and the **§18 "no
+> fake engagement" rule** still apply.
+
+---
+
+## Original document (historical)
 
 > **Status as of 2026-05-10**: visitor-local social MVP shipped
 > (Phase 1) — likes, saves, share via `src/lib/social/*`. Backed by

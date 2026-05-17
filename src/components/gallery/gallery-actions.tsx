@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bookmark, Heart, Link as LinkIcon, Share2 } from "lucide-react";
+import { Link as LinkIcon, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { useIsLiked, useIsSaved } from "@/lib/social/hooks";
-import { toggleLike } from "@/lib/social/likes";
-import { toggleSave } from "@/lib/social/saves";
+import { SaveButton } from "@/components/saves/save-button";
 import { buildFrameShareUrl, shareOrCopy } from "@/lib/social/share";
 import { cn } from "@/lib/utils";
 
@@ -15,13 +13,22 @@ interface GalleryActionsProps {
   title: string;
   caption?: string;
   locale: string;
+  /** Server-resolved initial state for SaveButton. */
+  initialSaved: boolean;
+  /** Whether the current viewer is signed in. */
+  signedIn: boolean;
 }
 
 type FeedbackKind = "shared" | "copied" | "unsupported";
 
-export function GalleryActions({ slug, title, caption, locale }: GalleryActionsProps) {
-  const liked = useIsLiked(slug);
-  const saved = useIsSaved(slug);
+export function GalleryActions({
+  slug,
+  title,
+  caption,
+  locale,
+  initialSaved,
+  signedIn,
+}: GalleryActionsProps) {
   const [feedback, setFeedback] = useState<FeedbackKind | null>(null);
   const t = useTranslations("Social");
 
@@ -65,37 +72,13 @@ export function GalleryActions({ slug, title, caption, locale }: GalleryActionsP
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button
-        type="button"
-        size="sm"
-        variant={liked ? "secondary" : "outline"}
-        aria-pressed={liked}
-        aria-label={liked ? t("unlikeAria") : t("likeAria")}
-        onClick={() => toggleLike(slug)}
-        className={cn("gap-2", liked && "text-signal")}
-      >
-        <Heart
-          aria-hidden="true"
-          className={cn("size-4", liked && "fill-current")}
-        />
-        <span>{liked ? t("liked") : t("like")}</span>
-      </Button>
-
-      <Button
-        type="button"
-        size="sm"
-        variant={saved ? "secondary" : "outline"}
-        aria-pressed={saved}
-        aria-label={saved ? t("unsaveAria") : t("saveAria")}
-        onClick={() => toggleSave(slug)}
-        className="gap-2"
-      >
-        <Bookmark
-          aria-hidden="true"
-          className={cn("size-4", saved && "fill-current")}
-        />
-        <span>{saved ? t("savedState") : t("save")}</span>
-      </Button>
+      <SaveButton
+        itemType="gallery"
+        itemKey={slug}
+        initialSaved={initialSaved}
+        signedIn={signedIn}
+        nextPath={`/${locale}/archive?frame=${slug}`}
+      />
 
       <Button
         type="button"

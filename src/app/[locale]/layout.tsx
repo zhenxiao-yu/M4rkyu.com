@@ -9,8 +9,10 @@ import { CommandPaletteProvider } from "@/components/system/command-palette-prov
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { LocalSavesMigration } from "@/components/saves/local-saves-migration";
 import { routing, type Locale } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog/get-posts";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { buildSiteJsonLd } from "@/lib/seo/structured-data";
 
 export function generateStaticParams() {
@@ -43,6 +45,11 @@ export default async function LocaleLayout({
     tags: post.tags,
   }));
 
+  // Resolved once per render; downstream UserMenu reuses the cached
+  // value (getCurrentUser is wrapped in React.cache). The boolean
+  // here only drives the saves-migration toast on first login.
+  const currentUser = await getCurrentUser();
+
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <JsonLd data={buildSiteJsonLd(activeLocale)} />
@@ -63,6 +70,7 @@ export default async function LocaleLayout({
             </div>
             <CookieConsentBanner />
             <ConsentAwareAnalytics />
+            <LocalSavesMigration signedIn={Boolean(currentUser)} />
             {/* Sonner toaster mounts inside ThemeProvider so it tracks
              * the active data-theme. Any client island can fire
              * `toast.success(...)` from this point onward. */}

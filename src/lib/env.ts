@@ -28,9 +28,30 @@ export const env = createEnv({
     // (server actions, build steps) don't fail when the webhook
     // isn't configured. The route itself returns 503 if missing.
     RESEND_WEBHOOK_SECRET: z.string().optional(),
+    // Supabase service-role key. Optional. Bypasses RLS — only set
+    // when a specific server-only admin job justifies it. Current
+    // code paths do NOT require it; admin actions run via RLS as the
+    // signed-in admin user. Never imported from a `"use client"` file.
+    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
+    // Supabase public config. Optional so lint / typecheck / preview
+    // builds pass without the keys; runtime helpers in
+    // `src/lib/supabase/*` short-circuit when unset and the auth UI
+    // hides itself gracefully. See `isSupabaseConfigured()`.
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
+    NEXT_PUBLIC_AUTH_GOOGLE_ENABLED: z
+      .enum(["true", "false"])
+      .optional(),
+    NEXT_PUBLIC_AUTH_GITHUB_ENABLED: z
+      .enum(["true", "false"])
+      .optional(),
+    // Public site origin. Used to compute OAuth redirect URLs server
+    // side. Optional — when unset, the request's own origin (or
+    // VERCEL_URL on Vercel) is used as a fallback.
+    NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
   },
   runtimeEnv: {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
@@ -38,7 +59,15 @@ export const env = createEnv({
     INQUIRY_FROM_EMAIL: process.env.INQUIRY_FROM_EMAIL,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     RESEND_WEBHOOK_SECRET: process.env.RESEND_WEBHOOK_SECRET,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_AUTH_GOOGLE_ENABLED:
+      process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED,
+    NEXT_PUBLIC_AUTH_GITHUB_ENABLED:
+      process.env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },
   // `next lint` and Storybook import this module without Resend keys
   // present. `skipValidation` lets those non-runtime contexts pass; the

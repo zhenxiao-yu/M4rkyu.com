@@ -23,6 +23,9 @@ interface GalleryLightboxProps {
   openSlug: string | null;
   locale: string;
   onChange: (slug: string | null) => void;
+  /** Server-resolved set of slugs the current user has saved. */
+  savedSlugs: Set<string>;
+  signedIn: boolean;
 }
 
 export function GalleryLightbox({
@@ -30,6 +33,8 @@ export function GalleryLightbox({
   openSlug,
   locale,
   onChange,
+  savedSlugs,
+  signedIn,
 }: GalleryLightboxProps) {
   const tGallery = useTranslations("Gallery");
   const openIndex = openSlug
@@ -158,6 +163,8 @@ export function GalleryLightbox({
               title={current.title}
               caption={current.caption}
               locale={locale}
+              initialSaved={savedSlugs.has(current.slug)}
+              signedIn={signedIn}
             />
 
             <div className="flex items-center justify-between border-t pt-4">

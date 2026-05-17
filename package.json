@@ -36,6 +36,8 @@
     "@radix-ui/react-visually-hidden": "^1.2.4",
     "@react-email/components": "^1.0.12",
     "@shikijs/rehype": "^3.23.0",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.105.4",
     "@swc/helpers": "^0.5.21",
     "@t3-oss/env-nextjs": "^0.13.11",
     "@vercel/analytics": "^2.0.1",

@@ -20,8 +20,37 @@ and is reachable on a free `*.vercel.app` URL for rollback.
 - `next-intl` for routing and message catalogs.
 - Tailwind CSS 4 with owned shadcn/Radix-style UI primitives.
 - Zod content schemas for structured portfolio data.
+- Supabase (auth + Postgres + RLS) for the user system — accounts,
+  saves, comments, admin moderation. See
+  [docs/BACKEND_ARCHITECTURE.md](docs/BACKEND_ARCHITECTURE.md) and
+  [supabase/README.md](supabase/README.md).
 - Storybook for component states.
 - Playwright for route smoke coverage.
+
+## User system / backend
+
+Public pages stay server-rendered from `src/content/*` (and from
+dev.to via ISR for `/logs`). Supabase only owns **user actions on**
+that content: profiles, saved/bookmarked items, comments + moderation,
+and a small `admin_settings` key/value store.
+
+To bring the user system online locally:
+
+1. Copy `.env.example` to `.env` and fill in the Supabase block:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` (optional; defaults to request origin)
+2. Apply the SQL in `supabase/migrations/` in filename order (Dashboard
+   SQL editor or `supabase db push`). Then run `supabase/seed.sql`.
+3. Enable Google, GitHub, and Email (magic link) providers in the
+   Supabase Auth → Providers dashboard. The redirect URLs you'll need
+   are listed in [supabase/README.md](supabase/README.md).
+4. Sign in once on your local dev server, then promote yourself to
+   admin with the SQL in [supabase/README.md](supabase/README.md).
+
+When the env vars are absent the auth UI hides itself and the rest of
+the site continues to work — preview deploys without Supabase keys
+won't 500.
 
 ## Local Development
 

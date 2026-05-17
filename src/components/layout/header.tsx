@@ -8,6 +8,7 @@ import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
+import { UserMenu } from "@/components/auth/user-menu";
 import { getPosts } from "@/lib/blog/get-posts";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
@@ -88,6 +89,10 @@ export async function Header({ locale }: { locale: Locale }) {
             <SoundSettingsButton />
             <QrCodeButton url="https://m4rkyu.com" />
           </div>
+          {/* UserMenu renders Sign-in trigger (guest) or account link
+           * (signed-in). Hides entirely when Supabase env vars are
+           * unset so previews stay clean. */}
+          <UserMenu locale={locale} />
         </div>
 
         {/* Compact rail (<lg): the language and theme controls stay
@@ -96,6 +101,7 @@ export async function Header({ locale }: { locale: Locale }) {
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
           <CommandPaletteIconTrigger />
           <NotificationBell posts={notificationFeed} locale={locale} />
+          <UserMenu locale={locale} />
           <LanguageSwitcher />
           <ThemeSwitcher />
           <MobileNav
