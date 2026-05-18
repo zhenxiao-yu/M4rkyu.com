@@ -7,6 +7,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import type { Locale } from "@/i18n/routing";
 import { AccountNav } from "../_components/account-nav";
 import { ProfileForm } from "./_form";
+import { SecurityPanel } from "./_security";
 
 export const dynamic = "force-dynamic";
 
@@ -29,19 +30,33 @@ export default async function AccountSettingsPage({
       />
       <PageSection>
         <AccountNav locale={locale} />
-        <Card className="bg-card/80">
-          <CardContent className="py-6">
-            <ProfileForm
-              initial={{
-                display_name: user.profile?.display_name ?? "",
-                username: user.profile?.username ?? "",
-                bio: user.profile?.bio ?? "",
-                website: user.profile?.website ?? "",
-                public_profile: user.profile?.public_profile ?? true,
-              }}
-            />
-          </CardContent>
-        </Card>
+        <div className="grid gap-6">
+          <Card className="bg-card/80">
+            <CardContent className="py-6">
+              <h2 className="mb-4 text-base font-medium">
+                {t("profileSectionTitle")}
+              </h2>
+              <ProfileForm
+                initial={{
+                  display_name: user.profile?.display_name ?? "",
+                  username: user.profile?.username ?? "",
+                  bio: user.profile?.bio ?? "",
+                  website: user.profile?.website ?? "",
+                  public_profile: user.profile?.public_profile ?? true,
+                }}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card/80">
+            <CardContent className="py-6">
+              <h2 className="mb-4 text-base font-medium">
+                {t("securitySectionTitle")}
+              </h2>
+              <SecurityPanel locale={locale} email={user.email} />
+            </CardContent>
+          </Card>
+        </div>
       </PageSection>
     </PageShell>
   );

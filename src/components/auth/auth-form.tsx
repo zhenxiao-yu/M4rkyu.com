@@ -233,9 +233,27 @@ export function AuthForm({ next }: AuthFormProps) {
             </button>
           ) : null}
         </div>
-        <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
-          {hasPassword ? t("passwordHintFilled") : t("passwordHintEmpty")}
-        </p>
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
+            {hasPassword ? t("passwordHintFilled") : t("passwordHintEmpty")}
+          </p>
+          {hasPassword ? (
+            // Forgot-password recovery uses the same magic-link action
+            // (rather than a dedicated reset email) — once the user
+            // signs in via the link they can set a new password from
+            // /account/settings. One auth surface, one less email
+            // template to maintain.
+            <Button
+              type="submit"
+              formAction={magicAction}
+              variant="link"
+              size="sm"
+              className="h-auto whitespace-nowrap p-0 text-[0.7rem] text-muted-foreground hover:text-foreground"
+            >
+              {t("forgotPassword")}
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid gap-2">
@@ -267,9 +285,50 @@ export function AuthForm({ next }: AuthFormProps) {
         ) : null}
       </div>
 
-      {errorMessage ? <ErrorLine text={errorMessage} /> : null}
+      {errorMessage ? (
+        <div className="grid gap-1">
+          <ErrorLine text={errorMessage} />
+          {shouldOfferRecoveryLink(signInState, signUpState) ? (
+            // Pivot users out of dead-end errors: a wrong password or
+            // "email already exists" landing flips one click into a
+            // working sign-in via email link. The button reuses the
+            // form's email field and re-submits via the magic-link
+            // action.
+            <Button
+              type="submit"
+              formAction={magicAction}
+              variant="link"
+              size="sm"
+              className="-ml-2 self-start gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <Mail className="size-3.5" aria-hidden="true" />
+              {t("emailLinkInstead")}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </form>
   );
+}
+
+function shouldOfferRecoveryLink(
+  signInState: { status: string; messageKey?: string },
+  signUpState: { status: string; messageKey?: string },
+): boolean {
+  if (
+    signInState.status === "error" &&
+    (signInState.messageKey === "invalidCredentials" ||
+      signInState.messageKey === "unconfirmedEmail")
+  ) {
+    return true;
+  }
+  if (
+    signUpState.status === "error" &&
+    signUpState.messageKey === "userAlreadyExists"
+  ) {
+    return true;
+  }
+  return false;
 }
 
 // ── Small presentational helpers ────────────────────────────────

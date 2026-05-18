@@ -340,17 +340,156 @@ export async function signUpWithPasswordAction(
 /**
  * Sign out the current session. Redirects to the locale home so the
  * resulting page tree refreshes its auth-dependent server data.
+ *
+ * Pass `scope: "global"` to revoke every active session for this user
+ * (across all devices). Default `"local"` only kills the session
+ * bound to the current cookie.
  */
-export async function signOutAction(locale?: string): Promise<void> {
+export async function signOutAction(
+  locale?: string,
+  scope: "local" | "global" = "local",
+): Promise<void> {
   if (isSupabaseConfigured()) {
     const supabase = await createSupabaseServerClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope });
   }
-  const target = locale && routing.locales.includes(locale as (typeof routing.locales)[number])
-    ? `/${locale}`
-    : `/${routing.defaultLocale}`;
+  const target =
+    locale && routing.locales.includes(locale as (typeof routing.locales)[number])
+      ? `/${locale}`
+      : `/${routing.defaultLocale}`;
   revalidatePath("/", "layout");
   redirect(target);
+}
+
+type UpdatePasswordMessageKey =
+  | "unconfigured"
+  | "guest"
+  | "weakPassword"
+  | "rateLimited"
+  | "updateFailed";
+
+export type UpdatePasswordState =
+  | { status: "idle" }
+  | { status: "ok" }
+  | { status: "error"; messageKey: UpdatePasswordMessageKey };
+
+/**
+ * Set or change the signed-in user's password. Used by the account
+ * settings form (any user) AND by users who land via the magic-link
+ * recovery flow and want to add a password.
+ *
+ * Reuses the same 8-72 char schema as signUp — bcrypt truncates past
+ * 72 bytes so we refuse rather than silently match a prefix.
+ */
+export async function updatePasswordAction(
+  _prevState: UpdatePasswordState,
+  formData: FormData,
+): Promise<UpdatePasswordState> {
+  if (!isSupabaseConfigured()) {
+    return { status: "error", messageKey: "unconfigured" };
+  }
+
+  // Re-derive the user from the cookie session — never trust a
+  // user_id passed in form data.
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { status: "error", messageKey: "guest" };
+
+  const parsed = passwordSchema.safeParse(
+    String(formData.get("password") ?? ""),
+  );
+  if (!parsed.success) {
+    return { status: "error", messageKey: "weakPassword" };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data });
+  if (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] password update failed", {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      });
+    }
+    if (isRateLimitError(error)) {
+      return { status: "error", messageKey: "rateLimited" };
+    }
+    if (error.code === "weak_password") {
+      return { status: "error", messageKey: "weakPassword" };
+    }
+    return { status: "error", messageKey: "updateFailed" };
+  }
+
+  revalidatePath("/", "layout");
+  return { status: "ok" };
+}
+
+type DeleteAccountMessageKey =
+  | "unconfigured"
+  | "guest"
+  | "confirmationMismatch"
+  | "deleteFailed";
+
+export type DeleteAccountState =
+  | { status: "idle" }
+  | { status: "error"; messageKey: DeleteAccountMessageKey };
+
+/**
+ * Permanently delete the signed-in user's account.
+ *
+ * The user types their email into the confirmation field; we compare
+ * it (case-insensitive) against the session email before invoking
+ * the `public.delete_my_account()` RPC. The RPC itself is gated by
+ * `auth.uid()` so even if a malicious client skipped this UI check,
+ * RLS / function permissions stop them from deleting someone else.
+ *
+ * On success: sign out + redirect to the locale home.
+ */
+export async function deleteAccountAction(
+  _prevState: DeleteAccountState,
+  formData: FormData,
+): Promise<DeleteAccountState> {
+  if (!isSupabaseConfigured()) {
+    return { status: "error", messageKey: "unconfigured" };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { status: "error", messageKey: "guest" };
+
+  const typed = String(formData.get("confirmation") ?? "")
+    .trim()
+    .toLowerCase();
+  const sessionEmail = (user.email ?? "").trim().toLowerCase();
+  if (!sessionEmail || typed !== sessionEmail) {
+    return { status: "error", messageKey: "confirmationMismatch" };
+  }
+
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] delete account failed", {
+        message: error.message,
+        code: error.code,
+      });
+    }
+    return { status: "error", messageKey: "deleteFailed" };
+  }
+
+  // Account is gone — clear the cookie session and bounce home.
+  await supabase.auth.signOut();
+  const rawLocale = String(formData.get("locale") ?? routing.defaultLocale);
+  const target = routing.locales.includes(
+    rawLocale as (typeof routing.locales)[number],
+  )
+    ? `/${rawLocale}`
+    : `/${routing.defaultLocale}`;
+  revalidatePath("/", "layout");
+  redirect(`${target}?accountDeleted=1`);
 }
 
 // Supabase surfaces several distinct error codes for OTP verification.

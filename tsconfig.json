@@ -51,7 +51,9 @@
     ".next-postpolish/types/**/*.ts",
     ".next-postpolish/dev/types/**/*.ts",
     ".next-p2/types/**/*.ts",
-    ".next-p2/dev/types/**/*.ts"
+    ".next-p2/dev/types/**/*.ts",
+    ".next-p2b/types/**/*.ts",
+    ".next-p2b/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

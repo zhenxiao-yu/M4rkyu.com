@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -10,6 +11,7 @@ import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { LocalSavesMigration } from "@/components/saves/local-saves-migration";
+import { AuthStatusToast } from "@/components/auth/auth-status-toast";
 import { routing, type Locale } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog/get-posts";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
@@ -71,6 +73,14 @@ export default async function LocaleLayout({
             <CookieConsentBanner />
             <ConsentAwareAnalytics />
             <LocalSavesMigration signedIn={Boolean(currentUser)} />
+            {/* Surfaces ?authError / ?accountDeleted URL params as
+             * Sonner toasts on first paint, then strips them from the
+             * URL so a refresh doesn't replay. Wrapped in Suspense
+             * because the underlying useSearchParams() opts the
+             * client side into URL-driven rendering. */}
+            <Suspense fallback={null}>
+              <AuthStatusToast />
+            </Suspense>
             {/* Sonner toaster mounts inside ThemeProvider so it tracks
              * the active data-theme. Any client island can fire
              * `toast.success(...)` from this point onward. */}

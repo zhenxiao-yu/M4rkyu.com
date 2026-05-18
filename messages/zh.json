@@ -596,6 +596,15 @@
       "signUpFailed": "账户创建失败，请稍后再试。",
       "rateLimited": "尝试次数过多，请稍候片刻再试。"
     },
+    "forgotPassword": "忘记密码？发送登录链接。",
+    "emailLinkInstead": "改用邮件链接登录",
+    "callbackError": {
+      "unconfigured": "当前部署未启用登录。",
+      "exchangeFailed": "登录未完成，请重新发送链接再试。",
+      "missingCode": "登录链接不完整，请重新申请。",
+      "generic": "登录时出错，请重试。"
+    },
+    "accountDeletedToast": "账户已删除。再见。",
     "signOut": "退出登录",
     "account": "账户",
     "openAccount": "打开账户",
@@ -647,6 +656,43 @@
       "websiteInvalid": "请输入有效的网址。",
       "usernameTaken": "该用户名已被占用。",
       "saveFailed": "保存失败，请稍后再试。"
+    },
+    "profileSectionTitle": "资料",
+    "securitySectionTitle": "安全",
+    "security": {
+      "passwordTitle": "密码",
+      "passwordDescription": "设置或更换密码，至少 8 个字符。",
+      "passwordLabel": "新密码",
+      "passwordPlaceholder": "新密码",
+      "savePassword": "保存密码",
+      "passwordSaved": "已保存",
+      "showPassword": "显示密码",
+      "hidePassword": "隐藏密码",
+      "passwordError": {
+        "unconfigured": "当前部署未启用登录。",
+        "guest": "请重新登录。",
+        "weakPassword": "密码强度不足，请使用 8 个以上字符。",
+        "rateLimited": "尝试次数过多，请稍候片刻再试。",
+        "updateFailed": "密码更新失败，请稍后再试。"
+      },
+      "sessionsTitle": "会话",
+      "sessionsDescription": "退出此账户在所有设备上的登录。",
+      "signOutEverywhere": "在所有设备上退出",
+      "dangerTitle": "危险操作",
+      "dangerDescription": "删除账户及全部关联数据，不可恢复。",
+      "deleteAccount": "删除账户",
+      "deleteDialogTitle": "确认删除账户？",
+      "deleteDialogBodyWithEmail": "请在下方输入 {email} 以确认。此操作将永久删除你的资料、收藏与偏好；评论将保留但显示为匿名。",
+      "deleteDialogBodyNoEmail": "此操作将永久删除你的资料、收藏与偏好；评论将保留但显示为匿名。",
+      "deleteConfirmLabel": "确认邮箱",
+      "cancel": "取消",
+      "deleteConfirm": "删除账户",
+      "deleteError": {
+        "unconfigured": "当前部署未启用登录。",
+        "guest": "请重新登录。",
+        "confirmationMismatch": "输入的邮箱不匹配，请重试。",
+        "deleteFailed": "账户删除失败，请稍后再试。"
+      }
     }
   },
   "Comments": {

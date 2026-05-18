@@ -596,6 +596,15 @@
       "signUpFailed": "Couldn't create the account. Try again in a moment.",
       "rateLimited": "Too many attempts. Wait a minute and try again."
     },
+    "forgotPassword": "Forgot password? Email a link.",
+    "emailLinkInstead": "Email me a link instead",
+    "callbackError": {
+      "unconfigured": "Sign-in isn't configured on this deployment.",
+      "exchangeFailed": "Sign-in didn't complete. Request a new link and try again.",
+      "missingCode": "That link was incomplete. Request a fresh one.",
+      "generic": "Something went wrong signing you in."
+    },
+    "accountDeletedToast": "Account deleted. Thanks for stopping by.",
     "signOut": "Sign out",
     "account": "Account",
     "openAccount": "Open account",
@@ -647,6 +656,43 @@
       "websiteInvalid": "Website must be a valid URL.",
       "usernameTaken": "That username is already taken.",
       "saveFailed": "Couldn't save your changes. Try again in a moment."
+    },
+    "profileSectionTitle": "Profile",
+    "securitySectionTitle": "Security",
+    "security": {
+      "passwordTitle": "Password",
+      "passwordDescription": "Set a password or change the one you've got. 8+ characters.",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "New password",
+      "savePassword": "Save password",
+      "passwordSaved": "Saved",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "passwordError": {
+        "unconfigured": "Sign-in isn't configured on this deployment.",
+        "guest": "Please sign in again.",
+        "weakPassword": "Pick a stronger password (8+ characters).",
+        "rateLimited": "Too many attempts. Wait a minute and try again.",
+        "updateFailed": "Couldn't update your password. Try again in a moment."
+      },
+      "sessionsTitle": "Sessions",
+      "sessionsDescription": "Sign out of every device that's signed in to this account.",
+      "signOutEverywhere": "Sign out everywhere",
+      "dangerTitle": "Danger zone",
+      "dangerDescription": "Delete your account and everything tied to it. Can't be undone.",
+      "deleteAccount": "Delete account",
+      "deleteDialogTitle": "Delete your account?",
+      "deleteDialogBodyWithEmail": "Type {email} below to confirm. This permanently removes your profile, saved items, and preferences. Your comments stay but show as unnamed.",
+      "deleteDialogBodyNoEmail": "This permanently removes your profile, saved items, and preferences. Your comments stay but show as unnamed.",
+      "deleteConfirmLabel": "Confirm email",
+      "cancel": "Cancel",
+      "deleteConfirm": "Delete account",
+      "deleteError": {
+        "unconfigured": "Sign-in isn't configured on this deployment.",
+        "guest": "Please sign in again.",
+        "confirmationMismatch": "The email you typed doesn't match. Try again.",
+        "deleteFailed": "Couldn't delete your account. Try again in a moment."
+      }
     }
   },
   "Comments": {
