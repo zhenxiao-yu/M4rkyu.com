@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
 
 export async function handleAuthCallback(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
-  const authError = searchParams.get("error_code") ?? searchParams.get("error");
   const code = searchParams.get("code");
   const rawNext = searchParams.get("next") ?? "/";
   const next = sanitizeNextPath(rawNext, `/${routing.defaultLocale}`);
@@ -37,7 +36,16 @@ export async function handleAuthCallback(request: NextRequest) {
   }
 
   if (!code) {
-    const reason = authError ?? "missingCode";
+    // Supabase sends `error` + `error_code` in the query string for
+    // server-side flows (and duplicates them into the hash fragment
+    // for client-side ones). We normalise to one of a small set of
+    // toast-friendly keys; raw Supabase codes go through `classify`
+    // so future codes default to a generic message instead of
+    // leaking machine-y strings into the URL.
+    const reason = classifyCallbackError(
+      searchParams.get("error_code"),
+      searchParams.get("error"),
+    );
     return NextResponse.redirect(
       `${origin}${next}?authError=${encodeURIComponent(reason)}`,
     );
@@ -51,4 +59,26 @@ export async function handleAuthCallback(request: NextRequest) {
   }
 
   return NextResponse.redirect(`${origin}${next}`);
+}
+
+/**
+ * Map raw Supabase callback errors onto the stable keys
+ * `AuthStatusToast` knows how to translate. Returns `missingCode`
+ * when there's no signal at all (the user hit the callback URL
+ * directly with nothing attached).
+ */
+function classifyCallbackError(
+  errorCode: string | null,
+  error: string | null,
+): string {
+  const code = (errorCode ?? "").toLowerCase();
+  const top = (error ?? "").toLowerCase();
+  if (!code && !top) return "missingCode";
+  if (code === "otp_expired" || code === "expired_token") return "otpExpired";
+  if (code === "over_email_send_rate_limit" || code === "rate_limit_exceeded") {
+    return "rateLimited";
+  }
+  if (top === "access_denied") return "accessDenied";
+  if (code === "server_error" || top === "server_error") return "serverError";
+  return "generic";
 }

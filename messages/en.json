@@ -602,6 +602,10 @@
       "unconfigured": "Sign-in isn't configured on this deployment.",
       "exchangeFailed": "Sign-in didn't complete. Request a new link and try again.",
       "missingCode": "That link was incomplete. Request a fresh one.",
+      "otpExpired": "That sign-in link expired. Request a fresh one and use it right away.",
+      "accessDenied": "Sign-in was cancelled or the link expired. Request a new one.",
+      "rateLimited": "Too many sign-in attempts. Wait a minute and try again.",
+      "serverError": "Supabase had a hiccup. Try again in a moment.",
       "generic": "Something went wrong signing you in."
     },
     "accountDeletedToast": "Account deleted. Thanks for stopping by.",

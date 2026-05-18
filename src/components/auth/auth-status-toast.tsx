@@ -49,12 +49,30 @@ export function AuthStatusToast() {
   return null;
 }
 
-// The callback route can produce a small set of `authError` values.
-// Anything outside the known set falls back to a generic message
-// rather than rendering raw URL noise.
-function classify(value: string): "unconfigured" | "exchangeFailed" | "missingCode" | "generic" {
-  if (value === "unconfigured") return "unconfigured";
-  if (value === "exchangeFailed") return "exchangeFailed";
-  if (value === "missingCode") return "missingCode";
-  return "generic";
+// The callback route normalises raw Supabase error codes into this
+// small set. Anything else falls back to `generic` rather than
+// rendering machine-y URL noise.
+type CallbackErrorKey =
+  | "unconfigured"
+  | "exchangeFailed"
+  | "missingCode"
+  | "otpExpired"
+  | "accessDenied"
+  | "rateLimited"
+  | "serverError"
+  | "generic";
+
+function classify(value: string): CallbackErrorKey {
+  switch (value) {
+    case "unconfigured":
+    case "exchangeFailed":
+    case "missingCode":
+    case "otpExpired":
+    case "accessDenied":
+    case "rateLimited":
+    case "serverError":
+      return value;
+    default:
+      return "generic";
+  }
 }

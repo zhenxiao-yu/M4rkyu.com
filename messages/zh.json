@@ -602,6 +602,10 @@
       "unconfigured": "当前部署未启用登录。",
       "exchangeFailed": "登录未完成，请重新发送链接再试。",
       "missingCode": "登录链接不完整，请重新申请。",
+      "otpExpired": "登录链接已过期，请重新发送并尽快使用。",
+      "accessDenied": "登录已取消或链接已过期，请重新申请。",
+      "rateLimited": "尝试次数过多，请稍候片刻再试。",
+      "serverError": "Supabase 服务异常，请稍后再试。",
       "generic": "登录时出错，请重试。"
     },
     "accountDeletedToast": "账户已删除。再见。",
