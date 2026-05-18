@@ -268,6 +268,12 @@ async function sendMagicLinkViaResend({
   }
 
   const resend = getResendClient();
+  if (!env.INQUIRY_FROM_EMAIL) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] fast magic-link sender env is not configured");
+    }
+    return "failed";
+  }
   const host = origin.replace(/^https?:\/\//, "").replace(/\/$/, "");
   const { error: sendError } = await resend.emails.send({
     from: env.INQUIRY_FROM_EMAIL,

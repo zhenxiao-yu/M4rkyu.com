@@ -1,6 +1,9 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+const requiredInProduction = (schema: z.ZodString) =>
+  process.env.NODE_ENV === "production" ? schema : schema.optional();
+
 /**
  * Typed environment variables. Validated at module load — a missing
  * required key fails the build instead of producing a silent 500 the
@@ -17,11 +20,17 @@ import { z } from "zod";
  */
 export const env = createEnv({
   server: {
-    RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
-    INQUIRY_TO_EMAIL: z.string().email("INQUIRY_TO_EMAIL must be a valid email"),
-    INQUIRY_FROM_EMAIL: z
-      .string()
-      .email("INQUIRY_FROM_EMAIL must be a valid sender (e.g. inquiry@m4rkyu.com)"),
+    RESEND_API_KEY: requiredInProduction(
+      z.string().min(1, "RESEND_API_KEY is required"),
+    ),
+    INQUIRY_TO_EMAIL: requiredInProduction(
+      z.string().email("INQUIRY_TO_EMAIL must be a valid email"),
+    ),
+    INQUIRY_FROM_EMAIL: requiredInProduction(
+      z
+        .string()
+        .email("INQUIRY_FROM_EMAIL must be a valid sender (e.g. inquiry@m4rkyu.com)"),
+    ),
     TURNSTILE_SECRET_KEY: z.string().optional(),
     // Resend webhook signing secret. Required only by the webhook
     // route. Optional at module load so other server entry points

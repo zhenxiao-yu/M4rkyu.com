@@ -101,6 +101,11 @@ export async function submitInquiryAction(
   const receivedAt = new Date().toUTCString();
 
   try {
+    if (!env.INQUIRY_FROM_EMAIL || !env.INQUIRY_TO_EMAIL) {
+      console.error("[inquiry] email sender/recipient env is not configured");
+      return { status: "error", kind: "send", messageKey: "sendError" };
+    }
+
     const resend = getResendClient();
     const { error } = await resend.emails.send({
       from: env.INQUIRY_FROM_EMAIL,
