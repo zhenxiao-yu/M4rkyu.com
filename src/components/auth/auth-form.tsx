@@ -1,12 +1,19 @@
 "use client";
 
-import { useActionState, useState, type ChangeEvent } from "react";
+import {
+  useActionState,
+  useId,
+  useState,
+  type ChangeEvent,
+  type ReactNode,
+} from "react";
 import {
   AlertCircle,
   ArrowLeft,
   Eye,
   EyeOff,
   KeyRound,
+  Loader2,
   Mail,
   UserPlus,
 } from "lucide-react";
@@ -26,26 +33,13 @@ interface AuthFormProps {
   next?: string;
 }
 
-/**
- * One form, three flows.
- *
- * The user always sees the same two fields: email, password (optional).
- *   - Leave password blank → primary button sends a magic link.
- *   - Fill password → primary button signs in with the password,
- *     and a secondary "Create account" appears for first-time visitors.
- *
- * That keeps the dialog single-column and removes a top-level
- * "sign in vs sign up" tab the user has to navigate before they've
- * typed anything. The submit buttons set distinct `formAction`s so
- * the server picks the right action without sniffing form data.
- *
- * Transitions:
- *   - magic-link send  → OTP-entry view (existing)
- *   - signup success   → "check your email" view
- *   - any sent view    → "Use a different email" button returns here
- */
+type AuthMode = "signin" | "signup" | "code";
+
 export function AuthForm({ next }: AuthFormProps) {
   const t = useTranslations("Auth");
+  const emailId = useId();
+  const passwordId = useId();
+  const tokenId = useId();
 
   const [magicState, magicAction, magicPending] = useActionState(
     requestMagicLinkAction,
@@ -64,6 +58,7 @@ export function AuthForm({ next }: AuthFormProps) {
     { status: "idle" as const },
   );
 
+  const [mode, setMode] = useState<AuthMode>("signin");
   const [returnToForm, setReturnToForm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,9 +66,7 @@ export function AuthForm({ next }: AuthFormProps) {
 
   const pending =
     magicPending || otpPending || signInPending || signUpPending;
-  const hasPassword = password.length > 0;
 
-  // ── "Check your email" / OTP view after magic-link send ──
   if (magicState.status === "sent" && !returnToForm) {
     return (
       <div className="grid gap-3">
@@ -86,14 +79,14 @@ export function AuthForm({ next }: AuthFormProps) {
           <input type="hidden" name="email" value={magicState.email} />
           {next ? <input type="hidden" name="next" value={next} /> : null}
           <label
-            htmlFor="auth-token"
+            htmlFor={tokenId}
             className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground"
           >
             {t("otpLabel")}
           </label>
           <div className="flex items-center gap-2">
             <Input
-              id="auth-token"
+              id={tokenId}
               name="token"
               type="text"
               required
@@ -108,17 +101,20 @@ export function AuthForm({ next }: AuthFormProps) {
             <Button
               type="submit"
               disabled={otpPending}
+              aria-busy={otpPending || undefined}
               aria-label={t("verifyOtp")}
               className="h-11 shrink-0 gap-2 sm:h-10"
             >
-              <KeyRound className="size-4" aria-hidden="true" />
+              {otpPending ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <KeyRound className="size-4" aria-hidden="true" />
+              )}
               <span className="hidden sm:inline">{t("verifyOtp")}</span>
             </Button>
           </div>
           {otpState.status === "error" ? (
-            <ErrorLine
-              text={t(`magicLinkError.${otpState.messageKey}`)}
-            />
+            <ErrorLine text={t(`magicLinkError.${otpState.messageKey}`)} />
           ) : null}
         </form>
 
@@ -131,7 +127,6 @@ export function AuthForm({ next }: AuthFormProps) {
     );
   }
 
-  // ── "Check your email" view after signup ──
   if (signUpState.status === "confirmSent" && !returnToForm) {
     return (
       <div className="grid gap-3">
@@ -148,174 +143,238 @@ export function AuthForm({ next }: AuthFormProps) {
     );
   }
 
-  // Surface whichever action errored most recently. The form clears
-  // its own error on the next submit because useActionState resets
-  // the state for the action that fired.
   const errorMessage =
-    signInState.status === "error"
+    mode === "signin" && signInState.status === "error"
       ? t(`passwordError.${signInState.messageKey}`)
-      : signUpState.status === "error"
+      : mode === "signup" && signUpState.status === "error"
         ? t(`signUpError.${signUpState.messageKey}`)
-        : magicState.status === "error"
+        : mode === "code" && magicState.status === "error"
           ? t(`magicLinkError.${magicState.messageKey}`)
           : null;
 
-  // The form action is the *primary* button's action. The secondary
-  // button overrides via formAction. We default the form to magic
-  // link, so even pressing Enter with an empty password sends a link.
-  const formAction = hasPassword ? signInAction : magicAction;
-  const primaryLabel = hasPassword
-    ? t("signInWithPassword")
-    : t("sendMagicLink");
-  const PrimaryIcon = hasPassword ? KeyRound : Mail;
+  const submitLabel =
+    mode === "signup"
+      ? t("createAccount")
+      : mode === "code"
+        ? t("sendMagicLink")
+        : t("signInWithPassword");
+  const SubmitIcon = mode === "signup" ? UserPlus : mode === "code" ? Mail : KeyRound;
 
   return (
-    <form action={formAction} className="grid gap-3">
-      {next ? <input type="hidden" name="next" value={next} /> : null}
-
-      <div className="grid gap-2">
-        <label className="sr-only" htmlFor="auth-email">
-          {t("emailLabel")}
-        </label>
-        <Input
-          id="auth-email"
-          name="email"
-          type="email"
-          required
-          inputMode="email"
-          autoComplete="email"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          placeholder={t("emailPlaceholder")}
-          value={email}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            setEmail(event.target.value)
-          }
-          disabled={pending}
-          className="h-11 sm:h-10"
-        />
-
-        <label className="sr-only" htmlFor="auth-password">
-          {t("passwordLabel")}
-        </label>
-        <div className="relative">
-          <Input
-            id="auth-password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete={hasPassword ? "current-password" : "new-password"}
-            minLength={8}
-            maxLength={72}
-            placeholder={t("passwordPlaceholder")}
-            value={password}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setPassword(event.target.value)
-            }
-            disabled={pending}
-            className={cn("h-11 sm:h-10", hasPassword && "pr-10")}
-          />
-          {hasPassword ? (
-            <button
-              type="button"
-              tabIndex={-1}
-              onClick={() => setShowPassword((value) => !value)}
-              aria-label={
-                showPassword ? t("hidePassword") : t("showPassword")
-              }
-              className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {showPassword ? (
-                <EyeOff className="size-4" aria-hidden="true" />
-              ) : (
-                <Eye className="size-4" aria-hidden="true" />
-              )}
-            </button>
-          ) : null}
-        </div>
-        <div className="flex items-baseline justify-between gap-2">
-          <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
-            {hasPassword ? t("passwordHintFilled") : t("passwordHintEmpty")}
-          </p>
-          {hasPassword ? (
-            // Forgot-password recovery uses the same magic-link action
-            // (rather than a dedicated reset email) — once the user
-            // signs in via the link they can set a new password from
-            // /account/settings. One auth surface, one less email
-            // template to maintain.
-            <Button
-              type="submit"
-              formAction={magicAction}
-              variant="link"
-              size="sm"
-              className="h-auto whitespace-nowrap p-0 text-[0.7rem] text-muted-foreground hover:text-foreground"
-            >
-              {t("forgotPassword")}
-            </Button>
-          ) : null}
-        </div>
+    <div className="grid gap-3">
+      <div
+        role="tablist"
+        aria-label={t("authModeLabel")}
+        className="grid grid-cols-3 rounded-md border border-border bg-muted p-1"
+      >
+        <ModeButton
+          active={mode === "signin"}
+          onClick={() => {
+            setMode("signin");
+            setReturnToForm(false);
+          }}
+        >
+          {t("signInTab")}
+        </ModeButton>
+        <ModeButton
+          active={mode === "signup"}
+          onClick={() => {
+            setMode("signup");
+            setReturnToForm(false);
+          }}
+        >
+          {t("signUpTab")}
+        </ModeButton>
+        <ModeButton
+          active={mode === "code"}
+          onClick={() => {
+            setMode("code");
+            setReturnToForm(false);
+          }}
+        >
+          {t("emailCodeTab")}
+        </ModeButton>
       </div>
 
-      <div className="grid gap-2">
+      <form
+        action={
+          mode === "signup"
+            ? signUpAction
+            : mode === "code"
+              ? magicAction
+              : signInAction
+        }
+        className="grid gap-3"
+      >
+        {next ? <input type="hidden" name="next" value={next} /> : null}
+
+        <div className="grid gap-2">
+          <label className="sr-only" htmlFor={emailId}>
+            {t("emailLabel")}
+          </label>
+          <Input
+            id={emailId}
+            name="email"
+            type="email"
+            required
+            inputMode="email"
+            autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            placeholder={t("emailPlaceholder")}
+            value={email}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
+            }
+            disabled={pending}
+            className="h-11 sm:h-10"
+          />
+
+          {mode !== "code" ? (
+            <>
+              <label className="sr-only" htmlFor={passwordId}>
+                {t("passwordLabel")}
+              </label>
+              <div className="relative">
+                <Input
+                  id={passwordId}
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  autoComplete={
+                    mode === "signup" ? "new-password" : "current-password"
+                  }
+                  minLength={8}
+                  maxLength={72}
+                  placeholder={t("passwordPlaceholder")}
+                  value={password}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    setPassword(event.target.value)
+                  }
+                  disabled={pending}
+                  className="h-11 pr-10 sm:h-10"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={
+                    showPassword ? t("hidePassword") : t("showPassword")
+                  }
+                  className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-4" aria-hidden="true" />
+                  ) : (
+                    <Eye className="size-4" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+              <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
+                {mode === "signup"
+                  ? t("signUpHint")
+                  : t("passwordHintFilled")}
+              </p>
+            </>
+          ) : (
+            <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
+              {t("passwordHintEmpty")}
+            </p>
+          )}
+        </div>
+
         <Button
           type="submit"
           disabled={pending}
           aria-busy={
-            (hasPassword ? signInPending : magicPending) || undefined
+            (mode === "signup"
+              ? signUpPending
+              : mode === "code"
+                ? magicPending
+                : signInPending) || undefined
           }
           className="h-11 gap-2 sm:h-10"
         >
-          <PrimaryIcon className="size-4" aria-hidden="true" />
-          <span>{primaryLabel}</span>
+          {pending ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <SubmitIcon className="size-4" aria-hidden="true" />
+          )}
+          <span>{submitLabel}</span>
         </Button>
-        {hasPassword ? (
+
+        {mode === "signin" ? (
           <Button
             type="submit"
-            // `formAction` overrides the parent form's action so this
-            // submit hits signUpWithPasswordAction instead of sign-in.
-            formAction={signUpAction}
-            variant="outline"
-            disabled={pending}
-            aria-busy={signUpPending || undefined}
-            className="h-11 gap-2 sm:h-10"
+            formAction={magicAction}
+            formNoValidate
+            variant="link"
+            size="sm"
+            disabled={pending || email.trim().length === 0}
+            className="-mt-1 h-auto justify-self-start p-0 text-xs text-muted-foreground hover:text-foreground"
           >
-            <UserPlus className="size-4" aria-hidden="true" />
-            <span>{t("createAccount")}</span>
+            {t("forgotPassword")}
           </Button>
         ) : null}
-      </div>
 
-      {errorMessage ? (
-        <div className="grid gap-1">
-          <ErrorLine text={errorMessage} />
-          {shouldOfferRecoveryLink(signInState, signUpState) ? (
-            // Pivot users out of dead-end errors: a wrong password or
-            // "email already exists" landing flips one click into a
-            // working sign-in via email link. The button reuses the
-            // form's email field and re-submits via the magic-link
-            // action.
-            <Button
-              type="submit"
-              formAction={magicAction}
-              variant="link"
-              size="sm"
-              className="-ml-2 self-start gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <Mail className="size-3.5" aria-hidden="true" />
-              {t("emailLinkInstead")}
-            </Button>
-          ) : null}
-        </div>
-      ) : null}
-    </form>
+        {errorMessage ? (
+          <div className="grid gap-1">
+            <ErrorLine text={errorMessage} />
+            {shouldOfferEmailCode(mode, signInState, signUpState) ? (
+              <Button
+                type="submit"
+                formAction={magicAction}
+                formNoValidate
+                variant="link"
+                size="sm"
+                className="-ml-2 self-start gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <Mail className="size-3.5" aria-hidden="true" />
+                {t("emailLinkInstead")}
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
+      </form>
+    </div>
   );
 }
 
-function shouldOfferRecoveryLink(
+function ModeButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-8 items-center justify-center rounded-sm px-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        active
+          ? "bg-background text-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function shouldOfferEmailCode(
+  mode: AuthMode,
   signInState: { status: string; messageKey?: string },
   signUpState: { status: string; messageKey?: string },
 ): boolean {
   if (
+    mode === "signin" &&
     signInState.status === "error" &&
     (signInState.messageKey === "invalidCredentials" ||
       signInState.messageKey === "unconfirmedEmail")
@@ -323,6 +382,7 @@ function shouldOfferRecoveryLink(
     return true;
   }
   if (
+    mode === "signup" &&
     signUpState.status === "error" &&
     signUpState.messageKey === "userAlreadyExists"
   ) {
@@ -330,8 +390,6 @@ function shouldOfferRecoveryLink(
   }
   return false;
 }
-
-// ── Small presentational helpers ────────────────────────────────
 
 function SentNotice({ title, body }: { title: string; body: string }) {
   return (

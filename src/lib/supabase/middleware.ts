@@ -7,7 +7,7 @@ import { getSupabaseConfigOrThrow, isSupabaseConfigured } from "./config";
 /**
  * Refresh the Supabase session cookie for an incoming request and
  * return a NextResponse with the updated `Set-Cookie` headers. The
- * caller (root `middleware.ts`) is expected to:
+ * caller (`src/proxy.ts`) is expected to:
  *
  *   1. Call this first to mint a base response.
  *   2. Forward cookie mutations onto whatever response the

@@ -12,7 +12,11 @@ export interface ShareInput {
 export async function shareOrCopy(input: ShareInput): Promise<ShareResult> {
   if (typeof window === "undefined") return "unsupported";
 
-  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+  if (
+    typeof navigator !== "undefined" &&
+    typeof navigator.share === "function" &&
+    window.matchMedia?.("(pointer: coarse)").matches
+  ) {
     try {
       await navigator.share(input);
       return "shared";
