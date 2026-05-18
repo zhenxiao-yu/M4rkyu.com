@@ -46,8 +46,10 @@ depends on `public.is_admin()` from the trigger file.
 5. **Configure auth providers.** Dashboard → Authentication →
    Providers:
    - Enable **Email** with "Enable email signup" on. The UI supports
-     password sign-in/sign-up plus email-code fallback. Set the email
-     template's redirect URL token to `{{ .SiteURL }}/auth/callback`.
+     password sign-in/sign-up plus email-code fallback. Use Supabase's
+     confirmation URL in the email link: `{{ .ConfirmationURL }}`. If
+     you hand-build the email link instead, include the token hash:
+     `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email`.
    - Enable **Google** — set Client ID / Secret from Google Cloud
      Console (OAuth 2.0 Client, Web application).
    - Enable **GitHub** — set Client ID / Secret from

@@ -23,6 +23,8 @@ export async function GET(request: NextRequest) {
 export async function handleAuthCallback(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = classifyEmailOtpType(searchParams.get("type"));
   const rawNext = searchParams.get("next") ?? "/";
   const next = sanitizeNextPath(rawNext, `/${routing.defaultLocale}`);
 
@@ -33,6 +35,27 @@ export async function handleAuthCallback(request: NextRequest) {
     return NextResponse.redirect(
       `${origin}/${routing.defaultLocale}?authError=unconfigured`,
     );
+  }
+
+  if (tokenHash && type) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type,
+    });
+
+    if (error) {
+      const reason = classifyCallbackError(
+        error.code ?? null,
+        error.message ?? null,
+        null,
+      );
+      return NextResponse.redirect(
+        `${origin}${next}?authError=${encodeURIComponent(reason)}`,
+      );
+    }
+
+    return NextResponse.redirect(`${origin}${next}`);
   }
 
   if (!code) {
@@ -60,6 +83,29 @@ export async function handleAuthCallback(request: NextRequest) {
   }
 
   return NextResponse.redirect(`${origin}${next}`);
+}
+
+type EmailOtpCallbackType =
+  | "email"
+  | "email_change"
+  | "invite"
+  | "magiclink"
+  | "recovery"
+  | "signup";
+
+function classifyEmailOtpType(type: string | null): EmailOtpCallbackType | null {
+  const normalized = (type ?? "").toLowerCase();
+  switch (normalized) {
+    case "email":
+    case "email_change":
+    case "magiclink":
+    case "recovery":
+    case "invite":
+    case "signup":
+      return normalized;
+    default:
+      return null;
+  }
 }
 
 /**
