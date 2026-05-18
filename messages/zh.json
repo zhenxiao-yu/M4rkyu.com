@@ -626,6 +626,7 @@
     "anonymous": "未命名",
     "noBio": "尚未填写简介 —— 可前往「设置」补充。",
     "memberSince": "加入时间",
+    "signInMethods": "登录方式",
     "adminBadge": "管理员",
     "savedTitle": "已保存的内容",
     "savedDescription": "你收藏的全部条目，最新在前。",
@@ -678,6 +679,24 @@
         "weakPassword": "密码强度不足，请使用 8 个以上字符。",
         "rateLimited": "尝试次数过多，请稍候片刻再试。",
         "updateFailed": "密码更新失败，请稍后再试。"
+      },
+      "connected": {
+        "title": "已连接的账户",
+        "description": "连接更多登录方式，下次用任意一种都能登录。",
+        "connected": "已连接",
+        "notConnected": "未连接",
+        "emailProvider": "邮箱",
+        "disconnect": "断开",
+        "disconnected": "已断开",
+        "linkFailed": "连接失败，请重试。",
+        "lastIdentityHint": "这是你唯一的登录方式，无法断开。请先连接另一种。",
+        "unlinkError": {
+          "unconfigured": "当前部署未启用登录。",
+          "guest": "请重新登录。",
+          "notFound": "该登录方式已不在连接中。",
+          "lastIdentity": "无法断开 —— 这是你唯一的登录方式。请先连接另一种。",
+          "unlinkFailed": "断开失败，请稍后再试。"
+        }
       },
       "sessionsTitle": "会话",
       "sessionsDescription": "退出此账户在所有设备上的登录。",

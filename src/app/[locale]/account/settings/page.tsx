@@ -53,7 +53,11 @@ export default async function AccountSettingsPage({
               <h2 className="mb-4 text-base font-medium">
                 {t("securitySectionTitle")}
               </h2>
-              <SecurityPanel locale={locale} email={user.email} />
+              <SecurityPanel
+                locale={locale}
+                email={user.email}
+                identities={user.identities}
+              />
             </CardContent>
           </Card>
         </div>

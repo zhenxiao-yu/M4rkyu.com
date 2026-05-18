@@ -53,7 +53,9 @@
     ".next-p2/types/**/*.ts",
     ".next-p2/dev/types/**/*.ts",
     ".next-p2b/types/**/*.ts",
-    ".next-p2b/dev/types/**/*.ts"
+    ".next-p2b/dev/types/**/*.ts",
+    ".next-conn/types/**/*.ts",
+    ".next-conn/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

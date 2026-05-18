@@ -426,6 +426,77 @@ export async function updatePasswordAction(
   return { status: "ok" };
 }
 
+type UnlinkIdentityMessageKey =
+  | "unconfigured"
+  | "guest"
+  | "notFound"
+  | "lastIdentity"
+  | "unlinkFailed";
+
+export type UnlinkIdentityState =
+  | { status: "idle" }
+  | { status: "ok" }
+  | { status: "error"; messageKey: UnlinkIdentityMessageKey };
+
+/**
+ * Disconnect an OAuth provider (or the email identity) from the
+ * signed-in user's account. The form field `identity_id` carries
+ * the immutable identity row id we want removed.
+ *
+ * Safety: Supabase itself blocks removing the LAST identity on a
+ * user (returns `single_identity_not_deletable`). We re-check that
+ * here too so the UI never even tries.
+ */
+export async function unlinkIdentityAction(
+  _prevState: UnlinkIdentityState,
+  formData: FormData,
+): Promise<UnlinkIdentityState> {
+  if (!isSupabaseConfigured()) {
+    return { status: "error", messageKey: "unconfigured" };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { status: "error", messageKey: "guest" };
+
+  const identityId = String(formData.get("identity_id") ?? "").trim();
+  if (!identityId) return { status: "error", messageKey: "notFound" };
+
+  const identities = user.identities ?? [];
+  if (identities.length <= 1) {
+    return { status: "error", messageKey: "lastIdentity" };
+  }
+
+  const target = identities.find((row) => row.identity_id === identityId);
+  if (!target) return { status: "error", messageKey: "notFound" };
+
+  const { error } = await supabase.auth.unlinkIdentity(target);
+  if (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] unlink identity failed", {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      });
+    }
+    // Supabase surfaces this when the call would leave the user
+    // without any way to sign back in. The earlier check should
+    // have caught it; this is the belt-and-suspenders branch.
+    if (
+      error.code === "single_identity_not_deletable" ||
+      error.code === "identity_already_exists"
+    ) {
+      return { status: "error", messageKey: "lastIdentity" };
+    }
+    return { status: "error", messageKey: "unlinkFailed" };
+  }
+
+  revalidatePath("/", "layout");
+  return { status: "ok" };
+}
+
 type DeleteAccountMessageKey =
   | "unconfigured"
   | "guest"

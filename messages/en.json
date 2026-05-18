@@ -626,6 +626,7 @@
     "anonymous": "Unnamed",
     "noBio": "No bio yet — add one in Settings.",
     "memberSince": "Member since",
+    "signInMethods": "Sign-in methods",
     "adminBadge": "Admin",
     "savedTitle": "Saved items",
     "savedDescription": "Everything you've bookmarked, newest first.",
@@ -678,6 +679,24 @@
         "weakPassword": "Pick a stronger password (8+ characters).",
         "rateLimited": "Too many attempts. Wait a minute and try again.",
         "updateFailed": "Couldn't update your password. Try again in a moment."
+      },
+      "connected": {
+        "title": "Connected accounts",
+        "description": "Link more providers so you can sign in with whichever one's handy next time.",
+        "connected": "Connected",
+        "notConnected": "Not connected",
+        "emailProvider": "Email",
+        "disconnect": "Disconnect",
+        "disconnected": "Disconnected",
+        "linkFailed": "Couldn't connect. Try again.",
+        "lastIdentityHint": "You can't disconnect your only sign-in method. Connect another first.",
+        "unlinkError": {
+          "unconfigured": "Sign-in isn't configured on this deployment.",
+          "guest": "Please sign in again.",
+          "notFound": "That provider isn't connected anymore.",
+          "lastIdentity": "Can't disconnect — it's the only way left to sign in. Connect another provider first.",
+          "unlinkFailed": "Couldn't disconnect. Try again in a moment."
+        }
       },
       "sessionsTitle": "Sessions",
       "sessionsDescription": "Sign out of every device that's signed in to this account.",

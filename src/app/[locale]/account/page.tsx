@@ -72,6 +72,14 @@ export default async function AccountPage({
                   ? new Date(user.profile.created_at).toISOString().slice(0, 10)
                   : "—"}
               </span>
+              {user.identities.length > 0 ? (
+                <span>
+                  {t("signInMethods")} ·{" "}
+                  {user.identities
+                    .map((row) => providerLabel(row.provider))
+                    .join(" · ")}
+                </span>
+              ) : null}
               {user.isAdmin ? <span>{t("adminBadge")}</span> : null}
             </div>
           </CardContent>
@@ -79,4 +87,20 @@ export default async function AccountPage({
       </PageSection>
     </PageShell>
   );
+}
+
+// Provider strings come straight out of Supabase (`google`, `github`,
+// `email`, possibly future ones). We display them tidied — anything
+// we don't recognise renders verbatim with the first letter cased.
+function providerLabel(provider: string): string {
+  switch (provider) {
+    case "google":
+      return "Google";
+    case "github":
+      return "GitHub";
+    case "email":
+      return "Email";
+    default:
+      return provider.charAt(0).toUpperCase() + provider.slice(1);
+  }
 }

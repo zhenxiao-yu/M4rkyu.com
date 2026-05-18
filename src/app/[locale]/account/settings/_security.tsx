@@ -10,6 +10,7 @@ import {
   ShieldAlert,
   Trash2,
 } from "lucide-react";
+import type { UserIdentity } from "@supabase/supabase-js";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ConnectedAccounts } from "@/components/auth/connected-accounts";
 import { cn } from "@/lib/utils";
 import {
   deleteAccountAction,
@@ -31,24 +33,28 @@ import {
 interface SecurityPanelProps {
   locale: string;
   email: string | null;
+  identities: UserIdentity[];
 }
 
 /**
- * Account "Security" pane. Three independent forms in one card:
+ * Account "Security" pane. Four independent forms in one card:
  *   1. Set / change password (no current-password challenge because
  *      the session cookie is the auth gate — same posture Supabase
  *      uses for `auth.updateUser`).
- *   2. Global sign-out — revokes every active session.
- *   3. Danger zone — permanent account deletion behind a typed-
+ *   2. Connected accounts — link / unlink OAuth providers so the
+ *      user can sign in via any of them next time.
+ *   3. Global sign-out — revokes every active session.
+ *   4. Danger zone — permanent account deletion behind a typed-
  *      confirmation dialog.
  *
  * Each form has its own useActionState so an error in one doesn't
  * blow away the others' UI state.
  */
-export function SecurityPanel({ locale, email }: SecurityPanelProps) {
+export function SecurityPanel({ locale, email, identities }: SecurityPanelProps) {
   return (
     <div className="grid gap-6">
       <PasswordSection />
+      <ConnectedAccounts identities={identities} />
       <GlobalSignOutSection locale={locale} />
       <DangerZone locale={locale} email={email} />
     </div>

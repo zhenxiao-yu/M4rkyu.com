@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import type { UserIdentity } from "@supabase/supabase-js";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import type { ProfileRow } from "@/lib/supabase/types";
@@ -10,6 +11,14 @@ export interface CurrentUser {
   email: string | null;
   profile: ProfileRow | null;
   isAdmin: boolean;
+  /**
+   * The signed-in user's linked OAuth + email identities. Powers the
+   * "Connected accounts" panel in settings: once you've linked
+   * Google + GitHub + email to the same account, any of them signs
+   * you in. An empty array means the upstream call was unavailable
+   * (e.g. legacy session); the panel renders a graceful empty state.
+   */
+  identities: UserIdentity[];
 }
 
 /**
@@ -42,5 +51,6 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     email: user.email ?? null,
     profile: profile ?? null,
     isAdmin: profile?.role === "admin",
+    identities: user.identities ?? [],
   };
 });
