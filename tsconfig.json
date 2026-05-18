@@ -49,7 +49,9 @@
     ".next-validate/types/**/*.ts",
     ".next-validate/dev/types/**/*.ts",
     ".next-postpolish/types/**/*.ts",
-    ".next-postpolish/dev/types/**/*.ts"
+    ".next-postpolish/dev/types/**/*.ts",
+    ".next-p2/types/**/*.ts",
+    ".next-p2/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

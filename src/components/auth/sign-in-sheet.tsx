@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { env } from "@/lib/env";
 import { OAuthButtons } from "./oauth-buttons";
-import { MagicLinkForm } from "./magic-link-form";
+import { AuthForm } from "./auth-form";
 
 interface SignInSheetProps {
   /**
@@ -77,10 +77,10 @@ export function SignInSheet({ trigger, next, open, onOpenChange }: SignInSheetPr
 
           {/*
            * `key` bound to open state so closing the dialog resets the
-           * MagicLinkForm action state (otherwise the user reopens to
-           * the OTP "sent" view even when they meant to start over).
+           * AuthForm action state (otherwise the user reopens to a
+           * "sent" view even when they meant to start over).
            */}
-          <MagicLinkForm key={isOpen ? "open" : "closed"} next={next} />
+          <AuthForm key={isOpen ? "open" : "closed"} next={next} />
 
           <p className="text-[0.7rem] leading-relaxed text-muted-foreground">
             {t("signInTos")}
