@@ -30,7 +30,12 @@ interface SignInSheetProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function SignInSheet({ trigger, next, open, onOpenChange }: SignInSheetProps) {
+export function SignInSheet({
+  trigger,
+  next,
+  open,
+  onOpenChange,
+}: SignInSheetProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
@@ -48,9 +53,14 @@ export function SignInSheet({ trigger, next, open, onOpenChange }: SignInSheetPr
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            aria-label={t("signIn")}
+          >
             <LogIn className="size-4" aria-hidden="true" />
-            <span>{t("signIn")}</span>
+            <span className="hidden min-[380px]:inline">{t("signIn")}</span>
           </Button>
         )}
       </DialogTrigger>

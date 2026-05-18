@@ -695,6 +695,12 @@
         "disconnect": "断开",
         "disconnected": "已断开",
         "linkFailed": "连接失败，请重试。",
+        "linkError": {
+          "manualLinkingDisabled": "Supabase 未启用账户连接。请开启 manual linking 后重试。",
+          "alreadyConnected": "该登录方式已连接到一个账户。",
+          "sessionExpired": "登录会话已过期。请重新登录后再连接此方式。",
+          "linkFailed": "连接失败，请重试。"
+        },
         "lastIdentityHint": "这是你唯一的登录方式，无法断开。请先连接另一种。",
         "unlinkError": {
           "unconfigured": "当前部署未启用登录。",

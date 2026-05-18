@@ -57,7 +57,8 @@
     ".next-conn/types/**/*.ts",
     ".next-conn/dev/types/**/*.ts",
     ".next-fastemail/types/**/*.ts",
-    ".next-fastemail/dev/types/**/*.ts"
+    ".next-fastemail/dev/types/**/*.ts",
+    ".next-playwright/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

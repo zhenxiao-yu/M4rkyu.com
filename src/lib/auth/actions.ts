@@ -25,7 +25,10 @@ const emailSchema = z.object({
 });
 
 const otpSchema = emailSchema.extend({
-  token: z.string().trim().regex(/^\d{6,8}$/),
+  token: z
+    .string()
+    .trim()
+    .regex(/^\d{6,8}$/),
 });
 
 // Supabase hashes passwords with bcrypt, which silently truncates
@@ -106,8 +109,8 @@ type SignUpState =
  *        Supabase's project-level email quota.
  *
  * Either path is rate-limited via `record_email_send()` (RPC defined
- * in supabase/migrations/20260517000400_email_send_rate_limit.sql) —
- * 3 sends per email per 60s + 10 sends per IP per 10 minutes.
+ * in the Supabase email-rate-limit migrations) — currently 5 sends
+ * per email per 60s + 30 sends per IP per 10 minutes.
  */
 export async function requestMagicLinkAction(
   _prevState: MagicLinkState,
@@ -491,10 +494,7 @@ export async function signUpWithPasswordAction(
     if (isRateLimitError(error)) {
       return { status: "error", messageKey: "rateLimited" };
     }
-    if (
-      error.code === "user_already_exists" ||
-      error.code === "email_exists"
-    ) {
+    if (error.code === "user_already_exists" || error.code === "email_exists") {
       return { status: "error", messageKey: "userAlreadyExists" };
     }
     if (error.code === "weak_password") {
@@ -536,7 +536,8 @@ export async function signOutAction(
     await supabase.auth.signOut({ scope });
   }
   const target =
-    locale && routing.locales.includes(locale as (typeof routing.locales)[number])
+    locale &&
+    routing.locales.includes(locale as (typeof routing.locales)[number])
       ? `/${locale}`
       : `/${routing.defaultLocale}`;
   revalidatePath("/", "layout");

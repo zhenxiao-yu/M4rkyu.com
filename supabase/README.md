@@ -45,14 +45,18 @@ depends on `public.is_admin()` from the trigger file.
    with sensible defaults.
 5. **Configure auth providers.** Dashboard → Authentication →
    Providers:
-   - Enable **Email** with "Enable email confirmations" off and
-     "Enable email signup" on (we use magic-link only — no
-     passwords). Set the email template's redirect URL token to
-     `{{ .SiteURL }}/auth/callback`.
+   - Enable **Email** with "Enable email signup" on. The UI supports
+     password sign-in/sign-up plus email-code fallback. Set the email
+     template's redirect URL token to `{{ .SiteURL }}/auth/callback`.
    - Enable **Google** — set Client ID / Secret from Google Cloud
      Console (OAuth 2.0 Client, Web application).
    - Enable **GitHub** — set Client ID / Secret from
      https://github.com/settings/developers → OAuth Apps.
+   - Enable **Manual identity linking** in Authentication settings.
+     The account settings screen uses Supabase `linkIdentity()` so a
+     signed-in user can attach Google/GitHub to the same account. This
+     is what prevents duplicate-account confusion when one OAuth
+     provider exposes multiple verified emails.
 6. **Configure redirect URLs.** Dashboard → Authentication →
    URL Configuration:
    - Site URL: production origin (e.g. `https://m4rkyu.com`).
@@ -66,12 +70,19 @@ depends on `public.is_admin()` from the trigger file.
      OAuth client's "Authorized redirect URIs."
    - GitHub OAuth App: set Authorization callback URL to
      `https://<project-ref>.supabase.co/auth/v1/callback`.
-   These are Supabase's project-level callbacks; Supabase then
-   redirects back to your app's `/auth/callback`.
+     These are Supabase's project-level callbacks; Supabase then
+     redirects back to your app's `/auth/callback`.
 
 ## First admin
 
-After your first sign-in, promote yourself to admin by hand in the
+Owner emails are allowlisted in
+`20260517000100_admin_email_allowlist.sql` and hardened by
+`20260517000200_admin_email_verified.sql` /
+`20260518000200_oauth_owner_verified_metadata.sql`. Sign-ins for
+`markyu0615@gmail.com` and `zyu347@uwo.ca` become admin only after the
+email is verified by Supabase or by trusted OAuth provider metadata.
+
+If you ever need to promote an extra account by hand, run this in the
 Supabase SQL editor:
 
 ```sql

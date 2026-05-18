@@ -1,14 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import {
-  AlertCircle,
-  Check,
-  Link2,
-  Loader2,
-  Mail,
-  Unlink,
-} from "lucide-react";
+import { AlertCircle, Check, Link2, Loader2, Mail, Unlink } from "lucide-react";
 import type { UserIdentity } from "@supabase/supabase-js";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -95,7 +88,11 @@ export function ConnectedAccounts({ identities }: ConnectedAccountsProps) {
         {linkedByProvider.has("email") ? (
           <li>
             <EmailRow
-              email={linkedByProvider.get("email")?.identity_data?.email as string | undefined}
+              email={
+                linkedByProvider.get("email")?.identity_data?.email as
+                  | string
+                  | undefined
+              }
               identityId={linkedByProvider.get("email")?.identity_id ?? ""}
               onlyOneIdentity={onlyOneIdentity}
               unlinkAction={unlinkAction}
@@ -120,7 +117,10 @@ export function ConnectedAccounts({ identities }: ConnectedAccountsProps) {
           aria-live="polite"
           className="flex items-start gap-1.5 text-xs text-destructive"
         >
-          <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+          <AlertCircle
+            className="mt-0.5 size-3.5 shrink-0"
+            aria-hidden="true"
+          />
           <span>{t(`unlinkError.${unlinkState.messageKey}`)}</span>
         </p>
       ) : null}
@@ -152,7 +152,9 @@ function ProviderRow({
   const t = useTranslations("Account.security.connected");
   const tAuth = useTranslations("Auth");
   const [linkPending, setLinkPending] = useState(false);
-  const [linkError, setLinkError] = useState<string | null>(null);
+  const [linkError, setLinkError] = useState<LinkIdentityMessageKey | null>(
+    null,
+  );
 
   async function handleLink() {
     setLinkError(null);
@@ -167,12 +169,12 @@ function ProviderRow({
         options: { redirectTo: `${origin}/auth/callback` },
       });
       if (error) {
-        setLinkError(t("linkFailed"));
+        setLinkError(classifyLinkIdentityError(error));
         setLinkPending(false);
       }
       // Success path redirects the browser through the OAuth dance.
     } catch {
-      setLinkError(t("linkFailed"));
+      setLinkError("linkFailed");
       setLinkPending(false);
     }
   }
@@ -212,11 +214,7 @@ function ProviderRow({
 
       {linked ? (
         <form action={unlinkAction}>
-          <input
-            type="hidden"
-            name="identity_id"
-            value={linked.identity_id}
-          />
+          <input type="hidden" name="identity_id" value={linked.identity_id} />
           <Button
             type="submit"
             variant="ghost"
@@ -252,13 +250,46 @@ function ProviderRow({
               aria-live="polite"
               className="text-[0.7rem] text-destructive"
             >
-              {linkError}
+              {t(`linkError.${linkError}`)}
             </p>
           ) : null}
         </div>
       )}
     </div>
   );
+}
+
+type LinkIdentityMessageKey =
+  | "manualLinkingDisabled"
+  | "alreadyConnected"
+  | "sessionExpired"
+  | "linkFailed";
+
+function classifyLinkIdentityError(error: {
+  code?: string;
+  message?: string;
+  status?: number;
+}): LinkIdentityMessageKey {
+  const code = (error.code ?? "").toLowerCase();
+  const message = (error.message ?? "").toLowerCase();
+
+  if (
+    code === "manual_linking_disabled" ||
+    message.includes("manual linking")
+  ) {
+    return "manualLinkingDisabled";
+  }
+  if (
+    code === "identity_already_exists" ||
+    message.includes("already registered") ||
+    message.includes("already linked")
+  ) {
+    return "alreadyConnected";
+  }
+  if (error.status === 401 || code === "session_not_found") {
+    return "sessionExpired";
+  }
+  return "linkFailed";
 }
 
 function EmailRow({

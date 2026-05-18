@@ -695,6 +695,12 @@
         "disconnect": "Disconnect",
         "disconnected": "Disconnected",
         "linkFailed": "Couldn't connect. Try again.",
+        "linkError": {
+          "manualLinkingDisabled": "Account linking is disabled in Supabase. Turn on manual linking and try again.",
+          "alreadyConnected": "That provider is already connected to an account.",
+          "sessionExpired": "Your session expired. Sign in again, then connect this provider.",
+          "linkFailed": "Couldn't connect. Try again."
+        },
         "lastIdentityHint": "You can't disconnect your only sign-in method. Connect another first.",
         "unlinkError": {
           "unconfigured": "Sign-in isn't configured on this deployment.",

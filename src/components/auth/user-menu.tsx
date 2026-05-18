@@ -26,7 +26,8 @@ export async function UserMenu({ locale }: { locale: Locale }) {
     return <SignInSheet />;
   }
 
-  const label = user.profile?.display_name ?? user.profile?.username ?? t("account");
+  const label =
+    user.profile?.display_name ?? user.profile?.username ?? t("account");
 
   return (
     <Button asChild variant="ghost" size="sm" className="gap-2">
@@ -42,7 +43,9 @@ export async function UserMenu({ locale }: { locale: Locale }) {
         ) : (
           <UserRound className="size-4" aria-hidden="true" />
         )}
-        <span className="max-w-[14ch] truncate">{label}</span>
+        <span className="hidden max-w-[14ch] truncate min-[380px]:inline">
+          {label}
+        </span>
       </Link>
     </Button>
   );
