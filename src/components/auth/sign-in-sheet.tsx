@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { env } from "@/lib/env";
+import { authProviderFlags } from "@/lib/auth/provider-flags";
 import { OAuthButtons } from "./oauth-buttons";
 import { AuthForm } from "./auth-form";
 
@@ -45,9 +45,8 @@ export function SignInSheet({
   };
 
   const t = useTranslations("Auth");
-  const oauthEnabled =
-    env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" ||
-    env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED === "true";
+  const providers = authProviderFlags();
+  const oauthEnabled = providers.google || providers.github;
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>

@@ -65,6 +65,7 @@ depends on `public.is_admin()` from the trigger file.
    - Additional Redirect URLs (one per line):
      - `https://m4rkyu.com/auth/callback`
      - `http://localhost:3000/auth/callback`
+     - `http://127.0.0.1:3000/auth/callback`
      - any preview-deploy origin: `https://*-yourname.vercel.app/auth/callback`
 7. **OAuth dashboard callback URLs.**
    - Google Cloud Console: add

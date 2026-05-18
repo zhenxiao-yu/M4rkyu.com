@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { resolveSiteOrigin } from "@/lib/auth/redirect-url";
-import { env } from "@/lib/env";
+import { authProviderFlags } from "@/lib/auth/provider-flags";
 
 type Provider = "google" | "github";
 
@@ -25,8 +25,7 @@ export function OAuthButtons({ next }: OAuthButtonsProps) {
    */
   const [errorOn, setErrorOn] = useState<Provider | null>(null);
   const t = useTranslations("Auth");
-  const googleEnabled = env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
-  const githubEnabled = env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED === "true";
+  const { google: googleEnabled, github: githubEnabled } = authProviderFlags();
 
   async function handleProvider(provider: Provider) {
     setErrorOn(null);

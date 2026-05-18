@@ -4,22 +4,22 @@ import { env } from "@/lib/env";
  * Compute the public origin to use for OAuth redirect URLs.
  *
  * Resolution order:
- *   1. `NEXT_PUBLIC_SITE_URL` — author-provided, always wins.
- *   2. `VERCEL_URL` — populated by Vercel on preview / prod deploys.
- *   3. Provided `requestOrigin` — falls through to the request's
- *      own scheme + host for local dev.
+ *   1. Provided `requestOrigin` — keeps localhost, production, and
+ *      preview deployments on the origin the user actually opened.
+ *   2. `NEXT_PUBLIC_SITE_URL` — author-provided fallback.
+ *   3. `VERCEL_URL` — populated by Vercel on preview / prod deploys.
  *   4. `http://localhost:3000` — last-resort default.
  *
  * Always returns a value without a trailing slash.
  */
 export function resolveSiteOrigin(requestOrigin?: string | null): string {
+  if (requestOrigin) return stripTrailingSlash(requestOrigin);
+
   const fromEnv = env.NEXT_PUBLIC_SITE_URL?.trim();
   if (fromEnv) return stripTrailingSlash(fromEnv);
 
   const vercelHost = process.env.VERCEL_URL?.trim();
   if (vercelHost) return `https://${stripTrailingSlash(vercelHost)}`;
-
-  if (requestOrigin) return stripTrailingSlash(requestOrigin);
 
   return "http://localhost:3000";
 }

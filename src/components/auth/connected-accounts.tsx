@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { resolveSiteOrigin } from "@/lib/auth/redirect-url";
-import { env } from "@/lib/env";
+import { authProviderFlags } from "@/lib/auth/provider-flags";
 import { unlinkIdentityAction } from "@/lib/auth/actions";
 import { cn } from "@/lib/utils";
 
@@ -38,10 +38,7 @@ export function ConnectedAccounts({ identities }: ConnectedAccountsProps) {
     { status: "idle" as const },
   );
 
-  const providersEnabled: Record<ConnectableProvider, boolean> = {
-    google: env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true",
-    github: env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED === "true",
-  };
+  const providersEnabled = authProviderFlags();
   const linkedByProvider = new Map(
     identities.map((row) => [row.provider, row] as const),
   );
