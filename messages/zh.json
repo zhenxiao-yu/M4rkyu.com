@@ -610,6 +610,7 @@
       "otpExpired": "登录链接已过期，请重新发送并尽快使用。",
       "accessDenied": "登录已取消或链接已过期，请重新申请。",
       "rateLimited": "尝试次数过多，请稍候片刻再试。",
+      "duplicateIdentity": "该 GitHub 账号匹配了多个已有邮箱。请先用 Google 或邮箱登录，再到账号设置中连接 GitHub。",
       "serverError": "Supabase 服务异常，请稍后再试。",
       "generic": "登录时出错，请重试。"
     },

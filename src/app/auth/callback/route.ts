@@ -45,6 +45,7 @@ export async function handleAuthCallback(request: NextRequest) {
     const reason = classifyCallbackError(
       searchParams.get("error_code"),
       searchParams.get("error"),
+      searchParams.get("error_description"),
     );
     return NextResponse.redirect(
       `${origin}${next}?authError=${encodeURIComponent(reason)}`,
@@ -70,13 +71,18 @@ export async function handleAuthCallback(request: NextRequest) {
 function classifyCallbackError(
   errorCode: string | null,
   error: string | null,
+  description: string | null,
 ): string {
   const code = (errorCode ?? "").toLowerCase();
   const top = (error ?? "").toLowerCase();
+  const details = (description ?? "").toLowerCase();
   if (!code && !top) return "missingCode";
   if (code === "otp_expired" || code === "expired_token") return "otpExpired";
   if (code === "over_email_send_rate_limit" || code === "rate_limit_exceeded") {
     return "rateLimited";
+  }
+  if (details.includes("multiple accounts with the same email address")) {
+    return "duplicateIdentity";
   }
   if (top === "access_denied") return "accessDenied";
   if (code === "server_error" || top === "server_error") return "serverError";

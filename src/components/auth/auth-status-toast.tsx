@@ -59,6 +59,7 @@ type CallbackErrorKey =
   | "otpExpired"
   | "accessDenied"
   | "rateLimited"
+  | "duplicateIdentity"
   | "serverError"
   | "generic";
 
@@ -70,6 +71,7 @@ function classify(value: string): CallbackErrorKey {
     case "otpExpired":
     case "accessDenied":
     case "rateLimited":
+    case "duplicateIdentity":
     case "serverError":
       return value;
     default:

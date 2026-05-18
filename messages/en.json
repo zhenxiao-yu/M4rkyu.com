@@ -610,6 +610,7 @@
       "otpExpired": "That sign-in link expired. Request a fresh one and use it right away.",
       "accessDenied": "Sign-in was cancelled or the link expired. Request a new one.",
       "rateLimited": "Too many sign-in attempts. Wait a minute and try again.",
+      "duplicateIdentity": "That GitHub account matches more than one existing account email. Sign in with Google or email first, then connect GitHub from Account settings.",
       "serverError": "Supabase had a hiccup. Try again in a moment.",
       "generic": "Something went wrong signing you in."
     },
