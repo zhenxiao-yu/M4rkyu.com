@@ -46,7 +46,7 @@ export function SignInSheet({
 
   const t = useTranslations("Auth");
   const providers = authProviderFlags();
-  const oauthEnabled = providers.google || providers.github;
+  const oauthEnabled = providers.google || providers.github || providers.discord;
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>

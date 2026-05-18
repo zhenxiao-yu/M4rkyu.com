@@ -90,7 +90,7 @@ export default async function AccountPage({
 }
 
 // Provider strings come straight out of Supabase (`google`, `github`,
-// `email`, possibly future ones). We display them tidied — anything
+// `discord`, `email`, possibly future ones). We display them tidied — anything
 // we don't recognise renders verbatim with the first letter cased.
 function providerLabel(provider: string): string {
   switch (provider) {
@@ -98,6 +98,8 @@ function providerLabel(provider: string): string {
       return "Google";
     case "github":
       return "GitHub";
+    case "discord":
+      return "Discord";
     case "email":
       return "Email";
     default:

@@ -42,7 +42,7 @@ To bring the user system online locally:
    - `NEXT_PUBLIC_SITE_URL` (optional; defaults to request origin)
 2. Apply the SQL in `supabase/migrations/` in filename order (Dashboard
    SQL editor or `supabase db push`). Then run `supabase/seed.sql`.
-3. Enable Google, GitHub, and Email (magic link) providers in the
+3. Enable Google, GitHub, Discord, and Email (magic link) providers in the
    Supabase Auth → Providers dashboard. The redirect URLs you'll need
    are listed in [supabase/README.md](supabase/README.md).
 4. Sign in once on your local dev server, then promote yourself to

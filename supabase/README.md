@@ -54,9 +54,11 @@ depends on `public.is_admin()` from the trigger file.
      Console (OAuth 2.0 Client, Web application).
    - Enable **GitHub** — set Client ID / Secret from
      https://github.com/settings/developers → OAuth Apps.
+   - Enable **Discord** — set Client ID / Secret from
+     https://discord.com/developers/applications → OAuth2.
    - Enable **Manual identity linking** in Authentication settings.
      The account settings screen uses Supabase `linkIdentity()` so a
-     signed-in user can attach Google/GitHub to the same account. This
+     signed-in user can attach Google/GitHub/Discord to the same account. This
      is what prevents duplicate-account confusion when one OAuth
      provider exposes multiple verified emails.
 6. **Configure redirect URLs.** Dashboard → Authentication →
@@ -72,6 +74,9 @@ depends on `public.is_admin()` from the trigger file.
      `https://<project-ref>.supabase.co/auth/v1/callback` to the
      OAuth client's "Authorized redirect URIs."
    - GitHub OAuth App: set Authorization callback URL to
+     `https://<project-ref>.supabase.co/auth/v1/callback`.
+   - Discord Developer Portal: add the same Supabase callback URL under
+     OAuth2 redirects:
      `https://<project-ref>.supabase.co/auth/v1/callback`.
      These are Supabase's project-level callbacks; Supabase then
      redirects back to your app's `/auth/callback`.

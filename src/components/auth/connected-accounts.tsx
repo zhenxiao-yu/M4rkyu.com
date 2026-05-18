@@ -15,9 +15,9 @@ interface ConnectedAccountsProps {
   identities: UserIdentity[];
 }
 
-type ConnectableProvider = "google" | "github";
+type ConnectableProvider = "google" | "github" | "discord";
 
-const ALL_PROVIDERS: ConnectableProvider[] = ["github", "google"];
+const ALL_PROVIDERS: ConnectableProvider[] = ["github", "google", "discord"];
 
 /**
  * Lets the signed-in user link / unlink OAuth providers (and see
@@ -176,11 +176,8 @@ function ProviderRow({
     }
   }
 
-  const label =
-    provider === "google"
-      ? tAuth("continueWithGoogle")
-      : tAuth("continueWithGithub");
-  const providerName = provider === "google" ? "Google" : "GitHub";
+  const label = providerAuthLabel(provider, tAuth);
+  const providerName = providerDisplayName(provider);
 
   return (
     <div
@@ -190,11 +187,7 @@ function ProviderRow({
       )}
     >
       <div className="flex items-center gap-3 text-sm">
-        {provider === "google" ? (
-          <GoogleGlyph className="size-4" aria-hidden="true" />
-        ) : (
-          <GithubGlyph className="size-4" aria-hidden="true" />
-        )}
+        <ProviderGlyph provider={provider} className="size-4" />
         <div className="grid">
           <span className="font-medium">{providerName}</span>
           {linked ? (
@@ -289,6 +282,48 @@ function classifyLinkIdentityError(error: {
   return "linkFailed";
 }
 
+function providerAuthLabel(
+  provider: ConnectableProvider,
+  tAuth: ReturnType<typeof useTranslations>,
+): string {
+  switch (provider) {
+    case "google":
+      return tAuth("continueWithGoogle");
+    case "github":
+      return tAuth("continueWithGithub");
+    case "discord":
+      return tAuth("continueWithDiscord");
+  }
+}
+
+function providerDisplayName(provider: ConnectableProvider): string {
+  switch (provider) {
+    case "google":
+      return "Google";
+    case "github":
+      return "GitHub";
+    case "discord":
+      return "Discord";
+  }
+}
+
+function ProviderGlyph({
+  provider,
+  className,
+}: {
+  provider: ConnectableProvider;
+  className?: string;
+}) {
+  switch (provider) {
+    case "google":
+      return <GoogleGlyph className={className} />;
+    case "github":
+      return <GithubGlyph className={className} />;
+    case "discord":
+      return <DiscordGlyph className={className} />;
+  }
+}
+
 function EmailRow({
   email,
   identityId,
@@ -362,6 +397,20 @@ function GoogleGlyph({ className }: { className?: string }) {
         fill="#EA4335"
         d="M12 10.2v3.9h5.5c-.24 1.4-1.74 4.1-5.5 4.1-3.31 0-6-2.74-6-6.1S8.69 6 12 6c1.88 0 3.14.8 3.86 1.48l2.64-2.55C16.94 3.5 14.7 2.4 12 2.4 6.93 2.4 2.85 6.49 2.85 11.6S6.93 20.8 12 20.8c6.93 0 9.5-4.86 9.5-9.32 0-.62-.07-1.08-.16-1.28H12z"
       />
+    </svg>
+  );
+}
+
+function DiscordGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      fill="currentColor"
+      role="presentation"
+    >
+      <path d="M20.32 4.37A19.8 19.8 0 0 0 15.36 2.8a13.7 13.7 0 0 0-.64 1.33 18.3 18.3 0 0 0-5.44 0 13.7 13.7 0 0 0-.65-1.33 19.7 19.7 0 0 0-4.96 1.58C.53 9.16-.32 13.83.1 18.43a19.9 19.9 0 0 0 6.08 3.08c.49-.67.93-1.38 1.3-2.12a12.9 12.9 0 0 1-2.05-.98l.5-.39a14.2 14.2 0 0 0 12.16 0l.5.39c-.66.4-1.35.73-2.06.98.38.74.81 1.45 1.3 2.12a19.9 19.9 0 0 0 6.09-3.08c.5-5.34-.86-9.97-3.6-14.06ZM8.02 15.6c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42s2.17 1.1 2.15 2.42c0 1.34-.95 2.42-2.15 2.42Zm7.96 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42s2.17 1.1 2.15 2.42c0 1.34-.95 2.42-2.15 2.42Z" />
     </svg>
   );
 }

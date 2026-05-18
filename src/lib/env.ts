@@ -57,6 +57,9 @@ export const env = createEnv({
     NEXT_PUBLIC_AUTH_GITHUB_ENABLED: z
       .enum(["true", "false"])
       .optional(),
+    NEXT_PUBLIC_AUTH_DISCORD_ENABLED: z
+      .enum(["true", "false"])
+      .optional(),
     // Public site origin. Used to compute OAuth redirect URLs server
     // side. Optional — when unset, the request's own origin (or
     // VERCEL_URL on Vercel) is used as a fallback.
@@ -76,6 +79,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED,
     NEXT_PUBLIC_AUTH_GITHUB_ENABLED:
       process.env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED,
+    NEXT_PUBLIC_AUTH_DISCORD_ENABLED:
+      process.env.NEXT_PUBLIC_AUTH_DISCORD_ENABLED,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },
   // `next lint` and Storybook import this module without Resend keys
