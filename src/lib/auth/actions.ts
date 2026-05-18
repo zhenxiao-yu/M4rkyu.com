@@ -6,6 +6,16 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import {
+  getAdminSupabaseClient,
+  isFastAuthEmailConfigured,
+} from "@/lib/supabase/admin";
+import { getResendClient } from "@/lib/email/client";
+import {
+  MagicLinkEmail,
+  renderMagicLinkText,
+} from "@/lib/email/templates/magic-link";
+import { env } from "@/lib/env";
 import { resolveSiteOrigin, sanitizeNextPath } from "./redirect-url";
 import { routing } from "@/i18n/routing";
 
@@ -79,9 +89,25 @@ type SignUpState =
   | { status: "error"; messageKey: SignUpMessageKey };
 
 /**
- * Send a magic-link email. Used by the `MagicLinkForm` client island
- * via `useActionState`. Returns a discriminated state object that
- * the form renders directly (sent confirmation / error / idle).
+ * Send a magic-link email.
+ *
+ * Two code paths, picked by `isFastAuthEmailConfigured()`:
+ *
+ *   1. Fast path (SUPABASE_SERVICE_ROLE_KEY + RESEND_API_KEY set)
+ *      - admin.generateLink mints the link + OTP without triggering
+ *        Supabase's slow built-in email pipeline (typical 30–60s
+ *        delivery on the free tier).
+ *      - Resend sends the email with our own branded template.
+ *      - Typical delivery: 2–5s.
+ *
+ *   2. Slow fallback (default Supabase auth email)
+ *      - signInWithOtp asks Supabase to mint + send the email.
+ *      - Works with zero extra setup but is slower and capped at
+ *        Supabase's project-level email quota.
+ *
+ * Either path is rate-limited via `record_email_send()` (RPC defined
+ * in supabase/migrations/20260517000400_email_send_rate_limit.sql) —
+ * 3 sends per email per 60s + 10 sends per IP per 10 minutes.
  */
 export async function requestMagicLinkAction(
   _prevState: MagicLinkState,
@@ -101,16 +127,58 @@ export async function requestMagicLinkAction(
 
   const requestHeaders = await headers();
   const origin = resolveSiteOrigin(requestHeaders.get("origin"));
-  const nextParam = parsed.data.next ? `?next=${encodeURIComponent(parsed.data.next)}` : "";
+  const ip = clientIpFromHeaders(requestHeaders);
+  const nextParam = parsed.data.next
+    ? `?next=${encodeURIComponent(parsed.data.next)}`
+    : "";
+  const redirectTo = `${origin}/auth/callback${nextParam}`;
 
+  // App-level rate limit. The RPC enforces it server-side regardless
+  // of which sending path follows, so a misconfigured admin client
+  // (which would bypass Supabase's own throttle) still respects it.
   const supabase = await createSupabaseServerClient();
+  const rate = await supabase.rpc("record_email_send", {
+    p_email: parsed.data.email,
+    p_ip: ip,
+  });
+  if (rate.error) {
+    if ((rate.error as { code?: string }).code === "P0001") {
+      return { status: "error", messageKey: "rateLimited" };
+    }
+    // The rate-limit table isn't load-bearing for correctness — if
+    // the RPC itself errors (e.g. migration not applied yet) we log
+    // and continue rather than block the user.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[auth] email rate-limit RPC failed; allowing send", {
+        message: rate.error.message,
+      });
+    }
+  }
+
+  if (isFastAuthEmailConfigured()) {
+    const fastResult = await sendMagicLinkViaResend({
+      email: parsed.data.email,
+      redirectTo,
+      origin,
+    });
+    if (fastResult === "ok") {
+      return { status: "sent", email: parsed.data.email };
+    }
+    if (fastResult === "rateLimited") {
+      return { status: "error", messageKey: "rateLimited" };
+    }
+    // The fast path failed for a reason that isn't "rate-limited" —
+    // fall through to the slow path so the user still gets an email.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[auth] fast magic-link path failed, falling back");
+    }
+  }
+
+  // Slow fallback: Supabase mints + sends.
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback${nextParam}`,
-    },
+    options: { emailRedirectTo: redirectTo },
   });
-
   if (error) {
     if (process.env.NODE_ENV !== "production") {
       console.error("[auth] magic link send failed", {
@@ -125,6 +193,120 @@ export async function requestMagicLinkAction(
     return { status: "error", messageKey: "sendFailed" };
   }
   return { status: "sent", email: parsed.data.email };
+}
+
+/**
+ * Mint a magic link via admin.generateLink and send it through
+ * Resend. Returns "ok" on success, "rateLimited" if Supabase
+ * refuses (still possible at the auth-layer even with the service
+ * role), or "failed" for anything we couldn't classify — the caller
+ * falls back to signInWithOtp in that case.
+ *
+ * Creates the user on the fly when generateLink reports them
+ * missing (Supabase requires the user to exist for type='magiclink').
+ */
+async function sendMagicLinkViaResend({
+  email,
+  redirectTo,
+  origin,
+}: {
+  email: string;
+  redirectTo: string;
+  origin: string;
+}): Promise<"ok" | "rateLimited" | "failed"> {
+  const admin = getAdminSupabaseClient();
+  if (!admin) return "failed";
+
+  let linkResult = await admin.auth.admin.generateLink({
+    type: "magiclink",
+    email,
+    options: { redirectTo },
+  });
+
+  // The user doesn't exist yet — create them and try again. Magic
+  // link is the user-creation path for password-less accounts, so
+  // auto-creation here matches what `signInWithOtp` does by default.
+  if (linkResult.error && isUserNotFoundError(linkResult.error)) {
+    const create = await admin.auth.admin.createUser({
+      email,
+      email_confirm: true,
+    });
+    if (create.error) {
+      if (isRateLimitError(create.error)) return "rateLimited";
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[auth] admin createUser failed", create.error);
+      }
+      return "failed";
+    }
+    linkResult = await admin.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: { redirectTo },
+    });
+  }
+
+  if (linkResult.error || !linkResult.data) {
+    if (linkResult.error && isRateLimitError(linkResult.error)) {
+      return "rateLimited";
+    }
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] admin generateLink failed", linkResult.error);
+    }
+    return "failed";
+  }
+
+  const actionLink = linkResult.data.properties?.action_link;
+  const otp = linkResult.data.properties?.email_otp;
+  if (!actionLink || !otp) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] generateLink returned no link/otp");
+    }
+    return "failed";
+  }
+
+  const resend = getResendClient();
+  const host = origin.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const { error: sendError } = await resend.emails.send({
+    from: env.INQUIRY_FROM_EMAIL,
+    to: email,
+    subject: `Your sign-in link for ${host}`,
+    react: MagicLinkEmail({ actionLink, otp, site: host }),
+    text: renderMagicLinkText({ actionLink, otp, site: host }),
+  });
+  if (sendError) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[auth] resend send failed", sendError);
+    }
+    return "failed";
+  }
+  return "ok";
+}
+
+function isUserNotFoundError(err: {
+  code?: string | null;
+  status?: number | null;
+  message?: string | null;
+}): boolean {
+  const code = err.code ?? "";
+  if (code === "user_not_found") return true;
+  if (err.status === 404) return true;
+  const message = (err.message ?? "").toLowerCase();
+  return message.includes("user not found") || message.includes("no user");
+}
+
+/**
+ * Best-effort client IP extraction from the request headers Vercel
+ * (and most proxies) provide. Used as one of the two keys on the
+ * `record_email_send` rate limit. Returns `null` when no header
+ * matches — the RPC treats null as "skip IP check".
+ */
+function clientIpFromHeaders(h: Headers): string | null {
+  const forwarded = h.get("x-forwarded-for");
+  if (forwarded) {
+    const first = forwarded.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return h.get("x-real-ip") ?? h.get("cf-connecting-ip") ?? null;
 }
 
 export async function verifyEmailOtpAction(

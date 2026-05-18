@@ -55,7 +55,9 @@
     ".next-p2b/types/**/*.ts",
     ".next-p2b/dev/types/**/*.ts",
     ".next-conn/types/**/*.ts",
-    ".next-conn/dev/types/**/*.ts"
+    ".next-conn/dev/types/**/*.ts",
+    ".next-fastemail/types/**/*.ts",
+    ".next-fastemail/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
