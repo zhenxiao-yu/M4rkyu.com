@@ -3,7 +3,6 @@ import { UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { SignInSheet } from "./sign-in-sheet";
 import type { Locale } from "@/i18n/routing";
 
@@ -13,12 +12,11 @@ import type { Locale } from "@/i18n/routing";
  *  - a link to /account with the user's display name + a small avatar
  *    (signed-in).
  *
- * Hides itself entirely when Supabase is unconfigured so previews
- * without env vars stay clean.
+ * Keeps the guest sign-in trigger visible even when Supabase is
+ * unconfigured. The form actions surface the "auth unavailable"
+ * state, which is clearer than silently removing the auth UI.
  */
 export async function UserMenu({ locale }: { locale: Locale }) {
-  if (!isSupabaseConfigured()) return null;
-
   const t = await getTranslations({ locale, namespace: "Auth" });
   const user = await getCurrentUser();
 
