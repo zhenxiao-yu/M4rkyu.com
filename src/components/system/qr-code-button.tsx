@@ -202,14 +202,24 @@ export function QrCodeButton({
 }
 
 // One-time client-only feature detection. Subscribe is a no-op because
-// `navigator.share` doesn't change after page load; the SSR snapshot is
-// `false` so the dialog renders the single-button (copy-only) layout
-// before hydration matches.
+// the relevant capabilities don't change after page load; the SSR
+// snapshot is `false` so the dialog renders the single-button
+// (copy-only) layout before hydration matches.
+//
+// We gate native share behind `(pointer: coarse)` — i.e. touch devices.
+// Desktop Chromium / Edge implement `navigator.share` too, but the
+// resulting OS share popup (Windows in particular) can render at an
+// odd position, steal focus, and is impossible to dismiss
+// programmatically from our code. On desktop the "Copy link" path is
+// strictly better, so we hide the Share button entirely there.
 function subscribeNoop(): () => void {
   return () => {};
 }
 function getCanShareSnapshot(): boolean {
-  return typeof navigator !== "undefined" && typeof navigator.share === "function";
+  if (typeof navigator === "undefined") return false;
+  if (typeof navigator.share !== "function") return false;
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 function getServerSnapshot(): boolean {
   return false;
