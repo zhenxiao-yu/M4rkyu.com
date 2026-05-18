@@ -1,25 +1,16 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import type { PalettePost } from "./command-palette";
-
-// Dynamic import keeps cmdk + Radix Dialog + the lucide icon set +
-// the gallery content payload out of the initial JS bundle on every
-// route. The dialog body is only fetched the first time the user
-// opens the palette (Cmd+K or trigger button).
-const CommandPalette = dynamic(
-  () => import("./command-palette").then((mod) => mod.CommandPalette),
-  { ssr: false },
-);
+import { CommandPalette, type PalettePost } from "./command-palette";
 
 interface CommandPaletteContextValue {
   open: boolean;
@@ -51,9 +42,10 @@ export function CommandPaletteProvider({
   posts,
 }: CommandPaletteProviderProps) {
   const [open, setOpen] = useState(false);
-  // Latch flips the first time the palette opens so the dynamic
-  // import is initiated only on demand — we keep the chunk mounted
-  // afterwards so subsequent opens are instant.
+  const [loadedPosts, setLoadedPosts] = useState<PalettePost[] | undefined>(
+    posts,
+  );
+  const postsRequestedRef = useRef(Boolean(posts));
   const [hasOpened, setHasOpened] = useState(false);
 
   const toggle = useCallback(() => {
@@ -82,6 +74,28 @@ export function CommandPaletteProvider({
     return () => window.removeEventListener("keydown", handler);
   }, [toggle]);
 
+  useEffect(() => {
+    if (!hasOpened || postsRequestedRef.current) return;
+
+    const controller = new AbortController();
+    postsRequestedRef.current = true;
+
+    fetch("/api/command-palette/posts", { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { posts?: PalettePost[] } | null) => {
+        if (Array.isArray(payload?.posts)) {
+          setLoadedPosts(payload.posts);
+        }
+      })
+      .catch((error: unknown) => {
+        if ((error as { name?: string }).name !== "AbortError") {
+          console.warn("[command-palette] failed to load posts", error);
+        }
+      });
+
+    return () => controller.abort();
+  }, [hasOpened]);
+
   const value = useMemo(
     () => ({ open, setOpen: handleSetOpen, toggle }),
     [open, handleSetOpen, toggle],
@@ -91,7 +105,11 @@ export function CommandPaletteProvider({
     <CommandPaletteContext.Provider value={value}>
       {children}
       {hasOpened ? (
-        <CommandPalette open={open} onOpenChange={handleSetOpen} posts={posts} />
+        <CommandPalette
+          open={open}
+          onOpenChange={handleSetOpen}
+          posts={loadedPosts}
+        />
       ) : null}
     </CommandPaletteContext.Provider>
   );

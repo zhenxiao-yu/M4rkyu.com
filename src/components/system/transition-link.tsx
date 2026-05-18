@@ -41,6 +41,14 @@ interface TransitionLinkProps
   locale?: Locale;
 }
 
+let routeTransitionInFlight = false;
+
+function releaseRouteTransition() {
+  window.setTimeout(() => {
+    routeTransitionInFlight = false;
+  }, 0);
+}
+
 function hasViewTransition(): boolean {
   return (
     typeof document !== "undefined" &&
@@ -78,9 +86,14 @@ export const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>
       if (typeof href !== "string") return;
 
       event.preventDefault();
-      (
+      if (routeTransitionInFlight) return;
+
+      routeTransitionInFlight = true;
+      const transition = (
         document as Document & {
-          startViewTransition: (cb: () => void) => unknown;
+          startViewTransition: (cb: () => void) => {
+            finished?: Promise<unknown>;
+          };
         }
       ).startViewTransition(() => {
         // next-intl's router handles the locale prefix; the second
@@ -92,6 +105,13 @@ export const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>
           router.push(href);
         }
       });
+      if (transition.finished) {
+        transition.finished.finally(releaseRouteTransition);
+      } else {
+        window.setTimeout(() => {
+          routeTransitionInFlight = false;
+        }, 500);
+      }
     }
 
     return (

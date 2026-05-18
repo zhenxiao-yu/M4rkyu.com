@@ -14,10 +14,10 @@ import {
 const SESSION_KEY = "m4rkyu:intro-played-v3";
 
 /**
- * One-shot full-viewport boot overlay shown on the first visit of a
- * session. Skips on repeat visits (sessionStorage flag) and on
- * `prefers-reduced-motion: reduce`. Renders nothing on the server so
- * SSR HTML stays untouched.
+ * Optional full-viewport boot overlay shown only when the URL includes
+ * `?intro=1`. It stays out of the default path so first-load header
+ * controls are never visually covered after the user has already tried
+ * to interact with the page.
  *
  * v3 polish (ReactBits text-animation pass):
  *   - Wordmark "M4RKYU" decrypts in via DecryptedText sequential mode.
@@ -35,6 +35,9 @@ export function IntroLoader() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    const shouldPlay =
+      new URLSearchParams(window.location.search).get("intro") === "1";
+    if (!shouldPlay) return;
     if (readStoredString(SESSION_KEY, "", "session") === "1") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       writeStoredString(SESSION_KEY, "1", "session");
@@ -44,7 +47,7 @@ export function IntroLoader() {
     setVisible(true);
 
     const start = performance.now();
-    const duration = 1800;
+    const duration = 950;
     let done = false;
     let progressTimer = 0;
     let exitTimer = 0;
@@ -71,10 +74,10 @@ export function IntroLoader() {
       setCount(Math.round(eased * 100));
       if (t >= 1 && !done) {
         window.clearInterval(progressTimer);
-        exitTimer = window.setTimeout(finish, 260);
+        exitTimer = window.setTimeout(finish, 120);
       }
     }, 40);
-    failsafeTimer = window.setTimeout(finish, duration + 1200);
+    failsafeTimer = window.setTimeout(finish, duration + 600);
 
     window.addEventListener("keydown", finish);
     window.addEventListener("pointerdown", finish);
@@ -94,8 +97,8 @@ export function IntroLoader() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
-          className="pointer-events-none fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background"
+          transition={{ duration: 0.22, ease: [0.2, 0.7, 0.2, 1] }}
+          className="fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background"
           aria-hidden="true"
         >
           <div
@@ -191,7 +194,7 @@ export function IntroLoader() {
           </div>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/50">
-            press any key to skip · or just wait
+            tap or press any key to skip
           </div>
         </motion.div>
       ) : null}

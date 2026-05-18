@@ -42,7 +42,7 @@ export function CookieConsentBanner() {
   return (
     <section
       aria-label={t("bannerLabel")}
-      className="fixed inset-x-3 top-[4.5rem] z-50 mx-auto max-w-xl rounded-lg border border-border bg-background/95 p-3 shadow-2xl shadow-black/15 backdrop-blur-xl sm:inset-x-auto sm:right-4 sm:left-auto sm:mx-0 sm:max-w-lg sm:p-4 dark:shadow-black/40"
+      className="fixed inset-x-3 bottom-3 z-50 mx-auto max-h-[calc(100dvh-5rem)] max-w-xl overflow-y-auto rounded-lg border border-border bg-background/95 p-3 shadow-2xl shadow-black/15 backdrop-blur-xl sm:bottom-auto sm:inset-x-auto sm:right-4 sm:left-auto sm:top-[4.5rem] sm:mx-0 sm:max-w-lg sm:p-4 dark:shadow-black/40"
     >
       <div className="grid gap-3">
         <div className="min-w-0">
@@ -57,8 +57,13 @@ export function CookieConsentBanner() {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" size="sm" onClick={acceptAll}>
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+          <Button
+            type="button"
+            size="sm"
+            onClick={acceptAll}
+            className="w-full sm:w-auto"
+          >
             <Check aria-hidden="true" className="size-4" />
             {t("acceptAll")}
           </Button>
@@ -67,6 +72,7 @@ export function CookieConsentBanner() {
             size="sm"
             variant="outline"
             onClick={essentialOnly}
+            className="w-full sm:w-auto"
           >
             <X aria-hidden="true" className="size-4" />
             {t("essentialOnly")}
@@ -77,6 +83,7 @@ export function CookieConsentBanner() {
             variant="ghost"
             onClick={() => setExpanded((value) => !value)}
             aria-expanded={expanded}
+            className="col-span-2 w-full sm:col-span-1 sm:w-auto"
           >
             <Settings2 aria-hidden="true" className="size-4" />
             {t("settings")}

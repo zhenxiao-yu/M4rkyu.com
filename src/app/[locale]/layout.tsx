@@ -13,7 +13,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { LocalSavesMigration } from "@/components/saves/local-saves-migration";
 import { AuthStatusToast } from "@/components/auth/auth-status-toast";
 import { routing, type Locale } from "@/i18n/routing";
-import { getPosts } from "@/lib/blog/get-posts";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { buildSiteJsonLd } from "@/lib/seo/structured-data";
 
@@ -37,28 +36,13 @@ export default async function LocaleLayout({
   const activeLocale = locale as Locale;
   const messages = await getMessages({ locale: activeLocale });
 
-  // Slim payload — only fields the palette indexes. Cached fetcher,
-  // shared with /logs and /logs/[slug] within the same render.
-  const posts = await getPosts();
-  const palettePosts = posts.slice(0, 20).map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    category: post.category,
-    tags: post.tags,
-  }));
-
-  // Resolved once per render; downstream UserMenu reuses the cached
-  // value (getCurrentUser is wrapped in React.cache). The boolean
-  // here only drives the saves-migration toast on first login.
-  const currentUser = await getCurrentUser();
-
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <JsonLd data={buildSiteJsonLd(activeLocale)} />
       <ThemeProvider>
         <TooltipProvider delayDuration={400} skipDelayDuration={150}>
           <AudioPlayerProvider>
-            <CommandPaletteProvider posts={palettePosts}>
+            <CommandPaletteProvider>
             {/*
              * `lang={locale}` lives on a `display: contents` wrapper so
              * the DOM exposes the active locale without altering layout.
@@ -72,7 +56,9 @@ export default async function LocaleLayout({
             </div>
             <CookieConsentBanner />
             <ConsentAwareAnalytics />
-            <LocalSavesMigration signedIn={Boolean(currentUser)} />
+            <Suspense fallback={null}>
+              <SignedInSavesMigration />
+            </Suspense>
             {/* Surfaces ?authError / ?accountDeleted URL params as
              * Sonner toasts on first paint, then strips them from the
              * URL so a refresh doesn't replay. Wrapped in Suspense
@@ -91,4 +77,10 @@ export default async function LocaleLayout({
       </ThemeProvider>
     </NextIntlClientProvider>
   );
+}
+
+async function SignedInSavesMigration() {
+  const currentUser = await getCurrentUser();
+
+  return <LocalSavesMigration signedIn={Boolean(currentUser)} />;
 }

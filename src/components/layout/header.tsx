@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -9,6 +10,7 @@ import { CommandPaletteTrigger } from "@/components/system/command-palette-trigg
 import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
+import { SignInSheet } from "@/components/auth/sign-in-sheet";
 import { getPosts } from "@/lib/blog/get-posts";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
@@ -34,17 +36,6 @@ export async function Header({ locale }: { locale: Locale }) {
   };
 
   const structure = buildNavStructure(labels);
-
-  // Re-uses the React.cache()-wrapped fetcher the /logs page calls, so
-  // the upstream dev.to request is deduped within a single render.
-  const posts = await getPosts();
-  const notificationFeed = posts.slice(0, 8).map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    date: post.date,
-    category: post.category,
-    canonicalUrl: post.canonicalUrl,
-  }));
 
   return (
     // Sticky full-width system bar. `pointer-events-none` keeps only
@@ -83,7 +74,7 @@ export async function Header({ locale }: { locale: Locale }) {
            * settings button (replaces the old SoundToggle + MusicToggle
            * pair; opens the media-player dialog), QR. */}
           <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
-            <NotificationBell posts={notificationFeed} locale={locale} />
+            <LazyNotificationBell locale={locale} />
             <LanguageSwitcher />
             <ThemeSwitcher />
             <SoundSettingsButton />
@@ -92,7 +83,9 @@ export async function Header({ locale }: { locale: Locale }) {
           {/* UserMenu renders Sign-in trigger (guest) or account link
            * (signed-in). Hides entirely when Supabase env vars are
            * unset so previews stay clean. */}
-          <UserMenu locale={locale} />
+          <Suspense fallback={<SignInSheet />}>
+            <UserMenu locale={locale} />
+          </Suspense>
         </div>
 
         {/* Compact rail (<lg): the language and theme controls stay
@@ -100,8 +93,10 @@ export async function Header({ locale }: { locale: Locale }) {
          * into the sheet to keep the dock readable on 360px screens. */}
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
           <CommandPaletteIconTrigger />
-          <NotificationBell posts={notificationFeed} locale={locale} />
-          <UserMenu locale={locale} />
+          <LazyNotificationBell locale={locale} />
+          <Suspense fallback={<SignInSheet />}>
+            <UserMenu locale={locale} />
+          </Suspense>
           <LanguageSwitcher />
           <ThemeSwitcher />
           <MobileNav
@@ -113,4 +108,25 @@ export async function Header({ locale }: { locale: Locale }) {
       </HeaderDock>
     </header>
   );
+}
+
+function LazyNotificationBell({ locale }: { locale: Locale }) {
+  return (
+    <Suspense fallback={<NotificationBell posts={[]} locale={locale} />}>
+      <NotificationBellFeed locale={locale} />
+    </Suspense>
+  );
+}
+
+async function NotificationBellFeed({ locale }: { locale: Locale }) {
+  const posts = await getPosts();
+  const notificationFeed = posts.slice(0, 8).map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    category: post.category,
+    canonicalUrl: post.canonicalUrl,
+  }));
+
+  return <NotificationBell posts={notificationFeed} locale={locale} />;
 }

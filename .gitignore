@@ -84,3 +84,4 @@ chat-exports/
 session-logs/
 scratch/
 .tmp-screens/
+.env*.local
