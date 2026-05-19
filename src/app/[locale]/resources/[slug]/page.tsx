@@ -6,7 +6,8 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { ToolShell } from "@/components/tools/tool-shell";
-import { TOOL_REGISTRY } from "@/components/tools/tool-registry";
+import { isToolSlug } from "@/components/tools/tool-registry";
+import { ToolRenderer } from "@/components/tools/tool-renderer";
 import { resources } from "@/content/resources";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -47,9 +48,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   // so saved bookmarks of /resources/[slug] don't dead-end.
   if (!resource) notFound();
   if (resource.type !== "tool") redirect(resource.link);
-
-  const ToolComponent = TOOL_REGISTRY[slug];
-  if (!ToolComponent) notFound();
+  if (!isToolSlug(slug)) notFound();
 
   const t = await getTranslations({ locale, namespace: "Resources" });
 
@@ -87,7 +86,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
             </Button>
           }
         >
-          <ToolComponent />
+          <ToolRenderer slug={slug} />
         </ToolShell>
       </PageSection>
     </PageShell>

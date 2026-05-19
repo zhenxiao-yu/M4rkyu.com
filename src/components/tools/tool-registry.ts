@@ -1,29 +1,17 @@
-import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
-
-// Tool registry — each slug maps to a lazily-loaded client component.
-// Adding a tool: drop a Tool.tsx into src/components/tools/[name]/,
-// add a `type: "tool"` entry in src/content/resources.ts with a
-// matching slug, then register here. The route at /resources/[slug]
-// reads from this map.
+// Server-safe registry: just the known tool slugs. The actual dynamic
+// imports live in tool-renderer.tsx (client component) because Next 16
+// disallows `ssr: false` from server-component import graphs.
 //
-// dynamic() with { ssr: false } keeps each tool in its own chunk so
-// the index route loads zero tool JS until a visitor opens one.
-export const TOOL_REGISTRY: Record<string, ComponentType> = {
-  "contrast-checker": dynamic(
-    () =>
-      import("./contrast-checker/Tool").then((mod) => mod.ContrastChecker),
-    { ssr: false },
-  ),
-  "color-converter": dynamic(
-    () => import("./color-converter/Tool").then((mod) => mod.ColorConverter),
-    { ssr: false },
-  ),
-  "shadow-generator": dynamic(
-    () =>
-      import("./shadow-generator/Tool").then((mod) => mod.ShadowGenerator),
-    { ssr: false },
-  ),
-};
+// To add a tool: append the slug here AND add a branch in tool-renderer.tsx.
 
-export const TOOL_SLUGS = Object.keys(TOOL_REGISTRY);
+export const TOOL_SLUGS = [
+  "contrast-checker",
+  "color-converter",
+  "shadow-generator",
+] as const;
+
+export type ToolSlug = (typeof TOOL_SLUGS)[number];
+
+export function isToolSlug(value: string): value is ToolSlug {
+  return (TOOL_SLUGS as readonly string[]).includes(value);
+}

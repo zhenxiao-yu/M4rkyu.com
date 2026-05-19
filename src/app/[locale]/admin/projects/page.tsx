@@ -19,9 +19,11 @@ export default async function AdminProjectsPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "AdminProjects" });
-  const tAdmin = await getTranslations({ locale, namespace: "Admin" });
-  const projects = await getDbProjects();
+  const [t, tAdmin, projects] = await Promise.all([
+    getTranslations({ locale, namespace: "AdminProjects" }),
+    getTranslations({ locale, namespace: "Admin" }),
+    getDbProjects(),
+  ]);
 
   return (
     <PageShell locale={locale}>

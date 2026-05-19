@@ -34,13 +34,18 @@ interface PageProps {
 
 export default async function CollectionDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "AdminGallery" });
-  const tAdmin = await getTranslations({ locale, namespace: "Admin" });
-
-  const collection = await getDbCollectionBySlug(slug);
+  // Fan out: both translation namespaces, the collection row, and the
+  // items list can all be requested in parallel. Items still run when
+  // the collection turns out to be missing — cheap and bounded by the
+  // public-ready partial index, so the wasted work is negligible.
+  const [t, tAdmin, collection, allItems] = await Promise.all([
+    getTranslations({ locale, namespace: "AdminGallery" }),
+    getTranslations({ locale, namespace: "Admin" }),
+    getDbCollectionBySlug(slug),
+    getDbGalleryItems(),
+  ]);
   if (!collection) notFound();
 
-  const allItems = await getDbGalleryItems();
   const items = allItems.filter((item) => item.collectionId === collection.id);
 
   return (

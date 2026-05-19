@@ -55,15 +55,16 @@ export default async function ProjectDetailPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const project = await getProjectFromSource(slug);
+  // Fan out: project lookup + three translation namespaces in parallel.
+  // getProjectFromSource is React-cached so the duplicate read for
+  // adjacent-nav below is free.
+  const [project, tProjects, tCase, tCategories] = await Promise.all([
+    getProjectFromSource(slug),
+    getTranslations({ locale, namespace: "Projects" }),
+    getTranslations({ locale, namespace: "CaseStudy" }),
+    getTranslations({ locale, namespace: "Categories" }),
+  ]);
   if (!project) notFound();
-
-  const tProjects = await getTranslations({ locale, namespace: "Projects" });
-  const tCase = await getTranslations({ locale, namespace: "CaseStudy" });
-  const tCategories = await getTranslations({
-    locale,
-    namespace: "Categories",
-  });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
   const processShots = project.screenshots.slice(1, 9);
