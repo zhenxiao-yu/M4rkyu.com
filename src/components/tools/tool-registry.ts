@@ -5,9 +5,26 @@
 // To add a tool: append the slug here AND add a branch in tool-renderer.tsx.
 
 export const TOOL_SLUGS = [
+  // CSS / design
   "contrast-checker",
   "color-converter",
   "shadow-generator",
+  // dev utilities
+  "json-formatter",
+  "base64",
+  "url-codec",
+  "jwt-decoder",
+  "uuid",
+  "password-generator",
+  "hash-generator",
+  "px-rem",
+  "case-converter",
+  "slug",
+  "lorem-ipsum",
+  "timestamp",
+  "word-counter",
+  "base-converter",
+  "html-entities",
 ] as const;
 
 export type ToolSlug = (typeof TOOL_SLUGS)[number];
