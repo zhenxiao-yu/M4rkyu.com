@@ -319,7 +319,6 @@ function BentoHeroTile({
         rel="noopener noreferrer"
         aria-label={ariaLabel}
         className={className}
-        data-bento-tile
       >
         {content}
       </a>
@@ -332,7 +331,6 @@ function BentoHeroTile({
       locale={locale}
       aria-label={ariaLabel}
       className={className}
-      data-bento-tile
     >
       {content}
     </Link>
@@ -395,7 +393,6 @@ function BentoSecondaryTile({
         rel="noopener noreferrer"
         aria-label={ariaLabel}
         className={className}
-        data-bento-tile
       >
         {content}
       </a>
@@ -407,7 +404,6 @@ function BentoSecondaryTile({
       locale={locale}
       aria-label={ariaLabel}
       className={className}
-      data-bento-tile
     >
       {content}
     </Link>
@@ -492,7 +488,6 @@ function BentoWideTile({
         rel="noopener noreferrer"
         aria-label={ariaLabel}
         className={className}
-        data-bento-tile
       >
         {content}
       </a>
@@ -504,7 +499,6 @@ function BentoWideTile({
       locale={locale}
       aria-label={ariaLabel}
       className={className}
-      data-bento-tile
     >
       {content}
     </Link>

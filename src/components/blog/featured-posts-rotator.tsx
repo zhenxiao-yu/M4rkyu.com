@@ -212,7 +212,6 @@ function PostHeroTile({
         "hover:border-ring/70",
         FOCUS_RING,
       )}
-      data-bento-tile
     >
       {/* Cover image as a low-opacity background layer behind the
           content. `priority` only on the visible hero to keep
@@ -331,7 +330,6 @@ function PostSecondaryTile({
         FOCUS_RING,
         spanClass,
       )}
-      data-bento-tile
     >
       <PointerSpotlight radius={300} intensity={0.18} />
       <div className="relative z-20 flex items-start gap-3">
@@ -398,7 +396,6 @@ function PostWideTile({
         FOCUS_RING,
         spanClass,
       )}
-      data-bento-tile
     >
       {/* Cover on the left, content on the right. Cover gets a
           consistent 1/3 width on lg so the two wide tiles read in

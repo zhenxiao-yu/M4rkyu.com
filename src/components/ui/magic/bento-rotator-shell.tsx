@@ -1,12 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import {
   useCallback,
   useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
   useSyncExternalStore,
   type CSSProperties,
@@ -30,19 +28,6 @@ import {
 } from "@/lib/browser/safe-storage";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
-
-// React Bits TargetCursor — scoped tight to bento tiles only so the
-// reticle reads as an accent on the cards, never a page-wide cursor
-// takeover. Lazy-loaded so the GSAP timeline cost only lands when the
-// rotator is mounted, and gated below to only render while the pointer
-// is actually inside the bento section.
-const TargetCursor = dynamic(
-  () =>
-    import("@/components/ui/magic/target-cursor").then((mod) => ({
-      default: mod.TargetCursor,
-    })),
-  { ssr: false },
-);
 
 export interface BentoRotatorLabels {
   /** Eyebrow above the heading. */
@@ -117,15 +102,7 @@ export function BentoRotatorShell<T>({
   const [rawPageIndex, setPageIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
-  // Gate the TargetCursor mount on pointer-inside-section. The reticle
-  // is meant to feel like an accent that animates onto the bento, not
-  // a persistent overlay — keeping it unmounted everywhere else means
-  // the native cursor stays visible on buttons, dots, page chrome,
-  // and the rest of the site.
-  const [pointerInside, setPointerInside] = useState(false);
-  const finePointer = useMediaQuery("(pointer: fine)");
   const docHidden = useDocumentHidden();
-  const sectionRef = useRef<HTMLElement | null>(null);
 
   const pageIndex =
     pages.length === 0
@@ -198,18 +175,11 @@ export function BentoRotatorShell<T>({
 
   return (
     <section
-      ref={sectionRef}
       role="region"
       aria-labelledby={headingId}
       aria-label={labels.regionLabel}
-      onMouseEnter={() => {
-        setHovered(true);
-        setPointerInside(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-        setPointerInside(false);
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onKeyDown={handleKeyDown}
       tabIndex={isStatic ? -1 : 0}
       className={cn(
@@ -219,18 +189,6 @@ export function BentoRotatorShell<T>({
         className,
       )}
     >
-      {/* TargetCursor lives at the section level but only renders
-          while the pointer is inside the bento. `hideDefaultCursor`
-          stays false so the native cursor remains visible on the
-          prev/next/play-pause/collapse buttons and the dot pager
-          — the reticle is an accent that only snaps onto tiles
-          tagged `data-bento-tile`. */}
-      {finePointer && !reduceMotion && pointerInside && !collapsed ? (
-        <TargetCursor
-          targetSelector="[data-bento-tile]"
-          hideDefaultCursor={false}
-        />
-      ) : null}
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid gap-1">
           <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
