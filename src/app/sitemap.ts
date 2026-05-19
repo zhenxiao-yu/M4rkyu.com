@@ -21,7 +21,6 @@ const STATIC_PATHS = [
   { path: "/resources", changeFrequency: "monthly" as const, priority: 0.6 },
   { path: "/about", changeFrequency: "monthly" as const, priority: 0.7 },
   { path: "/contact", changeFrequency: "yearly" as const, priority: 0.6 },
-  { path: "/portal", changeFrequency: "yearly" as const, priority: 0.4 },
 ];
 
 function languageAlternates(path: string): Record<string, string> {

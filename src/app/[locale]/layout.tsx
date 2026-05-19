@@ -7,6 +7,7 @@ import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner"
 import { ConsentAwareAnalytics } from "@/components/privacy/consent-aware-analytics";
 import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
+import { CursorTrail } from "@/components/ui/magic/cursor-trail";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -54,6 +55,7 @@ export default async function LocaleLayout({
             <div lang={locale} className="contents">
               {children}
             </div>
+            <CursorTrail />
             <CookieConsentBanner />
             <ConsentAwareAnalytics />
             <Suspense fallback={null}>

@@ -22,6 +22,6 @@ export const WithMailto: Story = {
 
 export const WithSecondaryHref: Story = {
   args: {
-    secondary: { label: "Visit portal", href: "/portal" },
+    secondary: { label: "All work", href: "/work" },
   },
 };

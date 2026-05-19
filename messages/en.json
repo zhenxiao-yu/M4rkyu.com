@@ -9,7 +9,6 @@
     "resources": "Resources",
     "about": "About",
     "contact": "Contact",
-    "portal": "Portal",
     "menu": "Open menu",
     "menuDescription": "Mobile navigation, language, and media controls.",
     "navigateLabel": "navigate",
@@ -134,7 +133,6 @@
       }
     },
     "primaryCta": "See the work",
-    "portalCta": "Enter portal",
     "featured": "Selected work",
     "featuredDescription": "A few production-grade case studies across web apps, AI tooling, and data visualisation.",
     "fullArchive": "Full archive",
@@ -300,6 +298,15 @@
     "noMatchesHint": "Try widening the year, clearing search, or jumping back to all categories.",
     "clearFilters": "Clear all filters",
     "clearSearch": "Clear search",
+    "featuredOn": "Featured",
+    "sortLabel": "Sort",
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "alpha": "A → Z"
+    },
+    "activeFiltersLabel": "Active",
+    "removeFilter": "Remove filter",
     "draftsHeading": "Drafts in development",
     "draftsCount": "{count, plural, =0 {no drafts} one {# draft hidden} other {# drafts hidden}}",
     "noProductionMatches": "{count, plural, =0 {No matches.} one {No production projects match — # draft hidden below.} other {No production projects match — # drafts hidden below.}}"
@@ -477,25 +484,6 @@
     "shopDescription": "Limited prints, posters, and small editions — the storefront opens once the first run is ready.",
     "notesTitle": "Notes",
     "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated."
-  },
-  "Portal": {
-    "title": "Portal",
-    "intro": "An opt-in interactive route. For now, the terminal stays light, fast, and quiet — atmosphere only.",
-    "shellTitle": "prototype-shell",
-    "shellSubtitle": "client-only · no telemetry",
-    "shellStatus": "STANDBY",
-    "shellSlotStatus": "QUEUED",
-    "shellSlot": {
-      "caseStudies": "case-studies",
-      "gallery": "gallery",
-      "media": "media"
-    },
-    "shellFootnote": "An interactive mode will land alongside real game and gallery content. No heavy WebGL ships here.",
-    "bootLine1": "> boot sequence: deferred",
-    "bootLine2": "> webgl: disabled by default",
-    "bootLine3": "> motion: reduced-motion aware",
-    "bootLine4": "> assets: placeholder frames active",
-    "bootLine5": "> status: standby"
   },
   "Common": {
     "comingSoon": "Coming soon",

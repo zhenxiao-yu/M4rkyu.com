@@ -307,24 +307,6 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
               );
             })}
 
-            <SheetClose asChild>
-              <Link
-                href="/portal"
-                locale={locale}
-                className={cn(
-                  "mt-2 flex min-h-13 items-center justify-between rounded-md border border-ring/40 bg-ring/5 px-4 py-3 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:bg-ring/10",
-                  FOCUS_RING_INSET,
-                )}
-              >
-                <span>{t("portal")}</span>
-                <span
-                  aria-hidden="true"
-                  className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ring"
-                >
-                  /portal
-                </span>
-              </Link>
-            </SheetClose>
           </nav>
         </div>
 

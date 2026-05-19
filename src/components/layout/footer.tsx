@@ -41,7 +41,6 @@ const workLinks = [
 const systemLinks = [
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-  { label: "Portal", href: "/portal" },
 ] as const;
 
 function isPublishedResume(href?: string) {

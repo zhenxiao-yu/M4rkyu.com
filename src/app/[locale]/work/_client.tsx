@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronDown, FilterX, Search, X } from "lucide-react";
+import { ChevronDown, FilterX, Search, Star, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ProjectCard } from "@/components/cards/project-card";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,7 @@ import {
 import { WorkDeckReveal } from "@/components/sections/work-deck-reveal";
 import type { Project } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 
 const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
   { labelKey: "all", value: null },
@@ -34,6 +34,9 @@ const CATEGORY_VALUES = new Set(
 );
 
 const ALL_YEARS = "__all__";
+const SORT_MODES = ["newest", "oldest", "alpha"] as const;
+type SortMode = (typeof SORT_MODES)[number];
+const DEFAULT_SORT: SortMode = "newest";
 
 export function ProjectsClient({
   projects,
@@ -56,19 +59,30 @@ export function ProjectsClient({
     ? (categoryParam as Project["category"])
     : null;
   const yearParam = searchParams.get("year");
+  const featuredOnly = searchParams.get("featured") === "true";
+  const sortParam = searchParams.get("sort") as SortMode | null;
+  const activeSort: SortMode = SORT_MODES.includes(sortParam as SortMode)
+    ? (sortParam as SortMode)
+    : DEFAULT_SORT;
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   // Filter against the deferred value so typing fast doesn't re-run
-  // the full project filter + re-mount cards on every keystroke. The
-  // URL sync below is also debounced — router.replace was firing per
-  // keystroke and dropping a frame each time on slower machines.
+  // the full project filter + re-mount cards on every keystroke.
   const deferredQuery = useDeferredValue(query);
+
+  // Year counts memoized once per project list — used both as the year
+  // dropdown badges and as the active-chip label suffix.
+  const yearCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const project of projects) {
+      map.set(project.year, (map.get(project.year) ?? 0) + 1);
+    }
+    return map;
+  }, [projects]);
 
   const yearOptions = useMemo(
     () =>
-      Array.from(new Set(projects.map((p) => p.year))).sort((a, b) =>
-        b.localeCompare(a),
-      ),
-    [projects],
+      Array.from(yearCounts.keys()).sort((a, b) => b.localeCompare(a)),
+    [yearCounts],
   );
   const activeYear = yearOptions.includes(yearParam ?? "")
     ? (yearParam as string)
@@ -78,6 +92,8 @@ export function ProjectsClient({
     category?: Project["category"] | null;
     year?: string | null;
     q?: string;
+    featured?: boolean;
+    sort?: SortMode;
   }) {
     const params = new URLSearchParams(searchParams);
     if ("category" in next) {
@@ -92,6 +108,14 @@ export function ProjectsClient({
       const value = next.q?.trim();
       if (value) params.set("q", value);
       else params.delete("q");
+    }
+    if ("featured" in next) {
+      if (next.featured) params.set("featured", "true");
+      else params.delete("featured");
+    }
+    if ("sort" in next) {
+      if (next.sort && next.sort !== DEFAULT_SORT) params.set("sort", next.sort);
+      else params.delete("sort");
     }
     startTransition(() => {
       const nextQuery = params.toString();
@@ -109,6 +133,9 @@ export function ProjectsClient({
     if (activeYear !== ALL_YEARS) {
       result = result.filter((p) => p.year === activeYear);
     }
+    if (featuredOnly) {
+      result = result.filter((p) => p.featured);
+    }
     if (deferredQuery.trim()) {
       const q = deferredQuery.toLowerCase();
       result = result.filter(
@@ -118,12 +145,18 @@ export function ProjectsClient({
           p.stack.some((s) => s.toLowerCase().includes(q)),
       );
     }
+    if (activeSort === "alpha") {
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title));
+    } else {
+      const direction = activeSort === "newest" ? -1 : 1;
+      result = [...result].sort(
+        (a, b) => a.year.localeCompare(b.year) * direction,
+      );
+    }
     return result;
-  }, [projects, activeCategory, activeYear, deferredQuery]);
+  }, [projects, activeCategory, activeYear, featuredOnly, deferredQuery, activeSort]);
 
   // Debounce the URL sync so router.replace doesn't fire per keystroke.
-  // The filter above already runs near-instantly via the deferred value;
-  // this just keeps the URL eventually consistent + shareable.
   useEffect(() => {
     const id = setTimeout(() => {
       const params = new URLSearchParams(window.location.search);
@@ -149,10 +182,14 @@ export function ProjectsClient({
     [filtered],
   );
 
-  // True when the user has narrowed from the default view — drives
-  // both the empty-state CTA and the chip-row "Clear" affordance.
+  // True when the user has narrowed from the default view — drives the
+  // active-chip row visibility and the inline / empty-state Clear CTAs.
   const hasActiveFilters =
-    activeCategory !== null || activeYear !== ALL_YEARS || query.trim() !== "";
+    activeCategory !== null ||
+    activeYear !== ALL_YEARS ||
+    featuredOnly ||
+    query.trim() !== "" ||
+    activeSort !== DEFAULT_SORT;
 
   function clearAllFilters() {
     setQuery("");
@@ -190,12 +227,32 @@ export function ProjectsClient({
               </Button>
             );
           })}
+          <Button
+            type="button"
+            onClick={() => updateUrl({ featured: !featuredOnly })}
+            variant="ghost"
+            size="sm"
+            className="h-auto rounded-full p-0 hover:bg-transparent focus-visible:ring-offset-1"
+            aria-pressed={featuredOnly}
+          >
+            <Badge
+              variant={featuredOnly ? "success" : "outline"}
+              className={cn(
+                "cursor-pointer gap-1 transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
+                !featuredOnly &&
+                  "hover:border-foreground/40 hover:text-foreground",
+              )}
+            >
+              <Star aria-hidden="true" className={cn("size-3", featuredOnly && "fill-current")} />
+              {t("featuredOn")}
+            </Badge>
+          </Button>
           <span className="ml-2 font-mono text-xs text-muted-foreground">
             {filtered.length} / {projects.length}
           </span>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
+        <div className="grid gap-3 sm:grid-cols-[8rem_8rem_1fr]">
           <label className="grid gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
               {t("yearLabel")}
@@ -208,10 +265,41 @@ export function ProjectsClient({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL_YEARS}>{t("yearAll")}</SelectItem>
+                <SelectItem value={ALL_YEARS}>
+                  {t("yearAll")}
+                  <span className="ml-1 text-muted-foreground">
+                    ({projects.length})
+                  </span>
+                </SelectItem>
                 {yearOptions.map((year) => (
                   <SelectItem key={year} value={year}>
                     {year}
+                    <span className="ml-1 text-muted-foreground">
+                      ({yearCounts.get(year) ?? 0})
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </label>
+
+          <label className="grid gap-1.5 text-xs text-muted-foreground">
+            <span className="font-mono uppercase tracking-[0.18em]">
+              {t("sortLabel")}
+            </span>
+            <Select
+              value={activeSort}
+              onValueChange={(value) =>
+                updateUrl({ sort: value as SortMode })
+              }
+            >
+              <SelectTrigger aria-label={t("sortLabel")}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_MODES.map((mode) => (
+                  <SelectItem key={mode} value={mode}>
+                    {t(`sort.${mode}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -240,7 +328,10 @@ export function ProjectsClient({
                   type="button"
                   onClick={() => setQuery("")}
                   aria-label={t("clearSearch")}
-                  className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
+                  className={cn(
+                    "absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
+                    FOCUS_RING_INSET,
+                  )}
                 >
                   <X aria-hidden="true" className="size-3.5" />
                 </button>
@@ -249,6 +340,58 @@ export function ProjectsClient({
           </label>
         </div>
       </div>
+
+      {hasActiveFilters ? (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+            {t("activeFiltersLabel")}
+          </span>
+          {activeCategory ? (
+            <ActiveChip
+              label={tCategories(activeCategory)}
+              onRemove={() => updateUrl({ category: null })}
+              removeLabel={t("removeFilter")}
+            />
+          ) : null}
+          {activeYear !== ALL_YEARS ? (
+            <ActiveChip
+              label={`${t("yearLabel")}: ${activeYear}`}
+              onRemove={() => updateUrl({ year: null })}
+              removeLabel={t("removeFilter")}
+            />
+          ) : null}
+          {featuredOnly ? (
+            <ActiveChip
+              label={t("featuredOn")}
+              onRemove={() => updateUrl({ featured: false })}
+              removeLabel={t("removeFilter")}
+            />
+          ) : null}
+          {query.trim() ? (
+            <ActiveChip
+              label={`"${query.trim()}"`}
+              onRemove={() => setQuery("")}
+              removeLabel={t("removeFilter")}
+            />
+          ) : null}
+          {activeSort !== DEFAULT_SORT ? (
+            <ActiveChip
+              label={`${t("sortLabel")}: ${t(`sort.${activeSort}`)}`}
+              onRemove={() => updateUrl({ sort: DEFAULT_SORT })}
+              removeLabel={t("removeFilter")}
+            />
+          ) : null}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={clearAllFilters}
+            className="ml-auto h-7 px-2 text-xs"
+          >
+            {t("clearFilters")}
+          </Button>
+        </div>
+      ) : null}
 
       {production.length === 0 && drafts.length === 0 ? (
         <div className="mx-auto mt-16 flex max-w-md flex-col items-center gap-4 rounded-xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center">
@@ -285,7 +428,7 @@ export function ProjectsClient({
         // Search query is intentionally excluded — keystrokes would
         // otherwise re-mount the grid mid-typing and steal focus state.
         <WorkDeckReveal
-          key={`deck-${activeCategory ?? "all"}-${activeYear}`}
+          key={`deck-${activeCategory ?? "all"}-${activeYear}-${featuredOnly ? "f" : "n"}-${activeSort}`}
         >
           <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {production.map((project) => (
@@ -338,5 +481,32 @@ export function ProjectsClient({
         </details>
       ) : null}
     </>
+  );
+}
+
+function ActiveChip({
+  label,
+  onRemove,
+  removeLabel,
+}: {
+  label: string;
+  onRemove: () => void;
+  removeLabel: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card/80 py-0.5 pl-2.5 pr-1 text-xs text-foreground">
+      <span>{label}</span>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`${removeLabel}: ${label}`}
+        className={cn(
+          "grid size-5 place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
+          FOCUS_RING_INSET,
+        )}
+      >
+        <X aria-hidden="true" className="size-3" />
+      </button>
+    </span>
   );
 }

@@ -38,10 +38,10 @@ export const games = [
     year: "TBD",
     status: "coming-soon",
     pitch:
-      "Coming soon: reserved game/portal-adjacent archive lane. Replace with final description only when ready.",
+      "Coming soon: reserved archive lane. Replace with final description only when ready.",
     role: "TBD",
     notes: [
-      "Portal crossover TBD.",
+      "Crossover concept TBD.",
       "Media and design notes pending.",
       "Keep lightweight until the main site is stable.",
     ],

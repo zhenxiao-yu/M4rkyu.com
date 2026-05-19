@@ -16,7 +16,6 @@ import {
   SearchX,
   ShoppingBag,
   Sun,
-  Terminal,
   User,
   Wrench,
 } from "lucide-react";
@@ -73,7 +72,6 @@ const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
   { key: "resources", href: "/resources", icon: Wrench },
   { key: "about", href: "/about", icon: User },
   { key: "contact", href: "/contact", icon: Mail },
-  { key: "portal", href: "/portal", icon: Terminal },
 ];
 
 const THEMES = [

@@ -57,6 +57,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
+    // 1 year cache for optimized AVIF/WebP — Next's default 60s is too short
+    // for static portfolio assets that change only at deploy time.
+    minimumCacheTTL: 31536000,
     // Dev.to-syndicated post bodies (Phase 8.2) reference images
     // hosted on Forem's CDN and the underlying S3 bucket. Any new
     // upstream image host added here must be a known, trusted CDN.
