@@ -13,15 +13,19 @@ import {
 } from "@/components/case-study/case-study-section";
 import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
-import { allProjects, getProject } from "@/content/projects";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
+import {
+  getProjectFromSource,
+  getProjectsSource,
+} from "@/lib/projects/source";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return allProjects.flatMap((project) => [
+export async function generateStaticParams() {
+  const projects = await getProjectsSource();
+  return projects.flatMap((project) => [
     { locale: "en", slug: project.slug },
     { locale: "zh", slug: project.slug },
   ]);
@@ -33,7 +37,7 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const project = getProject(slug);
+  const project = await getProjectFromSource(slug);
   if (!project) return {};
   return {
     title: project.seo.title,
@@ -51,7 +55,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const project = getProject(slug);
+  const project = await getProjectFromSource(slug);
   if (!project) notFound();
 
   const tProjects = await getTranslations({ locale, namespace: "Projects" });
@@ -65,6 +69,7 @@ export default async function ProjectDetailPage({
   const processShots = project.screenshots.slice(1, 9);
 
   // Adjacent navigation in archive order — predictable, no clever sort.
+  const allProjects = await getProjectsSource();
   const projectIndex = allProjects.findIndex((p) => p.slug === project.slug);
   const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : undefined;
   const nextProject =

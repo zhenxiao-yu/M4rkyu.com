@@ -9,8 +9,8 @@ import { FramesGallery } from "@/components/sections/home/frames-gallery";
 import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
 import { WritingPulseSection } from "@/components/sections/home/writing-pulse-section";
 import { PageShell } from "@/components/layout/page-shell";
-import { allProjects } from "@/content/projects";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { getProjectsSource } from "@/lib/projects/source";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
 
@@ -32,6 +32,7 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  const allProjects = await getProjectsSource();
 
   return (
     <PageShell locale={locale}>

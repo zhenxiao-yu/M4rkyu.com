@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { allProjects } from "@/content/projects";
+import { getProjectsSource } from "@/lib/projects/source";
 import { games } from "@/content/games";
 import { galleryCollections } from "@/content/gallery";
 import { routing, type Locale } from "@/i18n/routing";
@@ -53,6 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Only include `ready` content in the sitemap so drafts and
   // placeholders don't get crawled before they have real bodies.
+  const allProjects = await getProjectsSource();
   const projectEntries = allProjects
     .filter((project) => project.contentStatus === "ready")
     .flatMap((project) => entry(`/work/${project.slug}`, "monthly", 0.7));

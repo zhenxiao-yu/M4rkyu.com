@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/cards/project-card";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
-import { allProjects } from "@/content/projects";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { getProjectsSource } from "@/lib/projects/source";
 
 export default async function NotFoundPage() {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("NotFound");
+  const allProjects = await getProjectsSource();
   const readyProjects = allProjects
     .filter((p) => p.contentStatus === "ready")
     .slice(0, 3);

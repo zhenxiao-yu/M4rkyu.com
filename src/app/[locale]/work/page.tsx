@@ -4,10 +4,10 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { allProjects } from "@/content/projects";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { summarize } from "@/lib/content/summary";
+import { getProjectsSource } from "@/lib/projects/source";
 import { ProjectsClient } from "./_client";
 
 export async function generateMetadata({
@@ -31,6 +31,7 @@ export default async function ProjectsPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Projects" });
+  const allProjects = await getProjectsSource();
   const summary = summarize(allProjects, (p) => p.contentStatus);
   const readyCount = summary.ready;
   const draftCount = summary.total - summary.ready;
