@@ -58,6 +58,13 @@ export const projectSchema = z.object({
   translations: z.record(z.string(), z.unknown()).optional(),
 });
 
+const profilePortraitSchema = z.object({
+  src: z.string(),
+  alt: z.string(),
+  caption: z.string().optional(),
+  focal: z.enum(["top", "center", "bottom"]).default("center"),
+});
+
 export const profileSchema = z.object({
   name: z.string(),
   title: z.string(),
@@ -85,6 +92,8 @@ export const profileSchema = z.object({
       twitter: z.string().url().optional(),
       instagram: z.string().url().optional(),
       mastodon: z.string().url().optional(),
+      facebook: z.string().url().optional(),
+      youtube: z.string().url().optional(),
     })
     .partial()
     .default({}),
@@ -136,18 +145,10 @@ export const profileSchema = z.object({
       }),
     )
     .default([]),
-  // Optional portrait for the /about bento. When unset the card
-  // renders a styled placeholder slot so the layout stays intact
-  // before the image is delivered.
-  portrait: z
-    .object({
-      src: z.string(),
-      alt: z.string(),
-      focal: z
-        .enum(["top", "center", "bottom"])
-        .default("center"),
-    })
-    .optional(),
+  // Optional portraits for the /about portrait stack. `portrait` is
+  // kept as a single-image fallback for older content.
+  portraits: z.array(profilePortraitSchema).default([]),
+  portrait: profilePortraitSchema.optional(),
 });
 
 export const galleryAspectSchema = z.enum([

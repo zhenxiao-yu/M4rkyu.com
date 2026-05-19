@@ -448,14 +448,19 @@
       "timelineNow": "Now",
       "timelineNowBody": "Editing the archive. Keeping fewer, better pieces.",
       "toolsEyebrow": "tools",
-      "toolsTitle": "things on the desk",
-      "toolsBody": "Names, not ratings. The shape matters more than the count.",
+      "toolsTitle": "things I actually use",
+      "toolsBody": "Grouped by practice, not confidence theater.",
       "toolGroups": {
-        "frontend": "interface",
-        "backend_and_infra": "systems",
-        "game_and_interaction": "play",
-        "creative_and_visual": "image",
-        "tooling": "utility"
+        "frontend_development": "Frontend development",
+        "backend_development": "Backend development",
+        "game_development": "Game development",
+        "design_and_art": "Design & art"
+      },
+      "toolDescriptions": {
+        "frontend_development": "Interfaces, motion, layout, and the browser layer.",
+        "backend_development": "APIs, data systems, services, and the unglamorous glue.",
+        "game_development": "Engines, interaction, levels, physics, and playful systems.",
+        "design_and_art": "Visual direction, UI structure, typography, and production art."
       },
       "closingEyebrow": "exit",
       "closingTitle": "Enough about me.",
@@ -807,6 +812,8 @@
     "sectionResourcesBlurb": "Daily-use tools and a personal link library.",
     "sectionStudio": "Studio",
     "sectionStudioBlurb": "Background, contact, and channels for collaboration.",
+    "sectionSocials": "Socials",
+    "sectionSocialsBlurb": "Find me on the usual feeds.",
     "linkProjects": "Projects",
     "linkGames": "Games",
     "linkArchive": "Archive",
@@ -829,6 +836,8 @@
     "socialLinkedin": "LinkedIn",
     "socialTwitter": "Twitter / X",
     "socialInstagram": "Instagram",
+    "socialFacebook": "Facebook",
+    "socialYoutube": "YouTube",
     "socialPending": "soon"
   },
   "Privacy": {

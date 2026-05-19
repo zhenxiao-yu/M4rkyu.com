@@ -23,7 +23,6 @@ import { MagnetLines } from "@/components/ui/magic/magnet-lines";
 import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { StatusPulse } from "@/components/ui/pixel/status-pulse";
 import { FooterClock } from "./footer-clock";
-import { FooterCopyEmail } from "./footer-copy-email";
 import { FooterBackToTop } from "./footer-back-to-top";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
@@ -84,6 +83,24 @@ export async function Footer({ locale }: { locale: Locale }) {
     resumeReady && resumeHref
       ? { label: t("linkResume"), href: resumeHref, external: true }
       : { label: t("linkResume"), href: "/about", pending: true },
+  ];
+
+  // Socials column — externally-linked. Rows render as `pending` until
+  // a URL lands in `src/content/profile.ts` under `socials.{key}`; the
+  // pending row falls back to the Studio /about route so the link
+  // never 404s while the placeholder badge is shown.
+  function socialRow(
+    label: string,
+    href: string | undefined,
+  ): FooterLink {
+    if (href) return { label, href, external: true };
+    return { label, href: "/about", pending: true };
+  }
+  const socialColumnLinks: FooterLink[] = [
+    socialRow(t("socialFacebook"), socials.facebook),
+    socialRow(t("socialInstagram"), socials.instagram),
+    socialRow(t("socialYoutube"), socials.youtube),
+    socialRow(t("socialLinkedin"), socials.linkedin),
   ];
 
   const socialEntries: FooterSocial[] = [
@@ -200,12 +217,7 @@ export async function Footer({ locale }: { locale: Locale }) {
               </span>{" "}
               · {t("metaAvailability")}
             </p>
-            <div className="mt-2 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-              <FooterCopyEmail
-                email={profile.email}
-                copyLabel={t("emailCopy")}
-                copiedLabel={t("emailCopied")}
-              />
+            <div className="mt-2 flex items-center justify-center">
               <Link
                 href="/contact"
                 locale={locale}
@@ -240,8 +252,8 @@ export async function Footer({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* 3. Sitemap — three editorial columns with a one-line blurb each */}
-        <div className="grid gap-10 border-t py-12 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 3. Sitemap — four editorial columns with a one-line blurb each */}
+        <div className="grid gap-10 border-t py-12 sm:grid-cols-2 lg:grid-cols-4">
           <SitemapColumn
             title={t("sectionWork")}
             blurb={t("sectionWorkBlurb")}
@@ -262,6 +274,13 @@ export async function Footer({ locale }: { locale: Locale }) {
             links={studioLinks}
             locale={locale}
             pendingLabel={t("resumePending")}
+          />
+          <SitemapColumn
+            title={t("sectionSocials")}
+            blurb={t("sectionSocialsBlurb")}
+            links={socialColumnLinks}
+            locale={locale}
+            pendingLabel={t("socialPending")}
           />
         </div>
 

@@ -448,14 +448,19 @@
       "timelineNow": "现在",
       "timelineNowBody": "继续编辑档案。留下更少、更好的东西。",
       "toolsEyebrow": "工具",
-      "toolsTitle": "桌上的东西",
-      "toolsBody": "只列名字，不打分。形状比数量重要。",
+      "toolsTitle": "真的会用的东西",
+      "toolsBody": "按实践分类，不做信心打分。",
       "toolGroups": {
-        "frontend": "界面",
-        "backend_and_infra": "系统",
-        "game_and_interaction": "可玩",
-        "creative_and_visual": "图像",
-        "tooling": "工具"
+        "frontend_development": "前端开发",
+        "backend_development": "后端开发",
+        "game_development": "游戏开发",
+        "design_and_art": "设计与艺术"
+      },
+      "toolDescriptions": {
+        "frontend_development": "界面、动效、布局，以及浏览器这一层。",
+        "backend_development": "API、数据系统、服务，以及不太显眼的连接部分。",
+        "game_development": "引擎、交互、关卡、物理和可玩的系统。",
+        "design_and_art": "视觉方向、UI 结构、字体排版和生产用美术。"
       },
       "closingEyebrow": "出口",
       "closingTitle": "关于我，说这些就够了。",
@@ -807,6 +812,8 @@
     "sectionResourcesBlurb": "每日好用的工具与个人收藏的链接库。",
     "sectionStudio": "工作室",
     "sectionStudioBlurb": "背景、联系方式以及合作渠道。",
+    "sectionSocials": "社交",
+    "sectionSocialsBlurb": "在常去的平台上找到我。",
     "linkProjects": "项目",
     "linkGames": "游戏",
     "linkArchive": "档案",
@@ -829,6 +836,8 @@
     "socialLinkedin": "领英",
     "socialTwitter": "推特 / X",
     "socialInstagram": "Instagram",
+    "socialFacebook": "Facebook",
+    "socialYoutube": "YouTube",
     "socialPending": "敬请期待"
   },
   "Privacy": {
