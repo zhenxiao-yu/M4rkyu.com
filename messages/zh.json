@@ -20,7 +20,9 @@
     "writing": "写作",
     "blogs": "博客",
     "notes": "笔记",
-    "shop": "商店"
+    "shop": "商店",
+    "tools": "工具",
+    "links": "链接"
   },
   "Theme": {
     "label": "主题",
@@ -552,7 +554,49 @@
     "linksRailLede": "我常用的框架与参考。在新标签页打开。",
     "marqueeLabel": "全部工具",
     "openToolAria": "打开 {name} 工具",
-    "toolCount": "{count, plural, =0 {0 个工具} other {# 个工具}}"
+    "openLinkAria": "在新标签页打开 {name}",
+    "toolCount": "{count, plural, =0 {0 个工具} other {# 个工具}}",
+    "linkCount": "{count, plural, =0 {0 个链接} other {# 个链接}}",
+    "landingEyebrow": "资源",
+    "landingTitle": "资源",
+    "landingLede": "浏览器内的交互工具，加上一份每日常用的精选链接 —— 全部可搜索、可索引。",
+    "landingToolsTitle": "工具",
+    "landingToolsLede": "浏览器里直接跑的小工具：格式化、生成器、颜色与加密辅助。零上传、零追踪。",
+    "landingLinksTitle": "链接",
+    "landingLinksLede": "我真的每天会打开的书签 —— 文档、AI 助手、配色、托管、灵感。",
+    "landingToolsCount": "{count, plural, =0 {暂无工具} other {# 个工具}}",
+    "landingLinksCount": "{count, plural, =0 {暂无链接} other {# 个链接}}",
+    "landingEnter": "进入",
+    "landingPreviewToolsLabel": "工具示例",
+    "landingPreviewLinksLabel": "链接示例",
+    "breadcrumbResources": "资源",
+    "ToolsPage": {
+      "eyebrow": "交互工具",
+      "title": "工具",
+      "lede": "完全在你的浏览器中运行的单页小工具。无需登录、无需上传、无追踪 —— 打开一个，拷走结果。"
+    },
+    "LinksPage": {
+      "eyebrow": "每日链接",
+      "title": "链接",
+      "lede": "我每天真的会打开的东西。文档、AI 助手、配色、托管、灵感 —— 按频次排序，可搜索。",
+      "searchLabel": "搜索链接",
+      "searchPlaceholder": "按名称、标签或描述搜索…"
+    },
+    "Bento": {
+      "toolsEyebrow": "聚焦 · 工具",
+      "toolsHeading": "精选工具",
+      "toolsRegionLabel": "精选工具，自动轮播",
+      "linksEyebrow": "聚焦 · 链接",
+      "linksHeading": "精选链接",
+      "linksRegionLabel": "精选链接，自动轮播",
+      "prev": "上一组",
+      "next": "下一组",
+      "pause": "暂停轮播",
+      "play": "继续轮播",
+      "collapse": "收起聚焦",
+      "expand": "展开聚焦",
+      "gotoPage": "切换到第 {index} 组"
+    }
   },
   "Shop": {
     "eyebrow": "小批量出品",
@@ -567,8 +611,12 @@
   "Meta": {
     "galleryTitle": "影像",
     "galleryDescription": "黑白摄影、数字艺术与样片 —— 于震潇的视觉档案。",
-    "resourcesTitle": "免费浏览器开发者工具",
-    "resourcesDescription": "18 个交互工具 —— JSON 格式化、对比度检查、JWT 解码、密码生成等 —— 全部在浏览器中运行。无需登录、无需上传、无追踪。",
+    "resourcesTitle": "资源 —— 工具与每日链接",
+    "resourcesDescription": "浏览器内的交互工具，加上一份精选的开发者日常链接。挑一边：动手用的小工具，或者我真的会打开的书签。",
+    "resourcesToolsTitle": "免费浏览器开发者工具",
+    "resourcesToolsDescription": "38 个交互工具 —— JSON 格式化、对比度检查、JWT 解码、密码生成等 —— 全部在浏览器中运行。无需登录、无需上传、无追踪。",
+    "resourcesLinksTitle": "每日常用开发者链接",
+    "resourcesLinksDescription": "精选书签：文档、AI 助手、配色工具、托管、Playground 与设计灵感 —— 我每天真的会打开的那些。",
     "contactTitle": "联系",
     "contactDescription": "项目咨询与合作。当前提供邮件与表单回退，后续接入服务端表单服务。",
     "mediaTitle": "媒体",

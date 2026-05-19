@@ -10,34 +10,48 @@ import {
 
 export type ToolViewMode = "grid" | "list";
 
-const STORAGE_KEY = "m4rkyu:resources:view-mode";
 const DEFAULT_MODE: ToolViewMode = "grid";
-const STORAGE_EVENT = "m4rkyu:resources-view-mode-changed";
 
-function subscribe(callback: () => void) {
-  return subscribeStoredValue(STORAGE_KEY, STORAGE_EVENT, callback);
+// Default channel for the /resources/tools page. Other surfaces
+// (e.g. /resources/links) pass an override into `useToolViewMode`
+// to keep their preference independent.
+const DEFAULT_STORAGE_KEY = "m4rkyu:resources:view-mode";
+const DEFAULT_STORAGE_EVENT = "m4rkyu:resources-view-mode-changed";
+
+interface UseToolViewModeOptions {
+  /** localStorage key; defaults to the tools-page channel. */
+  storageKey?: string;
+  /** Synthetic event name used for cross-instance sync within a tab. */
+  storageEvent?: string;
 }
 
-function getSnapshot(): ToolViewMode {
-  const stored = readStoredString(STORAGE_KEY);
-  if (stored === "list" || stored === "grid") return stored;
-  return DEFAULT_MODE;
-}
+// Persisted grid/list preference for /resources surfaces. Mirrors
+// useViewMode for /logs — SSR renders the default grid, hydration
+// swaps to the stored value, setter broadcasts a synthetic event so
+// any other instance in the same tab re-snapshots.
+export function useToolViewMode(options: UseToolViewModeOptions = {}) {
+  const storageKey = options.storageKey ?? DEFAULT_STORAGE_KEY;
+  const storageEvent = options.storageEvent ?? DEFAULT_STORAGE_EVENT;
 
-function getServerSnapshot(): ToolViewMode {
-  return DEFAULT_MODE;
-}
+  function subscribe(callback: () => void) {
+    return subscribeStoredValue(storageKey, storageEvent, callback);
+  }
 
-// Persisted grid/list preference for /resources. Mirrors useViewMode
-// for /logs — SSR renders the default grid, hydration swaps to the
-// stored value, setter broadcasts a synthetic event so any other
-// instance in the same tab re-snapshots.
-export function useToolViewMode() {
+  function getSnapshot(): ToolViewMode {
+    const stored = readStoredString(storageKey);
+    if (stored === "list" || stored === "grid") return stored;
+    return DEFAULT_MODE;
+  }
+
+  function getServerSnapshot(): ToolViewMode {
+    return DEFAULT_MODE;
+  }
+
   const mode = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function setMode(next: ToolViewMode) {
-    writeStoredString(STORAGE_KEY, next);
-    dispatchStoredValueChanged(STORAGE_EVENT);
+    writeStoredString(storageKey, next);
+    dispatchStoredValueChanged(storageEvent);
   }
 
   return [mode, setMode] as const;

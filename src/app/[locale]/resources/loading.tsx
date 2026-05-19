@@ -1,46 +1,44 @@
 import {
   SkeletonBlock,
-  SkeletonChip,
-  SkeletonGrid,
   SkeletonHero,
   SkeletonLine,
 } from "@/components/placeholders/skeleton";
 
 /**
- * Suspense fallback for `/resources`. Hero + category-filter row +
- * 3-up grid + the "index pending" empty state at the bottom.
+ * Suspense fallback for `/resources` (landing splash). Two large
+ * entry tiles for Tools and Links — keep the skeleton aligned so the
+ * layout doesn't shift when the page mounts.
  */
-export default function ResourcesLoading() {
+export default function ResourcesLandingLoading() {
   return (
     <article aria-busy="true" aria-live="polite">
       <SkeletonHero atmosphereOpacity="opacity-25" />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
-          <div className="flex flex-wrap items-center gap-2">
-            <SkeletonChip className="w-12" />
-            <SkeletonChip className="w-20" />
-            <SkeletonChip className="w-16" />
-            <SkeletonChip className="w-24" />
-            <SkeletonChip className="w-14" />
-            <SkeletonLine className="ml-2 h-2.5 w-16" />
-          </div>
-          <div className="grid gap-2">
-            <SkeletonLine className="h-3 w-16" />
-            <SkeletonBlock className="h-10 w-full" />
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <SkeletonGrid count={6} className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" withThumb={false} />
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="grid gap-3 rounded-md border border-dashed border-border/60 bg-muted/30 p-8 text-center">
-          <SkeletonBlock className="mx-auto size-9 rounded-full" />
-          <SkeletonLine className="mx-auto h-4 w-4/12" />
-          <SkeletonLine className="mx-auto w-6/12" />
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[0, 1].map((i) => (
+            <div
+              key={i}
+              className="grid h-80 gap-4 rounded-lg border border-border/60 bg-card/40 p-6 sm:p-8"
+            >
+              <div className="flex items-start justify-between">
+                <SkeletonBlock className="size-12 rounded-md" />
+                <SkeletonLine className="h-3 w-20" />
+              </div>
+              <div className="grid gap-2">
+                <SkeletonLine className="h-3 w-24" />
+                <SkeletonLine className="h-8 w-2/3" />
+                <SkeletonLine className="w-11/12" />
+                <SkeletonLine className="w-9/12" />
+              </div>
+              <div className="mt-auto flex flex-wrap gap-1.5">
+                <SkeletonLine className="h-6 w-24 rounded-full" />
+                <SkeletonLine className="h-6 w-28 rounded-full" />
+                <SkeletonLine className="h-6 w-20 rounded-full" />
+                <SkeletonLine className="h-6 w-24 rounded-full" />
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </article>

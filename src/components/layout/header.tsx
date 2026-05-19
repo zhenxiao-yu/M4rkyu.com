@@ -31,6 +31,8 @@ export async function Header({ locale }: { locale: Locale }) {
     blogs: t("blogs"),
     notes: t("notes"),
     resources: t("resources"),
+    tools: t("tools"),
+    links: t("links"),
     about: t("about"),
     contact: t("contact"),
   };

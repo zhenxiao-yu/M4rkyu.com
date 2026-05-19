@@ -20,7 +20,9 @@
     "writing": "Writing",
     "blogs": "Blog",
     "notes": "Notes",
-    "shop": "Shop"
+    "shop": "Shop",
+    "tools": "Tools",
+    "links": "Links"
   },
   "Theme": {
     "label": "Theme",
@@ -552,7 +554,49 @@
     "linksRailLede": "Frameworks and references I lean on. Open in a new tab.",
     "marqueeLabel": "All tools",
     "openToolAria": "Open {name} tool",
-    "toolCount": "{count, plural, =0 {0 tools} one {# tool} other {# tools}}"
+    "openLinkAria": "Open {name} in a new tab",
+    "toolCount": "{count, plural, =0 {0 tools} one {# tool} other {# tools}}",
+    "linkCount": "{count, plural, =0 {0 links} one {# link} other {# links}}",
+    "landingEyebrow": "resources",
+    "landingTitle": "Resources",
+    "landingLede": "Interactive tools that run in the browser, plus curated daily-use links — both indexed and searchable.",
+    "landingToolsTitle": "Tools",
+    "landingToolsLede": "In-browser utilities: formatters, generators, color and crypto helpers. Zero uploads, zero tracking.",
+    "landingLinksTitle": "Links",
+    "landingLinksLede": "The bookmarks I actually open every day — docs, AI helpers, color tools, hosting, inspiration.",
+    "landingToolsCount": "{count, plural, =0 {no tools yet} one {# tool} other {# tools}}",
+    "landingLinksCount": "{count, plural, =0 {no links yet} one {# link} other {# links}}",
+    "landingEnter": "Enter",
+    "landingPreviewToolsLabel": "Sample tools",
+    "landingPreviewLinksLabel": "Sample links",
+    "breadcrumbResources": "Resources",
+    "ToolsPage": {
+      "eyebrow": "interactive tools",
+      "title": "Tools",
+      "lede": "Single-page utilities that run entirely in your browser. No login, no upload, no tracking — open one and copy the result out."
+    },
+    "LinksPage": {
+      "eyebrow": "daily links",
+      "title": "Links",
+      "lede": "Stuff I actually open every day. Docs, AI helpers, color tools, hosting, inspiration — sorted by frequency, searchable.",
+      "searchLabel": "Search links",
+      "searchPlaceholder": "Search by name, tag, or description…"
+    },
+    "Bento": {
+      "toolsEyebrow": "spotlight · tools",
+      "toolsHeading": "Featured tools",
+      "toolsRegionLabel": "Featured tools, auto-rotating",
+      "linksEyebrow": "spotlight · links",
+      "linksHeading": "Featured links",
+      "linksRegionLabel": "Featured links, auto-rotating",
+      "prev": "Previous group",
+      "next": "Next group",
+      "pause": "Pause rotation",
+      "play": "Resume rotation",
+      "collapse": "Hide spotlight",
+      "expand": "Show spotlight",
+      "gotoPage": "Show group {index}"
+    }
   },
   "Shop": {
     "eyebrow": "small editions",
@@ -567,8 +611,12 @@
   "Meta": {
     "galleryTitle": "Gallery",
     "galleryDescription": "Black-and-white photography, digital art, and contact sheets — visual archive by ZhenXiao Mark Yu.",
-    "resourcesTitle": "Free in-browser developer tools",
-    "resourcesDescription": "Eighteen interactive tools — JSON formatter, contrast checker, JWT decoder, password generator, and more — that run in your browser. No login, no upload, no tracking.",
+    "resourcesTitle": "Resources — tools and daily links",
+    "resourcesDescription": "Interactive in-browser tools plus a curated set of daily-use developer links. Pick a side: hands-on utilities, or the bookmarks I actually open.",
+    "resourcesToolsTitle": "Free in-browser developer tools",
+    "resourcesToolsDescription": "Thirty-eight interactive tools — JSON formatter, contrast checker, JWT decoder, password generator, and more — that run in your browser. No login, no upload, no tracking.",
+    "resourcesLinksTitle": "Daily-use developer links",
+    "resourcesLinksDescription": "Curated bookmarks for docs, AI assistants, color tools, hosting, playgrounds, and inspiration — the ones I actually open every day.",
     "contactTitle": "Contact",
     "contactDescription": "Project inquiries and collaboration. Mailto and form fallback now, server-side provider later.",
     "mediaTitle": "Media",

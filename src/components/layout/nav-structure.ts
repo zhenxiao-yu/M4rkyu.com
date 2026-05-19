@@ -37,6 +37,8 @@ export interface NavLabels {
   blogs: string;
   notes: string;
   resources: string;
+  tools: string;
+  links: string;
   about: string;
   contact: string;
 }
@@ -71,9 +73,17 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
           { id: "notes", label: labels.notes, href: "/notes" },
         ],
       },
+      {
+        id: "resources",
+        label: labels.resources,
+        href: "/resources",
+        items: [
+          { id: "tools", label: labels.tools, href: "/resources/tools" },
+          { id: "links", label: labels.links, href: "/resources/links" },
+        ],
+      },
     ],
     flatLinks: [
-      { id: "resources", label: labels.resources, href: "/resources" },
       { id: "about", label: labels.about, href: "/about" },
       { id: "contact", label: labels.contact, href: "/contact" },
     ],
