@@ -23,6 +23,33 @@ const RENDERERS: Record<ToolSlug, ComponentType> = {
     () => import("./shadow-generator/Tool").then((m) => m.ShadowGenerator),
     { ssr: false },
   ),
+  gradient: dynamic(
+    () => import("./gradient/Tool").then((m) => m.GradientGenerator),
+    { ssr: false },
+  ),
+  "css-triangle": dynamic(
+    () => import("./css-triangle/Tool").then((m) => m.CssTriangle),
+    { ssr: false },
+  ),
+  bezier: dynamic(() => import("./bezier/Tool").then((m) => m.CubicBezier), {
+    ssr: false,
+  }),
+  glassmorphism: dynamic(
+    () => import("./glassmorphism/Tool").then((m) => m.Glassmorphism),
+    { ssr: false },
+  ),
+  "border-radius": dynamic(
+    () => import("./border-radius/Tool").then((m) => m.BorderRadius),
+    { ssr: false },
+  ),
+  "box-model": dynamic(
+    () => import("./box-model/Tool").then((m) => m.BoxModel),
+    { ssr: false },
+  ),
+  "color-palette": dynamic(
+    () => import("./color-palette/Tool").then((m) => m.ColorPalette),
+    { ssr: false },
+  ),
   "json-formatter": dynamic(
     () => import("./json-formatter/Tool").then((m) => m.JsonFormatter),
     { ssr: false },
@@ -78,6 +105,56 @@ const RENDERERS: Record<ToolSlug, ComponentType> = {
   ),
   "html-entities": dynamic(
     () => import("./html-entities/Tool").then((m) => m.HtmlEntities),
+    { ssr: false },
+  ),
+  "utm-builder": dynamic(
+    () => import("./utm-builder/Tool").then((m) => m.UtmBuilder),
+    { ssr: false },
+  ),
+  "cron-explainer": dynamic(
+    () => import("./cron-explainer/Tool").then((m) => m.CronExplainer),
+    { ssr: false },
+  ),
+  "http-status": dynamic(
+    () => import("./http-status/Tool").then((m) => m.HttpStatus),
+    { ssr: false },
+  ),
+  "mime-finder": dynamic(
+    () => import("./mime-finder/Tool").then((m) => m.MimeFinder),
+    { ssr: false },
+  ),
+  "regex-tester": dynamic(
+    () => import("./regex-tester/Tool").then((m) => m.RegexTester),
+    { ssr: false },
+  ),
+  "text-diff": dynamic(
+    () => import("./text-diff/Tool").then((m) => m.TextDiff),
+    { ssr: false },
+  ),
+  "csv-json": dynamic(
+    () => import("./csv-json/Tool").then((m) => m.CsvJson),
+    { ssr: false },
+  ),
+  "json-to-ts": dynamic(
+    () => import("./json-to-ts/Tool").then((m) => m.JsonToTs),
+    { ssr: false },
+  ),
+  "sql-formatter": dynamic(
+    () => import("./sql-formatter/Tool").then((m) => m.SqlFormatter),
+    { ssr: false },
+  ),
+  morse: dynamic(() => import("./morse/Tool").then((m) => m.Morse), {
+    ssr: false,
+  }),
+  "ascii-art": dynamic(
+    () => import("./ascii-art/Tool").then((m) => m.AsciiArt),
+    { ssr: false },
+  ),
+  roman: dynamic(() => import("./roman/Tool").then((m) => m.RomanNumeral), {
+    ssr: false,
+  }),
+  "random-number": dynamic(
+    () => import("./random-number/Tool").then((m) => m.RandomNumber),
     { ssr: false },
   ),
 };

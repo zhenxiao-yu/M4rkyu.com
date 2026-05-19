@@ -9,6 +9,13 @@ export const TOOL_SLUGS = [
   "contrast-checker",
   "color-converter",
   "shadow-generator",
+  "gradient",
+  "css-triangle",
+  "bezier",
+  "glassmorphism",
+  "border-radius",
+  "box-model",
+  "color-palette",
   // dev utilities
   "json-formatter",
   "base64",
@@ -25,6 +32,22 @@ export const TOOL_SLUGS = [
   "word-counter",
   "base-converter",
   "html-entities",
+  // dev reference / network
+  "utm-builder",
+  "cron-explainer",
+  "http-status",
+  "mime-finder",
+  "regex-tester",
+  // text / data
+  "text-diff",
+  "csv-json",
+  "json-to-ts",
+  "sql-formatter",
+  // generators / fun
+  "morse",
+  "ascii-art",
+  "roman",
+  "random-number",
 ] as const;
 
 export type ToolSlug = (typeof TOOL_SLUGS)[number];
