@@ -31,14 +31,56 @@ export function GhostedWord({
     if (!el) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    function onMove(event: PointerEvent) {
+    // GhostedWord lives in the footer wordmark which is below the
+    // fold on every page. Gating the pointermove listener via
+    // IntersectionObserver + throttling state updates to rAF keeps
+    // this from re-rendering 7 ghost spans per pointer move on every
+    // route. The cost off-screen is now zero.
+    let attached = false;
+    let pending = false;
+    let lastX = 0;
+
+    function update() {
+      pending = false;
       const rect = el!.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
-      const dx = (event.clientX - cx) / (window.innerWidth / 2);
+      const dx = (lastX - cx) / (window.innerWidth / 2);
       setPull(Math.max(-1, Math.min(1, dx)));
     }
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
+
+    function onMove(event: PointerEvent) {
+      lastX = event.clientX;
+      if (pending) return;
+      pending = true;
+      window.requestAnimationFrame(update);
+    }
+
+    function attach() {
+      if (attached) return;
+      window.addEventListener("pointermove", onMove, { passive: true });
+      attached = true;
+    }
+
+    function detach() {
+      if (!attached) return;
+      window.removeEventListener("pointermove", onMove);
+      attached = false;
+      setPull(0);
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) attach();
+        else detach();
+      },
+      { threshold: 0 },
+    );
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      detach();
+    };
   }, [reduce]);
 
   if (reduce) {

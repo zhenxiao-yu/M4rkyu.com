@@ -804,6 +804,25 @@ html {
   }
 }
 
+/* Button shine — one-shot sweep used by the Footer primary CTA. A
+ * skewed highlight band travels left→right across the button each
+ * time the parent enters its hover state. Keyframe-driven (not a
+ * transition) so on hover-out the band is removed cleanly rather
+ * than animating backward across the button. */
+@keyframes button-shine {
+  0% {
+    transform: translate3d(-160%, 0, 0) skewX(-12deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate3d(420%, 0, 0) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
 /* ShinyText sweep — bg-clip-text gradient pans 200% horizontally so
  * the highlight band travels across the glyphs. Reduced-motion media
  * query below kills the animation; the gradient remains as a static
