@@ -168,6 +168,14 @@ export const resourceSchema = z.object({
   category: z.string().min(1),
   description: z.string().min(1),
   why: z.string().min(1),
+  // "link" resources point at external sites; "tool" resources live at
+  // /resources/[slug] and render an in-browser interactive component
+  // loaded via the dynamic tool registry in src/components/tools/.
+  type: z.enum(["link", "tool"]).default("link"),
+  // For type="link" this is the external URL. For type="tool" this can
+  // be a docs/source URL associated with the tool (often the same as
+  // the in-house route). Always validated as a URL so cards have
+  // somewhere to point.
   link: z.string().url(),
   pricing: z.string().min(1),
   tags: z.array(z.string()),

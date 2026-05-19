@@ -30,6 +30,7 @@ const draftResource: Resource = {
   description:
     "Component workspace for visual states, accessibility checks, and design-system review.",
   why: "Placeholder: expand stories as each final section component lands.",
+  type: "link",
   link: "https://storybook.js.org",
   pricing: "Free",
   tags: ["components", "a11y", "documentation"],

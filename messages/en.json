@@ -513,6 +513,15 @@
   "Resources": {
     "eyebrow": "tool library",
     "categoryAll": "All",
+    "typeLabel": "Type",
+    "type": {
+      "all": "All",
+      "tool": "Tools",
+      "link": "Links"
+    },
+    "openTool": "Open tool",
+    "backToResources": "All resources",
+    "toolSource": "Source",
     "searchLabel": "Search",
     "searchPlaceholder": "Filter tools and notes…",
     "filterSummary": "{filtered} / {total}",

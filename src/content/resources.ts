@@ -64,4 +64,44 @@ export const resources = [
     tags: ["images", "video", "performance"],
     status: "placeholder",
   },
+  // In-browser tools — render at /resources/[slug] via the dynamic
+  // registry in src/components/tools/tool-registry.ts. `link` points
+  // at a docs source so the card's "source" action still has somewhere
+  // to go.
+  {
+    name: "Contrast Checker",
+    slug: "contrast-checker",
+    category: "Tool",
+    description: "Paste two colors, see WCAG AA / AAA pass-fail for normal and large text with a live sample preview.",
+    why: "Every time I tweak a token I want to know whether the pair still clears the accessibility bar — without leaving the page.",
+    type: "tool",
+    link: "https://www.w3.org/TR/WCAG21/#contrast-minimum",
+    pricing: "Free",
+    tags: ["a11y", "color", "wcag"],
+    status: "ready",
+  },
+  {
+    name: "Color Converter",
+    slug: "color-converter",
+    category: "Tool",
+    description: "Three-way Hex ↔ RGB ↔ HSL converter with a live swatch, lightness shades, and one-click copy.",
+    why: "Tailwind v4 token tweaks are easier when the same color reads in every notation at once.",
+    type: "tool",
+    link: "https://developer.mozilla.org/en-US/docs/Web/CSS/color_value",
+    pricing: "Free",
+    tags: ["color", "css", "tokens"],
+    status: "ready",
+  },
+  {
+    name: "Shadow Generator",
+    slug: "shadow-generator",
+    category: "Tool",
+    description: "Live box-shadow builder — drag the sliders, copy CSS or a Tailwind arbitrary class. Inset toggle, any CSS color.",
+    why: "Shadow stacks are easier to feel than to read, and the Tailwind arbitrary-value syntax is fiddly to type by hand.",
+    type: "tool",
+    link: "https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow",
+    pricing: "Free",
+    tags: ["css", "tailwind", "design"],
+    status: "ready",
+  },
 ].map((resource) => resourceSchema.parse(resource));

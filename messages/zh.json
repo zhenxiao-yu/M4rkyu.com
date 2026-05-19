@@ -513,6 +513,15 @@
   "Resources": {
     "eyebrow": "工具库",
     "categoryAll": "全部",
+    "typeLabel": "类型",
+    "type": {
+      "all": "全部",
+      "tool": "工具",
+      "link": "外链"
+    },
+    "openTool": "打开工具",
+    "backToResources": "全部资源",
+    "toolSource": "来源",
     "searchLabel": "搜索",
     "searchPlaceholder": "按工具或笔记过滤…",
     "filterSummary": "{filtered} / {total}",
