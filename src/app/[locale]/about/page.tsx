@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
-import { FadeIn } from "@/components/motion/fade-in";
-import { Stagger, StaggerItem } from "@/components/motion/stagger";
+import { Badge } from "@/components/ui/badge";
+import { BioCard } from "@/components/about/bio-card";
+import { GithubStatsCard } from "@/components/about/github-stats-card";
+import { NowPlayingCard } from "@/components/about/now-playing-card";
+import { SkillsRail } from "@/components/about/skills-rail";
+import { TravelMapCard } from "@/components/about/travel-map-card";
+import { ObsessionsCard } from "@/components/about/obsessions-card";
+import { TimelineCard } from "@/components/about/timeline-card";
 import { profile } from "@/content/profile";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -37,110 +42,72 @@ export default async function AboutPage({
 
   return (
     <PageShell locale={locale}>
-      <PageHero
-        title={t("title")}
-        description={t("intro")}
-        decorativeWord="MARK"
-        sidecarClassName="w-full max-w-sm lg:max-w-none"
-      >
-        <PlaceholderImage
-          label="PORTRAIT OR STUDIO IMAGE TBD"
-          aspect="aspect-4/5"
-        />
-      </PageHero>
-
       <PageSection>
-        <Stagger className="grid gap-5 lg:grid-cols-[1fr_0.85fr]" delay={0.05}>
-          <StaggerItem>
-            <Card className="h-full bg-card/80 hover:border-ring/50 hover:shadow-md">
-              <CardHeader>
-                <CardTitle>{profile.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-5 text-base leading-8 text-muted-foreground">
-                <p>{profile.intro}</p>
-                <p className="font-mono text-sm">{profile.location}</p>
-              </CardContent>
-            </Card>
-          </StaggerItem>
-          <StaggerItem>
-            <Card className="h-full bg-card/80 hover:border-ring/50 hover:shadow-md">
-              <CardHeader>
-                <CardTitle>Values</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-3">
-                {profile.values.map((value, i) => (
-                  <div
-                    key={value}
-                    className="grid grid-cols-[2rem_1fr] items-start gap-3 rounded-md border bg-background/50 p-3 transition-[background-color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/40 hover:bg-background/70 motion-safe:hover:translate-x-1"
-                  >
-                    <span className="font-mono text-[0.6rem] text-muted-foreground/60 pt-0.5">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p className="text-sm leading-6">{value}</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </StaggerItem>
-        </Stagger>
+        {/* Hero strip — name + location only, agent-voice silence on titles. */}
+        <Card className="relative overflow-hidden border-border/70 bg-card/80">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-cyber-grid opacity-25"
+          />
+          <CardContent className="relative grid gap-4 px-5 py-7 sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-6 sm:px-7">
+            <div className="grid gap-2">
+              <p className="font-mono text-[0.6rem] uppercase tracking-[0.28em] text-muted-foreground">
+                {t("metaCard.eyebrow")}
+              </p>
+              <h1 className="font-display text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-none tracking-tight">
+                {profile.name.toUpperCase()}
+              </h1>
+              <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <MapPin className="size-3" aria-hidden="true" />
+                {profile.location}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="success" className="font-mono text-[0.6rem]">
+                <span className="mr-1 inline-block size-1.5 rounded-full bg-current align-middle" />
+                {t("metaCard.available")}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
 
-        <FadeIn delay={0.15}>
-          <div className="mt-5 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
-            <Card className="bg-card/80 hover:border-ring/50 hover:shadow-md">
-              <CardHeader>
-                <CardTitle>Current focus</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm leading-6 text-muted-foreground">
-                <p>
-                  Available for frontend systems, full-stack prototypes, and
-                  creative or game projects. Based in {profile.location}.
+        <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8">
+          {t("intro")}
+        </p>
+
+        {/* Bento grid. Mobile = stack; lg = 4-column with span hints. */}
+        <div className="mt-8 grid gap-5 lg:grid-cols-4">
+          <BioCard locale={locale} className="lg:col-span-2" />
+          <GithubStatsCard className="lg:col-span-2" />
+
+          <SkillsRail locale={locale} className="lg:col-span-3" />
+          <NowPlayingCard className="lg:col-span-1" />
+
+          <TravelMapCard locale={locale} className="lg:col-span-3" />
+          <ObsessionsCard locale={locale} className="lg:col-span-1" />
+
+          <TimelineCard locale={locale} className="lg:col-span-2" />
+
+          <Card className="bg-card/80 lg:col-span-2">
+            <CardContent className="grid h-full content-between gap-4 p-5">
+              <div className="grid gap-2">
+                <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+                  /contact
                 </p>
-                <p>
-                  Currently building this portfolio platform as a structured
-                  archive of engineering, game development, and digital art
-                  work.
+                <h2 className="text-lg font-semibold">{t("cta.title")}</h2>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  {t("cta.body")}
                 </p>
-                <Button asChild className="mt-2">
-                  <Link href="/contact" locale={locale}>
-                    Start a conversation
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/80 hover:border-ring/50 hover:shadow-md">
-              <CardHeader>
-                <CardTitle>Timeline</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                {profile.timeline.map((item) => (
-                  <div key={item.label} className="relative border-l-2 pl-5">
-                    <span className="absolute -left-1.5 top-1.5 size-3 rounded-full border-2 border-border bg-background" />
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
-                      {item.date}
-                    </p>
-                    <h3 className="mt-1 font-semibold">{item.label}</h3>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      {item.detail}
-                    </p>
-                  </div>
-                ))}
-                <div className="relative border-l-2 border-dashed pl-5">
-                  <span className="absolute -left-1.5 top-1.5 size-3 rounded-full border-2 border-border border-dashed bg-background" />
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
-                    Now
-                  </p>
-                  <h3 className="mt-1 font-semibold">
-                    Creative systems engineer
-                  </h3>
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                    Shipping software, game, and art work under one coherent
-                    archive.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </FadeIn>
+              </div>
+              <Button asChild className="w-fit">
+                <Link href="/contact" locale={locale}>
+                  {t("cta.button")}
+                  <ArrowUpRight aria-hidden="true" className="size-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </PageSection>
     </PageShell>
   );

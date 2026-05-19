@@ -42,6 +42,13 @@ export const env = createEnv({
     // code paths do NOT require it; admin actions run via RLS as the
     // signed-in admin user. Never imported from a `"use client"` file.
     SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+    // Spotify "now playing" integration for the /about dashboard.
+    // All optional — the card degrades to "Not playing" when unset.
+    // Authorize flow: create a Spotify app at developer.spotify.com,
+    // run scripts/spotify-authorize.ts once to mint a refresh token.
+    SPOTIFY_CLIENT_ID: z.string().optional(),
+    SPOTIFY_CLIENT_SECRET: z.string().optional(),
+    SPOTIFY_REFRESH_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
@@ -72,6 +79,9 @@ export const env = createEnv({
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     RESEND_WEBHOOK_SECRET: process.env.RESEND_WEBHOOK_SECRET,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+    SPOTIFY_REFRESH_TOKEN: process.env.SPOTIFY_REFRESH_TOKEN,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,

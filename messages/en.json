@@ -407,8 +407,69 @@
     "viewModeGrid": "Grid"
   },
   "About": {
-    "title": "About Mark",
-    "intro": "A China to Canada software and art path shaped by Western University, J.D. Power, game development, and a sustained interest in systems that feel human."
+    "title": "About",
+    "intro": "Mark, Ontario. Writing code, building games, taking photos. The dashboard below is what he's reading, shipping, listening to, and where he's been.",
+    "metaCard": {
+      "eyebrow": "operator",
+      "available": "Open to collaboration"
+    },
+    "bio": {
+      "eyebrow": "bio",
+      "paragraph1": "Mark is a software engineer from Ontario, Canada — by way of China. He builds web applications by day and tinkers with games, shaders, and black-and-white photography the rest of the time.",
+      "paragraph2": "Trained at Western University, sharpened by a full-stack co-op at J.D. Power. He treats portfolio surfaces like product surfaces: tight type, fast load, no fake metrics.",
+      "paragraph3": "When he isn't shipping he's usually somewhere with a camera. The travel log to the right is roughly chronological."
+    },
+    "skills": {
+      "eyebrow": "skills",
+      "title": "Tools on hand",
+      "empty": "Skill list is being curated. Add entries to profile.skills to populate this card."
+    },
+    "github": {
+      "eyebrow": "github",
+      "title": "Open source",
+      "repos": "Repos",
+      "stars": "Stars",
+      "followers": "Follows",
+      "openOnGithub": "Open on GitHub"
+    },
+    "nowPlaying": {
+      "title": "Listening",
+      "nowPlaying": "Now playing",
+      "recentlyPlayed": "Recently played",
+      "notPlaying": "Not playing",
+      "loading": "—",
+      "live": "Live",
+      "openOnSpotify": "Open on Spotify",
+      "openTrack": "Open {track} on Spotify"
+    },
+    "travel": {
+      "eyebrow": "travel log",
+      "title": "Recent cities",
+      "count": "{count, plural, =0 {0 cities} one {# city} other {# cities}}",
+      "empty": "No cities logged yet",
+      "svgAria": "Map showing {count, plural, =0 {no cities} one {# visited city} other {# visited cities}} as dots on a dotted-grid backdrop"
+    },
+    "obsessions": {
+      "eyebrow": "currently into",
+      "title": "Loops in his head",
+      "item1": "Input feel in fighting games",
+      "item2": "Unreal materials and lighting",
+      "item3": "Shooting on grain",
+      "item4": "Tailwind v4 internals",
+      "item5": "Quiet, restrained dashboards",
+      "item6": ""
+    },
+    "timeline": {
+      "eyebrow": "timeline",
+      "title": "Where he's been",
+      "nowLabel": "Now",
+      "nowDetail": "Shipping this site as one archive — software, games, art, writing."
+    },
+    "cta": {
+      "title": "Build something with him",
+      "body": "Open inbox for collaborations, game work, and quiet contract gigs.",
+      "button": "Start a conversation"
+    }
   },
   "Contact": {
     "eyebrow": "collaboration",

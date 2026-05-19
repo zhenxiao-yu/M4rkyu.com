@@ -86,6 +86,37 @@ export const profileSchema = z.object({
     .default({}),
   // Optional resume link. Public PDF lives at `public/resume.pdf`.
   resumeUrl: z.string().optional(),
+  // About-dashboard fields — all default-empty so the page renders
+  // gracefully before content is filled in.
+  // GitHub handle (slug only — full URL derives from this in the GitHub stats card).
+  githubHandle: z.string().optional(),
+  // Tasteful skills list — group buckets the rail visually, no fake levels.
+  skills: z
+    .array(
+      z.object({
+        label: z.string(),
+        group: z.string(),
+        // Optional: short descriptor / "depth" hint (e.g., "daily", "exploring").
+        note: z.string().optional(),
+      }),
+    )
+    .default([]),
+  // Cities visited recently — render as dots on the about travel map.
+  cities: z
+    .array(
+      z.object({
+        name: z.string(),
+        country: z.string(),
+        // WGS84 decimal coordinates; coords.com has a free picker.
+        lat: z.number().min(-90).max(90),
+        lng: z.number().min(-180).max(180),
+        // ISO-ish ("2024-08") so the timeline can sort.
+        visitedAt: z.string(),
+        // Optional: short note shown on hover/tap.
+        note: z.string().optional(),
+      }),
+    )
+    .default([]),
 });
 
 export const galleryAspectSchema = z.enum([

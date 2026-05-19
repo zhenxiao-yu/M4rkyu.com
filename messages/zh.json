@@ -407,8 +407,69 @@
     "viewModeGrid": "网格"
   },
   "About": {
-    "title": "关于 Mark",
-    "intro": "从中国到加拿大，从 Western University 到 J.D. Power，再到软件、游戏与艺术的交叉实践。Mark 关注的是有温度的系统。"
+    "title": "关于",
+    "intro": "Mark，安大略。写代码、做游戏、拍照片。下方的仪表盘记录他在读什么、在做什么、在听什么，以及去过哪里。",
+    "metaCard": {
+      "eyebrow": "档案",
+      "available": "开放合作"
+    },
+    "bio": {
+      "eyebrow": "个人简介",
+      "paragraph1": "Mark 是来自加拿大安大略的软件工程师 —— 出生于中国。白天写 Web 应用，其余时间在游戏、shader 与黑白摄影之间打转。",
+      "paragraph2": "Western University 出身，曾在 J.D. Power 完成全栈 co-op。他把作品集页面当成产品来对待：版式紧凑、加载迅捷、没有虚构的指标。",
+      "paragraph3": "不在交付的时候，多半在某个地方拿着相机。右侧的旅行记录大致按时间排列。"
+    },
+    "skills": {
+      "eyebrow": "技能",
+      "title": "手边的工具",
+      "empty": "技能列表整理中。补充 profile.skills 即可填充。"
+    },
+    "github": {
+      "eyebrow": "github",
+      "title": "开源",
+      "repos": "项目",
+      "stars": "Stars",
+      "followers": "关注",
+      "openOnGithub": "在 GitHub 打开"
+    },
+    "nowPlaying": {
+      "title": "在听",
+      "nowPlaying": "正在播放",
+      "recentlyPlayed": "最近播放",
+      "notPlaying": "无播放",
+      "loading": "—",
+      "live": "实时",
+      "openOnSpotify": "在 Spotify 打开",
+      "openTrack": "在 Spotify 打开 {track}"
+    },
+    "travel": {
+      "eyebrow": "旅行记录",
+      "title": "最近去过的城市",
+      "count": "{count, plural, =0 {0 个城市} other {# 个城市}}",
+      "empty": "尚未记录城市",
+      "svgAria": "地图：在网格底纹上以圆点标注 {count, plural, =0 {0 个城市} other {# 个城市}}"
+    },
+    "obsessions": {
+      "eyebrow": "最近在迷",
+      "title": "脑里循环的事",
+      "item1": "格斗游戏的输入手感",
+      "item2": "Unreal 材质与光照",
+      "item3": "用胶片颗粒拍照",
+      "item4": "Tailwind v4 内部机制",
+      "item5": "安静克制的仪表盘",
+      "item6": ""
+    },
+    "timeline": {
+      "eyebrow": "时间线",
+      "title": "走过的路",
+      "nowLabel": "现在",
+      "nowDetail": "把这个站点做成一个档案 —— 软件、游戏、艺术、文字。"
+    },
+    "cta": {
+      "title": "一起做点东西",
+      "body": "邮件常开，欢迎合作、游戏项目、安静的合同活儿。",
+      "button": "发起对话"
+    }
   },
   "Contact": {
     "eyebrow": "合作",

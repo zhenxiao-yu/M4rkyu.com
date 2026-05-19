@@ -44,4 +44,9 @@ export const profile = profileSchema.parse({
   // file is uploaded. Until then, the footer renders the link with a
   // "pending" badge.
   resumeUrl: "/resume.pdf",
+  githubHandle: "zhenxiao-yu",
+  // Skills + cities seed the /about dashboard. Empty arrays render
+  // graceful empty states so adding content needs no code changes.
+  skills: [],
+  cities: [],
 });
