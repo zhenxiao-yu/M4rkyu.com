@@ -1,7 +1,17 @@
 "use client";
 
 import { useId } from "react";
-import { RotateCcw, Search, X } from "lucide-react";
+import {
+  Clock,
+  Flame,
+  Layers,
+  MessageCircle,
+  RotateCcw,
+  Search,
+  X,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BlogActiveFilters } from "@/components/blog/blog-active-filters";
 import { BlogTagRail } from "@/components/blog/blog-tag-rail";
@@ -69,6 +79,22 @@ export function BlogToolbar({
     discussed: t("sortDiscussed"),
     quick: t("sortQuick"),
   };
+  const sortDescriptions: Record<BlogSortMode, string> = {
+    newest: t("sortNewestDescription"),
+    popular: t("sortPopularDescription"),
+    discussed: t("sortDiscussedDescription"),
+    quick: t("sortQuickDescription"),
+  };
+  const sortIcons: Record<BlogSortMode, LucideIcon> = {
+    newest: Clock,
+    popular: Flame,
+    discussed: MessageCircle,
+    quick: Zap,
+  };
+  const totalCategoryCount = categories.reduce(
+    (sum, entry) => sum + entry.count,
+    0,
+  );
 
   return (
     <section
@@ -122,12 +148,16 @@ export function BlogToolbar({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL_CATEGORIES_VALUE}>
+              <SelectItem
+                value={ALL_CATEGORIES_VALUE}
+                icon={<Layers className="size-3.5" aria-hidden="true" />}
+                trailing={totalCategoryCount}
+              >
                 {t("categoryAll")}
               </SelectItem>
               {categories.map(({ value, count }) => (
-                <SelectItem key={value} value={value}>
-                  {value} ({count})
+                <SelectItem key={value} value={value} trailing={count}>
+                  {value}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -144,10 +174,21 @@ export function BlogToolbar({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">{sortLabels.newest}</SelectItem>
-              <SelectItem value="popular">{sortLabels.popular}</SelectItem>
-              <SelectItem value="discussed">{sortLabels.discussed}</SelectItem>
-              <SelectItem value="quick">{sortLabels.quick}</SelectItem>
+              {(["newest", "popular", "discussed", "quick"] as const).map(
+                (mode) => {
+                  const Icon = sortIcons[mode];
+                  return (
+                    <SelectItem
+                      key={mode}
+                      value={mode}
+                      icon={<Icon className="size-3.5" aria-hidden="true" />}
+                      description={sortDescriptions[mode]}
+                    >
+                      {sortLabels[mode]}
+                    </SelectItem>
+                  );
+                },
+              )}
             </SelectContent>
           </Select>
 

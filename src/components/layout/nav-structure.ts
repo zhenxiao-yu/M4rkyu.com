@@ -1,9 +1,15 @@
-// Shared nav structure for desktop dropdowns + mobile sheet. Each group has its own `href` so the parent label navigates to its primary destination; the dropdown is secondary disclosure.
+// Shared nav structure for desktop dropdowns + mobile sheet. Each
+// group has its own `href` so the parent label navigates to its
+// primary destination; the dropdown is secondary disclosure.
+// `iconKey` resolves to a lucide icon via the static map in
+// `nav-dropdown-icon.tsx` — keeps the import graph tree-shakable.
 
 export interface NavDropdownItem {
   id: string;
   label: string;
   href: string;
+  description?: string;
+  iconKey?: string;
 }
 
 export interface NavDropdownGroup {
@@ -29,16 +35,24 @@ export interface NavStructure {
 export interface NavLabels {
   projects: string;
   work: string;
+  workDescription: string;
   games: string;
+  gamesDescription: string;
   gallery: string;
   archive: string;
+  archiveDescription: string;
   shop: string;
+  shopDescription: string;
   logs: string;
   blogs: string;
+  blogsDescription: string;
   notes: string;
+  notesDescription: string;
   resources: string;
   tools: string;
+  toolsDescription: string;
   links: string;
+  linksDescription: string;
   about: string;
   contact: string;
 }
@@ -51,8 +65,20 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         label: labels.projects,
         href: "/work",
         items: [
-          { id: "work", label: labels.work, href: "/work" },
-          { id: "games", label: labels.games, href: "/games" },
+          {
+            id: "work",
+            label: labels.work,
+            href: "/work",
+            description: labels.workDescription,
+            iconKey: "Briefcase",
+          },
+          {
+            id: "games",
+            label: labels.games,
+            href: "/games",
+            description: labels.gamesDescription,
+            iconKey: "Gamepad2",
+          },
         ],
       },
       {
@@ -60,8 +86,20 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         label: labels.gallery,
         href: "/archive",
         items: [
-          { id: "archive", label: labels.archive, href: "/archive" },
-          { id: "shop", label: labels.shop, href: "/shop" },
+          {
+            id: "archive",
+            label: labels.archive,
+            href: "/archive",
+            description: labels.archiveDescription,
+            iconKey: "Image",
+          },
+          {
+            id: "shop",
+            label: labels.shop,
+            href: "/shop",
+            description: labels.shopDescription,
+            iconKey: "Store",
+          },
         ],
       },
       {
@@ -69,8 +107,20 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         label: labels.logs,
         href: "/logs",
         items: [
-          { id: "blogs", label: labels.blogs, href: "/logs" },
-          { id: "notes", label: labels.notes, href: "/notes" },
+          {
+            id: "blogs",
+            label: labels.blogs,
+            href: "/logs",
+            description: labels.blogsDescription,
+            iconKey: "BookOpen",
+          },
+          {
+            id: "notes",
+            label: labels.notes,
+            href: "/notes",
+            description: labels.notesDescription,
+            iconKey: "StickyNote",
+          },
         ],
       },
       {
@@ -78,8 +128,20 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         label: labels.resources,
         href: "/resources",
         items: [
-          { id: "tools", label: labels.tools, href: "/resources/tools" },
-          { id: "links", label: labels.links, href: "/resources/links" },
+          {
+            id: "tools",
+            label: labels.tools,
+            href: "/resources/tools",
+            description: labels.toolsDescription,
+            iconKey: "Wrench",
+          },
+          {
+            id: "links",
+            label: labels.links,
+            href: "/resources/links",
+            description: labels.linksDescription,
+            iconKey: "Link2",
+          },
         ],
       },
     ],

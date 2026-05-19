@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { usePathname, Link } from "@/i18n/navigation";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
+import { NavDropdownIcon } from "./nav-dropdown-icon";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
 
 interface DesktopNavProps {
@@ -65,40 +66,85 @@ export function DesktopNav({
                 />
               </Link>
 
-              {/* Hover/focus-within popover. `pt-2` lives inside the
+              {/* Hover/focus-within popover. `pt-3` lives inside the
                * absolute wrapper so the gap between trigger and panel
                * is a continuous hover target — moving the cursor down
                * does not collapse the menu. */}
-              <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-(--motion-fast) ease-(--ease-premium) group-hover/menu:visible group-hover/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:opacity-100">
-                <ul
+              <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition-[opacity,transform] duration-(--motion-fast) ease-(--ease-premium) group-hover/menu:visible group-hover/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:opacity-100 motion-safe:translate-y-1 motion-safe:group-hover/menu:translate-y-0 motion-safe:group-focus-within/menu:translate-y-0">
+                <div
                   role="menu"
                   aria-label={group.label}
-                  className="flex w-56 flex-col rounded-md border border-border/80 bg-popover p-1 text-popover-foreground shadow-xl shadow-black/15 dark:shadow-black/40"
+                  className="w-[20rem] overflow-hidden rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-2xl shadow-black/20 backdrop-blur-xl dark:shadow-black/50"
                 >
-                  {group.items.map((item) => (
-                    <li key={item.id} role="none">
-                      <Link
-                        role="menuitem"
-                        href={item.href}
-                        locale={locale}
-                        className={cn(
-                          "flex items-center justify-between gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:bg-muted focus-visible:text-foreground",
-                          isActive(item.href)
-                            ? "text-foreground"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        <span className="font-medium">{item.label}</span>
-                        <span
-                          aria-hidden="true"
-                          className="font-mono text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground/70"
-                        >
-                          {item.href}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                  <div className="flex items-center justify-between px-2.5 py-1.5">
+                    <span className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-muted-foreground">
+                      {group.label}
+                    </span>
+                    <Link
+                      href={group.href}
+                      locale={locale}
+                      role="menuitem"
+                      className={cn(
+                        "inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+                        FOCUS_RING,
+                      )}
+                    >
+                      <span>Overview</span>
+                      <ArrowUpRight aria-hidden="true" className="size-2.5" />
+                    </Link>
+                  </div>
+                  <ul className="grid gap-0.5">
+                    {group.items.map((item) => {
+                      const active = isActive(item.href);
+                      return (
+                        <li key={item.id} role="none">
+                          <Link
+                            role="menuitem"
+                            href={item.href}
+                            locale={locale}
+                            className={cn(
+                              "group/item flex items-start gap-3 rounded-lg px-2.5 py-2.5 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/70 focus-visible:bg-muted/70 focus-visible:outline-none",
+                              active && "bg-muted/50",
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "mt-0.5 grid size-9 shrink-0 place-items-center rounded-md border border-border/70 bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover/item:border-ring/60 group-hover/item:text-foreground group-focus-visible/item:border-ring/60 group-focus-visible/item:text-foreground",
+                                active && "border-ring/60 text-foreground",
+                              )}
+                            >
+                              <NavDropdownIcon
+                                iconKey={item.iconKey}
+                                className="size-4"
+                              />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span
+                                className={cn(
+                                  "flex items-center gap-2 text-sm font-medium leading-tight",
+                                  active
+                                    ? "text-foreground"
+                                    : "text-foreground/95",
+                                )}
+                              >
+                                {item.label}
+                                <ArrowUpRight
+                                  aria-hidden="true"
+                                  className="size-3 text-muted-foreground/0 transition-[color,transform] duration-(--motion-fast) ease-(--ease-premium) group-hover/item:-translate-y-0.5 group-hover/item:translate-x-0.5 group-hover/item:text-ring group-focus-visible/item:text-ring"
+                                />
+                              </span>
+                              {item.description ? (
+                                <span className="mt-0.5 block text-[0.7rem] leading-snug text-muted-foreground">
+                                  {item.description}
+                                </span>
+                              ) : null}
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
             </li>
           );

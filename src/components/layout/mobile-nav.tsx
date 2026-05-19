@@ -20,6 +20,7 @@ import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
+import { NavDropdownIcon } from "./nav-dropdown-icon";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
 
 interface MobileNavProps {
@@ -276,30 +277,58 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                     </div>
                     <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
                       <ul className="mt-1 grid gap-1 rounded-md border border-border/60 bg-background/45 p-2">
-                        {group.items.map((item) => (
-                          <li key={item.id}>
-                            <SheetClose asChild>
-                              <Link
-                                href={item.href}
-                                locale={locale}
-                                className={cn(
-                                  "flex min-h-11 items-center justify-between gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground",
-                                  FOCUS_RING_INSET,
-                                  isActive(item.href)
-                                    ? "text-foreground"
-                                    : "text-muted-foreground",
-                                )}
-                              >
-                                <span className="font-medium">
-                                  {item.label}
-                                </span>
-                                <span className="truncate font-mono text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground/75">
-                                  {item.href}
-                                </span>
-                              </Link>
-                            </SheetClose>
-                          </li>
-                        ))}
+                        {group.items.map((item) => {
+                          const itemActive = isActive(item.href);
+                          return (
+                            <li key={item.id}>
+                              <SheetClose asChild>
+                                <Link
+                                  href={item.href}
+                                  locale={locale}
+                                  className={cn(
+                                    "group/sub flex min-h-14 items-center gap-3 rounded-md px-3 py-2.5 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50",
+                                    FOCUS_RING_INSET,
+                                    itemActive && "bg-muted/40",
+                                  )}
+                                >
+                                  <span
+                                    className={cn(
+                                      "grid size-9 shrink-0 place-items-center rounded-md border border-border/70 bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover/sub:border-ring/55 group-hover/sub:text-foreground",
+                                      itemActive &&
+                                        "border-ring/55 text-foreground",
+                                    )}
+                                  >
+                                    <NavDropdownIcon
+                                      iconKey={item.iconKey}
+                                      className="size-4"
+                                    />
+                                  </span>
+                                  <span className="min-w-0 flex-1">
+                                    <span
+                                      className={cn(
+                                        "block text-sm font-medium leading-tight",
+                                        itemActive
+                                          ? "text-foreground"
+                                          : "text-foreground/95",
+                                      )}
+                                    >
+                                      {item.label}
+                                    </span>
+                                    {item.description ? (
+                                      <span className="mt-0.5 block text-[0.7rem] leading-snug text-muted-foreground">
+                                        {item.description}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                  <ArrowUpRight
+                                    aria-hidden="true"
+                                    className="size-4 text-muted-foreground/60 transition-[color,transform] duration-(--motion-fast) ease-(--ease-premium) group-hover/sub:-translate-y-0.5 group-hover/sub:translate-x-0.5 group-hover/sub:text-ring"
+                                  />
+                                </Link>
+                              </SheetClose>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </CollapsibleContent>
                   </Collapsible>

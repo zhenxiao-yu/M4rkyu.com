@@ -22,7 +22,15 @@
     "notes": "笔记",
     "shop": "商店",
     "tools": "工具",
-    "links": "链接"
+    "links": "链接",
+    "workDescription": "精选案例与项目记录",
+    "gamesDescription": "可玩原型与游戏开发日志",
+    "archiveDescription": "影像合集与视觉实验",
+    "shopDescription": "印刷品、海报和限量物件",
+    "blogsDescription": "长篇开发日志与现场笔记",
+    "notesDescription": "短观察、链接与代码片段",
+    "toolsDescription": "38 款浏览器内开发工具",
+    "linksDescription": "每日使用的开发与设计书签"
   },
   "Theme": {
     "label": "主题",
@@ -416,7 +424,11 @@
     "metaComments": "评论数",
     "viewModeLabel": "视图",
     "viewModeList": "列表",
-    "viewModeGrid": "网格"
+    "viewModeGrid": "网格",
+    "sortNewestDescription": "按日期排序，最新优先",
+    "sortPopularDescription": "按 dev.to 反应数排序",
+    "sortDiscussedDescription": "按评论数排序",
+    "sortQuickDescription": "5 分钟内可读优先"
   },
   "About": {
     "title": "关于",
@@ -445,16 +457,44 @@
       "openOnGithub": "在 GitHub 打开",
       "loadFailed": "加载失败 —— 下次访问再试。"
     },
-    "nowPlaying": {
-      "title": "在听",
-      "nowPlaying": "正在播放",
-      "recentlyPlayed": "最近播放",
-      "notPlaying": "无播放",
+    "steam": {
+      "eyebrow": "steam",
+      "title": "在玩",
+      "playingNow": "正在游玩",
+      "recent": "最近在玩",
+      "status": {
+        "inGame": "游戏中",
+        "online": "在线",
+        "offline": "离线"
+      },
+      "games": "{count, plural, other {# 款游戏}}",
+      "hours": "{hours, plural, other {# 小时}}",
+      "hours2w": "近两周 {hours} 小时",
+      "level": "Lv {level}",
+      "openOnSteam": "打开 Steam 主页",
       "loading": "—",
-      "live": "实时",
-      "openOnSpotify": "在 Spotify 打开",
-      "openTrack": "在 Spotify 打开 {track}",
-      "loadFailed": "无法获取播放状态"
+      "loadFailed": "无法获取 Steam 状态"
+    },
+    "currently": {
+      "title": "最近",
+      "empty": "暂无状态条目 —— 在 profile.currently 添加。",
+      "prev": "上一项",
+      "next": "下一项",
+      "open": "打开",
+      "kinds": {
+        "building": "在做",
+        "reading": "在读",
+        "listening": "在听",
+        "watching": "在看"
+      }
+    },
+    "charts": {
+      "eyebrow": "github / 信号",
+      "title": "信号",
+      "languagesTitle": "语言 · 字节占比",
+      "commitsTitle": "近 8 周提交",
+      "commits8w": "{count, plural, other {# 次提交}} · 近 8 周",
+      "loadFailed": "图表暂不可用"
     },
     "travel": {
       "eyebrow": "旅行记录",

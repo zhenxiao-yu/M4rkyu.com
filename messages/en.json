@@ -22,7 +22,15 @@
     "notes": "Notes",
     "shop": "Shop",
     "tools": "Tools",
-    "links": "Links"
+    "links": "Links",
+    "workDescription": "Selected case studies and write-ups",
+    "gamesDescription": "Playable prototypes and game-dev logs",
+    "archiveDescription": "Photo collections and visual experiments",
+    "shopDescription": "Prints, posters, and one-off objects",
+    "blogsDescription": "Long-form devlogs and field notes",
+    "notesDescription": "Short observations, links, snippets",
+    "toolsDescription": "38 in-browser developer utilities",
+    "linksDescription": "Daily-use dev and design bookmarks"
   },
   "Theme": {
     "label": "Theme",
@@ -416,7 +424,11 @@
     "metaComments": "Comments",
     "viewModeLabel": "View",
     "viewModeList": "List",
-    "viewModeGrid": "Grid"
+    "viewModeGrid": "Grid",
+    "sortNewestDescription": "By date, most recent first",
+    "sortPopularDescription": "Ranked by reactions on dev.to",
+    "sortDiscussedDescription": "Ranked by comment count",
+    "sortQuickDescription": "Sub-5-minute reads first"
   },
   "About": {
     "title": "About",
@@ -445,16 +457,44 @@
       "openOnGithub": "Open on GitHub",
       "loadFailed": "Couldn't load — retry on next visit."
     },
-    "nowPlaying": {
-      "title": "Listening",
-      "nowPlaying": "Now playing",
-      "recentlyPlayed": "Recently played",
-      "notPlaying": "Not playing",
+    "steam": {
+      "eyebrow": "steam",
+      "title": "Playing",
+      "playingNow": "Playing now",
+      "recent": "Recent",
+      "status": {
+        "inGame": "In-game",
+        "online": "Online",
+        "offline": "Offline"
+      },
+      "games": "{count, plural, one {# game} other {# games}}",
+      "hours": "{hours, plural, one {# hr} other {# hrs}}",
+      "hours2w": "{hours} hrs · last 2 wks",
+      "level": "Lv {level}",
+      "openOnSteam": "Open Steam profile",
       "loading": "—",
-      "live": "Live",
-      "openOnSpotify": "Open on Spotify",
-      "openTrack": "Open {track} on Spotify",
-      "loadFailed": "Audio status unavailable"
+      "loadFailed": "Steam status unavailable"
+    },
+    "currently": {
+      "title": "Currently",
+      "empty": "No status entries yet — add to profile.currently.",
+      "prev": "Previous",
+      "next": "Next",
+      "open": "Open",
+      "kinds": {
+        "building": "Building",
+        "reading": "Reading",
+        "listening": "Listening",
+        "watching": "Watching"
+      }
+    },
+    "charts": {
+      "eyebrow": "github / signals",
+      "title": "Signal",
+      "languagesTitle": "Languages by bytes",
+      "commitsTitle": "Commits · past 8 weeks",
+      "commits8w": "{count, plural, one {# commit} other {# commits}} · past 8 weeks",
+      "loadFailed": "Charts unavailable"
     },
     "travel": {
       "eyebrow": "travel log",
