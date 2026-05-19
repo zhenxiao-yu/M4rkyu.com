@@ -114,13 +114,40 @@ export const profileSchema = z.object({
         // WGS84 decimal coordinates; coords.com has a free picker.
         lat: z.number().min(-90).max(90),
         lng: z.number().min(-180).max(180),
-        // ISO-ish ("2024-08") so the timeline can sort.
-        visitedAt: z.string(),
+        // Optional ISO-ish ("2024-08") so the timeline can sort. When
+        // omitted, the travel map falls back to array insertion order
+        // and hides the per-entry date in the list.
+        visitedAt: z.string().optional(),
         // Optional: short note shown on hover/tap.
         note: z.string().optional(),
       }),
     )
     .default([]),
+  // "Currently into" status items — surfaced in the about page
+  // narrative carousel. Each entry becomes one auto-rotating slide.
+  // Kept short and editable; no API fetch.
+  currently: z
+    .array(
+      z.object({
+        kind: z.enum(["building", "reading", "listening", "watching"]),
+        label: z.string(),
+        detail: z.string().optional(),
+        url: z.string().url().optional(),
+      }),
+    )
+    .default([]),
+  // Optional portrait for the /about bento. When unset the card
+  // renders a styled placeholder slot so the layout stays intact
+  // before the image is delivered.
+  portrait: z
+    .object({
+      src: z.string(),
+      alt: z.string(),
+      focal: z
+        .enum(["top", "center", "bottom"])
+        .default("center"),
+    })
+    .optional(),
 });
 
 export const galleryAspectSchema = z.enum([

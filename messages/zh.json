@@ -488,6 +488,11 @@
         "watching": "在看"
       }
     },
+    "portrait": {
+      "eyebrow": "portrait",
+      "title": "Mark · 2026",
+      "placeholder": "肖像 —— 放置文件到 /public"
+    },
     "charts": {
       "eyebrow": "github / 信号",
       "title": "信号",

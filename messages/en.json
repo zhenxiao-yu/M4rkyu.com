@@ -488,6 +488,11 @@
         "watching": "Watching"
       }
     },
+    "portrait": {
+      "eyebrow": "portrait",
+      "title": "Mark, 2026",
+      "placeholder": "PORTRAIT — DROP A FILE AT /public"
+    },
     "charts": {
       "eyebrow": "github / signals",
       "title": "Signal",

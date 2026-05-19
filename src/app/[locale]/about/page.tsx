@@ -8,11 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BioCard } from "@/components/about/bio-card";
 import { GithubStatsCard } from "@/components/about/github-stats-card";
-import { NowPlayingCard } from "@/components/about/now-playing-card";
+import { SteamStatsCard } from "@/components/about/steam-stats-card";
 import { SkillsRail } from "@/components/about/skills-rail";
 import { TravelMapCard } from "@/components/about/travel-map-card";
 import { ObsessionsCard } from "@/components/about/obsessions-card";
 import { TimelineCard } from "@/components/about/timeline-card";
+import { BentoFx, BentoGrid } from "@/components/about/bento-fx";
+import { CurrentlyCarouselCard } from "@/components/about/currently-carousel-card";
+import { GithubChartsCard } from "@/components/about/github-charts-card";
+import { PortraitCard } from "@/components/about/portrait-card";
+import { GlitchText } from "@/components/motion/glitch-text";
 import { profile } from "@/content/profile";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -55,7 +60,7 @@ export default async function AboutPage({
                 {t("metaCard.eyebrow")}
               </p>
               <h1 className="font-display text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-none tracking-tight">
-                {profile.name.toUpperCase()}
+                <GlitchText>{profile.name.toUpperCase()}</GlitchText>
               </h1>
               <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 <MapPin className="size-3" aria-hidden="true" />
@@ -75,41 +80,78 @@ export default async function AboutPage({
           {t("intro")}
         </p>
 
-        {/* Bento grid. Mobile = single col; md = 2 cols (Bio/GitHub,
-         * Skills/NowPlaying, Travel/Obsessions, Timeline/CTA); lg = 4 cols
-         * with span hints so the wider cards reclaim their breathing room. */}
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          <BioCard locale={locale} className="md:col-span-2 lg:col-span-2" />
-          <GithubStatsCard className="md:col-span-2 lg:col-span-2" />
+        {/* Bento grid. Mobile = single col; md = 2 cols; lg = 4 cols
+         * across 6 rows. Layout reads left-to-right, top-to-bottom:
+         *   Row 1  ─ Portrait(1)        Bio(3)
+         *   Row 2  ─ GithubStats(2)     SkillsRail(2)
+         *   Row 3  ─ TravelMap(3)       SteamStats(1)
+         *   Row 4  ─ Timeline(2)        GithubCharts(2)
+         *   Row 5  ─ Obsessions(2)      Currently(2)
+         *   Row 6  ─ Contact CTA(4)
+         * The TravelMap opts out of the shared dots pattern because
+         * it already renders an opaque map underneath. */}
+        <BentoGrid className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <BentoFx pattern="dots" className="md:col-span-1 lg:col-span-1">
+            <PortraitCard locale={locale} />
+          </BentoFx>
+          <BentoFx pattern="dots" className="md:col-span-1 lg:col-span-3">
+            <BioCard locale={locale} />
+          </BentoFx>
 
-          <SkillsRail locale={locale} className="md:col-span-2 lg:col-span-3" />
-          <NowPlayingCard className="lg:col-span-1" />
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <GithubStatsCard />
+          </BentoFx>
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <SkillsRail locale={locale} />
+          </BentoFx>
 
-          <TravelMapCard locale={locale} className="md:col-span-2 lg:col-span-3" />
-          <ObsessionsCard locale={locale} className="lg:col-span-1" />
+          <BentoFx
+            pattern="none"
+            spotlight={false}
+            className="md:col-span-2 lg:col-span-3"
+          >
+            <TravelMapCard locale={locale} />
+          </BentoFx>
+          <BentoFx pattern="dots" className="lg:col-span-1">
+            <SteamStatsCard />
+          </BentoFx>
 
-          <TimelineCard locale={locale} className="lg:col-span-2" />
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <TimelineCard locale={locale} />
+          </BentoFx>
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <GithubChartsCard />
+          </BentoFx>
 
-          <Card className="bg-card/80 md:col-span-2 lg:col-span-2">
-            <CardContent className="grid h-full content-between gap-4 p-5">
-              <div className="grid gap-2">
-                <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-                  /contact
-                </p>
-                <h2 className="text-lg font-semibold">{t("cta.title")}</h2>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  {t("cta.body")}
-                </p>
-              </div>
-              <Button asChild className="w-fit">
-                <Link href="/contact" locale={locale}>
-                  {t("cta.button")}
-                  <ArrowUpRight aria-hidden="true" className="size-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <ObsessionsCard locale={locale} />
+          </BentoFx>
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
+            <CurrentlyCarouselCard />
+          </BentoFx>
+
+          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-4">
+            <Card className="h-full bg-card/80">
+              <CardContent className="grid h-full gap-4 p-5 sm:flex sm:items-center sm:justify-between">
+                <div className="grid gap-2">
+                  <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+                    /contact
+                  </p>
+                  <h2 className="text-lg font-semibold">{t("cta.title")}</h2>
+                  <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+                    {t("cta.body")}
+                  </p>
+                </div>
+                <Button asChild className="w-fit shrink-0">
+                  <Link href="/contact" locale={locale}>
+                    {t("cta.button")}
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </BentoFx>
+        </BentoGrid>
       </PageSection>
     </PageShell>
   );
