@@ -9,11 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Link } from "@/i18n/navigation";
-import { galleryCollections, galleryItems } from "@/content/gallery";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { getSavedKeysOfType } from "@/lib/social/saves";
+import { getGallerySource } from "@/lib/gallery/source";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { GalleryGrid } from "./_client";
 
@@ -39,11 +39,13 @@ export default async function ArchivePage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Gallery" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
-  const [user, savedSlugs] = await Promise.all([
+  const [user, savedSlugs, gallery] = await Promise.all([
     getCurrentUser(),
     getSavedKeysOfType("gallery"),
+    getGallerySource(),
   ]);
   const signedIn = Boolean(user);
+  const { collections: galleryCollections, items: galleryItems } = gallery;
 
   return (
     <PageShell locale={locale}>

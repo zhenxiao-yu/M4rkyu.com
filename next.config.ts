@@ -68,6 +68,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "media2.dev.to" },
       { protocol: "https", hostname: "media3.dev.to" },
       { protocol: "https", hostname: "dev-to-uploads.s3.amazonaws.com" },
+      // Supabase Storage CDN for the gallery-images bucket. Single
+      // hostname per Supabase project, wildcard covers any project ref.
+      { protocol: "https", hostname: "*.supabase.co" },
     ],
   },
   experimental: {
