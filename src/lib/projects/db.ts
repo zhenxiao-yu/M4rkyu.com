@@ -43,30 +43,45 @@ export interface DbProjectRow {
 const SELECT_COLUMNS =
   "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
 
+// `createSupabaseServerClient` reads request cookies, which throws
+// when Next is enumerating `generateStaticParams` /
+// `generateImageMetadata` / `sitemap` at build time (no request
+// context). We try/catch around the cookies-using setup and fall
+// back to an empty result — `getProjectsSource` then returns the
+// static `allProjects` array, which is the intended build-time
+// behaviour until the projects table is the source of truth.
 export const getDbProjects = cache(async (): Promise<DbProjectRow[]> => {
   if (!isSupabaseConfigured()) return [];
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("projects")
-    .select(SELECT_COLUMNS)
-    .order("sort_order", { ascending: true })
-    .order("year", { ascending: false })
-    .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data as DbProjectRow[];
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select(SELECT_COLUMNS)
+      .order("sort_order", { ascending: true })
+      .order("year", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error || !data) return [];
+    return data as DbProjectRow[];
+  } catch {
+    return [];
+  }
 });
 
 export const getDbProjectBySlug = cache(
   async (slug: string): Promise<DbProjectRow | null> => {
     if (!isSupabaseConfigured()) return null;
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from("projects")
-      .select(SELECT_COLUMNS)
-      .eq("slug", slug)
-      .maybeSingle();
-    if (error || !data) return null;
-    return data as DbProjectRow;
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data, error } = await supabase
+        .from("projects")
+        .select(SELECT_COLUMNS)
+        .eq("slug", slug)
+        .maybeSingle();
+      if (error || !data) return null;
+      return data as DbProjectRow;
+    } catch {
+      return null;
+    }
   },
 );
 
