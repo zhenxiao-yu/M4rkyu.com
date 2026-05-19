@@ -52,7 +52,7 @@ export function ShadowGenerator() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
+    <div className="grid gap-6 md:grid-cols-[1fr_18rem]">
       <div className="grid gap-5 rounded-md border border-border/60 bg-background/40 p-8">
         <div className="grid place-items-center">
           <div

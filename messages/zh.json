@@ -430,7 +430,8 @@
       "repos": "项目",
       "stars": "Stars",
       "followers": "关注",
-      "openOnGithub": "在 GitHub 打开"
+      "openOnGithub": "在 GitHub 打开",
+      "loadFailed": "加载失败 —— 下次访问再试。"
     },
     "nowPlaying": {
       "title": "在听",
@@ -440,7 +441,8 @@
       "loading": "—",
       "live": "实时",
       "openOnSpotify": "在 Spotify 打开",
-      "openTrack": "在 Spotify 打开 {track}"
+      "openTrack": "在 Spotify 打开 {track}",
+      "loadFailed": "无法获取播放状态"
     },
     "travel": {
       "eyebrow": "旅行记录",
@@ -871,7 +873,11 @@
     "noImage": "未上传图片",
     "noCaption": "没有说明。",
     "deleteItem": "删除",
+    "deleteItemConfirm": "删除「{title}」？将永久移除该条目及其图像。",
     "deleteCollection": "删除集合",
+    "deleteCollectionConfirm": "删除集合「{title}」及其下全部条目？此操作无法撤销。",
+    "saving": "保存中…",
+    "uploading": "上传中…",
     "deleteWarning": "将永久删除该集合下所有条目以及对应的存储对象，无法撤销。",
     "dangerZone": "危险区",
     "collectionForm": "集合设置",
@@ -921,6 +927,7 @@
     "noPitch": "暂无简介。",
     "required": "必填",
     "deleteProject": "删除项目",
+    "deleteProjectConfirm": "从数据库中删除「{title}」？公开 /work 会回退到静态数组。此操作不可撤销。",
     "deleteWarning": "永久删除该项目。公开 /work 会回退到静态数组。此操作不可撤销。",
     "dangerZone": "危险区",
     "section": {

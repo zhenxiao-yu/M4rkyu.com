@@ -40,6 +40,7 @@ export function CursorTrail({
     const target = { x: -100, y: -100 };
     let active = false;
     let raf = 0;
+    let alive = true;
 
     function onMove(event: PointerEvent) {
       target.x = event.clientX;
@@ -61,7 +62,24 @@ export function CursorTrail({
       active = false;
     }
 
+    // Park the trail off-screen on resize so the dots don't sit at
+    // stale coordinates after device rotation / viewport change.
+    function onResize() {
+      target.x = -100;
+      target.y = -100;
+      active = false;
+      for (const pos of positions) {
+        pos.x = -100;
+        pos.y = -100;
+      }
+    }
+
+    const containerEl = container;
+
     function tick() {
+      // Guard against the cleanup running between two RAF frames during
+      // a client-side navigation — the container may already be detached.
+      if (!alive || !containerEl.isConnected) return;
       let prevX = target.x;
       let prevY = target.y;
       for (let i = 0; i < positions.length; i++) {
@@ -79,13 +97,16 @@ export function CursorTrail({
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave, { passive: true });
     document.addEventListener("pointerleave", onLeave, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     raf = requestAnimationFrame(tick);
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("resize", onResize);
     };
   }, [ease, size]);
 

@@ -430,7 +430,8 @@
       "repos": "Repos",
       "stars": "Stars",
       "followers": "Follows",
-      "openOnGithub": "Open on GitHub"
+      "openOnGithub": "Open on GitHub",
+      "loadFailed": "Couldn't load — retry on next visit."
     },
     "nowPlaying": {
       "title": "Listening",
@@ -440,7 +441,8 @@
       "loading": "—",
       "live": "Live",
       "openOnSpotify": "Open on Spotify",
-      "openTrack": "Open {track} on Spotify"
+      "openTrack": "Open {track} on Spotify",
+      "loadFailed": "Audio status unavailable"
     },
     "travel": {
       "eyebrow": "travel log",
@@ -871,7 +873,11 @@
     "noImage": "No image uploaded",
     "noCaption": "No caption.",
     "deleteItem": "Delete",
+    "deleteItemConfirm": "Delete \"{title}\"? This permanently removes the item and its image.",
     "deleteCollection": "Delete collection",
+    "deleteCollectionConfirm": "Delete collection \"{title}\" and every item inside it? This cannot be undone.",
+    "saving": "Saving…",
+    "uploading": "Uploading…",
     "deleteWarning": "Removes every item in this collection and their storage objects. Cannot be undone.",
     "dangerZone": "Danger zone",
     "collectionForm": "Collection",
@@ -921,6 +927,7 @@
     "noPitch": "No short pitch yet.",
     "required": "Required",
     "deleteProject": "Delete project",
+    "deleteProjectConfirm": "Delete \"{title}\" from the database? Public /work falls back to the static array. Cannot be undone.",
     "deleteWarning": "Permanently removes this project. Public /work falls back to the static array. Cannot be undone.",
     "dangerZone": "Danger zone",
     "section": {

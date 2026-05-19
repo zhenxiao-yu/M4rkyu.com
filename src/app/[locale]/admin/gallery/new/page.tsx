@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { AdminNav } from "../../_components/admin-nav";
 import { createCollectionAction } from "@/lib/gallery/admin";
+import { SubmitButton } from "@/components/admin/submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -94,9 +95,7 @@ export default async function NewCollectionPage({
                     {t("cancel")}
                   </Link>
                 </Button>
-                <Button type="submit" size="sm">
-                  {t("create")}
-                </Button>
+                <SubmitButton size="sm">{t("create")}</SubmitButton>
               </div>
             </form>
           </CardContent>

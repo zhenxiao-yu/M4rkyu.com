@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/admin/submit-button";
 import type { Project } from "@/content/schemas";
 
 // Shared form used by both /admin/projects/new and /admin/projects/[slug].
@@ -335,9 +336,9 @@ export function ProjectForm({
         <Button asChild variant="ghost" size="sm">
           <a href={cancelHref}>{labels.cancel}</a>
         </Button>
-        <Button type="submit" size="sm">
+        <SubmitButton size="sm">
           {labels.submit}
-        </Button>
+        </SubmitButton>
       </div>
     </form>
   );
@@ -355,10 +356,13 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 function Row({ cols, children }: { cols: 2 | 3; children: ReactNode }) {
+  // 3-col rows wait until md (768px) so labels + textareas don't get
+  // crushed at 360px; 2-col rows kick in at sm (640px), which is
+  // already roomy enough for two short fields.
   return (
     <div
       className={
-        cols === 2 ? "grid gap-3 sm:grid-cols-2" : "grid gap-3 sm:grid-cols-3"
+        cols === 2 ? "grid gap-3 sm:grid-cols-2" : "grid gap-3 md:grid-cols-3"
       }
     >
       {children}

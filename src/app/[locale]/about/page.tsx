@@ -75,20 +75,22 @@ export default async function AboutPage({
           {t("intro")}
         </p>
 
-        {/* Bento grid. Mobile = stack; lg = 4-column with span hints. */}
-        <div className="mt-8 grid gap-5 lg:grid-cols-4">
-          <BioCard locale={locale} className="lg:col-span-2" />
-          <GithubStatsCard className="lg:col-span-2" />
+        {/* Bento grid. Mobile = single col; md = 2 cols (Bio/GitHub,
+         * Skills/NowPlaying, Travel/Obsessions, Timeline/CTA); lg = 4 cols
+         * with span hints so the wider cards reclaim their breathing room. */}
+        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <BioCard locale={locale} className="md:col-span-2 lg:col-span-2" />
+          <GithubStatsCard className="md:col-span-2 lg:col-span-2" />
 
-          <SkillsRail locale={locale} className="lg:col-span-3" />
+          <SkillsRail locale={locale} className="md:col-span-2 lg:col-span-3" />
           <NowPlayingCard className="lg:col-span-1" />
 
-          <TravelMapCard locale={locale} className="lg:col-span-3" />
+          <TravelMapCard locale={locale} className="md:col-span-2 lg:col-span-3" />
           <ObsessionsCard locale={locale} className="lg:col-span-1" />
 
           <TimelineCard locale={locale} className="lg:col-span-2" />
 
-          <Card className="bg-card/80 lg:col-span-2">
+          <Card className="bg-card/80 md:col-span-2 lg:col-span-2">
             <CardContent className="grid h-full content-between gap-4 p-5">
               <div className="grid gap-2">
                 <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">

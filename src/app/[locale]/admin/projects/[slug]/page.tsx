@@ -18,6 +18,7 @@ import {
   dbProjectRowToProject,
   getDbProjectBySlug,
 } from "@/lib/projects/db";
+import { DeleteButton } from "@/components/admin/delete-button";
 import { buildProjectFormLabels } from "../_labels";
 
 export const dynamic = "force-dynamic";
@@ -73,14 +74,16 @@ export default async function EditProjectPage({ params }: PageProps) {
           <CardContent>
             <form action={deleteProjectAction}>
               <input type="hidden" name="id" value={row.id} />
-              <Button
-                type="submit"
+              <DeleteButton
                 variant="outline"
                 size="sm"
                 className="w-full border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                confirmMessage={t("deleteProjectConfirm", {
+                  title: project.title,
+                })}
               >
                 {t("deleteProject")}
-              </Button>
+              </DeleteButton>
               <p className="mt-2 text-[0.7rem] text-muted-foreground">
                 {t("deleteWarning")}
               </p>

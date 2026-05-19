@@ -252,7 +252,7 @@ export function ProjectsClient({
           </span>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-[8rem_8rem_1fr]">
+        <div className="grid gap-3 md:grid-cols-[8rem_8rem_1fr]">
           <label className="grid gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
               {t("yearLabel")}
@@ -501,7 +501,7 @@ function ActiveChip({
         onClick={onRemove}
         aria-label={`${removeLabel}: ${label}`}
         className={cn(
-          "grid size-5 place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
+          "-mr-0.5 grid size-7 place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
           FOCUS_RING_INSET,
         )}
       >

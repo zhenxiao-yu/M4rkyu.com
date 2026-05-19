@@ -12,10 +12,12 @@ import type { NowPlaying } from "@/app/api/about/spotify/now-playing/route";
 // render a quiet empty state. No PII leaves the server.
 const POLL_INTERVAL_MS = 30_000;
 
+type LoadState = "loading" | "ready" | "error";
+
 export function NowPlayingCard({ className }: { className?: string }) {
   const t = useTranslations("About.nowPlaying");
   const [data, setData] = useState<NowPlaying | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [loadState, setLoadState] = useState<LoadState>("loading");
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -23,13 +25,14 @@ export function NowPlayingCard({ className }: { className?: string }) {
     async function load() {
       try {
         const r = await fetch("/api/about/spotify/now-playing");
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const json = (await r.json()) as NowPlaying;
         if (cancelled) return;
         setData(json);
-        setLoaded(true);
+        setLoadState("ready");
       } catch {
         if (cancelled) return;
-        setLoaded(true);
+        setLoadState("error");
       }
     }
     load();
@@ -39,6 +42,8 @@ export function NowPlayingCard({ className }: { className?: string }) {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+
+  const loaded = loadState !== "loading";
 
   const hasTrack = Boolean(data?.track);
   const heading = data?.isPlaying ? t("nowPlaying") : t("recentlyPlayed");
@@ -52,11 +57,13 @@ export function NowPlayingCard({ className }: { className?: string }) {
         <CardTitle className="flex items-center gap-2 text-base">
           <Music2 className="size-4" aria-hidden="true" />
           <span className="truncate">
-            {loaded
-              ? hasTrack
-                ? data?.track
-                : t("notPlaying")
-              : t("loading")}
+            {loadState === "error"
+              ? t("loadFailed")
+              : loaded
+                ? hasTrack
+                  ? data?.track
+                  : t("notPlaying")
+                : t("loading")}
           </span>
         </CardTitle>
       </CardHeader>

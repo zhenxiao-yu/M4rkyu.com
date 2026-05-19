@@ -22,6 +22,8 @@ import {
   deleteItemAction,
   updateCollectionAction,
 } from "@/lib/gallery/admin";
+import { DeleteButton } from "@/components/admin/delete-button";
+import { SubmitButton } from "@/components/admin/submit-button";
 import { AdminNav } from "../../_components/admin-nav";
 
 export const dynamic = "force-dynamic";
@@ -60,7 +62,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
           </Button>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_22rem]">
+        <div className="grid gap-8 xl:grid-cols-[1fr_22rem]">
           {/* Items grid */}
           <section className="grid gap-4">
             <div className="flex items-center justify-between gap-3">
@@ -124,14 +126,16 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                           </p>
                           <form action={deleteItemAction}>
                             <input type="hidden" name="id" value={item.id} />
-                            <Button
-                              type="submit"
+                            <DeleteButton
                               variant="outline"
                               size="sm"
                               className="w-full text-destructive hover:text-destructive"
+                              confirmMessage={t("deleteItemConfirm", {
+                                title: item.title,
+                              })}
                             >
                               {t("deleteItem")}
-                            </Button>
+                            </DeleteButton>
                           </form>
                         </CardContent>
                       </Card>
@@ -177,7 +181,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                     name="alt"
                     hint={t("altHint")}
                   />
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="grid gap-2 md:grid-cols-2">
                     <Select
                       label={t("typeLabel")}
                       name="type"
@@ -208,10 +212,14 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                       { value: "coming-soon", label: t("status.comingSoon") },
                     ]}
                   />
-                  <Button type="submit" size="sm" className="mt-1">
+                  <SubmitButton
+                    size="sm"
+                    className="mt-1"
+                    pendingLabel={t("uploading")}
+                  >
                     <ImagePlus className="size-4" aria-hidden="true" />
                     {t("addItem")}
-                  </Button>
+                  </SubmitButton>
                 </form>
               </CardContent>
             </Card>
@@ -268,9 +276,13 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                     />
                     <span>{t("featured")}</span>
                   </label>
-                  <Button type="submit" size="sm" variant="outline">
+                  <SubmitButton
+                    size="sm"
+                    variant="outline"
+                    pendingLabel={t("saving")}
+                  >
                     {t("save")}
-                  </Button>
+                  </SubmitButton>
                 </form>
               </CardContent>
             </Card>
@@ -284,14 +296,16 @@ export default async function CollectionDetailPage({ params }: PageProps) {
               <CardContent>
                 <form action={deleteCollectionAction}>
                   <input type="hidden" name="id" value={collection.id} />
-                  <Button
-                    type="submit"
+                  <DeleteButton
                     variant="outline"
                     size="sm"
                     className="w-full border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    confirmMessage={t("deleteCollectionConfirm", {
+                      title: collection.title,
+                    })}
                   >
                     {t("deleteCollection")}
-                  </Button>
+                  </DeleteButton>
                   <p className="mt-2 text-[0.7rem] text-muted-foreground">
                     {t("deleteWarning")}
                   </p>

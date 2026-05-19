@@ -10,28 +10,38 @@ import type { GithubStats } from "@/app/api/about/github/route";
 
 // Live GitHub stats — pulls from /api/about/github once per mount. The
 // route is ISR-cached 30 min upstream, so this is effectively free.
+type LoadState = "loading" | "ready" | "error";
+
 export function GithubStatsCard({ className }: { className?: string }) {
   const t = useTranslations("About.github");
   const [stats, setStats] = useState<GithubStats | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [loadState, setLoadState] = useState<LoadState>("loading");
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/about/github")
-      .then((r) => (r.ok ? (r.json() as Promise<GithubStats | null>) : null))
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return (await r.json()) as GithubStats | null;
+      })
       .then((data) => {
         if (cancelled) return;
         setStats(data ?? null);
-        setLoaded(true);
+        // Route returns null when handle is missing — treat as a soft
+        // error so the card surfaces "couldn't load" rather than "—"
+        // forever.
+        setLoadState(data ? "ready" : "error");
       })
       .catch(() => {
         if (cancelled) return;
-        setLoaded(true);
+        setLoadState("error");
       });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const loaded = loadState !== "loading";
 
   return (
     <Card className={cn("h-full bg-card/80", className)}>
@@ -82,6 +92,11 @@ export function GithubStatsCard({ className }: { className?: string }) {
               </Badge>
             ))}
           </div>
+        ) : null}
+        {loadState === "error" ? (
+          <p className="text-xs text-muted-foreground/80">
+            {t("loadFailed")}
+          </p>
         ) : null}
       </CardContent>
     </Card>

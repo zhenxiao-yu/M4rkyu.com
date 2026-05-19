@@ -174,7 +174,7 @@ export function ColorConverter() {
 
   return (
     <div className="grid gap-6">
-      <div className="grid gap-4 sm:grid-cols-[10rem_1fr] sm:items-center">
+      <div className="grid items-start gap-4 md:grid-cols-[10rem_1fr] md:items-center">
         <div
           aria-label="Color preview"
           className="aspect-square w-full rounded-md border border-border/60"
