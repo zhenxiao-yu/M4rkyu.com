@@ -36,20 +36,7 @@ interface SecurityPanelProps {
   identities: UserIdentity[];
 }
 
-/**
- * Account "Security" pane. Four independent forms in one card:
- *   1. Set / change password (no current-password challenge because
- *      the session cookie is the auth gate — same posture Supabase
- *      uses for `auth.updateUser`).
- *   2. Connected accounts — link / unlink OAuth providers so the
- *      user can sign in via any of them next time.
- *   3. Global sign-out — revokes every active session.
- *   4. Danger zone — permanent account deletion behind a typed-
- *      confirmation dialog.
- *
- * Each form has its own useActionState so an error in one doesn't
- * blow away the others' UI state.
- */
+// Security pane: password / connected accounts / global sign-out / danger zone. Each form owns its own useActionState so errors stay scoped.
 export function SecurityPanel({ locale, email, identities }: SecurityPanelProps) {
   return (
     <div className="grid gap-6">

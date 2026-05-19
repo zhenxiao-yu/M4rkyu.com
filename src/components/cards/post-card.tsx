@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Post } from "@/content/schemas";
 
 interface PostCardProps {
@@ -47,7 +47,10 @@ export function PostCard({ post, priority = false }: PostCardProps) {
     >
       <Link
         href={`/logs/${post.slug}`}
-        className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) hover:border-ring/60 hover:shadow-lg hover:shadow-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn(
+          "group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) hover:border-ring/60 hover:shadow-lg hover:shadow-black/10",
+          FOCUS_RING,
+        )}
       >
         {/* Cover */}
         <div className="relative aspect-16/9 w-full overflow-hidden border-b bg-muted">

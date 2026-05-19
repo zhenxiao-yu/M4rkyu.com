@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 export function NavigationMenu({
   className,
@@ -46,7 +46,8 @@ export function NavigationMenuTrigger({
   return (
     <NavigationMenuPrimitive.Trigger
       className={cn(
-        "group inline-flex h-9 items-center gap-1 rounded-md px-2.5 text-sm text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:text-foreground",
+        "group inline-flex h-9 items-center gap-1 rounded-md px-2.5 text-sm text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground data-[state=open]:text-foreground",
+        FOCUS_RING,
         className,
       )}
       {...props}

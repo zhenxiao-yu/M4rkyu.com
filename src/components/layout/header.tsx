@@ -52,7 +52,7 @@ export async function Header({ locale }: { locale: Locale }) {
             M4
           </span>
           <span className="hidden min-w-0 flex-col leading-none sm:flex">
-            <span className="truncate tracking-wide">M4RKYU.SYS</span>
+            <span className="truncate tracking-wide">M4RK_YU</span>
             <span className="mt-1 text-[0.55rem] uppercase tracking-[0.2em] text-muted-foreground">
               portfolio
             </span>
@@ -73,7 +73,7 @@ export async function Header({ locale }: { locale: Locale }) {
           {/* Tinted utility cluster — bell, lang, theme, single sound
            * settings button (replaces the old SoundToggle + MusicToggle
            * pair; opens the media-player dialog), QR. */}
-          <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
+          <div className="flex items-center gap-0.5 rounded-xl border-border/60 bg-muted/30 p-0.5">
             <LazyNotificationBell locale={locale} />
             <LanguageSwitcher />
             <ThemeSwitcher />

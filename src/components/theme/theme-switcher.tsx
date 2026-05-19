@@ -8,6 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 /**
  * Single-icon dark ↔ light toggle. Both icons are rendered; the
@@ -82,7 +83,10 @@ export function ThemeSwitcher() {
           aria-label="Toggle theme"
           data-testid="theme-toggle"
           onClick={toggle}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 p-0 text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:bg-background/70 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className={cn(
+            "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 p-0 text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:bg-background/70 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0",
+            FOCUS_RING,
+          )}
         >
           <Sun className="size-4 hidden dark:block" aria-hidden="true" />
           <Moon className="size-4 block dark:hidden" aria-hidden="true" />

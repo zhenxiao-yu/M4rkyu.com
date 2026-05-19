@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { BentoCard } from "@/components/ui/magic/bento-grid";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { GalleryItem } from "@/content/schemas";
 
 interface GalleryBentoTileProps {
@@ -27,7 +27,7 @@ export function GalleryBentoTile({ item, span }: GalleryBentoTileProps) {
       <Link
         href={`/archive?frame=${item.slug}`}
         aria-label={t("openFrame", { title: item.title })}
-        className="relative flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn("relative flex h-full flex-col", FOCUS_RING)}
       >
         <div className="relative flex-1 overflow-hidden bg-muted">
           {item.src ? (

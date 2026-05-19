@@ -4,18 +4,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { sanitizeNextPath } from "@/lib/auth/redirect-url";
 import { routing } from "@/i18n/routing";
 
-/**
- * OAuth + magic-link callback. Supabase redirects here with a `code`
- * query param after the provider hands back its auth response; we
- * exchange the code for a session cookie and bounce to the original
- * destination (or the locale home).
- *
- * The route lives OUTSIDE `[locale]` so the redirect URL configured
- * in Supabase + Google + GitHub stays stable regardless of which
- * locale the user logged in from. The middleware matcher already
- * excludes `/auth/callback` so the locale-prefix redirect doesn't
- * eat the request.
- */
+// OAuth + magic-link callback. Lives outside [locale] so Supabase/Google/GitHub redirect URLs stay stable across locales; middleware matcher excludes this path.
 export async function GET(request: NextRequest) {
   return handleAuthCallback(request);
 }
@@ -29,9 +18,7 @@ export async function handleAuthCallback(request: NextRequest) {
   const next = sanitizeNextPath(rawNext, `/${routing.defaultLocale}`);
 
   if (!isSupabaseConfigured()) {
-    // Surfaces a clean error in the rare case someone hits the
-    // callback with no project configured. Better than a confusing
-    // 500 from the supabase client throw.
+    // Clean toast instead of a 500 when the project isn't configured.
     return NextResponse.redirect(
       `${origin}/${routing.defaultLocale}?authError=unconfigured`,
     );
@@ -59,12 +46,7 @@ export async function handleAuthCallback(request: NextRequest) {
   }
 
   if (!code) {
-    // Supabase sends `error` + `error_code` in the query string for
-    // server-side flows (and duplicates them into the hash fragment
-    // for client-side ones). We normalise to one of a small set of
-    // toast-friendly keys; raw Supabase codes go through `classify`
-    // so future codes default to a generic message instead of
-    // leaking machine-y strings into the URL.
+    // Normalize Supabase error/error_code into toast-friendly keys; unknown codes fall through to generic.
     const reason = classifyCallbackError(
       searchParams.get("error_code"),
       searchParams.get("error"),
@@ -108,12 +90,7 @@ function classifyEmailOtpType(type: string | null): EmailOtpCallbackType | null 
   }
 }
 
-/**
- * Map raw Supabase callback errors onto the stable keys
- * `AuthStatusToast` knows how to translate. Returns `missingCode`
- * when there's no signal at all (the user hit the callback URL
- * directly with nothing attached).
- */
+// Map Supabase callback errors → stable AuthStatusToast keys; `missingCode` when the URL carries nothing.
 function classifyCallbackError(
   errorCode: string | null,
   error: string | null,

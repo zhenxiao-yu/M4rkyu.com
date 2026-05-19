@@ -17,7 +17,7 @@ export function ClosingCTAStrip({
     <section className="relative overflow-hidden border-t bg-muted/30 py-20 sm:py-24">
       <div aria-hidden="true" className="absolute inset-0 bg-cyber-grid opacity-25" />
       <div className="relative mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-        <p className="text-balance text-2xl font-semibold leading-tight font-[family-name:var(--font-display)] sm:text-3xl lg:text-4xl">
+        <p className="text-balance text-2xl font-semibold leading-tight font-display sm:text-3xl lg:text-4xl">
           {statement}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">

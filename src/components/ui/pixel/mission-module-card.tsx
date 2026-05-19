@@ -9,7 +9,7 @@ import { BorderBeam } from "@/components/ui/magic/border-beam";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 import type { Project } from "@/content/schemas";
 
@@ -52,7 +52,7 @@ export async function MissionModuleCard({
         href={`/work/${project.slug}`}
         locale={locale}
         aria-label={localized.title as string}
-        className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn("group block h-full rounded-lg", FOCUS_RING)}
       >
         <Card
           className={cn(

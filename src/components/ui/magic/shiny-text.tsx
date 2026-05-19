@@ -11,11 +11,7 @@ interface ShinyTextProps {
   className?: string;
 }
 
-/**
- * Subtle gradient sweep across text. Reduced-motion = static gradient
- * (still readable, no animation). Token-aware: uses `--foreground` and
- * `--ring` rather than hard-coded colors.
- */
+// Gradient sweep across text — uses --foreground / --ring tokens; reduced-motion stays static.
 export function ShinyText({ children, duration = 3, className }: ShinyTextProps) {
   const reduce = useReducedMotion();
   return (

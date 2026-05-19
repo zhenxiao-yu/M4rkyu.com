@@ -44,9 +44,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-// Latin gets the preload-eligible subset; Google chunks CJK via unicode-range
-// and loads chunks on demand when /zh glyphs render. preload: false so EN-only
-// visitors don't pay a preload for a Latin face Satoshi already covers.
+// CJK font; preload off so EN-only visitors don't fetch a Latin face Satoshi already covers.
 const notoSansSC = Noto_Sans_SC({
   variable: "--font-cjk",
   subsets: ["latin"],
@@ -54,9 +52,7 @@ const notoSansSC = Noto_Sans_SC({
   preload: false,
 });
 
-// Pixel display font — cyber-pixel UI layer. English-only:
-// the `:lang(zh)` / `[lang^="zh"]` guard in globals.css rewires
-// --font-pixel to --font-cjk on Chinese-language scopes.
+// Pixel display font (English-only); globals.css rewires --font-pixel to --font-cjk under :lang(zh).
 const vt323 = VT323({
   variable: "--font-pixel",
   subsets: ["latin"],

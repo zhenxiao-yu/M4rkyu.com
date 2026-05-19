@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Headphones, Pause, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
 import { playCue } from "@/lib/audio/ui-sound";
 import { AudioPlayerDialog } from "./audio-player-dialog";
@@ -43,7 +43,7 @@ export function SoundSettingsButton() {
             className={cn(
               "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
               "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              FOCUS_RING,
               isPlaying && "border-ring/60 text-foreground",
             )}
           >

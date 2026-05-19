@@ -12,10 +12,7 @@ interface RotatingTextProps {
   className?: string;
 }
 
-/**
- * Swaps through `words` on an interval with a brief y-slide. Reduced-motion
- * shows only the first word, no cycling. Port of ReactBits' RotatingText.
- */
+// Cycle words with y-slide; reduced-motion stays on the first word. Port of ReactBits RotatingText.
 export function RotatingText({
   words,
   intervalMs = 3000,

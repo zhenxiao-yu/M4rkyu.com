@@ -14,6 +14,7 @@ import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { getSavedKeysOfType } from "@/lib/social/saves";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { GalleryGrid } from "./_client";
 
 export async function generateMetadata({
@@ -58,7 +59,10 @@ export default async function ArchivePage({
             <Link
               href="/archive/saved"
               locale={locale}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-md text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={cn(
+                "inline-flex min-h-8 items-center gap-1.5 rounded-md text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
+                FOCUS_RING,
+              )}
             >
               {t("viewSaved")}
               <ArrowUpRight aria-hidden="true" className="size-3" />
@@ -67,10 +71,7 @@ export default async function ArchivePage({
         }
       />
 
-      {/* Primary surface — contact-sheet grid. The page leads with
-       * frames, not with collection cards, because the photographic
-       * grid is the page's wow factor per docs/FINAL_SITE_ARCHITECTURE
-       * §5.4. */}
+      {/* Primary surface — contact-sheet grid (docs/FINAL_SITE_ARCHITECTURE §5.4). */}
       <PageSection>
         <FadeIn>
           <SectionHeading
@@ -139,9 +140,7 @@ function CollectionRailCard({
       locale={locale}
       className="group block focus-visible:outline-none"
     >
-      {/* Focus ring lives on the Card so it traces the visible card
-       * shape (lg radius) instead of a rounded-md rectangle around
-       * the bare Link wrapper. */}
+      {/* Focus ring on Card so it traces the lg radius, not the wrapper Link. */}
       <Card className="h-full bg-card/80 transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) group-hover:border-ring group-hover:shadow-md group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background">
         <CardHeader className="gap-2">
           <div className="flex items-center justify-between gap-2">

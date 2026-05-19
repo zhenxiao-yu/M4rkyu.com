@@ -2,6 +2,7 @@
 
 import { SlidersHorizontal, X } from "lucide-react";
 import { DEFAULT_BLOG_SORT, type BlogSortMode } from "@/content/blog-page";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface BlogActiveFiltersProps {
   activeCategory: string | null;
@@ -74,7 +75,10 @@ function RemovableChip({
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-ring/35 bg-ring/10 px-2.5 py-1 text-xs font-medium text-foreground transition-[border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 hover:bg-ring/15 motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className={cn(
+        "inline-flex max-w-full items-center gap-1.5 rounded-full border border-ring/35 bg-ring/10 px-2.5 py-1 text-xs font-medium text-foreground transition-[border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 hover:bg-ring/15 motion-safe:hover:-translate-y-0.5",
+        FOCUS_RING,
+      )}
     >
       <span className="truncate">{label}</span>
       <X aria-hidden="true" className="size-3" />

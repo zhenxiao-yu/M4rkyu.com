@@ -26,7 +26,7 @@ function GameDetailHeaderClone({ game }: { game: Game }) {
           </span>
           {game.status !== "ready" ? <DraftBadge label={game.status} /> : null}
         </div>
-        <h1 className="mt-6 max-w-5xl text-balance font-[family-name:var(--font-display)] text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
+        <h1 className="mt-6 max-w-5xl text-balance font-display text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
           {game.title}
         </h1>
         <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl">

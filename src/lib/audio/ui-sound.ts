@@ -20,22 +20,7 @@ function readSfxVolume(): number {
   return Math.min(1, Math.max(0, parsed));
 }
 
-/**
- * UI sound module — phase 7 of docs/UNIFIED_VISUAL_DIRECTION.md (§4.10 + §8).
- *
- * Generates short procedural cues via the browser Web Audio API. No
- * audio files are shipped, no dependency added; all tones are synthesized
- * from a single Oscillator + Gain envelope per cue.
- *
- * Hard rules from the spec:
- * - Default OFF — the first sound the user ever hears is the `confirm`
- *   tone that fires the moment they enable SoundToggle.
- * - `prefers-reduced-motion` is treated as a proxy for "no surprise
- *   feedback" and forces sound off even when the toggle is on.
- * - Every public function is SSR-safe and returns a no-op when run
- *   outside a browser (so server components can import this module
- *   without crashing the build).
- */
+// Procedural UI sound (Web Audio, single Oscillator+Gain per cue). SSR-safe; default OFF; prefers-reduced-motion forces off. Spec: docs/UNIFIED_VISUAL_DIRECTION.md §4.10 + §8.
 
 const STORAGE_KEY = "m4rkyu.sound";
 const CHANGE_EVENT = "m4rkyu:sound:change";

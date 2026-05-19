@@ -15,20 +15,10 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { profile } from "@/content/profile";
 import { Badge } from "@/components/ui/badge";
-import { AsciiText } from "@/components/ui/magic/ascii-text";
 import { DotGrid } from "@/components/ui/magic/dot-grid";
 import { ShineBorder } from "@/components/ui/magic/shine-border";
 import { StatusPulse } from "@/components/ui/pixel/status-pulse";
-import { cn } from "@/lib/utils";
-
-const ASCII_WORDMARK = String.raw`
-███╗   ███╗██╗  ██╗██████╗ ██╗  ██╗██╗   ██╗██╗   ██╗
-████╗ ████║██║  ██║██╔══██╗██║ ██╔╝╚██╗ ██╔╝██║   ██║
-██╔████╔██║███████║██████╔╝█████╔╝  ╚████╔╝ ██║   ██║
-██║╚██╔╝██║╚════██║██╔══██╗██╔═██╗   ╚██╔╝  ██║   ██║
-██║ ╚═╝ ██║     ██║██║  ██║██║  ██╗   ██║   ╚██████╔╝
-╚═╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝
-`;
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface SocialEntry {
   label: string;
@@ -56,8 +46,7 @@ const systemLinks = [
 
 function isPublishedResume(href?: string) {
   if (!href) return false;
-  // Local public resume PDFs are easy to point at before the asset is
-  // committed. Keep local paths pending; external resume URLs are live.
+  // Local /public PDFs stay pending; only external URLs count as live.
   return !href.startsWith("/");
 }
 
@@ -104,12 +93,6 @@ export function Footer({ locale }: { locale: Locale }) {
         influenceRadius={150}
         baseOpacity={0.1}
       />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden justify-center md:flex">
-        <AsciiText
-          art={ASCII_WORDMARK}
-          className="text-foreground/[0.045] dark:text-foreground/[0.07]"
-        />
-      </div>
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="relative overflow-hidden rounded-lg border bg-card/75 shadow-sm backdrop-blur-xl">
@@ -150,7 +133,7 @@ export function Footer({ locale }: { locale: Locale }) {
             <Link
               href="/"
               locale={locale}
-              className="group inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={cn("group inline-flex items-center gap-3 rounded-lg", FOCUS_RING)}
             >
               <span className="grid size-10 place-items-center rounded-lg border bg-foreground text-background text-sm font-bold tracking-normal shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105">
                 M4
@@ -174,7 +157,10 @@ export function Footer({ locale }: { locale: Locale }) {
                   href={resumeHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-10 items-center gap-2 rounded-md border bg-background/55 px-3 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-foreground transition-[border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:text-ring motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className={cn(
+                    "inline-flex min-h-10 items-center gap-2 rounded-md border bg-background/55 px-3 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-foreground transition-[border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:text-ring motion-safe:hover:-translate-y-0.5",
+                    FOCUS_RING,
+                  )}
                 >
                   <FileText className="size-3.5" aria-hidden="true" />
                   Resume / CV
@@ -242,7 +228,10 @@ function FooterNavGroup({
             <Link
               href={href}
               locale={locale}
-              className="group flex min-h-10 items-center justify-between gap-3 rounded-md border border-transparent px-3 py-2 text-sm text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-card/65 hover:text-foreground motion-safe:hover:translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={cn(
+                "group flex min-h-10 items-center justify-between gap-3 rounded-md border border-transparent px-3 py-2 text-sm text-muted-foreground transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-card/65 hover:text-foreground motion-safe:hover:translate-x-1",
+                FOCUS_RING,
+              )}
             >
               {label}
               <ArrowUpRight
@@ -274,7 +263,8 @@ function FooterButton({
   children: ReactNode;
 }) {
   const className = cn(
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5",
+    FOCUS_RING,
     variant === "primary"
       ? "border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
       : "border-border bg-background/65 text-foreground hover:border-ring hover:text-ring",
@@ -311,8 +301,10 @@ function SocialLink({
   }>;
   pending?: boolean;
 }) {
-  const className =
-    "group flex min-h-12 items-center justify-between gap-3 rounded-lg border bg-card/55 px-3 py-2 text-sm transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 hover:bg-card hover:text-foreground hover:shadow-sm motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  const className = cn(
+    "group flex min-h-12 items-center justify-between gap-3 rounded-lg border bg-card/55 px-3 py-2 text-sm transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/70 hover:bg-card hover:text-foreground hover:shadow-sm motion-safe:hover:-translate-y-0.5",
+    FOCUS_RING,
+  );
 
   const content = (
     <>

@@ -29,7 +29,7 @@ export const ShortToken: Story = {
   args: {
     children: "PORTAL",
     className:
-      "font-[family-name:var(--font-display)] text-6xl font-[800] tracking-tight",
+      "font-display text-6xl font-[800] tracking-tight",
   },
 };
 

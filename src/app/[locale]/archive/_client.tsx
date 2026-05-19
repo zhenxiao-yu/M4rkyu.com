@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import type { GalleryItem } from "@/content/schemas";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 // Lightbox is only needed after a user clicks a frame — defer the
 // Dialog + per-frame controls bundle until first interaction.
@@ -73,8 +73,7 @@ export function GalleryGrid({ items, locale, savedSlugs, signedIn }: GalleryGrid
 
   return (
     <>
-      {/* Hover hint strip — keyboard interaction is invisible without
-        * a prompt, so the page surfaces it once above the grid. */}
+      {/* Hover hint strip — surfaces keyboard nav once above the grid. */}
       <p className="mb-4 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
         {t("hoverHint")}
       </p>
@@ -134,7 +133,8 @@ function FrameTile({
       type="button"
       aria-label={openLabel}
       className={cn(
-        "group relative block overflow-hidden rounded-md border border-border bg-card/80 text-left transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) hover:border-ring hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "group relative block overflow-hidden rounded-md border border-border bg-card/80 text-left transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) hover:border-ring hover:shadow-md",
+        FOCUS_RING,
         isDimmed && "opacity-80",
       )}
     >
@@ -199,9 +199,7 @@ function FrameThumb({
         />
       )}
 
-      {/* Saved indicator — small bookmark chip that always shows when
-        * the user has the frame in their saved list. Doesn't depend
-        * on hover so it stays discoverable across input modes. */}
+      {/* Saved indicator — always-on chip, discoverable across input modes. */}
       {saved ? (
         <span
           aria-label={savedLabel}
@@ -215,9 +213,7 @@ function FrameThumb({
         </span>
       ) : null}
 
-      {/* Hover metadata overlay — fades in on hover/focus, reveals
-        * date + location when present. aria-hidden because the same
-        * data is available via the lightbox; this is decorative. */}
+      {/* Hover metadata overlay — decorative; same data is in the lightbox. */}
       {(item.capturedAt || item.location) && hasImage ? (
         <div
           aria-hidden="true"

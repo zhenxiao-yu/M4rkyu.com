@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { GalleryItem } from "@/content/schemas";
 
 type Aspect = "1/1" | "3/2" | "4/5" | "16/9";
@@ -44,7 +44,10 @@ export function ArchiveTile({
       <Link
         href={`/archive?frame=${item.slug}`}
         aria-label={t("openFrame", { title: item.title })}
-        className="group block overflow-hidden rounded-sm border border-border bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn(
+          "group block overflow-hidden rounded-sm border border-border bg-card",
+          FOCUS_RING,
+        )}
       >
         <div
           className={cn(

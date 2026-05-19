@@ -31,21 +31,7 @@ interface ShuffleProps {
 const DEFAULT_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-/**
- * Shuffle — ambient per-character text shuffle inspired by reactbits.dev.
- *
- * Pulse model: at each pulse, a small fraction (`density`) of the
- * word's non-space characters run a brief scramble that flashes 2-3
- * random glyphs and resolves back. Pulses fire on a timer (when
- * `loop` is true) and on hover/focus (when `triggerOnHover`).
- *
- * Layout stability: each character cell stacks an invisible target
- * spacer (defines the cell's width and baseline) under the animated
- * overlay via `inline-grid`. The animated overlay can swap glyphs
- * and translate vertically without nudging neighboring cells.
- *
- * Reduced-motion: renders the static target text, no animation.
- */
+// Per-char scramble pulse — layout stable via inline-grid (invisible target spacer under animated overlay). Reduced-motion = static.
 export function Shuffle({
   text,
   duration = 0.45,

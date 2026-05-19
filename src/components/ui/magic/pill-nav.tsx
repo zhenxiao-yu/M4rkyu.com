@@ -22,21 +22,7 @@ export interface PillNavProps {
 
 const ACTIVE_PILL_LAYOUT_ID = "pill-nav-active-pill";
 
-/**
- * PillNav — clean horizontal pill navigation with a single sliding
- * indicator that morphs between items via motion's `layoutId` shared
- * layout transition. Active state is driven by the current pathname
- * so the pill snaps to the right item on first paint and after any
- * route change (cmd-k included).
- *
- * Compared to the GooeyNav this replaces:
- *   - No SVG goo filter, no particle bursts — the focus is the slide.
- *   - One transitioning element instead of three (filter + text + ul).
- *   - Theme-correct out of the box; no per-mode blend-mode tuning.
- *
- * Reduced-motion: the active pill snaps instantly; entrance stagger
- * is suppressed.
- */
+// Horizontal pill nav — single sliding indicator via motion layoutId; active driven by pathname. Reduced-motion snaps without stagger.
 export function PillNav({
   items,
   initialLoadAnimation = true,

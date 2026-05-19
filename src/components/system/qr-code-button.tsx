@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { shareOrCopy } from "@/lib/social/share";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface QrCodeButtonProps {
   /** Canonical site URL — the address the static QR asset encodes. */
@@ -17,13 +17,7 @@ interface QrCodeButtonProps {
   assetSrc?: string;
 }
 
-/**
- * Share-this-site affordance in the header chrome. The QR asset is
- * static (pre-rendered, no client QR-gen dependency) and encodes the
- * site root; the popover wraps it with Copy + native Share actions so
- * the button is useful from a desktop too — not just a poster you scan
- * with your phone.
- */
+// Header share affordance — static pre-rendered QR + popover with Copy + native Share.
 export function QrCodeButton({
   url = "https://m4rkyu.com",
   assetSrc = "/qr-code.svg",
@@ -89,7 +83,7 @@ export function QrCodeButton({
             className={cn(
               "inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
               "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              FOCUS_RING,
               open && "border-ring/60 text-foreground",
             )}
           >
@@ -128,7 +122,10 @@ export function QrCodeButton({
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label={t("closeShareAria")}
-                  className="inline-flex size-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className={cn(
+                    "inline-flex size-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground",
+                    FOCUS_RING,
+                  )}
                 >
                   <X className="size-3.5" aria-hidden="true" />
                 </button>
@@ -140,14 +137,14 @@ export function QrCodeButton({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t("openSiteAria")}
-                  className="group relative inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className={cn("group relative inline-flex rounded-md", FOCUS_RING)}
                 >
                   <Image
                     src={assetSrc}
                     alt=""
                     width={160}
                     height={160}
-                    className="size-[160px] rounded-md border border-border bg-white p-2 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:-translate-y-px"
+                    className="size-40 rounded-md border border-border bg-white p-2 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:-translate-y-px"
                     loading="lazy"
                   />
                 </a>
@@ -162,7 +159,10 @@ export function QrCodeButton({
                 onClick={copyToClipboard}
                 aria-label={t("copyLink")}
                 title={url}
-                className="mt-3 inline-flex w-full items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className={cn(
+                  "mt-3 inline-flex w-full items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:bg-muted hover:text-foreground",
+                  FOCUS_RING,
+                )}
               >
                 <span className="truncate">{url.replace(/\/$/, "")}</span>
                 <Copy className="size-3.5 shrink-0" aria-hidden="true" />
@@ -177,7 +177,10 @@ export function QrCodeButton({
                 <button
                   type="button"
                   onClick={copyToClipboard}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className={cn(
+                    "inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-muted",
+                    FOCUS_RING,
+                  )}
                 >
                   <Copy className="size-3.5" aria-hidden="true" />
                   {t("copyLink")}
@@ -186,7 +189,10 @@ export function QrCodeButton({
                   <button
                     type="button"
                     onClick={nativeShare}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-md border border-ring/60 bg-foreground px-3 py-2 text-xs font-medium text-background transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className={cn(
+                      "inline-flex items-center justify-center gap-1.5 rounded-md border border-ring/60 bg-foreground px-3 py-2 text-xs font-medium text-background transition-colors hover:bg-foreground/90",
+                      FOCUS_RING,
+                    )}
                   >
                     <Share2 className="size-3.5" aria-hidden="true" />
                     {t("share")}

@@ -1,32 +1,17 @@
 import { z } from "zod";
 
-/**
- * Single source of truth for /contact form validation.
- *
- * Used by:
- *   - The client form (`_contact-form.tsx`) via
- *     `@hookform/resolvers/zod` for inline error display.
- *   - The server action (`_actions.ts`) for the authoritative parse
- *     before calling Resend — a curl that bypasses the client still
- *     gets the same shape back.
- *
- * Error messages are intentionally string-keyed (not localised here)
- * so the form layer can map them to translated copy via
- * `useTranslations("Contact")`. This keeps the schema dependency-free
- * (no next-intl in shared lib code) while preserving the bilingual UX.
- *
- * The `_honeypot` field must remain empty — bots fill every visible
- * field. The server action treats a non-empty honeypot as silent
- * success (don't tip off the bot that we caught it).
- */
+// Single source of truth for /contact validation (client + server). Error strings are i18n keys resolved by the form layer.
+// `_honeypot` must stay empty — bots fill everything; non-empty triggers silent success in the action.
 export const inquirySchema = z.object({
   name: z.string().trim().min(1, "nameError").max(120, "nameError"),
+  // No CR/LF — defense in depth against header injection when echoed into `replyTo` / subjects.
   email: z
     .string()
     .trim()
     .min(1, "emailError")
     .email("emailError")
-    .max(254, "emailError"),
+    .max(254, "emailError")
+    .regex(/^[^\r\n]+$/, "emailError"),
   projectType: z
     .string()
     .trim()
@@ -43,13 +28,10 @@ export const inquirySchema = z.object({
 
 export type InquiryInput = z.infer<typeof inquirySchema>;
 
-/** Public-safe view of the input, used when echoing the parsed payload
- *  back into the email template or analytics. Strips the honeypot +
- *  turnstile token. */
+// Public-safe payload — strips honeypot + turnstile token before reuse in emails/analytics.
 export type InquiryPayload = Omit<InquiryInput, "_honeypot" | "turnstileToken">;
 
-/** Field names exposed to the form. Anchors the FormField mapping
- *  without stringly-typed `name` props. */
+// Field names exposed to the form — anchors FormField mapping without stringly-typed props.
 export const inquiryFields = [
   "name",
   "email",

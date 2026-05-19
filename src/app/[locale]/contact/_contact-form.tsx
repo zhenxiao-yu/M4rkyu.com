@@ -54,9 +54,7 @@ export function ContactForm({ email }: { email: string }) {
     mode: "onBlur",
   });
 
-  // Server action drives the actual send. We bridge react-hook-form's
-  // submit handler into a transition so the form button can show a
-  // pending state without giving up RHF's per-field validation UX.
+  // Bridge RHF submit into a transition so the button can show pending without losing per-field UX.
   const [pending, startTransition] = useTransition();
   const [lastResult, setLastResult] = useState<InquiryActionState | null>(null);
 
@@ -84,9 +82,7 @@ export function ContactForm({ email }: { email: string }) {
     });
   }
 
-  // Map server-action result into RHF errors / toasts. Kept in an
-  // effect (not inside `onValid`) so `useTransition`'s pending flag
-  // flushes first, avoiding a stale toast before the spinner ends.
+  // Effect (not in onValid) so the transition's pending flag flushes before the toast.
   useEffect(() => {
     if (!lastResult) return;
     if (lastResult.status === "success") {
@@ -223,13 +219,7 @@ export function ContactForm({ email }: { email: string }) {
   );
 }
 
-/**
- * Resolve a Zod error message key into a localised string. The shared
- * schema sets the message to a translation key (e.g. "nameError") so
- * client + server validation share the same source of truth. Falls
- * back to the raw message if it doesn't look like a key — defensive
- * against future schema authors using literal strings by mistake.
- */
+// Zod messages are i18n keys; fall back to raw string if a future schema author writes a literal.
 function resolveError(
   t: ReturnType<typeof useTranslations<"Contact">>,
   message: string | undefined,

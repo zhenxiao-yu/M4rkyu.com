@@ -4,19 +4,9 @@ interface SectionHeadingProps {
   eyebrow?: string;
   title: string;
   description?: string;
-  /**
-   * Heading level. Defaults to `h2`. Use `h1` when this is the page's
-   * top-level title (most archive pages — /projects, /games, /blog, etc.).
-   * Detail pages should keep this as `h2` because they own their own
-   * `h1` via `CaseStudyHeader` / `GameDetailHeader`.
-   */
+  /** Heading level; `h2` default. Use `h1` on archive pages; detail pages own their own h1. */
   as?: "h1" | "h2";
-  /**
-   * Opt out of the single-shot glitch effect on the H1. Defaults to
-   * false so archive page titles get the entry animation; pages
-   * that want a quieter reveal (or already animate the title via
-   * another path) can disable it.
-   */
+  /** Disable the single-shot glitch reveal on the h1. */
   disableGlitch?: boolean;
 }
 

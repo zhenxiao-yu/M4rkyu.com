@@ -27,7 +27,7 @@ export default async function NotFoundPage() {
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
                 {t("eyebrow")}
               </p>
-              <h1 className="mt-6 text-balance font-[family-name:var(--font-display)] text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none">
+              <h1 className="mt-6 text-balance font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none">
                 {t("title")}
               </h1>
               <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground">

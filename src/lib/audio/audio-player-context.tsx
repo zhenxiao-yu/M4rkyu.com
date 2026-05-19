@@ -92,21 +92,7 @@ interface AudioPlayerContextValue {
 
 const AudioPlayerContext = createContext<AudioPlayerContextValue | null>(null);
 
-/**
- * Site-wide background-music player.
- *
- * Owns hidden native audio elements that survive every route change
- * because the provider is mounted at the locale layout level. Two
- * elements handle crossfades; a third prewarms next-track metadata.
- * Track selection, transport state, loop / shuffle, and BGM + SFX
- * volume are all persisted to localStorage so the user's preferences
- * survive reload. Playback state itself (isPlaying) is *not* persisted
- * — browsers block autoplay across reload anyway, so attempting to
- * resume would just leave a paused player in a "playing" state.
- *
- * Native HTML5 audio — no library dependency. This keeps the player
- * lightweight even as the manifest grows.
- */
+// Site-wide BGM player; survives route changes (mounted at locale layout). Two <audio> for crossfade, one preload. Prefs persist; isPlaying does not (autoplay is blocked on reload).
 export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   const audioARef = useRef<HTMLAudioElement | null>(null);
   const audioBRef = useRef<HTMLAudioElement | null>(null);

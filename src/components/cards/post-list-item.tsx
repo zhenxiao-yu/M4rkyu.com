@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
 import { LinkPreview } from "@/components/system/link-preview";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Post } from "@/content/schemas";
 import type { ReactNode } from "react";
 
@@ -69,7 +69,7 @@ export function PostListItem({ post }: PostListItemProps) {
         className={cn(
           "group grid gap-3 rounded-md border border-transparent px-4 py-5 transition-[background-color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) sm:px-5 lg:px-6",
           "hover:border-border/80 hover:bg-background/70",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          FOCUS_RING,
           "md:items-center md:gap-6",
           hasCover
             ? "md:grid-cols-[8rem_1fr_auto] lg:grid-cols-[8rem_8rem_1fr_auto]"

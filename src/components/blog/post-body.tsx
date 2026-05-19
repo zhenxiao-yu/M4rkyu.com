@@ -57,10 +57,8 @@ const components = {
     <h1
       {...props}
       className={cn(
-        // scroll-mt aligns anchored headings under the sticky site
-        // header (h-14 on <sm, h-16 above) plus a small breathing
-        // gap. Tightened from scroll-mt-24 to match case-study sections.
-        "mt-12 scroll-mt-20 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-foreground sm:text-4xl",
+        // scroll-mt-20 clears the sticky header (h-14/h-16) with a small breathing gap.
+        "mt-12 scroll-mt-20 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl",
         className,
       )}
     />

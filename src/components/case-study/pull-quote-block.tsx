@@ -32,7 +32,7 @@ export function PullQuoteBlock({
       ) : null}
       <blockquote
         className={cn(
-          "text-balance font-[family-name:var(--font-display)] text-2xl font-medium leading-[1.2] tracking-tight text-foreground sm:text-3xl sm:leading-[1.18] lg:text-4xl lg:leading-[1.15]",
+          "text-balance font-display text-2xl font-medium leading-[1.2] tracking-tight text-foreground sm:text-3xl sm:leading-[1.18] lg:text-4xl lg:leading-[1.15]",
           eyebrow ? "mt-5" : "",
         )}
       >

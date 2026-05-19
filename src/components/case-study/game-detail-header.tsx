@@ -18,11 +18,7 @@ interface GameDetailHeaderProps {
   role: string;
 }
 
-/**
- * Mirrors `CaseStudyHeader`'s visual shape (cyber-grid hero +
- * eyebrow row + display title + lede + meta ribbon) but reads
- * game-specific fields: engine, year, role, platforms, build links.
- */
+/** Game detail hero — cyber-grid + eyebrow + title + lede + engine/year/role/platforms/build-links ribbon. */
 export async function GameDetailHeader({
   game,
   title,
@@ -53,7 +49,7 @@ export async function GameDetailHeader({
           {game.status !== "ready" ? <DraftBadge label={game.status} /> : null}
         </div>
 
-        <h1 className="mt-6 max-w-5xl text-balance font-[family-name:var(--font-display)] text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
+        <h1 className="mt-6 max-w-5xl text-balance font-display text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
           {title}
         </h1>
 

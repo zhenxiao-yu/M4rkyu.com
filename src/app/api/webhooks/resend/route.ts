@@ -1,48 +1,41 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { env } from "@/lib/env";
 import {
   RESEND_EVENT_TYPES,
   verifyResendWebhook,
   type ResendEventType,
-  type ResendWebhookPayload,
 } from "@/lib/server/webhooks/resend";
 
-/**
- * Resend webhook receiver.
- *
- * Authenticity is verified via Svix-format HMAC-SHA256 (see
- * `src/lib/server/webhooks/resend.ts`). Unsigned, expired, or
- * mismatched payloads are rejected with 401 — Resend's retries treat
- * 401 as "give up" rather than "retry", which is what we want for
- * permanent-failure cases.
- *
- * Today this endpoint is observability-only: structured `console.*`
- * lines land in Vercel's runtime logs, which already power our
- * inbound-mail audit trail. A future revision can persist events to
- * Vercel KV / Postgres + emit Analytics custom events.
- *
- * Force the Node runtime — `node:crypto` (used by the signature
- * verifier) isn't available in the Edge runtime.
- */
-export const runtime = "nodejs";
+// Loose shape check — full taxonomy lives in RESEND_EVENT_TYPES; unknown `type` values still log.
+const webhookPayloadSchema = z.object({
+  type: z.string().min(1),
+  created_at: z.string().optional(),
+  data: z
+    .object({
+      email_id: z.string().optional(),
+      from: z.string().optional(),
+      to: z.union([z.string(), z.array(z.string())]).optional(),
+      subject: z.string().optional(),
+    })
+    .passthrough()
+    .optional(),
+});
 
-/** Tell Next to always render fresh — webhook handlers must never be
- *  cached by the framework. */
+// Resend webhook — Svix HMAC verified; 401 on bad sig stops retries (treated as permanent). Node runtime for node:crypto.
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request): Promise<NextResponse> {
   if (!env.RESEND_WEBHOOK_SECRET) {
-    // Endpoint is unconfigured — emit a 503 so Resend's UI flags the
-    // misconfig and the monitor surfaces it instead of silently
-    // accepting events.
+    // 503 surfaces the misconfig in Resend's UI rather than silently accepting events.
     return NextResponse.json(
       { ok: false, reason: "webhook-not-configured" },
       { status: 503 },
     );
   }
 
-  // Read raw text BEFORE JSON.parse — Svix signs the byte string, not
-  // the re-serialised object.
+  // Read raw text — Svix signs the byte string, not the re-serialised object.
   const rawBody = await req.text();
 
   const verify = verifyResendWebhook({
@@ -60,19 +53,24 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ ok: false, reason: verify.reason }, { status: 401 });
   }
 
-  let payload: ResendWebhookPayload;
+  let parsedBody: unknown;
   try {
-    payload = JSON.parse(rawBody) as ResendWebhookPayload;
+    parsedBody = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ ok: false, reason: "bad-json" }, { status: 400 });
   }
 
+  const parsed = webhookPayloadSchema.safeParse(parsedBody);
+  if (!parsed.success) {
+    console.warn("[resend-webhook] bad shape", { issues: parsed.error.issues });
+    return NextResponse.json({ ok: false, reason: "bad-shape" }, { status: 400 });
+  }
+
+  const payload = parsed.data;
   const type = payload.type;
   const known = (RESEND_EVENT_TYPES as readonly string[]).includes(type);
 
-  // Single structured log line per event so a downstream log query
-  // (Vercel Observability filter on "[resend-webhook]") can group +
-  // chart event rates by type.
+  // Single structured log line per event — filter on "[resend-webhook]" in Vercel Observability.
   console.info("[resend-webhook] event", {
     type: known ? (type as ResendEventType) : `unknown:${type}`,
     emailId: payload.data?.email_id,
@@ -85,8 +83,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   return NextResponse.json({ ok: true });
 }
 
-/** Reject everything else loudly so a misconfigured monitor probing
- *  with GET doesn't think the endpoint is healthy. */
+// 405 on GET so a misconfigured monitor doesn't mistake this for a health endpoint.
 export function GET() {
   return new NextResponse("method-not-allowed", {
     status: 405,

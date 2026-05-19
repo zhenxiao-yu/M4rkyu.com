@@ -5,29 +5,7 @@ import { useReducedMotion } from "motion/react";
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 import { cn } from "@/lib/utils";
 
-/**
- * Galaxy — WebGL starfield with mouse parallax + cursor repulsion.
- *
- * Port of the ReactBits `Galaxy` component (MIT). The OGL renderer
- * compiles a single triangle and runs a fragment shader that draws
- * layered procedural star fields with hue-shift, twinkle, and an
- * optional mouse repulsion field.
- *
- * Adapted for M4rkyu:
- *   - Reduced-motion: paints one static frame, then stops the RAF loop.
- *     The starfield stays visible as atmosphere; nothing animates.
- *   - `disableAnimation` prop mirrors the upstream API for callers that
- *     want to force the static frame regardless of OS preference.
- *   - IntersectionObserver pauses the RAF loop when the container is
- *     off-screen so it costs nothing on inactive sections.
- *   - ResizeObserver keeps the canvas sized correctly when the section
- *     grows/collapses (e.g. hero pinned to dvh on mobile address-bar
- *     show/hide).
- *   - Wrapper opts out of pointer events when `mouseInteraction` is
- *     off so the backdrop doesn't swallow clicks under the hero.
- *
- * Bundle: ~12 kB minified including OGL's tree-shaken bits.
- */
+// WebGL starfield (OGL, ~12 kB) — single triangle + fragment shader. IntersectionObserver pauses RAF off-screen; reduced-motion / disableAnimation = one static frame. Port of ReactBits Galaxy (MIT).
 interface GalaxyProps {
   /** Focal point in normalized coords; 0.5,0.5 centers the camera. */
   focal?: [number, number];

@@ -4,23 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-/**
- * Waves — Perlin-noise driven line field with mouse repulsion.
- *
- * Port of ReactBits `Waves` (MIT). Pure 2D canvas — no WebGL — so the
- * bundle stays small (~2.5 kB minified). Each vertical line is a
- * column of points, each point pulsed by a Perlin field plus a
- * velocity-friction-tension cursor disturbance.
- *
- * Adapted for M4rkyu:
- *   - lineColor defaults to `var(--foreground)` resolved at mount so
- *     the field always matches the active theme; a MutationObserver
- *     re-reads when `data-theme` flips.
- *   - Reduced-motion: paints one static frame, then exits the RAF
- *     loop. Still gives a baseline of structure on the section.
- *   - IntersectionObserver pauses + resumes the ticker when the
- *     section enters / leaves the viewport.
- */
+// Perlin-noise line field with cursor repulsion (2D canvas, no WebGL). Theme-aware via MutationObserver on data-theme; reduced-motion paints one static frame; IntersectionObserver pauses off-screen. Port of ReactBits Waves (MIT).
 
 class Grad {
   constructor(public x: number, public y: number, public z: number) {}

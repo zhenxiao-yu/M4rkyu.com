@@ -23,24 +23,7 @@ interface DotGridProps {
   className?: string;
 }
 
-/**
- * Cursor-aware dot grid backdrop (ReactBits dot-field port). Renders
- * a full-bleed canvas of dots that grow + brighten near the cursor.
- * Pure 2D canvas — no WebGL, no Three.js. Auto-pauses via
- * IntersectionObserver when off-screen and re-reads the active
- * `--ring` color when the theme toggles.
- *
- * Reduced-motion: dots render once at the base size/opacity, then the
- * ticker exits — visitor still sees the structure but nothing
- * animates.
- *
- * Touch: dots stay at base size; we don't track touchmove because
- * scrolling on touch becomes "drag" and would constantly trigger the
- * proximity falloff during natural scrolling.
- *
- * Sized: places `absolute inset-0 size-full` by default — drop it
- * inside a `relative` parent and it fills.
- */
+// Cursor-aware dot grid (2D canvas). Auto-pauses via IntersectionObserver; theme-aware (--ring). Reduced-motion + touch render static. Fills its `relative` parent.
 export function DotGrid({
   spacing = 28,
   baseDotSize = 1.4,

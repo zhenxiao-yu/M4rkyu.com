@@ -18,11 +18,7 @@ interface PageHeroProps {
   sidecarClassName?: string;
 }
 
-/**
- * Shared index-route hero. Keeps page headers aligned across work,
- * archive, logs, games, media, resources, about, and contact while
- * preserving each page's optional right rail.
- */
+// Shared index-route hero — aligns headers across work/archive/logs/games/media/resources/about/contact; preserves optional right rail.
 export function PageHero({
   eyebrow,
   title,

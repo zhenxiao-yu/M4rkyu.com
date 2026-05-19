@@ -13,14 +13,7 @@ interface MagnetProps {
   className?: string;
 }
 
-/**
- * Magnetic cursor pull. Children translate toward the pointer when it
- * enters `radius`. Falls back to a static no-op on touch pointers and
- * reduced-motion.
- *
- * Port of the ReactBits `Magnet` mechanic, tokenized for M4rkyu's motion
- * envelope (strength capped low; we don't want the CTA to lunge).
- */
+// Cursor-relative pull within radius — touch + reduced-motion no-op. Port of ReactBits Magnet, low strength so CTAs don't lunge.
 export function Magnet({
   children,
   strength = 12,

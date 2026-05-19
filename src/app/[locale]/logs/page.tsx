@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { getPosts, DEVTO_USERNAME } from "@/lib/blog/get-posts";
 import { selectFeaturedPosts } from "@/lib/blog/filter-posts";
 import { BlogTimeline } from "./_client";
@@ -63,7 +64,10 @@ export default async function BlogPage({
                 href={`https://dev.to/${DEVTO_USERNAME}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-sm text-foreground underline-offset-4 transition-colors hover:text-ring hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className={cn(
+                  "rounded-sm text-foreground underline-offset-4 transition-colors hover:text-ring hover:underline",
+                  FOCUS_RING,
+                )}
               >
                 dev.to / @{DEVTO_USERNAME}
               </a>

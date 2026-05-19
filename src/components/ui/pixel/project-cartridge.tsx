@@ -21,11 +21,7 @@ interface ProjectCartridgeProps {
   role: string;
 }
 
-/**
- * Detail-page header card. Replaces CaseStudyHeader on /projects/[slug].
- * Featured projects get a single BorderBeam treatment around the
- * cartridge label per docs/UI_LIBRARY_STRATEGY.md §5 (one beam per page).
- */
+/** Detail-page header card for /projects/[slug]. Featured projects get one BorderBeam per docs/UI_LIBRARY_STRATEGY.md §5. */
 export async function ProjectCartridge({
   project,
   locale,
@@ -43,7 +39,7 @@ export async function ProjectCartridge({
 
   return (
     <header className="relative overflow-hidden border-b">
-      {/* atmospheric layers — keep parity with the prior CaseStudyHeader */}
+      {/* atmospheric layers — cyber grid + vignette */}
       <div
         className="absolute inset-0 bg-cyber-grid opacity-30"
         aria-hidden="true"

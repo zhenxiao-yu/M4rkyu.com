@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Locale } from "@/i18n/routing";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale;
@@ -28,7 +29,10 @@ export function LanguageSwitcher() {
           locale={nextLocale}
           aria-label={ariaLabel}
           data-testid="language-switcher"
-          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-background/70 px-3 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className={cn(
+            "inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-background/70 px-3 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
+            FOCUS_RING,
+          )}
         >
           {nextLocale === "zh" ? "中文" : "EN"}
         </Link>

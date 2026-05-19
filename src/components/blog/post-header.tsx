@@ -48,7 +48,7 @@ export async function PostHeader({
           {t("syndicatedHeader", { username })}
         </p>
 
-        <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl">
+        <h1 className="mt-6 font-display text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl">
           {title}
         </h1>
 

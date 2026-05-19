@@ -37,10 +37,7 @@ export async function generateMetadata({
   return {
     title: meta.title,
     description: meta.description,
-    // Per Phase 5.1's hreflang strategy, route alternates point at
-    // our locale-prefixed paths. The `canonical` here intentionally
-    // **overrides** the in-site URL with the dev.to canonical so
-    // search engines treat dev.to as the source of truth.
+    // Canonical overrides the in-site URL with dev.to — search engines treat dev.to as source of truth.
     alternates: {
       ...buildAlternates(locale, `/logs/${slug}`),
       canonical: meta.canonical_url,

@@ -18,7 +18,7 @@ import {
 import { WorkDeckReveal } from "@/components/sections/work-deck-reveal";
 import type { Project } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
   { labelKey: "all", value: null },
@@ -305,7 +305,12 @@ export function ProjectsClient({
 
       {drafts.length > 0 ? (
         <details className="mt-12 group rounded-lg border border-dashed border-border bg-muted/20">
-          <summary className="flex cursor-pointer items-center justify-between gap-3 p-5 font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <summary
+            className={cn(
+              "flex cursor-pointer items-center justify-between gap-3 p-5 font-medium text-foreground",
+              FOCUS_RING,
+            )}
+          >
             <span className="flex items-center gap-3">
               <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
                 {t("draftsHeading")}

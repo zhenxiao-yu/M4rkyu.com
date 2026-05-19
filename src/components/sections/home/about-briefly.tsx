@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { FadeIn } from "@/components/motion/fade-in";
 import { profile } from "@/content/profile";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
 import type { Locale } from "@/i18n/routing";
 
@@ -34,7 +35,10 @@ export async function AboutBriefly({ locale }: AboutBrieflyProps) {
         <Link
           href="/about"
           locale={locale}
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className={cn(
+            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
+            FOCUS_RING,
+          )}
         >
           {t("readLonger")}
           <ArrowUpRight aria-hidden="true" className="size-3.5" />

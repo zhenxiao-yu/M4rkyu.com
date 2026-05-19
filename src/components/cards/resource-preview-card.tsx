@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DraftBadge } from "@/components/placeholders/draft-badge";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Resource } from "@/content/schemas";
 
 interface ResourcePreviewCardProps {
@@ -19,7 +20,10 @@ export function ResourcePreviewCard({ resource }: ResourcePreviewCardProps) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${resource.name} — opens in a new tab`}
-      className="group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition duration-(--motion-fast) ease-(--ease-premium) hover:-translate-y-0.5 hover:border-ring/50 hover:shadow-md hover:shadow-ring/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className={cn(
+        "group flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition duration-(--motion-fast) ease-(--ease-premium) hover:-translate-y-0.5 hover:border-ring/50 hover:shadow-md hover:shadow-ring/5",
+        FOCUS_RING,
+      )}
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">

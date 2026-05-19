@@ -18,6 +18,7 @@ import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 export function generateStaticParams() {
   return allProjects.flatMap((project) => [
@@ -249,7 +250,10 @@ export default async function ProjectDetailPage({
                   <Link
                     key={item.slug}
                     href={`/work/${item.slug}`}
-                    className="group rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className={cn(
+                      "group rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+                      FOCUS_RING,
+                    )}
                   >
                     <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
                       {tCategories(item.category)}

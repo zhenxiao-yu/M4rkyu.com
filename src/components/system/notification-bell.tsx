@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { useLastSeen } from "@/lib/hooks/use-last-seen";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 /** Minimal post shape the bell needs — keeps the prop surface narrow. */
 interface NotificationPost {
@@ -100,7 +100,8 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground hover:-translate-y-px active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground hover:-translate-y-px active:translate-y-0",
+          FOCUS_RING,
           open && "border-ring/60 text-foreground",
         )}
       >
@@ -150,7 +151,10 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
                 type="button"
                 onClick={markAllRead}
                 disabled={unreadCount === 0}
-                className="shrink-0 rounded-sm font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-40"
+                className={cn(
+                  "shrink-0 rounded-sm font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40",
+                  FOCUS_RING,
+                )}
               >
                 {t("markRead")}
               </button>
@@ -214,7 +218,10 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
               href="/logs"
               locale={locale}
               onClick={() => setOpen(false)}
-              className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={cn(
+                "inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+                FOCUS_RING,
+              )}
             >
               <span className="truncate">{t("viewAll")}</span>
               <span aria-hidden="true">→</span>

@@ -1,13 +1,6 @@
-/**
- * Shared navigation structure for desktop dropdowns + mobile sheet.
- *
- * Each group has its own `href` so clicking the parent label always
- * navigates to its primary destination (the dropdown is a secondary
- * disclosure, not the only way in).
- */
+// Shared nav structure for desktop dropdowns + mobile sheet. Each group has its own `href` so the parent label navigates to its primary destination; the dropdown is secondary disclosure.
 
 export interface NavDropdownItem {
-  /** Key used for React iteration only — not user-visible. */
   id: string;
   label: string;
   href: string;
@@ -16,7 +9,7 @@ export interface NavDropdownItem {
 export interface NavDropdownGroup {
   id: string;
   label: string;
-  /** Primary destination when the group's label is clicked. */
+  // Primary destination when the group's label is clicked.
   href: string;
   items: NavDropdownItem[];
 }
@@ -32,12 +25,7 @@ export interface NavStructure {
   flatLinks: NavFlatLink[];
 }
 
-/**
- * Label bag the header passes in. The header is the only place
- * `next-intl` translation calls happen for the nav so each rendering
- * surface (desktop + mobile + palette) stays free of cross-namespace
- * `t()` plumbing.
- */
+// Label bag passed in by the header — desktop/mobile/palette stay free of next-intl `t()` plumbing.
 export interface NavLabels {
   projects: string;
   work: string;

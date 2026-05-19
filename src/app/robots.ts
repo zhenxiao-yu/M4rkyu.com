@@ -3,10 +3,7 @@ import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
-  // /<locale>/archive/saved is visitor-local state (localStorage-driven)
-  // and not meaningful to crawl. Emit one explicit disallow per locale
-  // so non-Google crawlers (which often don't honor the leading-slash
-  // wildcard form) skip the path deterministically.
+  // visitor-local state paths — explicit per-locale disallow for crawlers that ignore wildcards.
   const savedPaths = routing.locales.map(
     (locale) => `/${locale}/archive/saved`,
   );

@@ -25,29 +25,7 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Home page spine. Every section between the hero and the closing CTA
- * composes through the shared `HomeSection` shell so vertical rhythm,
- * eyebrow style, heading scale, lede width, action link, and tone
- * (default vs muted) are normalised.
- *
- *   1. IntroLoaderIsland      — first-paint branded boot, once per session.
- *   2. HeroSection            — name-led, full-bleed wave backdrop.
- *   3. AnimatedSeparator      — single marquee strip; visual breath.
- *   4. AboutBriefly           — "Mark, briefly" + portrait + values.
- *   5. CapabilitiesSection    — five numbered systems.
- *   6. SelectedWork           — bento grid of ready + draft projects.
- *   7. FramesGallery          — chronological journey timeline.
- *   8. WritingPulseSection    — latest + devlog posts.
- *   9. LetsBuildCta           — closing CTA.
- *
- * Two separators were retired in the polish pass — the
- * default→muted alternation between sections now carries the rhythm
- * without needing a chrome strip between every pair.
- *
- * `HomeSmoothScroll` instantiates Lenis + lazy-registers ScrollTrigger
- * — home-only by design (other routes use motion/react's `useScroll`).
- */
+// Home spine — sections compose through HomeSection for shared rhythm; HomeSmoothScroll lazy-registers Lenis + ScrollTrigger (home-only).
 export default async function HomePage({
   params,
 }: {

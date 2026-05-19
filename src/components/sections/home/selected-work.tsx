@@ -14,7 +14,7 @@ import { HomeSection } from "./home-section";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
 import type { Project } from "@/content/schemas";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface SelectedWorkProps {
   locale: Locale;
@@ -62,7 +62,10 @@ export function SelectedWork({ locale, projects }: SelectedWorkProps) {
         <Link
           href="/work"
           locale={locale}
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className={cn(
+            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
+            FOCUS_RING,
+          )}
         >
           {t("openWork")}
           <ArrowUpRight aria-hidden="true" className="size-3.5" />

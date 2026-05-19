@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, Link } from "@/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn, FOCUS_RING } from "@/lib/utils"
 import type { Locale } from "@/i18n/routing"
 
 interface NavLinkProps {
@@ -19,7 +19,8 @@ export function NavLink({ href, locale, children }: NavLinkProps) {
       href={href}
       locale={locale}
       className={cn(
-        "relative transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm",
+        "relative rounded-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+        FOCUS_RING,
         isActive
           ? "text-foreground after:absolute after:-bottom-1 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-foreground after:content-['']"
           : "text-muted-foreground",

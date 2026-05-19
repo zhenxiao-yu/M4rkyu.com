@@ -1,10 +1,13 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 disabled:motion-safe:hover:translate-y-0",
+  cn(
+    "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 disabled:pointer-events-none disabled:opacity-50 disabled:motion-safe:hover:translate-y-0",
+    FOCUS_RING,
+  ),
   {
     variants: {
       variant: {

@@ -14,14 +14,7 @@ interface GhostedWordProps {
   className?: string;
 }
 
-/**
- * Wraps a word in stacked duplicate spans that drift on cursor x-position.
- * Inspired by wodniack.dev's animated letter trails in the Work section.
- * Scoped here to a single word; full-section letter trails belong in the
- * scroll-tied SelectedWork showcase instead.
- *
- * Reduced-motion + touch: renders the base word only, no ghosts.
- */
+// Stacked duplicate spans drift on cursor x. Reduced-motion + touch = base word only.
 export function GhostedWord({
   text,
   ghosts = 6,

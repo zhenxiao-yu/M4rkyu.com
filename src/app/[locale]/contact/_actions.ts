@@ -28,31 +28,8 @@ export type InquiryActionState =
       messageKey: string;
     };
 
-// Note: Next 15 requires every runtime export from a "use server"
-// file to be an async function. Plain constants / objects are rejected
-// at module load with `invalid-use-server-value`. Keep helpers and
-// type aliases in this file (types erase at runtime), but never add
-// non-async value exports here.
-
-/**
- * Server action behind the /contact form. Wired through
- * `useActionState` on the client.
- *
- * Flow:
- *   1. Pull fields from FormData → parse with the shared Zod schema.
- *      Localised error keys come back to the client unchanged.
- *   2. Honeypot check: a non-empty `_honeypot` field returns success
- *      silently — never tip off the bot.
- *   3. Verify Turnstile (no-op when unconfigured for local dev).
- *   4. Send via Resend; React Email renders the HTML, plaintext
- *      fallback ships alongside.
- *   5. Return a discriminated state the client renders as toast +
- *      form reset.
- *
- * Telemetry is intentionally console-only for now — Vercel's runtime
- * captures it, Resend's dashboard is the audit log. A DB-backed log
- * lands later if volume justifies it (see plan §"Forward-compat").
- */
+// Next 15: every runtime export from a "use server" file must be async — only types and async fns here.
+// /contact server action: Zod parse → silent honeypot → Turnstile → Resend → discriminated state. Telemetry is console-only.
 export async function submitInquiryAction(
   _prevState: InquiryActionState,
   formData: FormData,
@@ -110,8 +87,7 @@ export async function submitInquiryAction(
     const { error } = await resend.emails.send({
       from: env.INQUIRY_FROM_EMAIL,
       to: env.INQUIRY_TO_EMAIL,
-      // Sender's address as replyTo so Mark can hit reply and land in
-      // the visitor's inbox.
+      // Sender as replyTo — Zod schema rejects CR/LF so subject/header injection is blocked.
       replyTo: parsed.data.email,
       subject: `Project inquiry — ${parsed.data.projectType}`,
       react: InquiryEmail({

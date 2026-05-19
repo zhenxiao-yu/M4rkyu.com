@@ -31,9 +31,7 @@ const otpSchema = emailSchema.extend({
     .regex(/^\d{6,8}$/),
 });
 
-// Supabase hashes passwords with bcrypt, which silently truncates
-// inputs past 72 bytes. We refuse them outright so a longer password
-// doesn't auth correctly only because the truncated prefix matches.
+// Reject >72 bytes — bcrypt truncates, which would let a longer password auth via prefix match.
 const passwordSchema = z
   .string()
   .min(8, "passwordTooShort")

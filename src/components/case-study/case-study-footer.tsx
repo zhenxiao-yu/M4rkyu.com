@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { LinkPreview } from "@/components/system/link-preview";
 import { Link } from "@/i18n/navigation";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 export interface CaseStudyAdjacentEntry {
   href: string;
@@ -83,9 +84,11 @@ function CaseStudyAdjacent({
     >
       <Link
         href={entry.href}
-        className={`group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-          isNext ? "lg:text-right" : ""
-        }`}
+        className={cn(
+          "group flex flex-col gap-2 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-md hover:shadow-ring/5",
+          FOCUS_RING,
+          isNext && "lg:text-right",
+        )}
       >
         <span
           className={`flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground ${

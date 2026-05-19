@@ -11,7 +11,7 @@ import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { BLOG_PAGE_SETTINGS } from "@/content/blog-page";
 import type { Post } from "@/content/schemas";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface FeaturedPostsBentoProps {
   posts: Post[];
@@ -108,7 +108,10 @@ function FeaturedPostCard({
         ) : null}
         <Link
           href={`/logs/${post.slug}`}
-          className="group relative flex h-full flex-col justify-end overflow-hidden p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-5"
+          className={cn(
+            "group relative flex h-full flex-col justify-end overflow-hidden p-4 sm:p-5",
+            FOCUS_RING,
+          )}
         >
           <div className="absolute inset-0 -z-20 bg-muted" aria-hidden="true">
             {cover ? (

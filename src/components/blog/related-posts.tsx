@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { DevtoArticleListItem } from "@/lib/blog/devto";
 
 interface RelatedPostsProps {
@@ -74,7 +75,10 @@ export async function RelatedPosts({
           <Link
             key={article.slug}
             href={`/logs/${article.slug}`}
-            className="group rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className={cn(
+              "group rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+              FOCUS_RING,
+            )}
           >
             <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
               {article.tag_list[0] ?? "post"}

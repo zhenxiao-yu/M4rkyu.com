@@ -15,11 +15,7 @@ export interface CommentWithAuthor extends CommentRow {
   author: Pick<ProfileRow, "id" | "display_name" | "username" | "avatar_url"> | null;
 }
 
-/**
- * Public list for a thread. Returns approved comments to everyone;
- * authors and admins additionally see their own pending/rejected/hidden
- * via the RLS policy. The caller doesn't have to filter — RLS does.
- */
+// Public thread list — RLS scopes visibility (approved for all; pending/rejected/hidden visible to author + admin).
 export const listCommentsForItem = cache(
   async (
     itemType: CommentItemType,

@@ -24,7 +24,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useSoundEnabled } from "@/hooks/use-sound-enabled";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
 import { playCue } from "@/lib/audio/ui-sound";
 import type { LoopMode } from "@/content/music";
@@ -196,7 +196,10 @@ export function AudioPlayerDialog({
             onClick={togglePlay}
             aria-label={isPlaying ? t("pause") : t("play")}
             disabled={isLoading || !hasTracks}
-            className="grid size-14 place-items-center rounded-full border border-border bg-foreground text-background shadow-sm transition-[transform,background-color] duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:active:scale-95"
+            className={cn(
+              "grid size-14 place-items-center rounded-full border border-border bg-foreground text-background shadow-sm transition-[transform,background-color] duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-55 motion-safe:active:scale-95",
+              FOCUS_RING,
+            )}
           >
             {isLoading ? (
               <Waves className="size-6 animate-pulse" />
@@ -249,7 +252,7 @@ export function AudioPlayerDialog({
                   "font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground",
                   "transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium)",
                   "hover:border-ring/60 hover:bg-ring/10 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  FOCUS_RING,
                 )}
               >
                 <PlayTest aria-hidden="true" className="size-2.5" />
@@ -338,7 +341,8 @@ function TransportButton({
       aria-pressed={active}
       disabled={disabled}
       className={cn(
-        "grid size-10 place-items-center rounded-full border border-transparent text-muted-foreground transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "grid size-10 place-items-center rounded-full border border-transparent text-muted-foreground transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45",
+        FOCUS_RING,
         active && "border-ring/45 bg-ring/10 text-foreground",
       )}
     >

@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { usePathname, Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
 
@@ -13,8 +13,10 @@ interface DesktopNavProps {
   ariaLabel: string;
 }
 
-const PILL_BASE =
-  "relative inline-flex h-9 items-center rounded-full px-3 font-mono text-[0.68rem] uppercase tracking-[0.18em] transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const PILL_BASE = cn(
+  "relative inline-flex h-9 items-center rounded-full px-3 font-mono text-[0.68rem] uppercase tracking-[0.18em] transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+  FOCUS_RING,
+);
 const PILL_ACTIVE = "bg-background text-foreground shadow-sm shadow-black/5";
 const PILL_INACTIVE = "text-muted-foreground";
 

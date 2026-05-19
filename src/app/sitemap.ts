@@ -6,10 +6,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 import { getAllPostSlugs } from "@/lib/blog/get-post";
 
-// Stable timestamp computed at build time. Real `lastModified` per
-// entry will land when content data carries explicit dates;
-// returning `new Date()` per request makes crawlers think the whole
-// site refreshes every minute and they de-weight the signal.
+// Stable build-time timestamp — per-request `new Date()` would make crawlers de-weight the signal.
 const BUILT_AT = new Date();
 
 const STATIC_PATHS = [
