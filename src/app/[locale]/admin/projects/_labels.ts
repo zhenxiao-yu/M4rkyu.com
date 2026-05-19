@@ -31,6 +31,8 @@ export async function buildProjectFormLabels(locale: Locale) {
     outcomeLabel: t("outcomeLabel"),
     stackLabel: t("stackLabel"),
     stackHint: t("arrayHint"),
+    tagsLabel: t("tagsLabel"),
+    tagsHint: t("tagsHint"),
     featuresLabel: t("featuresLabel"),
     architectureLabel: t("architectureLabel"),
     challengesLabel: t("challengesLabel"),

@@ -12,9 +12,11 @@ const routes = [
   "/en/logs",
   "/en/media",
   "/en/resources",
+  "/en/resources/contrast-checker",
+  "/en/resources/color-converter",
+  "/en/resources/shadow-generator",
   "/en/about",
   "/en/contact",
-  "/en/portal",
 ];
 
 for (const route of routes) {

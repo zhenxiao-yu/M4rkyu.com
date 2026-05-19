@@ -31,6 +31,8 @@ interface Labels {
   outcomeLabel: string;
   stackLabel: string;
   stackHint: string;
+  tagsLabel: string;
+  tagsHint: string;
   featuresLabel: string;
   architectureLabel: string;
   challengesLabel: string;
@@ -98,6 +100,7 @@ export function ProjectForm({
     role: project?.role ?? "",
     outcome: project?.outcome ?? "",
     stack: project?.stack?.join("\n") ?? "",
+    tags: project?.tags?.join("\n") ?? "",
     features: project?.features?.join("\n") ?? "",
     architectureNotes: project?.architectureNotes?.join("\n") ?? "",
     challenges: project?.challenges?.join("\n") ?? "",
@@ -222,14 +225,24 @@ export function ProjectForm({
             rows={3}
           />
         </Row>
-        <Field
-          label={labels.stackLabel}
-          name="stack"
-          defaultValue={defaults.stack}
-          hint={labels.stackHint}
-          multiline
-          rows={4}
-        />
+        <Row cols={2}>
+          <Field
+            label={labels.stackLabel}
+            name="stack"
+            defaultValue={defaults.stack}
+            hint={labels.stackHint}
+            multiline
+            rows={4}
+          />
+          <Field
+            label={labels.tagsLabel}
+            name="tags"
+            defaultValue={defaults.tags}
+            hint={labels.tagsHint}
+            multiline
+            rows={4}
+          />
+        </Row>
         <Row cols={2}>
           <Field
             label={labels.featuresLabel}

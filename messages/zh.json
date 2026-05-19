@@ -945,6 +945,8 @@
     "outcomeLabel": "结果",
     "stackLabel": "技术栈",
     "arrayHint": "每行一条。",
+    "tagsLabel": "标签",
+    "tagsHint": "跨主题标签（如个人项目、开源、已上线）。每行一条。",
     "featuresLabel": "功能",
     "architectureLabel": "架构笔记",
     "challengesLabel": "挑战",

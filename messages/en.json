@@ -945,6 +945,8 @@
     "outcomeLabel": "Outcome",
     "stackLabel": "Stack",
     "arrayHint": "One per line.",
+    "tagsLabel": "Tags",
+    "tagsHint": "Cross-cutting themes (e.g., personal, open-source, in-production). One per line.",
     "featuresLabel": "Features",
     "architectureLabel": "Architecture notes",
     "challengesLabel": "Challenges",

@@ -22,12 +22,26 @@ supabase/
     20260516000600_admin_settings.sql
     20260516001000_functions_triggers.sql
     20260516002000_rls.sql
+    20260517000100_admin_email_allowlist.sql
+    20260517000200_admin_email_verified.sql
+    20260517000300_delete_my_account.sql
+    20260517000400_email_send_rate_limit.sql
+    20260518000100_email_send_rate_limit_relax.sql
+    20260518000200_oauth_owner_verified_metadata.sql
+    20260518073753_function_security_hardening.sql
+    20260518073922_function_execute_grants.sql
+    20260519015546_gallery_cms.sql
+    20260519020813_projects_cms.sql
+    20260519022300_projects_tags.sql
   seed.sql
 ```
 
 Order matters — apply in filename order. The trigger file
 (`_010_`) depends on every table existing; the RLS file (`_020_`)
-depends on `public.is_admin()` from the trigger file.
+depends on `public.is_admin()` from the trigger file. The gallery
++ projects CMS migrations (PR 4a/4b) and the projects-tags column
+(PR 5) follow the same `is_admin()` + RLS pattern and depend on
+the trigger file too.
 
 ## First-time setup
 
@@ -36,11 +50,14 @@ depends on `public.is_admin()` from the trigger file.
 2. **Copy keys into `.env`** (use `.env.example` as the template):
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-3. **Apply migrations.** Two options:
+3. **Apply migrations.** Three options:
    - **Dashboard SQL editor** — paste each migration file in order,
      hit Run. Quick + visible.
    - **Supabase CLI** — `supabase link --project-ref <ref>` then
      `supabase db push`. Better for repeated environments.
+   - **GitHub Action** (recommended once configured) — see
+     "Auto-apply via CI" below. Migrations land on every push to
+     `main` that touches `supabase/migrations/**`.
 4. **Apply seed.** `supabase/seed.sql` populates `admin_settings`
    with sensible defaults.
 5. **Configure auth providers.** Dashboard → Authentication →
@@ -137,12 +154,54 @@ drop function if exists public.rate_limit_comments();
 
 Then re-apply the migrations in order.
 
+## Auto-apply via CI
+
+`.github/workflows/supabase-migrations.yml` runs `supabase db push`
+on every push to `main` that touches `supabase/migrations/**`.
+Idempotent — already-applied migrations skip cleanly.
+
+One-time GitHub configuration (Repo Settings → Secrets and variables
+→ Actions):
+
+| Kind     | Name                     | Where to get it                                                                                             |
+|----------|--------------------------|--------------------------------------------------------------------------------------------------------------|
+| Secret   | `SUPABASE_ACCESS_TOKEN`  | https://supabase.com/dashboard/account/tokens → "Generate new token". Scope: all projects.                   |
+| Secret   | `SUPABASE_DB_PASSWORD`   | Supabase dashboard → Project Settings → Database → Connection string → reveal password.                      |
+| Variable | `SUPABASE_PROJECT_REF`   | The slug in your Supabase dashboard URL: `https://supabase.com/dashboard/project/<REF>`.                     |
+
+Re-run anytime from the Actions tab → "Supabase migrations" →
+"Run workflow."
+
+If a migration was already applied via the dashboard SQL editor and
+the CLI errors with a drift complaint, run locally:
+
+```bash
+supabase migration repair --status applied <version>
+```
+
+Where `<version>` is the timestamp prefix of the file (e.g.
+`20260519015546`).
+
+## Content tables vs user-action tables
+
+The CMS migrations (gallery + projects) added in PR 4a/4b live
+alongside the user-action tables but stay in a separate concern:
+
+- `gallery_collections`, `gallery_items` — DB-backed CMS for `/archive`.
+  Public reads filter to `status = 'ready'`; admin owns full CRUD.
+  Storage bucket `gallery-images` (public read, admin write).
+- `projects` (+ `tags` column, PR 5) — DB-backed CMS for `/work`.
+  Same posture as the gallery tables.
+
+Public pages read DB-first and fall back to the static
+`src/content/*` arrays when the tables are empty, so cutover is
+zero-downtime. The static arrays remain authoritative until an admin
+creates the first row.
+
 ## What's NOT here
 
-- No content tables for projects / gallery / games / posts. Those
-  remain code-owned in `src/content/*` and from dev.to for logs.
-  Supabase only stores **user actions on** that content, never the
-  content itself.
+- No CMS for games / posts / resources yet. Games and resources
+  remain code-owned in `src/content/*`; posts come from dev.to.
 - No `audit_log`. Add it only when an admin action proves it's
   needed.
 - No `notes` table. The `/notes` route is empty today; building a

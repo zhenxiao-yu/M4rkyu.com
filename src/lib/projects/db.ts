@@ -25,6 +25,7 @@ export interface DbProjectRow {
   role: string;
   outcome: string;
   stack: string[];
+  tags: string[];
   features: string[];
   architecture_notes: string[];
   challenges: string[];
@@ -40,7 +41,7 @@ export interface DbProjectRow {
 }
 
 const SELECT_COLUMNS =
-  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
+  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
 
 export const getDbProjects = cache(async (): Promise<DbProjectRow[]> => {
   if (!isSupabaseConfigured()) return [];
@@ -87,6 +88,7 @@ export function dbProjectRowToProject(row: DbProjectRow): Project {
     solution: row.solution,
     role: row.role,
     stack: row.stack,
+    tags: row.tags ?? [],
     features: row.features,
     architectureNotes: row.architecture_notes,
     challenges: row.challenges,

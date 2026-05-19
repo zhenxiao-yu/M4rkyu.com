@@ -37,6 +37,10 @@ export const projectSchema = z.object({
   solution: z.string().min(1),
   role: z.string().min(1),
   stack: z.array(z.string()),
+  // Cross-cutting tags (themes, scope, audience). Separate from
+  // `stack` (technologies) — the /work filter UX can offer either
+  // axis. Default empty so existing static entries validate.
+  tags: z.array(z.string()).default([]),
   features: z.array(z.string()),
   architectureNotes: z.array(z.string()),
   // No "TBD…" default — an empty array reads as "no challenges yet"

@@ -112,10 +112,23 @@ export default async function AdminProjectsPage({
                       </Link>
                     </Button>
                   </CardHeader>
-                  <CardContent className="text-sm leading-6 text-muted-foreground">
+                  <CardContent className="grid gap-3 text-sm leading-6 text-muted-foreground">
                     <p className="line-clamp-2">
                       {project.short_pitch || t("noPitch")}
                     </p>
+                    {project.tags && project.tags.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="font-mono text-[0.6rem]"
+                          >
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
                   </CardContent>
                 </Card>
               </li>
