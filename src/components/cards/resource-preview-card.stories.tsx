@@ -35,6 +35,7 @@ const draftResource: Resource = {
   pricing: "Free",
   tags: ["components", "a11y", "documentation"],
   status: "draft",
+  featured: false,
 };
 
 export const Draft: Story = {

@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
 import { ToolShell } from "@/components/tools/tool-shell";
 import { isToolSlug } from "@/components/tools/tool-registry";
 import { ToolRenderer } from "@/components/tools/tool-renderer";
@@ -12,6 +13,7 @@ import { resources } from "@/content/resources";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { buildToolJsonLd } from "@/lib/seo/structured-data";
 
 interface ToolPageProps {
   params: Promise<{ locale: Locale; slug: string }>;
@@ -54,6 +56,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   return (
     <PageShell locale={locale}>
+      <JsonLd data={buildToolJsonLd(resource, locale)} />
       <PageSection>
         <div className="mb-6">
           <Button

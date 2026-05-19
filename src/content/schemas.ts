@@ -184,6 +184,11 @@ export const resourceSchema = z.object({
   pricing: z.string().min(1),
   tags: z.array(z.string()),
   status: contentStatusSchema.default("placeholder"),
+  // Featured tools get the bento spotlight on /resources. Defaults to
+  // false so existing entries keep validating untouched.
+  featured: z.boolean().default(false),
+  // Optional lucide icon name; falls back to a sensible category default.
+  iconKey: z.string().optional(),
 });
 
 export const postSchema = z.object({

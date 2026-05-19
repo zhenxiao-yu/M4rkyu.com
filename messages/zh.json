@@ -513,7 +513,7 @@
     "emptyDescription": "完成调色与字幕后，海报与片段会陆续出现在这里。"
   },
   "Resources": {
-    "eyebrow": "工具库",
+    "eyebrow": "交互工具",
     "categoryAll": "全部",
     "typeLabel": "类型",
     "type": {
@@ -524,14 +524,35 @@
     "openTool": "打开工具",
     "backToResources": "全部资源",
     "toolSource": "来源",
-    "searchLabel": "搜索",
-    "searchPlaceholder": "按工具或笔记过滤…",
+    "searchLabel": "搜索工具",
+    "searchPlaceholder": "按名称、标签或描述搜索…",
     "filterSummary": "{filtered} / {total}",
     "visit": "前往资源",
-    "emptyTitle": "没有找到匹配的资源",
-    "emptyDescription": "调整搜索词或清除分类，看看更多工具。",
+    "emptyTitle": "没有匹配的工具",
+    "emptyDescription": "换个标签或清除搜索条件再试。",
     "indexPendingTitle": "资源搜索索引待上线",
-    "indexPendingDescription": "待办：等正式资源与笔记确定后，会接入 Pagefind 索引与标签搜索。"
+    "indexPendingDescription": "待办：等正式资源与笔记确定后，会接入 Pagefind 索引与标签搜索。",
+    "clearFilters": "清除筛选",
+    "featuredEyebrow": "聚焦",
+    "featuredHeading": "置顶工具",
+    "subCategoryLabel": "标签",
+    "tagSection": {
+      "all": "全部",
+      "css": "CSS 与设计",
+      "crypto": "加密与认证",
+      "text": "文本",
+      "format": "格式与数据",
+      "encode": "编码"
+    },
+    "viewToggleLabel": "视图模式",
+    "viewToggleGrid": "网格视图",
+    "viewToggleList": "列表视图",
+    "linksRailEyebrow": "外部",
+    "linksRailTitle": "外部资源",
+    "linksRailLede": "我常用的框架与参考。在新标签页打开。",
+    "marqueeLabel": "全部工具",
+    "openToolAria": "打开 {name} 工具",
+    "toolCount": "{count, plural, =0 {0 个工具} other {# 个工具}}"
   },
   "Shop": {
     "eyebrow": "小批量出品",
@@ -546,8 +567,8 @@
   "Meta": {
     "galleryTitle": "影像",
     "galleryDescription": "黑白摄影、数字艺术与样片 —— 于震潇的视觉档案。",
-    "resourcesTitle": "资源",
-    "resourcesDescription": "工具、框架与参考 —— 真正在使用的小型个人技术栈。",
+    "resourcesTitle": "免费浏览器开发者工具",
+    "resourcesDescription": "18 个交互工具 —— JSON 格式化、对比度检查、JWT 解码、密码生成等 —— 全部在浏览器中运行。无需登录、无需上传、无追踪。",
     "contactTitle": "联系",
     "contactDescription": "项目咨询与合作。当前提供邮件与表单回退，后续接入服务端表单服务。",
     "mediaTitle": "媒体",

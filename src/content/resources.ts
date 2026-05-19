@@ -77,8 +77,10 @@ export const resources = [
     type: "tool",
     link: "https://www.w3.org/TR/WCAG21/#contrast-minimum",
     pricing: "Free",
-    tags: ["a11y", "color", "wcag"],
+    tags: ["css", "color", "a11y", "wcag"],
     status: "ready",
+    featured: true,
+    iconKey: "Contrast",
   },
   {
     name: "Color Converter",
@@ -114,8 +116,10 @@ export const resources = [
     type: "tool",
     link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
     pricing: "Free",
-    tags: ["json", "format", "validate"],
+    tags: ["format", "json", "validate"],
     status: "ready",
+    featured: true,
+    iconKey: "Braces",
   },
   {
     name: "Base64 Encoder/Decoder",
@@ -150,7 +154,7 @@ export const resources = [
     type: "tool",
     link: "https://datatracker.ietf.org/doc/html/rfc7519",
     pricing: "Free",
-    tags: ["jwt", "auth", "decode"],
+    tags: ["crypto", "jwt", "auth", "decode"],
     status: "ready",
   },
   {
@@ -174,8 +178,10 @@ export const resources = [
     type: "tool",
     link: "https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues",
     pricing: "Free",
-    tags: ["security", "crypto", "password"],
+    tags: ["crypto", "security", "password"],
     status: "ready",
+    featured: true,
+    iconKey: "KeyRound",
   },
   {
     name: "Hash Generator",
@@ -210,7 +216,7 @@ export const resources = [
     type: "tool",
     link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
     pricing: "Free",
-    tags: ["string", "naming", "rename"],
+    tags: ["text", "string", "naming", "rename"],
     status: "ready",
   },
   {
@@ -222,7 +228,7 @@ export const resources = [
     type: "tool",
     link: "https://en.wikipedia.org/wiki/Clean_URL",
     pricing: "Free",
-    tags: ["url", "string", "slug"],
+    tags: ["text", "url", "string", "slug"],
     status: "ready",
   },
   {
@@ -246,7 +252,7 @@ export const resources = [
     type: "tool",
     link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
     pricing: "Free",
-    tags: ["date", "time", "debug"],
+    tags: ["format", "date", "time", "debug"],
     status: "ready",
   },
   {
@@ -270,7 +276,7 @@ export const resources = [
     type: "tool",
     link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt",
     pricing: "Free",
-    tags: ["math", "binary", "hex"],
+    tags: ["format", "math", "binary", "hex"],
     status: "ready",
   },
   {

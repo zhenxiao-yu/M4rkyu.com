@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getProjectsSource } from "@/lib/projects/source";
 import { games } from "@/content/games";
 import { galleryCollections } from "@/content/gallery";
+import { resources } from "@/content/resources";
 import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 import { getAllPostSlugs } from "@/lib/blog/get-post";
@@ -77,11 +78,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry(`/logs/${slug}`, "weekly", 0.6),
   );
 
+  // Per-tool routes — every ready, runnable tool is its own URL and
+  // earns a sitemap entry so SoftwareApplication snippets index. Stays
+  // below the /resources index (0.6) at 0.5 so the index page remains
+  // the canonical entry point.
+  const toolEntries = resources
+    .filter((resource) => resource.type === "tool" && resource.status === "ready")
+    .flatMap((tool) => entry(`/resources/${tool.slug}`, "monthly", 0.5));
+
   return [
     ...staticEntries,
     ...projectEntries,
     ...gameEntries,
     ...galleryEntries,
     ...blogEntries,
+    ...toolEntries,
   ];
 }
