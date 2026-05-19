@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { FeaturedPostsBento } from "@/components/blog/featured-posts-bento";
+import { FeaturedPostsRotator } from "@/components/blog/featured-posts-rotator";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n/routing";
@@ -12,6 +12,13 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 import { getPosts, DEVTO_USERNAME } from "@/lib/blog/get-posts";
 import { selectFeaturedPosts } from "@/lib/blog/filter-posts";
 import { BlogTimeline } from "./_client";
+
+// Pull enough featured posts for a full rotator page. `selectFeaturedPosts`
+// only respects `BLOG_PAGE_SETTINGS.featuredPostCount`, so we widen the
+// candidate pool ourselves: a pinned post plus the highest-scoring 6
+// candidates. Fewer dev.to posts → the rotator falls back to its static
+// mode automatically.
+const ROTATOR_PAGE_SIZE = 7;
 
 export async function generateMetadata({
   params,
@@ -36,7 +43,10 @@ export default async function BlogPage({
   const t = await getTranslations({ locale, namespace: "Blog" });
   const posts = await getPosts();
   const pinned = posts.find((post) => post.pinned);
-  const featuredPosts = selectFeaturedPosts(posts, pinned);
+  // Widen the candidate pool just for the rotator (one full mosaic
+  // page = 7 tiles). The global BLOG_PAGE_SETTINGS stays at 3 so the
+  // legacy /logs surfaces that read it keep their previous behaviour.
+  const featuredPosts = selectFeaturedPosts(posts, pinned, ROTATOR_PAGE_SIZE);
   const featuredSlugs = new Set(featuredPosts.map((post) => post.slug));
   // Keep featured posts out of the archive timeline so readers do not see duplicates.
   const archivePosts = posts.filter((post) => !featuredSlugs.has(post.slug));
@@ -77,13 +87,25 @@ export default async function BlogPage({
         </Card>
       </PageHero>
 
-      <PageSection innerClassName="pb-0">
+      <PageSection innerClassName="pt-6 pb-4 sm:pt-8 sm:pb-6 lg:pt-10">
         <FadeIn>
-          <FeaturedPostsBento
+          <FeaturedPostsRotator
             posts={featuredPosts}
-            heading={t("featuredHeading")}
-            description={t("featuredDescription")}
-            ctaLabel={t("featuredCta")}
+            locale={locale}
+            labels={{
+              eyebrow: t("featuredRotatorEyebrow"),
+              heading: t("featuredHeading"),
+              regionLabel: t("featuredRotatorLabel"),
+              prev: t("featuredRotatorPrev"),
+              next: t("featuredRotatorNext"),
+              pause: t("featuredRotatorPause"),
+              play: t("featuredRotatorPlay"),
+              collapse: t("featuredRotatorCollapse"),
+              expand: t("featuredRotatorExpand"),
+              gotoPage: t("featuredRotatorGoto", { index: "{index}" }),
+              openAria: t("openPostAria", { name: "{name}" }),
+              ctaLabel: t("featuredCta"),
+            }}
           />
         </FadeIn>
       </PageSection>

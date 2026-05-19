@@ -102,14 +102,23 @@ export function filterAndSortPosts(
   return sortPosts(matches, filters.sortMode, posts);
 }
 
-export function selectFeaturedPosts(posts: Post[], pinned?: Post): Post[] {
-  if (BLOG_PAGE_SETTINGS.featuredPostCount <= 0) return [];
+/**
+ * Select the top-scoring posts for the /logs spotlight surface.
+ * `count` defaults to `BLOG_PAGE_SETTINGS.featuredPostCount` so existing
+ * callers stay untouched; the rotator on /logs passes a wider value
+ * (e.g. 7) to fill a full bento page without bumping the global setting,
+ * which is still consumed by the legacy `featured-posts-bento.tsx` and
+ * the per-card tag limit.
+ */
+export function selectFeaturedPosts(
+  posts: Post[],
+  pinned?: Post,
+  count: number = BLOG_PAGE_SETTINGS.featuredPostCount,
+): Post[] {
+  if (count <= 0) return [];
 
   const pinnedSlug = pinned?.slug;
-  const availableSlots = Math.max(
-    BLOG_PAGE_SETTINGS.featuredPostCount - (pinned ? 1 : 0),
-    0,
-  );
+  const availableSlots = Math.max(count - (pinned ? 1 : 0), 0);
   const ranked = posts
     .filter((post) => post.slug !== pinnedSlug)
     .map((post, index) => ({ post, index, score: featuredScore(post) }))

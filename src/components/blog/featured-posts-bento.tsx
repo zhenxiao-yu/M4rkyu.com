@@ -20,6 +20,12 @@ interface FeaturedPostsBentoProps {
   ctaLabel: string;
 }
 
+/**
+ * @deprecated Replaced by `FeaturedPostsRotator` on /logs as of the
+ * mosaic-bento revamp. Left on disk in case the static surface is
+ * needed elsewhere; no callers remain in the app tree.
+ */
+
 const metaClass =
   "font-mono text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground";
 

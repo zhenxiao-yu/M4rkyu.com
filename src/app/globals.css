@@ -604,6 +604,39 @@ body {
   );
 }
 
+/* Bento pattern primitives. Token-driven (color-mix on --foreground /
+ * --ring) so they shift with theme without touching JS. Apply via an
+ * absolute aria-hidden layer inside a relative parent; the opacity in
+ * BentoFx dials the strength. */
+.bento-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--foreground) 18%, transparent) 1px,
+    transparent 1.6px
+  );
+  background-size: 14px 14px;
+}
+.bento-diag {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 14px,
+    color-mix(in srgb, var(--foreground) 10%, transparent) 14px 15px
+  );
+}
+.bento-radial {
+  background-image:
+    radial-gradient(
+      circle at 78% 22%,
+      color-mix(in srgb, var(--ring) 22%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 18% 88%,
+      color-mix(in srgb, var(--foreground) 10%, transparent),
+      transparent 55%
+    );
+}
+
 .archive-vignette {
   background:
     radial-gradient(
@@ -624,7 +657,10 @@ body {
 [aria-hidden="true"].archive-vignette,
 [aria-hidden="true"].hero-vignette,
 [aria-hidden="true"].placeholder-noise,
-[aria-hidden="true"].contact-sheet {
+[aria-hidden="true"].contact-sheet,
+[aria-hidden="true"].bento-dots,
+[aria-hidden="true"].bento-diag,
+[aria-hidden="true"].bento-radial {
   pointer-events: none;
 }
 
@@ -821,6 +857,30 @@ html {
   }
   50% {
     transform: translate3d(0, 4px, 0);
+  }
+}
+
+/* Bento rotation pulse — a brief whole-grid ring shimmer that fires
+ * when FeaturedBentoRotator / FeaturedPostsRotator advance to the
+ * next page, so the eye catches the swap even when not tracking the
+ * hero tile. Rides on `box-shadow` so it composes cleanly with any
+ * border-radius on the grid frame. Duration is driven by the
+ * `--bento-pulse-ms` custom property the consumer sets at apply
+ * time; reduced-motion users get a no-op via the consumer's class
+ * gate plus the global animation-duration override below. */
+.bento-pulse {
+  animation: bento-pulse var(--bento-pulse-ms, 600ms)
+    var(--ease-premium, ease-out) 1;
+}
+@keyframes bento-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring) 0%, transparent);
+  }
+  40% {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 24%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring) 0%, transparent);
   }
 }
 
