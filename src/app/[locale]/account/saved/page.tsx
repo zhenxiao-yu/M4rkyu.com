@@ -9,6 +9,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import { getSavedItems } from "@/lib/social/saves";
 import { lookupContent } from "@/lib/content/lookup";
 import type { Locale } from "@/i18n/routing";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import { AccountNav } from "../_components/account-nav";
 
 export const dynamic = "force-dynamic";
@@ -89,7 +90,10 @@ export default async function AccountSavedPage({
                       href={summary.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className={cn(
+                        "group block rounded-md",
+                        FOCUS_RING_INSET,
+                      )}
                     >
                       {cardBody}
                     </a>
@@ -97,7 +101,10 @@ export default async function AccountSavedPage({
                     <Link
                       href={summary.href}
                       locale={locale}
-                      className="group block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className={cn(
+                        "group block rounded-md",
+                        FOCUS_RING_INSET,
+                      )}
                     >
                       {cardBody}
                     </Link>

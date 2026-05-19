@@ -20,7 +20,7 @@ import {
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import {
   requestMagicLinkAction,
   signInWithPasswordAction,
@@ -262,7 +262,10 @@ export function AuthForm({ next }: AuthFormProps) {
                   aria-label={
                     showPassword ? t("hidePassword") : t("showPassword")
                   }
-                  className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={cn(
+                    "absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground",
+                    FOCUS_RING_INSET,
+                  )}
                 >
                   {showPassword ? (
                     <EyeOff className="size-4" aria-hidden="true" />
@@ -357,7 +360,8 @@ function ModeButton({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 items-center justify-center rounded-sm px-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "inline-flex h-8 items-center justify-center rounded-sm px-2 text-xs font-medium transition-colors",
+        FOCUS_RING_INSET,
         active
           ? "bg-background text-foreground shadow-sm"
           : "text-muted-foreground hover:text-foreground",

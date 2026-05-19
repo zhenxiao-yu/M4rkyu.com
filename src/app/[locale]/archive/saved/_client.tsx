@@ -11,6 +11,7 @@ import { SignInSheet } from "@/components/auth/sign-in-sheet";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import type { GalleryItem } from "@/content/schemas";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 interface SavedGalleryClientProps {
   locale: Locale;
@@ -69,7 +70,10 @@ export function SavedGalleryClient({ locale, signedIn, items }: SavedGalleryClie
             href={`/archive?frame=${item.slug}`}
             locale={locale}
             aria-label={t("openFrame", { title: item.title })}
-            className="group block h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className={cn(
+              "group block h-full rounded-md",
+              FOCUS_RING_INSET,
+            )}
           >
             <Card className="h-full overflow-hidden bg-card/80 group-hover:border-ring group-hover:shadow-md">
               <FrameThumb item={item} frameTbdLabel={t("frameTbd")} />

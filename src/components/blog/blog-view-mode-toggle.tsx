@@ -2,7 +2,7 @@
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { LayoutGrid, List } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import type { BlogViewMode } from "./use-view-mode";
 
 interface BlogViewModeToggleProps {
@@ -60,7 +60,8 @@ function ToggleButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "grid size-8 place-items-center rounded-md transition-[background-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "grid size-8 place-items-center rounded-md transition-[background-color,color,transform] duration-(--motion-fast) ease-(--ease-premium)",
+        FOCUS_RING_INSET,
         active
           ? "bg-foreground text-background"
           : "text-muted-foreground hover:bg-muted hover:text-foreground motion-safe:hover:-translate-y-0.5",

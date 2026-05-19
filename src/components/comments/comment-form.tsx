@@ -9,6 +9,7 @@ import {
   type SubmitCommentState,
 } from "@/lib/comments/actions";
 import type { CommentItemType } from "@/lib/supabase/types";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 interface CommentFormProps {
   itemType: CommentItemType;
@@ -63,7 +64,10 @@ export function CommentForm({
         placeholder={t("placeholder")}
         required
         disabled={pending}
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className={cn(
+          "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm",
+          FOCUS_RING_INSET,
+        )}
       />
       <div className="flex items-center justify-between gap-3">
         <p className="text-[0.7rem] text-muted-foreground">{t("moderationNotice")}</p>

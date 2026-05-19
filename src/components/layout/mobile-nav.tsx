@@ -19,7 +19,7 @@ import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 import type { NavDropdownGroup, NavFlatLink } from "./nav-structure";
 
 interface MobileNavProps {
@@ -95,7 +95,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
             href="/"
             locale={locale}
             onClick={() => setSheetOpen(false)}
-            className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className={cn(
+              "inline-flex items-center gap-2 rounded-md",
+              FOCUS_RING_INSET,
+            )}
           >
             <span className="grid size-8 place-items-center rounded-md border bg-foreground font-mono text-xs font-bold text-background">
               M4
@@ -108,7 +111,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
             <button
               type="button"
               aria-label="Close menu"
-              className="inline-flex size-10 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className={cn(
+                "inline-flex size-10 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground",
+                FOCUS_RING_INSET,
+              )}
             >
               <X aria-hidden="true" className="size-4" />
             </button>
@@ -132,7 +138,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                     requestAnimationFrame(() => setPaletteOpen(true)),
                   );
                 }}
-                className="inline-flex h-12 w-full items-center justify-between rounded-md border border-border bg-background/80 px-4 text-sm text-muted-foreground shadow-sm transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={cn(
+                  "inline-flex h-12 w-full items-center justify-between rounded-md border border-border bg-background/80 px-4 text-sm text-muted-foreground shadow-sm transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
+                  FOCUS_RING_INSET,
+                )}
                 aria-label={tPalette("title")}
               >
                 <span className="inline-flex items-center gap-2">
@@ -171,7 +180,8 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                         href={link.href}
                         locale={locale}
                         className={cn(
-                          "group flex min-h-16 items-center justify-between rounded-md border border-border/70 bg-background/65 px-4 py-3 transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                          "group flex min-h-16 items-center justify-between rounded-md border border-border/70 bg-background/65 px-4 py-3 transition-[background-color,border-color,color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-muted/35 hover:text-foreground",
+                          FOCUS_RING_INSET,
                           isActive(link.href)
                             ? "border-ring/45 text-foreground"
                             : "text-muted-foreground",
@@ -231,7 +241,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                         <Link
                           href={group.href}
                           locale={locale}
-                          className="flex flex-1 items-center px-4 py-3 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          className={cn(
+                            "flex flex-1 items-center px-4 py-3 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground",
+                            FOCUS_RING_INSET,
+                          )}
                         >
                           <span className="font-display text-3xl font-black leading-none tracking-normal">
                             {group.label}
@@ -247,7 +260,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                         }
                         aria-expanded={open}
                         onClick={() => setOpenGroup(open ? null : group.id)}
-                        className="flex w-14 shrink-0 items-center justify-center border-l border-border/60 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className={cn(
+                          "flex w-14 shrink-0 items-center justify-center border-l border-border/60 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/35 hover:text-foreground",
+                          FOCUS_RING_INSET,
+                        )}
                       >
                         <ChevronDown
                           aria-hidden="true"
@@ -267,7 +283,8 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
                                 href={item.href}
                                 locale={locale}
                                 className={cn(
-                                  "flex min-h-11 items-center justify-between gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                                  "flex min-h-11 items-center justify-between gap-3 rounded-sm px-3 py-2 text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground",
+                                  FOCUS_RING_INSET,
                                   isActive(item.href)
                                     ? "text-foreground"
                                     : "text-muted-foreground",
@@ -294,7 +311,10 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
               <Link
                 href="/portal"
                 locale={locale}
-                className="mt-2 flex min-h-13 items-center justify-between rounded-md border border-ring/40 bg-ring/5 px-4 py-3 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:bg-ring/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={cn(
+                  "mt-2 flex min-h-13 items-center justify-between rounded-md border border-ring/40 bg-ring/5 px-4 py-3 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring hover:bg-ring/10",
+                  FOCUS_RING_INSET,
+                )}
               >
                 <span>{t("portal")}</span>
                 <span

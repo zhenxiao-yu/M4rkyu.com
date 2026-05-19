@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import type { GalleryItem } from "@/content/schemas";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import { GalleryActions } from "./gallery-actions";
 
 interface GalleryLightboxProps {
@@ -212,7 +212,7 @@ export function GalleryLightbox({
                       key={item.slug}
                       type="button"
                       onClick={() => onChange(item.slug)}
-                      className="group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className={cn("group text-left", FOCUS_RING_INSET)}
                       aria-label={tGallery("openFrame", { title: item.title })}
                     >
                       <div

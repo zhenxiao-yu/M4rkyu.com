@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import { LinkPreview } from "./link-preview";
 
 const meta = {
@@ -21,7 +22,10 @@ type Story = StoryObj<typeof meta>;
 const TriggerLink = ({ children }: { children: React.ReactNode }) => (
   <a
     href="#"
-    className="rounded px-3 py-1.5 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    className={cn(
+      "rounded px-3 py-1.5 underline-offset-4 hover:underline",
+      FOCUS_RING_INSET,
+    )}
   >
     {children}
   </a>

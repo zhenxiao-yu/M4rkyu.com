@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConnectedAccounts } from "@/components/auth/connected-accounts";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import {
   deleteAccountAction,
   signOutAction,
@@ -92,7 +92,10 @@ function PasswordSection() {
             tabIndex={-1}
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? t("hidePassword") : t("showPassword")}
-            className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className={cn(
+              "absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground",
+              FOCUS_RING_INSET,
+            )}
           >
             {showPassword ? (
               <EyeOff className="size-4" aria-hidden="true" />

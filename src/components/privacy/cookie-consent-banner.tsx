@@ -10,7 +10,7 @@ import {
   saveConsent,
   subscribeConsent,
 } from "@/lib/privacy/consent";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 export function CookieConsentBanner() {
   const t = useTranslations("Privacy");
@@ -133,7 +133,10 @@ function PreferenceToggle({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex min-h-24 items-start justify-between gap-4 rounded-lg border border-border bg-card/70 p-3 text-left transition-[border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-card motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "flex min-h-24 items-start justify-between gap-4 rounded-lg border border-border bg-card/70 p-3 text-left transition-[border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/45 hover:bg-card motion-safe:hover:-translate-y-0.5",
+        FOCUS_RING_INSET,
+      )}
     >
       <span>
         <span className="block text-sm font-semibold text-foreground">

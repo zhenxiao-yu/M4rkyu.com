@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -31,7 +31,12 @@ export function DialogContent({
       >
         {children}
         {hideCloseButton ? null : (
-          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <DialogPrimitive.Close
+            className={cn(
+              "absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100",
+              FOCUS_RING_INSET,
+            )}
+          >
             <X className="size-4" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>

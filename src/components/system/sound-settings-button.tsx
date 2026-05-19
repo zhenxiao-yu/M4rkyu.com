@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Headphones, Pause, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
 import { playCue } from "@/lib/audio/ui-sound";
 import { AudioPlayerDialog } from "./audio-player-dialog";
@@ -76,7 +76,8 @@ export function QuickPlayPauseButton({ className }: { className?: string }) {
       onClick={togglePlay}
       aria-label={isPlaying ? t("pause") : t("play")}
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
+        FOCUS_RING_INSET,
         className,
       )}
     >
