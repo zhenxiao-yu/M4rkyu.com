@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -126,7 +127,12 @@ export function GalleryLightbox({
 
         {current ? (
           <div className="grid gap-5 px-5 pb-5">
-            <FrameMedia item={current} mediaTbdLabel={tGallery("lightboxMediaTbd")} />
+            <FrameMedia
+              item={current}
+              mediaTbdLabel={tGallery("lightboxMediaTbd")}
+              zoomInLabel={tGallery("zoomIn")}
+              zoomOutLabel={tGallery("zoomOut")}
+            />
 
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <Badge variant="outline">{current.type}</Badge>
@@ -260,26 +266,77 @@ export function GalleryLightbox({
 function FrameMedia({
   item,
   mediaTbdLabel,
+  zoomInLabel,
+  zoomOutLabel,
 }: {
   item: GalleryItem;
   mediaTbdLabel: string;
+  zoomInLabel: string;
+  zoomOutLabel: string;
 }) {
+  const reduceMotion = useReducedMotion();
+  const [zoomed, setZoomed] = useState(false);
+  const [origin, setOrigin] = useState("center");
   const aspect = aspectClass(item.aspect);
-  if (item.src) {
-    return (
-      <div className={cn("relative overflow-hidden rounded-md border bg-muted", aspect)}>
+
+  if (!item.src) {
+    return <PlaceholderImage label={mediaTbdLabel} aspect={aspect} />;
+  }
+
+  // Pan follows the cursor only when zoomed; mousemove never fires on
+  // touch, so touch devices get a simple centred 2× view instead.
+  const handleMove = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!zoomed) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    setOrigin(`${x}% ${y}%`);
+  };
+
+  return (
+    <div className={cn("group relative overflow-hidden rounded-md border bg-muted", aspect)}>
+      <button
+        type="button"
+        aria-label={zoomed ? zoomOutLabel : zoomInLabel}
+        aria-pressed={zoomed}
+        onClick={() => setZoomed((value) => !value)}
+        onMouseMove={handleMove}
+        onMouseLeave={() => setOrigin("center")}
+        className={cn(
+          "absolute inset-0 size-full",
+          zoomed ? "cursor-zoom-out" : "cursor-zoom-in",
+          FOCUS_RING_INSET,
+        )}
+      >
         <Image
           src={item.src.src}
           alt={item.src.alt}
           fill
           priority
           sizes="(min-width: 1024px) 960px, 100vw"
-          className="object-contain"
+          className={cn(
+            "object-contain",
+            !reduceMotion &&
+              "transition-transform duration-(--motion-medium) ease-(--ease-premium)",
+          )}
+          style={{
+            transform: zoomed ? "scale(2)" : "scale(1)",
+            transformOrigin: origin,
+          }}
         />
-      </div>
-    );
-  }
-  return <PlaceholderImage label={mediaTbdLabel} aspect={aspect} />;
+      </button>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-md border border-border bg-background/80 text-muted-foreground backdrop-blur-sm"
+      >
+        {zoomed ? (
+          <ZoomOut className="size-3.5" />
+        ) : (
+          <ZoomIn className="size-3.5" />
+        )}
+      </span>
+    </div>
+  );
 }
 
 function aspectClass(aspect: GalleryItem["aspect"]): string {

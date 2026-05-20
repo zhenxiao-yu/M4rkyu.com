@@ -50,7 +50,11 @@ export function AdminForm({
   }, [state, successMessage]);
 
   return (
-    <form action={formAction} className="grid gap-8">
+    <form
+      action={formAction}
+      encType="multipart/form-data"
+      className="grid gap-8"
+    >
       {hiddenFields}
 
       {state.status === "error" ? (

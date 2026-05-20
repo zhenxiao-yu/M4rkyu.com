@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { ArrowLeft, ImagePlus } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { PageShell } from "@/components/layout/page-shell";
@@ -7,7 +7,6 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -23,8 +22,10 @@ import {
   updateCollectionAction,
 } from "@/lib/gallery/admin";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { SubmitButton } from "@/components/admin/submit-button";
+import { CollectionForm } from "@/components/admin/gallery/collection-form";
+import { ItemForm } from "@/components/admin/gallery/item-form";
 import { AdminNav } from "../../_components/admin-nav";
+import { buildCollectionFormLabels, buildItemFormLabels } from "../_labels";
 
 export const dynamic = "force-dynamic";
 
@@ -34,16 +35,17 @@ interface PageProps {
 
 export default async function CollectionDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
-  // Fan out: both translation namespaces, the collection row, and the
-  // items list can all be requested in parallel. Items still run when
-  // the collection turns out to be missing — cheap and bounded by the
-  // public-ready partial index, so the wasted work is negligible.
-  const [t, tAdmin, collection, allItems] = await Promise.all([
-    getTranslations({ locale, namespace: "AdminGallery" }),
-    getTranslations({ locale, namespace: "Admin" }),
-    getDbCollectionBySlug(slug),
-    getDbGalleryItems(),
-  ]);
+  // Fan out: both translation namespaces, the collection row, the items
+  // list, and the form label bags can all be requested in parallel.
+  const [t, tAdmin, collection, allItems, collectionLabels, itemLabels] =
+    await Promise.all([
+      getTranslations({ locale, namespace: "AdminGallery" }),
+      getTranslations({ locale, namespace: "Admin" }),
+      getDbCollectionBySlug(slug),
+      getDbGalleryItems(),
+      buildCollectionFormLabels(locale),
+      buildItemFormLabels(locale),
+    ]);
   if (!collection) notFound();
 
   const items = allItems.filter((item) => item.collectionId === collection.id);
@@ -58,16 +60,26 @@ export default async function CollectionDetailPage({ params }: PageProps) {
       <PageSection>
         <AdminNav locale={locale} />
 
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between gap-2">
           <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
             <Link href="/admin/gallery" locale={locale}>
               <ArrowLeft aria-hidden="true" className="size-4" />
               {t("backToCollections")}
             </Link>
           </Button>
+          <Button asChild variant="outline" size="sm">
+            <a
+              href={`/${locale}/archive/${collection.slug}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <ExternalLink aria-hidden="true" className="size-3.5" />
+              {tAdmin("list.view")}
+            </a>
+          </Button>
         </div>
 
-        <div className="grid gap-8 xl:grid-cols-[1fr_22rem]">
+        <div className="grid gap-8 xl:grid-cols-[1fr_24rem]">
           {/* Items grid */}
           <section className="grid gap-4">
             <div className="flex items-center justify-between gap-3">
@@ -151,144 +163,39 @@ export default async function CollectionDetailPage({ params }: PageProps) {
             )}
           </section>
 
-          {/* Right rail: new item form + collection actions */}
+          {/* Right rail: collection edit + add-item form + danger zone */}
           <aside className="grid gap-4">
-            <Card className="bg-card/80">
-              <CardHeader>
-                <CardTitle className="text-base">{t("newItem")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form
-                  action={createItemAction}
-                  encType="multipart/form-data"
-                  className="grid gap-3"
-                >
-                  <input
-                    type="hidden"
-                    name="collectionId"
-                    value={collection.id}
-                  />
-                  <Field label={t("titleLabel")} name="title" required />
-                  <Field
-                    label={t("slugLabel")}
-                    name="slug"
-                    pattern="[a-z0-9-]+"
-                    required
-                  />
-                  <FieldFile label={t("imageLabel")} name="image" />
-                  <Field
-                    label={t("captionLabel")}
-                    name="caption"
-                    multiline
-                  />
-                  <Field
-                    label={t("altLabel")}
-                    name="alt"
-                    hint={t("altHint")}
-                  />
-                  <div className="grid gap-2 md:grid-cols-2">
-                    <Select
-                      label={t("typeLabel")}
-                      name="type"
-                      defaultValue="image"
-                      options={[
-                        { value: "image", label: t("itemType.image") },
-                        { value: "contact-sheet", label: t("itemType.contactSheet") },
-                        { value: "process", label: t("itemType.process") },
-                      ]}
-                    />
-                    <Select
-                      label={t("aspectLabel")}
-                      name="aspect"
-                      defaultValue="4/5"
-                      options={["1/1", "4/5", "3/4", "2/3", "16/9", "21/9"].map(
-                        (v) => ({ value: v, label: v }),
-                      )}
-                    />
-                  </div>
-                  <Select
-                    label={t("statusLabel")}
-                    name="status"
-                    defaultValue="ready"
-                    options={[
-                      { value: "ready", label: t("status.ready") },
-                      { value: "draft", label: t("status.draft") },
-                      { value: "placeholder", label: t("status.placeholder") },
-                      { value: "coming-soon", label: t("status.comingSoon") },
-                    ]}
-                  />
-                  <SubmitButton
-                    size="sm"
-                    className="mt-1"
-                    pendingLabel={t("uploading")}
-                  >
-                    <ImagePlus className="size-4" aria-hidden="true" />
-                    {t("addItem")}
-                  </SubmitButton>
-                </form>
-              </CardContent>
-            </Card>
-
             <Card className="bg-card/80">
               <CardHeader>
                 <CardTitle className="text-base">{t("collectionForm")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <form action={updateCollectionAction} className="grid gap-3">
-                  <input type="hidden" name="id" value={collection.id} />
-                  <Field
-                    label={t("titleLabel")}
-                    name="title"
-                    defaultValue={collection.title}
-                    required
-                  />
-                  <Field
-                    label={t("slugLabel")}
-                    name="slug"
-                    defaultValue={collection.slug}
-                    pattern="[a-z0-9-]+"
-                    required
-                  />
-                  <Field
-                    label={t("descriptionLabel")}
-                    name="description"
-                    defaultValue={collection.description}
-                    multiline
-                  />
-                  <Select
-                    label={t("statusLabel")}
-                    name="status"
-                    defaultValue={collection.status}
-                    options={[
-                      { value: "placeholder", label: t("status.placeholder") },
-                      { value: "draft", label: t("status.draft") },
-                      { value: "ready", label: t("status.ready") },
-                      { value: "coming-soon", label: t("status.comingSoon") },
-                    ]}
-                  />
-                  <Field
-                    label={t("sortOrderLabel")}
-                    name="sortOrder"
-                    type="number"
-                    defaultValue={String(collection.sortOrder)}
-                  />
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      name="featured"
-                      defaultChecked={collection.featured}
-                      className="size-4 rounded border-border accent-ring"
-                    />
-                    <span>{t("featured")}</span>
-                  </label>
-                  <SubmitButton
-                    size="sm"
-                    variant="outline"
-                    pendingLabel={t("saving")}
-                  >
-                    {t("save")}
-                  </SubmitButton>
-                </form>
+                <CollectionForm
+                  action={updateCollectionAction}
+                  collection={collection}
+                  labels={{ ...collectionLabels, submit: t("save") }}
+                  successMessage={tAdmin("saved")}
+                  hiddenFields={
+                    <input type="hidden" name="id" value={collection.id} />
+                  }
+                  cancelHref={`/${locale}/admin/gallery`}
+                />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card/80">
+              <CardHeader>
+                <CardTitle className="text-base">{t("newItem")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ItemForm
+                  action={createItemAction}
+                  collectionId={collection.id}
+                  showImage
+                  labels={{ ...itemLabels, submit: t("addItem") }}
+                  successMessage={tAdmin("saved")}
+                  cancelHref={`/${locale}/admin/gallery/${collection.slug}`}
+                />
               </CardContent>
             </Card>
 
@@ -321,103 +228,5 @@ export default async function CollectionDetailPage({ params }: PageProps) {
         </div>
       </PageSection>
     </PageShell>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  defaultValue,
-  required,
-  multiline,
-  hint,
-  pattern,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  defaultValue?: string;
-  required?: boolean;
-  multiline?: boolean;
-  hint?: string;
-  pattern?: string;
-}) {
-  const inputClass =
-    "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
-      </span>
-      {multiline ? (
-        <textarea
-          name={name}
-          defaultValue={defaultValue}
-          rows={3}
-          required={required}
-          className={inputClass}
-        />
-      ) : (
-        <Input
-          name={name}
-          type={type}
-          defaultValue={defaultValue}
-          required={required}
-          pattern={pattern}
-          autoComplete="off"
-        />
-      )}
-      {hint ? (
-        <span className="text-[0.7rem] text-muted-foreground/70">{hint}</span>
-      ) : null}
-    </label>
-  );
-}
-
-function FieldFile({ label, name }: { label: string; name: string }) {
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
-      </span>
-      <input
-        type="file"
-        name={name}
-        accept="image/*"
-        className="w-full rounded-md border border-dashed border-border bg-background/40 px-3 py-2 text-xs"
-      />
-    </label>
-  );
-}
-
-function Select({
-  label,
-  name,
-  options,
-  defaultValue,
-}: {
-  label: string;
-  name: string;
-  options: { value: string; label: string }[];
-  defaultValue?: string;
-}) {
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
-      </span>
-      <select
-        name={name}
-        defaultValue={defaultValue}
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }

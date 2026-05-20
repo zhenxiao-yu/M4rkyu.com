@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
@@ -6,9 +7,10 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Carousel } from "@/components/ui/magic/carousel";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Link } from "@/i18n/navigation";
+import type { GalleryCollection } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
@@ -45,7 +47,14 @@ export default async function ArchivePage({
     getGallerySource(),
   ]);
   const signedIn = Boolean(user);
-  const { collections: galleryCollections, items: galleryItems } = gallery;
+  const { collections, items } = gallery;
+
+  const featuredCollections = collections.filter((c) => c.featured);
+  const carouselCollections =
+    featuredCollections.length > 0
+      ? featuredCollections
+      : collections.slice(0, 3);
+  const featuredFrames = items.filter((item) => item.featured).slice(0, 8);
 
   return (
     <PageShell locale={locale}>
@@ -56,7 +65,7 @@ export default async function ArchivePage({
         decorativeWord="ARCHIVE"
         meta={
           <div className="flex flex-wrap items-center gap-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-            <span>{t("framesCount", { count: galleryItems.length })}</span>
+            <span>{t("framesCount", { count: items.length })}</span>
             <span aria-hidden="true">·</span>
             <Link
               href="/archive/saved"
@@ -73,31 +82,39 @@ export default async function ArchivePage({
         }
       />
 
-      {/* Primary surface — contact-sheet grid (docs/FINAL_SITE_ARCHITECTURE §5.4). */}
-      <PageSection>
-        <FadeIn>
-          <SectionHeading
-            eyebrow={t("mediaGridEyebrow")}
-            title={t("mediaGridTitle")}
-            description={t("mediaGridDescription")}
-          />
-        </FadeIn>
-        <div className="mt-8">
-          {/* GalleryGrid renders its own EmptyArchiveState when the
-           * collection is empty — no separate empty branch needed. */}
-          <GalleryGrid
-            items={galleryItems}
-            locale={locale}
-            savedSlugs={savedSlugs}
-            signedIn={signedIn}
-          />
-        </div>
-      </PageSection>
+      {/* Featured spotlight — rotating cover banners of the headline
+       * collections. Autoplay pauses on hover / reduced-motion. */}
+      {carouselCollections.length > 0 ? (
+        <PageSection>
+          <FadeIn>
+            <SectionHeading
+              eyebrow={t("featuredEyebrow")}
+              title={t("featuredTitle")}
+              description={t("featuredDescription")}
+            />
+          </FadeIn>
+          <div className="mt-8">
+            <Carousel
+              ariaLabel={t("featuredTitle")}
+              autoplayDelay={6500}
+              controlLabels={{ prev: t("carouselPrev"), next: t("carouselNext") }}
+              slideLabels={carouselCollections.map((c) => c.title)}
+            >
+              {carouselCollections.map((collection) => (
+                <CollectionBanner
+                  key={collection.slug}
+                  collection={collection}
+                  countLabel={t("framesCount", { count: collection.count })}
+                  enterLabel={t("viewCollection")}
+                  locale={locale}
+                />
+              ))}
+            </Carousel>
+          </div>
+        </PageSection>
+      ) : null}
 
-      {/* Collections rail — secondary navigation. Compact cards, not
-       * the page's main event. Sits below the contact sheet so the
-       * page reads: "this is the archive · these are the frames ·
-       * here are the groupings if you want them". */}
+      {/* Browse collections — cover cards into each set's masonry. */}
       <PageSection tone="muted">
         <FadeIn>
           <SectionHeading
@@ -106,63 +123,176 @@ export default async function ArchivePage({
             description={t("collectionsDescription")}
           />
         </FadeIn>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          {galleryCollections.map((collection) => (
-            <CollectionRailCard
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {collections.map((collection) => (
+            <CollectionCoverCard
               key={collection.slug}
-              title={collection.title}
-              description={collection.description}
+              collection={collection}
               countLabel={t("framesCount", { count: collection.count })}
-              href={`/archive/${collection.slug}`}
               locale={locale}
             />
           ))}
         </div>
       </PageSection>
+
+      {/* Featured frames — individual artwork, opens the lightbox. */}
+      {featuredFrames.length > 0 ? (
+        <PageSection>
+          <FadeIn>
+            <SectionHeading
+              eyebrow={t("mediaGridEyebrow")}
+              title={t("mediaGridTitle")}
+              description={t("mediaGridDescription")}
+            />
+          </FadeIn>
+          <div className="mt-8">
+            <GalleryGrid
+              items={featuredFrames}
+              locale={locale}
+              savedSlugs={savedSlugs}
+              signedIn={signedIn}
+              variant="bare"
+              showHint={false}
+            />
+          </div>
+        </PageSection>
+      ) : null}
     </PageShell>
   );
 }
 
-function CollectionRailCard({
-  title,
-  description,
+function hasRealCover(collection: GalleryCollection): boolean {
+  return Boolean(collection.cover?.src?.includes("/storage/"));
+}
+
+function focalPosition(focal: GalleryCollection["cover"]["focal"]): string {
+  if (focal === "top") return "center top";
+  if (focal === "bottom") return "center bottom";
+  return "center";
+}
+
+function CollectionBanner({
+  collection,
   countLabel,
-  href,
+  enterLabel,
   locale,
 }: {
-  title: string;
-  description: string;
+  collection: GalleryCollection;
   countLabel: string;
-  href: string;
+  enterLabel: string;
   locale: Locale;
 }) {
+  const cover = hasRealCover(collection) ? collection.cover : null;
   return (
     <Link
-      href={href}
+      href={`/archive/${collection.slug}`}
       locale={locale}
-      className="group block focus-visible:outline-none"
+      aria-label={collection.title}
+      className={cn(
+        "group relative block aspect-16/9 overflow-hidden rounded-lg border border-border bg-card sm:aspect-21/9",
+        FOCUS_RING,
+      )}
     >
-      {/* Focus ring on Card so it traces the lg radius, not the wrapper Link. */}
-      <Card className="h-full bg-card/80 transition-[border-color,box-shadow] duration-(--motion-base) ease-(--ease-premium) group-hover:border-ring group-hover:shadow-md group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background">
-        <CardHeader className="gap-2">
-          <div className="flex items-center justify-between gap-2">
-            <Badge
-              variant="outline"
-              className="font-mono text-[0.6rem] uppercase tracking-[0.18em]"
-            >
-              {countLabel}
-            </Badge>
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-4 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-ring"
-            />
+      {cover ? (
+        <Image
+          src={cover.src}
+          alt={cover.alt}
+          fill
+          sizes="(min-width: 1024px) 80rem, 100vw"
+          className="object-cover grayscale transition duration-(--motion-medium) ease-(--ease-premium) group-hover:grayscale-0"
+          style={{ objectPosition: focalPosition(cover.focal) }}
+        />
+      ) : (
+        <div aria-hidden="true" className="absolute inset-0 bg-cyber-grid opacity-40" />
+      )}
+      <div className="absolute inset-0 bg-linear-to-r from-background/90 via-background/45 to-transparent" />
+      <div className="absolute inset-0 flex flex-col justify-end gap-2 p-6 sm:p-8">
+        <Badge
+          variant="outline"
+          className="w-fit bg-background/70 font-mono text-[0.6rem] uppercase tracking-[0.18em] backdrop-blur-sm"
+        >
+          {countLabel}
+        </Badge>
+        <h3 className="max-w-xl text-balance font-display text-2xl font-semibold leading-tight sm:text-4xl">
+          {collection.title}
+        </h3>
+        <p className="max-w-md text-sm leading-6 text-muted-foreground sm:text-base">
+          {collection.description}
+        </p>
+        <span className="mt-1 inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-foreground">
+          {enterLabel}
+          <ArrowUpRight
+            aria-hidden="true"
+            className="size-4 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ring"
+          />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function CollectionCoverCard({
+  collection,
+  countLabel,
+  locale,
+}: {
+  collection: GalleryCollection;
+  countLabel: string;
+  locale: Locale;
+}) {
+  const cover = hasRealCover(collection) ? collection.cover : null;
+  return (
+    <Link
+      href={`/archive/${collection.slug}`}
+      locale={locale}
+      aria-label={collection.title}
+      className={cn(
+        "group relative block aspect-4/5 overflow-hidden rounded-lg border border-border bg-card transition-[border-color,box-shadow,transform] duration-(--motion-base) ease-(--ease-premium) hover:border-ring hover:shadow-md motion-safe:hover:-translate-y-0.5",
+        FOCUS_RING,
+      )}
+    >
+      {cover ? (
+        <Image
+          src={cover.src}
+          alt={cover.alt}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover grayscale transition duration-(--motion-medium) ease-(--ease-premium) group-hover:grayscale-0"
+          style={{ objectPosition: focalPosition(cover.focal) }}
+        />
+      ) : (
+        <div aria-hidden="true" className="absolute inset-0 contact-sheet opacity-50" />
+      )}
+      <div className="absolute inset-0 bg-linear-to-t from-background/92 via-background/35 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5">
+        <div className="flex items-center justify-between gap-2">
+          <Badge
+            variant="outline"
+            className="bg-background/70 font-mono text-[0.6rem] uppercase tracking-[0.18em] backdrop-blur-sm"
+          >
+            {countLabel}
+          </Badge>
+          <ArrowUpRight
+            aria-hidden="true"
+            className="size-4 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-ring"
+          />
+        </div>
+        <h3 className="text-balance font-display text-lg font-semibold leading-tight">
+          {collection.title}
+        </h3>
+        {collection.mood.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {collection.mood.slice(0, 3).map((mood) => (
+              <span
+                key={mood}
+                className="font-mono text-[0.55rem] uppercase tracking-[0.18em] text-muted-foreground"
+              >
+                #{mood}
+              </span>
+            ))}
           </div>
-          <CardTitle className="text-base leading-tight">{title}</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm leading-6 text-muted-foreground">
-          {description}
-        </CardContent>
-      </Card>
+        ) : null}
+      </div>
     </Link>
   );
 }

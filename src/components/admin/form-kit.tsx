@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 // Shared presentational form primitives for every admin editor. No
 // hooks here, so these stay usable inside server components; the only
@@ -137,6 +138,40 @@ export function Select({
         ))}
       </select>
       <FieldHint error={error} />
+    </label>
+  );
+}
+
+export function FileField({
+  label,
+  name,
+  accept,
+  hint,
+  required,
+  error,
+}: {
+  label: string;
+  name: string;
+  accept?: string;
+  hint?: string;
+  required?: boolean;
+  error?: string;
+}) {
+  return (
+    <label className="grid gap-1.5 text-sm">
+      <FieldLabel label={label} />
+      <input
+        type="file"
+        name={name}
+        accept={accept}
+        required={required}
+        aria-invalid={error ? true : undefined}
+        className={cn(
+          adminInputClass,
+          "file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1 file:text-xs file:font-medium file:text-foreground hover:file:bg-muted/70",
+        )}
+      />
+      <FieldHint hint={hint} error={error} />
     </label>
   );
 }

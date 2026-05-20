@@ -1,15 +1,16 @@
-import { ArrowUpRight, FolderPlus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getDbGalleryCollections, getDbGalleryItems } from "@/lib/gallery/db";
+import {
+  duplicateCollectionAction,
+  reorderCollectionAction,
+  setCollectionStatusAction,
+} from "@/lib/gallery/admin";
 import { AdminNav } from "../_components/admin-nav";
+import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
 
@@ -19,21 +20,40 @@ export default async function AdminGalleryPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "AdminGallery" });
-  const tAdmin = await getTranslations({ locale, namespace: "Admin" });
-
-  const [collections, items] = await Promise.all([
+  const [t, tAdmin, collections, allItems] = await Promise.all([
+    getTranslations({ locale, namespace: "AdminGallery" }),
+    getTranslations({ locale, namespace: "Admin" }),
     getDbGalleryCollections(),
     getDbGalleryItems(),
   ]);
 
-  const countByCollection = new Map<string, number>();
-  for (const item of items) {
-    countByCollection.set(
-      item.collectionId,
-      (countByCollection.get(item.collectionId) ?? 0) + 1,
-    );
-  }
+  const countByCollection = allItems.reduce<Record<string, number>>(
+    (acc, item) => {
+      acc[item.collectionId] = (acc[item.collectionId] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  const items: AdminListItem[] = collections.map((collection) => ({
+    id: collection.id,
+    slug: collection.slug,
+    title: collection.title,
+    status: collection.status,
+    badges: [
+      t("itemCount", { count: countByCollection[collection.id] ?? 0 }),
+      ...collection.mood,
+    ],
+    subtitle: collection.description || undefined,
+    viewHref: `/${locale}/archive/${collection.slug}`,
+  }));
+
+  const statusOptions = [
+    { value: "ready", label: t("status.ready") },
+    { value: "draft", label: t("status.draft") },
+    { value: "placeholder", label: t("status.placeholder") },
+    { value: "coming-soon", label: t("status.comingSoon") },
+  ];
 
   return (
     <PageShell locale={locale}>
@@ -45,83 +65,32 @@ export default async function AdminGalleryPage({
       />
       <PageSection>
         <AdminNav locale={locale} />
-
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {t("collectionsCount", { count: collections.length })}
-          </p>
-          <Button asChild size="sm">
-            <Link href="/admin/gallery/new" locale={locale}>
-              <FolderPlus className="size-4" aria-hidden="true" />
-              {t("newCollection")}
-            </Link>
-          </Button>
-        </div>
-
-        {collections.length === 0 ? (
-          <Card className="bg-card/80">
-            <CardContent className="grid gap-3 py-8 text-center">
-              <p className="text-sm text-muted-foreground">{t("emptyTitle")}</p>
-              <p className="text-xs text-muted-foreground/80">
-                {t("emptyDescription")}
-              </p>
-              <div className="flex justify-center pt-1">
-                <Button asChild size="sm">
-                  <Link href="/admin/gallery/new" locale={locale}>
-                    <FolderPlus className="size-4" aria-hidden="true" />
-                    {t("newCollection")}
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {collections.map((collection) => (
-              <Card key={collection.id} className="flex h-full flex-col bg-card/80">
-                <CardHeader>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="font-mono text-[0.6rem]">
-                      {collection.status}
-                    </Badge>
-                    {collection.featured ? (
-                      <Badge variant="success" className="font-mono text-[0.6rem]">
-                        {t("featured")}
-                      </Badge>
-                    ) : null}
-                    <Badge variant="outline" className="ml-auto font-mono text-[0.6rem]">
-                      {t("itemCount", {
-                        count: countByCollection.get(collection.id) ?? 0,
-                      })}
-                    </Badge>
-                  </div>
-                  <CardTitle className="mt-2 text-base">
-                    {collection.title}
-                  </CardTitle>
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground/80">
-                    /{collection.slug}
-                  </p>
-                </CardHeader>
-                <CardContent className="flex flex-1 flex-col gap-3">
-                  <p className="line-clamp-3 text-sm leading-6 text-muted-foreground">
-                    {collection.description || t("noDescription")}
-                  </p>
-                  <div className="mt-auto flex justify-end">
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/admin/gallery/${collection.slug}`}
-                        locale={locale}
-                      >
-                        {t("manage")}
-                        <ArrowUpRight aria-hidden="true" className="size-3.5" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        <AdminList
+          items={items}
+          locale={locale}
+          editBase="/admin/gallery"
+          newHref="/admin/gallery/new"
+          statusOptions={statusOptions}
+          setStatusAction={setCollectionStatusAction}
+          reorderAction={reorderCollectionAction}
+          duplicateAction={duplicateCollectionAction}
+          labels={{
+            searchPlaceholder: tAdmin("list.search"),
+            statusAll: tAdmin("list.allStatuses"),
+            edit: t("manage"),
+            view: tAdmin("list.view"),
+            duplicate: tAdmin("list.duplicate"),
+            moveUp: tAdmin("list.moveUp"),
+            moveDown: tAdmin("list.moveDown"),
+            statusAria: tAdmin("list.status"),
+            noMatches: tAdmin("list.noMatches"),
+            results: tAdmin("list.results"),
+            newLabel: t("newCollection"),
+            countLabel: t("collectionsCount", { count: items.length }),
+            emptyTitle: t("emptyTitle"),
+            emptyDescription: t("emptyDescription"),
+          }}
+        />
       </PageSection>
     </PageShell>
   );

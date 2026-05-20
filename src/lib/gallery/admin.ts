@@ -6,14 +6,24 @@ import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import {
+  type AdminActionState,
+  adminError,
+  adminSuccess,
+  dbErrorToMessage,
+  zodToActionState,
+} from "@/lib/admin/action-state";
+import {
   uploadGalleryImage,
   deleteGalleryImage,
 } from "@/lib/gallery/storage";
 
-// Admin server actions. Every entry point re-runs requireAdmin() so
-// a stale form post from a downgraded account can't sneak a mutation
-// through — RLS on the underlying tables enforces the same thing,
-// belt-and-suspenders.
+// Admin server actions for the gallery CMS. Collections are a standard
+// CRUD domain (mirrors the games template); items are bespoke because
+// they carry an image upload. requireAdmin gates every entry point;
+// RLS on the underlying tables is the belt-and-suspenders layer.
+// create/update return an AdminActionState so the form shows inline
+// feedback instead of throwing; the lightweight status/reorder/
+// duplicate actions power the list UI.
 
 const SLUG_RE = /^[a-z0-9-]+$/;
 const STATUS_ENUM = z.enum(["ready", "draft", "placeholder", "coming-soon"]);
@@ -21,21 +31,22 @@ const ITEM_TYPE_ENUM = z.enum(["image", "contact-sheet", "process"]);
 const ASPECT_ENUM = z.enum(["1/1", "4/5", "3/4", "2/3", "16/9", "21/9"]);
 
 const collectionSchema = z.object({
-  slug: z.string().regex(SLUG_RE).min(1).max(80),
+  slug: z.string().regex(SLUG_RE, "lowercase letters, numbers, hyphens").min(1).max(80),
   title: z.string().min(1).max(120),
   description: z.string().max(600).default(""),
-  status: STATUS_ENUM.default("placeholder"),
+  status: STATUS_ENUM.default("draft"),
   sortOrder: z.coerce.number().int().default(0),
   featured: z.coerce.boolean().default(false),
+  coverAlt: z.string().max(240).default(""),
 });
 
 const itemSchema = z.object({
   collectionId: z.string().uuid(),
-  slug: z.string().regex(SLUG_RE).min(1).max(100),
+  slug: z.string().regex(SLUG_RE, "lowercase letters, numbers, hyphens").min(1).max(100),
   title: z.string().min(1).max(160),
   caption: z.string().max(1000).default(""),
-  type: ITEM_TYPE_ENUM,
-  status: STATUS_ENUM.default("placeholder"),
+  type: ITEM_TYPE_ENUM.default("image"),
+  status: STATUS_ENUM.default("draft"),
   alt: z.string().max(240).default(""),
   aspect: ASPECT_ENUM.default("4/5"),
   capturedAt: z.string().optional(),
@@ -44,6 +55,9 @@ const itemSchema = z.object({
   pinned: z.coerce.boolean().default(false),
   sortOrder: z.coerce.number().int().default(0),
 });
+
+const COLLECTION_COLUMNS =
+  "slug, title, description, status, sort_order, featured, cover_path, cover_alt, mood";
 
 function pickField(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -54,62 +68,101 @@ function booleanField(formData: FormData, key: string): boolean {
   return formData.get(key) === "on" || formData.get(key) === "true";
 }
 
-export async function createCollectionAction(formData: FormData) {
-  await requireAdmin();
-  const parsed = collectionSchema.parse({
+function parseCollection(formData: FormData) {
+  return collectionSchema.parse({
     slug: pickField(formData, "slug"),
     title: pickField(formData, "title"),
     description: pickField(formData, "description"),
-    status: pickField(formData, "status") || "placeholder",
+    status: pickField(formData, "status") || "draft",
     sortOrder: pickField(formData, "sortOrder") || "0",
     featured: booleanField(formData, "featured"),
+    coverAlt: pickField(formData, "coverAlt"),
   });
+}
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("gallery_collections").insert({
+function collectionToRow(parsed: z.infer<typeof collectionSchema>) {
+  return {
     slug: parsed.slug,
     title: parsed.title,
     description: parsed.description,
     status: parsed.status,
     sort_order: parsed.sortOrder,
     featured: parsed.featured,
-  });
-  if (error) throw new Error(error.message);
-
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
-  redirect(`/admin/gallery/${parsed.slug}`);
+    cover_alt: parsed.coverAlt || null,
+  };
 }
 
-export async function updateCollectionAction(formData: FormData) {
-  await requireAdmin();
-  const id = pickField(formData, "id");
-  if (!id) throw new Error("missing id");
-  const parsed = collectionSchema.parse({
+function parseItem(formData: FormData) {
+  return itemSchema.parse({
+    collectionId: pickField(formData, "collectionId"),
     slug: pickField(formData, "slug"),
     title: pickField(formData, "title"),
-    description: pickField(formData, "description"),
-    status: pickField(formData, "status") || "placeholder",
-    sortOrder: pickField(formData, "sortOrder") || "0",
+    caption: pickField(formData, "caption"),
+    type: pickField(formData, "type") || "image",
+    status: pickField(formData, "status") || "draft",
+    alt: pickField(formData, "alt"),
+    aspect: pickField(formData, "aspect") || "4/5",
+    capturedAt: pickField(formData, "capturedAt") || undefined,
+    location: pickField(formData, "location") || undefined,
     featured: booleanField(formData, "featured"),
+    pinned: booleanField(formData, "pinned"),
+    sortOrder: pickField(formData, "sortOrder") || "0",
   });
+}
 
+function revalidateGallery(slug?: string) {
+  revalidatePath("/(.*)/admin/gallery", "page");
+  revalidatePath("/(.*)/archive", "page");
+  if (slug) revalidatePath(`/(.*)/archive/${slug}`, "page");
+}
+
+// ── Collections ────────────────────────────────────────────────────
+
+export async function createCollectionAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  let parsed: z.infer<typeof collectionSchema>;
+  try {
+    parsed = parseCollection(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("gallery_collections")
-    .update({
-      slug: parsed.slug,
-      title: parsed.title,
-      description: parsed.description,
-      status: parsed.status,
-      sort_order: parsed.sortOrder,
-      featured: parsed.featured,
-    })
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+    .insert(collectionToRow(parsed));
+  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
 
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
+  revalidateGallery(parsed.slug);
+  redirect(`/admin/gallery/${parsed.slug}`);
+}
+
+export async function updateCollectionAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  const id = pickField(formData, "id");
+  if (!id) return adminError("Missing record id.");
+  let parsed: z.infer<typeof collectionSchema>;
+  try {
+    parsed = parseCollection(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("gallery_collections")
+    .update(collectionToRow(parsed))
+    .eq("id", id);
+  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+
+  revalidateGallery(parsed.slug);
+  return adminSuccess();
 }
 
 export async function deleteCollectionAction(formData: FormData) {
@@ -118,15 +171,15 @@ export async function deleteCollectionAction(formData: FormData) {
   if (!id) throw new Error("missing id");
 
   const supabase = await createSupabaseServerClient();
-  // Pull child items first so we can clean up storage objects. RLS
-  // cascade on the table deletes the rows; storage objects orphan
-  // unless we explicitly remove them here.
+  // Pull child items first so we can clean up storage objects. The FK
+  // cascade deletes the rows; storage objects orphan unless we remove
+  // them here.
   const { data: items } = await supabase
     .from("gallery_items")
     .select("storage_path")
     .eq("collection_id", id);
   const paths = (items ?? [])
-    .map((row) => row.storage_path as string | null)
+    .map((row) => (row as { storage_path: string | null }).storage_path)
     .filter((p): p is string => Boolean(p));
   if (paths.length > 0) {
     await supabase.storage.from("gallery-images").remove(paths);
@@ -138,37 +191,117 @@ export async function deleteCollectionAction(formData: FormData) {
     .eq("id", id);
   if (error) throw new Error(error.message);
 
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
+  revalidateGallery();
   redirect("/admin/gallery");
 }
 
-export async function createItemAction(formData: FormData) {
+export async function setCollectionStatusAction(id: string, status: string) {
   await requireAdmin();
-  const parsed = itemSchema.parse({
-    collectionId: pickField(formData, "collectionId"),
-    slug: pickField(formData, "slug"),
-    title: pickField(formData, "title"),
-    caption: pickField(formData, "caption"),
-    type: pickField(formData, "type") || "image",
-    status: pickField(formData, "status") || "placeholder",
-    alt: pickField(formData, "alt"),
-    aspect: pickField(formData, "aspect") || "4/5",
-    capturedAt: pickField(formData, "capturedAt") || undefined,
-    location: pickField(formData, "location") || undefined,
-    featured: booleanField(formData, "featured"),
-    pinned: booleanField(formData, "pinned"),
-    sortOrder: pickField(formData, "sortOrder") || "0",
-  });
+  const parsed = STATUS_ENUM.safeParse(status);
+  if (!parsed.success) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("gallery_collections")
+    .update({ status: parsed.data })
+    .eq("id", id);
+  revalidateGallery();
+}
 
-  // Resolve the collection slug for the storage path prefix + redirect.
+export async function reorderCollectionAction(
+  id: string,
+  direction: "up" | "down",
+) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("gallery_collections")
+    .select("id, sort_order")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []) as { id: string; sort_order: number }[];
+  const index = rows.findIndex((r) => r.id === id);
+  if (index === -1) return;
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (target < 0 || target >= rows.length) return;
+  [rows[index], rows[target]] = [rows[target], rows[index]];
+  // Normalize sort_order to the new positions; only write what changed.
+  await Promise.all(
+    rows
+      .map((row, position) => ({ row, position }))
+      .filter(({ row, position }) => row.sort_order !== position)
+      .map(({ row, position }) =>
+        supabase
+          .from("gallery_collections")
+          .update({ sort_order: position })
+          .eq("id", row.id),
+      ),
+  );
+  revalidateGallery();
+}
+
+export async function duplicateCollectionAction(id: string) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("gallery_collections")
+    .select(COLLECTION_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+  if (!data) return;
+  const source = data as Record<string, unknown> & {
+    slug: string;
+    title: string;
+  };
+
+  // Find a free `<slug>-copy[-n]` slug.
+  let slug = `${source.slug}-copy`.slice(0, 80);
+  for (let n = 2; ; n += 1) {
+    const { data: clash } = await supabase
+      .from("gallery_collections")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (!clash) break;
+    slug = `${source.slug}-copy-${n}`.slice(0, 80);
+    if (n > 50) return;
+  }
+
+  // Metadata-only copy — does NOT clone items.
+  const { error } = await supabase.from("gallery_collections").insert({
+    ...source,
+    slug,
+    title: `${source.title} (copy)`,
+    status: "draft",
+  });
+  if (error) return;
+  revalidateGallery();
+  redirect(`/admin/gallery/${slug}`);
+}
+
+// ── Items ──────────────────────────────────────────────────────────
+
+export async function createItemAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  let parsed: z.infer<typeof itemSchema>;
+  try {
+    parsed = parseItem(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
+
+  // Resolve the collection slug for the storage path prefix + revalidate.
   const supabase = await createSupabaseServerClient();
   const { data: collectionRow } = await supabase
     .from("gallery_collections")
     .select("slug")
     .eq("id", parsed.collectionId)
     .maybeSingle();
-  const collectionSlug = (collectionRow?.slug as string | undefined) ?? "misc";
+  const collectionSlug =
+    (collectionRow?.slug as string | undefined) ?? "misc";
 
   let storagePath: string | null = null;
   const file = formData.get("image");
@@ -177,7 +310,7 @@ export async function createItemAction(formData: FormData) {
       file,
       `${collectionSlug}/${parsed.slug}`,
     );
-    if (!upload) throw new Error("upload failed");
+    if (!upload) return adminError(dbErrorToMessage("upload failed"), { image: " " });
     storagePath = upload.path;
   }
 
@@ -199,34 +332,29 @@ export async function createItemAction(formData: FormData) {
   });
   if (error) {
     if (storagePath) await deleteGalleryImage(storagePath);
-    throw new Error(error.message);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
   }
 
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
-  redirect(`/admin/gallery/${collectionSlug}`);
+  revalidateGallery(collectionSlug);
+  return adminSuccess();
 }
 
-export async function updateItemAction(formData: FormData) {
+export async function updateItemAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
   await requireAdmin();
   const id = pickField(formData, "id");
-  if (!id) throw new Error("missing id");
-  const parsed = itemSchema.parse({
-    collectionId: pickField(formData, "collectionId"),
-    slug: pickField(formData, "slug"),
-    title: pickField(formData, "title"),
-    caption: pickField(formData, "caption"),
-    type: pickField(formData, "type") || "image",
-    status: pickField(formData, "status") || "placeholder",
-    alt: pickField(formData, "alt"),
-    aspect: pickField(formData, "aspect") || "4/5",
-    capturedAt: pickField(formData, "capturedAt") || undefined,
-    location: pickField(formData, "location") || undefined,
-    featured: booleanField(formData, "featured"),
-    pinned: booleanField(formData, "pinned"),
-    sortOrder: pickField(formData, "sortOrder") || "0",
-  });
+  if (!id) return adminError("Missing record id.");
+  let parsed: z.infer<typeof itemSchema>;
+  try {
+    parsed = parseItem(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
 
+  // Metadata-only — image re-upload is intentionally not supported here.
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("gallery_items")
@@ -245,10 +373,10 @@ export async function updateItemAction(formData: FormData) {
       sort_order: parsed.sortOrder,
     })
     .eq("id", id);
-  if (error) throw new Error(error.message);
+  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
 
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
+  revalidateGallery();
+  return adminSuccess();
 }
 
 export async function deleteItemAction(formData: FormData) {
@@ -257,8 +385,8 @@ export async function deleteItemAction(formData: FormData) {
   if (!id) throw new Error("missing id");
 
   const supabase = await createSupabaseServerClient();
-  // Pull storage path before deleting the row so we can clean up
-  // the bucket. Cascade only handles DB rows.
+  // Pull storage path before deleting the row so we can clean up the
+  // bucket. Cascade only handles DB rows.
   const { data: itemRow } = await supabase
     .from("gallery_items")
     .select("storage_path")
@@ -271,6 +399,17 @@ export async function deleteItemAction(formData: FormData) {
 
   if (storagePath) await deleteGalleryImage(storagePath);
 
-  revalidatePath("/(.*)/admin/gallery", "page");
-  revalidatePath("/(.*)/archive", "page");
+  revalidateGallery();
+}
+
+export async function setItemStatusAction(id: string, status: string) {
+  await requireAdmin();
+  const parsed = STATUS_ENUM.safeParse(status);
+  if (!parsed.success) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("gallery_items")
+    .update({ status: parsed.data })
+    .eq("id", id);
+  revalidateGallery();
 }

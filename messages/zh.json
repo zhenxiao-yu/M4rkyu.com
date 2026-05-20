@@ -306,7 +306,15 @@
     "plannedFramesCount": "{count, plural, =0 {暂无计划帧} other {计划 # 帧}}",
     "finalImagesTbd": "正式影像待定",
     "collectionMediaPendingTitle": "合集影像待补",
-    "collectionMediaPendingDescription": "正式影像将在优化与元数据复核后陆续补齐。"
+    "collectionMediaPendingDescription": "正式影像将在优化与元数据复核后陆续补齐。",
+    "featuredEyebrow": "精选",
+    "featuredTitle": "精选合集",
+    "featuredDescription": "轮播聚焦最值得先打开的几组作品。",
+    "viewCollection": "查看合集",
+    "carouselPrev": "上一个合集",
+    "carouselNext": "下一个合集",
+    "zoomIn": "放大",
+    "zoomOut": "缩小"
   },
   "Social": {
     "like": "喜欢",
@@ -1285,6 +1293,18 @@
     "aspectLabel": "比例",
     "statusLabel": "状态",
     "sortOrderLabel": "排序",
+    "coverAltLabel": "封面替代文字",
+    "coverAltHint": "供屏幕阅读器描述合集封面。",
+    "imageHint": "支持 JPG、PNG 或 WebP，保存时上传至图库存储。",
+    "imageReplaceHint": "暂不支持替换图片——如需更换，请删除后重新添加该条目。",
+    "locationLabel": "拍摄地点",
+    "capturedAtLabel": "拍摄时间",
+    "capturedAtHint": "例如 2025-08 或自由格式日期。",
+    "pinned": "置顶",
+    "section": {
+      "basics": "基础信息",
+      "detail": "详细信息"
+    },
     "status": {
       "ready": "Ready（公开）",
       "draft": "Draft",

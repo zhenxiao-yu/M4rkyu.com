@@ -306,7 +306,15 @@
     "plannedFramesCount": "{count, plural, =0 {no planned frames} one {# planned frame} other {# planned frames}}",
     "finalImagesTbd": "Final images TBD",
     "collectionMediaPendingTitle": "Collection media pending",
-    "collectionMediaPendingDescription": "Final gallery images land here after optimisation and metadata review."
+    "collectionMediaPendingDescription": "Final gallery images land here after optimisation and metadata review.",
+    "featuredEyebrow": "featured",
+    "featuredTitle": "Featured collections",
+    "featuredDescription": "A rotating spotlight on the sets worth opening first.",
+    "viewCollection": "View collection",
+    "carouselPrev": "Previous collection",
+    "carouselNext": "Next collection",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "Social": {
     "like": "Like",
@@ -1285,6 +1293,18 @@
     "aspectLabel": "Aspect",
     "statusLabel": "Status",
     "sortOrderLabel": "Sort order",
+    "coverAltLabel": "Cover alt text",
+    "coverAltHint": "Describes the collection cover for screen readers.",
+    "imageHint": "JPG, PNG or WebP. Uploaded to the gallery bucket on save.",
+    "imageReplaceHint": "Replacing the image isn't supported yet — delete and re-add the item to swap it.",
+    "locationLabel": "Location",
+    "capturedAtLabel": "Captured at",
+    "capturedAtHint": "e.g. 2025-08 or a free-form date.",
+    "pinned": "Pinned",
+    "section": {
+      "basics": "Basics",
+      "detail": "Detail"
+    },
     "status": {
       "ready": "Ready (public)",
       "draft": "Draft",
