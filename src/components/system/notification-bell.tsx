@@ -11,12 +11,7 @@ import type {
   NotificationStateResponse,
 } from "@/app/api/notifications/state/route";
 import type { SiteNotification } from "@/lib/notifications/feed";
-import {
-  dispatchStoredValueChanged,
-  readStoredString,
-  subscribeStoredValue,
-  writeStoredString,
-} from "@/lib/browser/safe-storage";
+import { useLastSeen } from "@/lib/hooks/use-last-seen";
 import { playNotificationCue } from "@/lib/audio/ui-sound";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
@@ -26,15 +21,21 @@ interface NotificationBellProps {
 }
 
 const LAST_SEEN_KEY = "m4rkyu.notifications.lastSeen";
-const PREF_EVENT = "m4rkyu:notifications:change";
 
 export function NotificationBell({ items, locale }: NotificationBellProps) {
   const t = useTranslations("Notifications");
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
+  // Guest "last seen" lives in localStorage behind a useSyncExternalStore
+  // hook. It's SSR-safe: the server snapshot is +Infinity, so nothing
+  // reads as unread on the server or the first client render, and the
+  // badge can't cause a hydration mismatch (Bell vs BellRing). The real
+  // value lands on the post-hydration render. Signed-in users layer the
+  // server timestamp on top via `state.lastSeenAt`.
+  const { lastSeen: storedLastSeen, markSeen } = useLastSeen(LAST_SEEN_KEY);
   const [state, setState] = useState<NotificationStateResponse>(() => ({
     signedIn: false,
-    lastSeenAt: localLastSeenIso(),
+    lastSeenAt: null,
     browserNotifications: false,
     emailNotifications: false,
   }));
@@ -63,15 +64,6 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
   }, []);
 
   useEffect(() => {
-    return subscribeStoredValue(LAST_SEEN_KEY, PREF_EVENT, () => {
-      setState((current) => ({
-        ...current,
-        lastSeenAt: readStoredString(LAST_SEEN_KEY) || current.lastSeenAt,
-      }));
-    });
-  }, []);
-
-  useEffect(() => {
     if (!open) return;
     function onPointer(event: MouseEvent) {
       if (!wrapperRef.current) return;
@@ -91,7 +83,10 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
   }, [open]);
 
   const ordered = useMemo(() => sortNewestFirst(items).slice(0, 12), [items]);
-  const lastSeen = state.lastSeenAt ? Date.parse(state.lastSeenAt) : 0;
+  // Newest of the local (guest) and server (signed-in) timestamps. On the
+  // server `storedLastSeen` is +Infinity → unreadCount is 0 → no badge.
+  const serverLastSeen = state.lastSeenAt ? Date.parse(state.lastSeenAt) : 0;
+  const lastSeen = Math.max(serverLastSeen, storedLastSeen);
   const unreadCount = useMemo(() => {
     return ordered.reduce((count, item) => {
       const stamp = Date.parse(item.occurredAt);
@@ -116,16 +111,18 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
   }, [state, t, unreadCount]);
 
   const markAllRead = useCallback(() => {
-    const iso = new Date().toISOString();
-    writeStoredString(LAST_SEEN_KEY, iso);
-    dispatchStoredValueChanged(PREF_EVENT);
-    setState((current) => ({ ...current, lastSeenAt: iso }));
+    // Writes Date.now() to localStorage and broadcasts to this + other
+    // tabs; the useSyncExternalStore hook re-renders us with the new
+    // timestamp, so unreadCount drops immediately.
+    markSeen();
     if (state.signedIn) {
-      void patchNotificationState({ lastSeenAt: iso }).then((next) => {
-        if (next) setState((current) => ({ ...current, ...next }));
-      });
+      void patchNotificationState({ lastSeenAt: new Date().toISOString() }).then(
+        (next) => {
+          if (next) setState((current) => ({ ...current, ...next }));
+        },
+      );
     }
-  }, [state.signedIn]);
+  }, [markSeen, state.signedIn]);
 
   const enableBrowserNotifications = useCallback(async () => {
     if (typeof window === "undefined" || !("Notification" in window)) return;
@@ -316,11 +313,6 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
 
 function sortNewestFirst(items: SiteNotification[]): SiteNotification[] {
   return [...items].sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt));
-}
-
-function localLastSeenIso() {
-  const value = readStoredString(LAST_SEEN_KEY);
-  return value || null;
 }
 
 async function patchNotificationState(body: {
