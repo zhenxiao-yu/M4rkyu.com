@@ -7,7 +7,12 @@ import {
   subscribeStoredValue,
   writeStoredJson,
 } from "@/lib/browser/safe-storage";
-import { cartSchema, EMPTY_CART, type Cart } from "./cart-shared";
+import {
+  cartSchema,
+  EMPTY_CART,
+  type Cart,
+  type CartPromo,
+} from "./cart-shared";
 
 const KEY = "m4rkyu.cart";
 const EVENT = "m4rkyu:cart:change";
@@ -61,7 +66,7 @@ export function useCart() {
             : item,
         )
       : [...current.items, { slug, quantity: Math.min(99, quantity) }];
-    write({ items });
+    write({ items, promo: current.promo });
   }, []);
 
   const setQuantity = useCallback((slug: string, quantity: number) => {
@@ -74,17 +79,28 @@ export function useCart() {
               ? { ...item, quantity: Math.min(99, quantity) }
               : item,
           );
-    write({ items });
+    write({ items, promo: current.promo });
   }, []);
 
   const remove = useCallback((slug: string) => {
     const current = getSnapshot();
-    write({ items: current.items.filter((item) => item.slug !== slug) });
+    write({
+      items: current.items.filter((item) => item.slug !== slug),
+      promo: current.promo,
+    });
+  }, []);
+
+  const applyPromo = useCallback((promo: CartPromo) => {
+    write({ items: getSnapshot().items, promo });
+  }, []);
+
+  const clearPromo = useCallback(() => {
+    write({ items: getSnapshot().items });
   }, []);
 
   const clear = useCallback(() => write(EMPTY_CART), []);
 
   const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
-  return { cart, add, setQuantity, remove, clear, count };
+  return { cart, add, setQuantity, remove, applyPromo, clearPromo, clear, count };
 }

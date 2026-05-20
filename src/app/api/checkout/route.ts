@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getStripe } from "@/lib/stripe/server";
+import { getOrCreateStripeCustomer } from "@/lib/stripe/customer";
 import { cartSchema, resolveCart } from "@/lib/shop/cart-shared";
 import { getShopProducts } from "@/content/shop";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -81,13 +82,50 @@ export async function POST(request: NextRequest) {
     .join(",")
     .slice(0, 480);
 
+  // Saved customer (address/payment reuse) for signed-in buyers.
+  const customerId = userId
+    ? await getOrCreateStripeCustomer(userId, email)
+    : undefined;
+
+  // Re-validate any applied promo code server-side — never trust the
+  // client. When valid we apply it directly; otherwise we still let the
+  // buyer enter a code on Stripe's hosted page (allow_promotion_codes).
+  let promotionCodeId: string | undefined;
+  const promoCode = parsed.data.promo?.code?.trim();
+  if (promoCode) {
+    try {
+      const promos = await stripe.promotionCodes.list({
+        code: promoCode,
+        active: true,
+        limit: 1,
+      });
+      promotionCodeId = promos.data[0]?.id;
+    } catch {
+      // Ignore — fall back to manual entry at checkout.
+    }
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
       success_url: `${origin}/${locale}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${locale}/shop/cart`,
-      ...(email ? { customer_email: email } : {}),
+      ...(customerId
+        ? {
+            customer: customerId,
+            customer_update: {
+              address: "auto",
+              name: "auto",
+              ...(resolved.hasPhysical ? { shipping: "auto" } : {}),
+            },
+          }
+        : email
+          ? { customer_email: email }
+          : {}),
+      ...(promotionCodeId
+        ? { discounts: [{ promotion_code: promotionCodeId }] }
+        : { allow_promotion_codes: true }),
       metadata: {
         locale,
         items: itemsMeta,
