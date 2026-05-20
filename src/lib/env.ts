@@ -50,9 +50,20 @@ export const env = createEnv({
     // playtime data.
     STEAM_API_KEY: z.string().optional(),
     STEAM_ID: z.string().optional(),
+    // Stripe (shop / payments). All optional so builds + preview deploys
+    // pass without a Stripe account; `isStripeConfigured()` gates the
+    // checkout route and the webhook returns 503 when its secret is
+    // unset. Secret key is server-only and must never reach the client
+    // bundle. Mint keys at https://dashboard.stripe.com/apikeys.
+    STRIPE_SECRET_KEY: z.string().optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
+    // Stripe publishable key — safe to expose; optional. Only needed if
+    // a future embedded Payment Element is added (hosted Checkout uses
+    // the server-minted session URL and doesn't require it).
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     // Supabase public config. Optional so lint / typecheck / preview
     // builds pass without the keys; runtime helpers in
     // `src/lib/supabase/*` short-circuit when unset and the auth UI
@@ -82,6 +93,10 @@ export const env = createEnv({
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
