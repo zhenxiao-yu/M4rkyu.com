@@ -21,15 +21,20 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { useCart } from "@/lib/shop/cart";
 import { resolveCart } from "@/lib/shop/cart-shared";
-import { getShopProducts } from "@/content/shop";
+import type { Product } from "@/content/shop";
 import { formatPrice } from "@/lib/shop/format";
 import { cn } from "@/lib/utils";
 
 interface CartViewProps {
   locale: Locale;
+  // Resolved catalog passed from the server page so the cart works
+  // whether products come from the DB or the static fallback. The cart
+  // itself only stores { slug, quantity }; prices are always resolved
+  // against this catalog (and re-validated server-side at checkout).
+  products: Product[];
 }
 
-export function CartView({ locale }: CartViewProps) {
+export function CartView({ locale, products }: CartViewProps) {
   const t = useTranslations("Shop");
   const { cart, setQuantity, remove, applyPromo, clearPromo } = useCart();
   const [pending, setPending] = useState(false);
@@ -39,7 +44,7 @@ export function CartView({ locale }: CartViewProps) {
   const [promoPending, setPromoPending] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const resolved = resolveCart(cart.items, getShopProducts(), cart.promo);
+  const resolved = resolveCart(cart.items, products, cart.promo);
 
   if (resolved.lines.length === 0) {
     return (

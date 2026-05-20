@@ -11,7 +11,8 @@ import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { Link } from "@/i18n/navigation";
-import { getProduct, getShopProducts } from "@/content/shop";
+import { getShopProducts } from "@/content/shop";
+import { getProductFromSource } from "@/lib/shop/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { formatPrice } from "@/lib/shop/format";
@@ -29,7 +30,7 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductFromSource(slug);
   if (!product || product.status !== "ready") return {};
   return {
     title: product.title,
@@ -47,7 +48,7 @@ export default async function ProductPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductFromSource(slug);
   if (!product || product.status !== "ready") notFound();
 
   const t = await getTranslations({ locale, namespace: "Shop" });

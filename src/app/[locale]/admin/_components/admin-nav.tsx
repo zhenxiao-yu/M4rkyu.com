@@ -13,6 +13,7 @@ const TABS = [
   { href: "/admin/media", key: "media" as const },
   { href: "/admin/gallery", key: "gallery" as const },
   { href: "/admin/resources", key: "resources" as const },
+  { href: "/admin/shop", key: "shop" as const },
   { href: "/admin/profile", key: "profile" as const },
   { href: "/admin/comments", key: "comments" as const },
   { href: "/admin/users", key: "users" as const },

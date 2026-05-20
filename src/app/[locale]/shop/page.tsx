@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/sections/section-heading";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { CartButton } from "@/components/shop/cart-button";
 import { ProductCard } from "@/components/shop/product-card";
-import { getShopProducts } from "@/content/shop";
+import { getShopProductsSource } from "@/lib/shop/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 
@@ -33,7 +33,7 @@ export default async function ShopPage({
   const { locale } = await params;
   const tShop = await getTranslations({ locale, namespace: "Shop" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
-  const products = getShopProducts();
+  const products = await getShopProductsSource();
   const featured = products.filter((product) => product.featured);
 
   return (

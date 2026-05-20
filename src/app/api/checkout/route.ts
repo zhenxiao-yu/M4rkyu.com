@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getStripe } from "@/lib/stripe/server";
 import { getOrCreateStripeCustomer } from "@/lib/stripe/customer";
 import { cartSchema, resolveCart } from "@/lib/shop/cart-shared";
-import { getShopProducts } from "@/content/shop";
+import { getShopProductsSource } from "@/lib/shop/source";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   }
   const locale = body?.locale === "zh" ? "zh" : "en";
 
-  const resolved = resolveCart(parsed.data.items, getShopProducts());
+  const resolved = resolveCart(parsed.data.items, await getShopProductsSource());
   if (resolved.lines.length === 0) {
     return NextResponse.json({ error: "empty_cart" }, { status: 400 });
   }

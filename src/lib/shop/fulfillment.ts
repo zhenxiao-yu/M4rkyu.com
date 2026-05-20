@@ -2,7 +2,7 @@ import "server-only";
 
 import type Stripe from "stripe";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
-import { getShopProducts } from "@/content/shop";
+import { getShopProductsSource } from "@/lib/shop/source";
 import { resolveCart, type CartItem } from "@/lib/shop/cart-shared";
 import { sendOrderConfirmation } from "./order-email";
 
@@ -27,7 +27,7 @@ export async function fulfillCheckoutSession(
     })
     .filter((item) => item.slug.length > 0);
 
-  const resolved = resolveCart(items, getShopProducts());
+  const resolved = resolveCart(items, await getShopProductsSource());
   const snapshot = resolved.lines.map((line) => ({
     slug: line.product.slug,
     title: line.product.title,
