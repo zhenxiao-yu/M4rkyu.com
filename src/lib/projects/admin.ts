@@ -5,10 +5,20 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import {
+  type AdminActionState,
+  adminError,
+  adminSuccess,
+  dbErrorToMessage,
+  zodToActionState,
+} from "@/lib/admin/action-state";
 
-// Admin server actions for projects. Same posture as the gallery
-// admin: requireAdmin gate, Zod-validated input, RLS as the
-// underlying enforcement layer.
+// Admin server actions for projects. requireAdmin gate, Zod-validated
+// input, RLS as the underlying enforcement layer. create/update return
+// an AdminActionState so the form shows inline feedback instead of
+// throwing; the lightweight status/reorder/duplicate actions power the
+// list UI. Note: projects use `content_status` for public visibility
+// (`status` is the lifecycle field).
 
 const SLUG_RE = /^[a-z0-9-]+$/;
 
@@ -74,6 +84,9 @@ function nullishUrl(value: string): string | null {
   return trimmed ? trimmed : null;
 }
 
+const DATA_COLUMNS =
+  "slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
+
 function parseForm(formData: FormData) {
   return projectFormSchema.parse({
     slug: pickField(formData, "slug"),
@@ -105,11 +118,8 @@ function parseForm(formData: FormData) {
   });
 }
 
-export async function createProjectAction(formData: FormData) {
-  await requireAdmin();
-  const parsed = parseForm(formData);
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("projects").insert({
+function toRow(parsed: z.infer<typeof projectFormSchema>) {
+  return {
     slug: parsed.slug,
     title: parsed.title,
     short_pitch: parsed.shortPitch,
@@ -136,57 +146,55 @@ export async function createProjectAction(formData: FormData) {
     seo_title: parsed.seoTitle,
     seo_description: parsed.seoDescription,
     sort_order: parsed.sortOrder,
-  });
-  if (error) throw new Error(error.message);
+  };
+}
 
+function revalidateProjects(slug?: string) {
   revalidatePath("/(.*)/admin/projects", "page");
   revalidatePath("/(.*)/work", "page");
-  revalidatePath(`/(.*)/work/${parsed.slug}`, "page");
+  if (slug) revalidatePath(`/(.*)/work/${slug}`, "page");
+}
+
+export async function createProjectAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  let parsed: z.infer<typeof projectFormSchema>;
+  try {
+    parsed = parseForm(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("projects").insert(toRow(parsed));
+  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+
+  revalidateProjects(parsed.slug);
   redirect(`/admin/projects/${parsed.slug}`);
 }
 
-export async function updateProjectAction(formData: FormData) {
+export async function updateProjectAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
   await requireAdmin();
   const id = pickField(formData, "id");
-  if (!id) throw new Error("missing id");
-  const parsed = parseForm(formData);
-
+  if (!id) return adminError("Missing record id.");
+  let parsed: z.infer<typeof projectFormSchema>;
+  try {
+    parsed = parseForm(formData);
+  } catch (error) {
+    if (error instanceof z.ZodError) return zodToActionState(error);
+    throw error;
+  }
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase
-    .from("projects")
-    .update({
-      slug: parsed.slug,
-      title: parsed.title,
-      short_pitch: parsed.shortPitch,
-      category: parsed.category,
-      year: parsed.year,
-      status: parsed.status,
-      content_status: parsed.contentStatus,
-      featured: parsed.featured,
-      problem: parsed.problem,
-      solution: parsed.solution,
-      role: parsed.role,
-      outcome: parsed.outcome,
-      stack: parsed.stack,
-      features: parsed.features,
-      architecture_notes: parsed.architectureNotes,
-      challenges: parsed.challenges,
-      lessons_learned: parsed.lessonsLearned,
-      next_steps: parsed.nextSteps,
-      live_url: nullishUrl(parsed.liveUrl ?? ""),
-      github_url: nullishUrl(parsed.githubUrl ?? ""),
-      cover_image_src: parsed.coverImageSrc || null,
-      cover_image_alt: parsed.coverImageAlt,
-      seo_title: parsed.seoTitle,
-      seo_description: parsed.seoDescription,
-      sort_order: parsed.sortOrder,
-    })
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+  const { error } = await supabase.from("projects").update(toRow(parsed)).eq("id", id);
+  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
 
-  revalidatePath("/(.*)/admin/projects", "page");
-  revalidatePath("/(.*)/work", "page");
-  revalidatePath(`/(.*)/work/${parsed.slug}`, "page");
+  revalidateProjects(parsed.slug);
+  return adminSuccess();
 }
 
 export async function deleteProjectAction(formData: FormData) {
@@ -198,7 +206,73 @@ export async function deleteProjectAction(formData: FormData) {
   const { error } = await supabase.from("projects").delete().eq("id", id);
   if (error) throw new Error(error.message);
 
-  revalidatePath("/(.*)/admin/projects", "page");
-  revalidatePath("/(.*)/work", "page");
+  revalidateProjects();
   redirect("/admin/projects");
+}
+
+export async function setProjectStatusAction(id: string, status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("projects").update({ content_status: parsed.data }).eq("id", id);
+  revalidateProjects();
+}
+
+export async function reorderProjectAction(id: string, direction: "up" | "down") {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("projects")
+    .select("id, sort_order")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []) as { id: string; sort_order: number }[];
+  const index = rows.findIndex((r) => r.id === id);
+  if (index === -1) return;
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (target < 0 || target >= rows.length) return;
+  [rows[index], rows[target]] = [rows[target], rows[index]];
+  // Normalize sort_order to the new positions; only write what changed.
+  await Promise.all(
+    rows
+      .map((row, position) => ({ row, position }))
+      .filter(({ row, position }) => row.sort_order !== position)
+      .map(({ row, position }) =>
+        supabase.from("projects").update({ sort_order: position }).eq("id", row.id),
+      ),
+  );
+  revalidateProjects();
+}
+
+export async function duplicateProjectAction(id: string) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("projects")
+    .select(DATA_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+  if (!data) return;
+  const source = data as Record<string, unknown> & { slug: string; title: string };
+
+  // Find a free `<slug>-copy[-n]` slug.
+  let slug = `${source.slug}-copy`.slice(0, 80);
+  for (let n = 2; ; n += 1) {
+    const { data: clash } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (!clash) break;
+    slug = `${source.slug}-copy-${n}`.slice(0, 80);
+    if (n > 50) return;
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .insert({ ...source, slug, title: `${source.title} (copy)`, content_status: "draft" });
+  if (error) return;
+  revalidateProjects();
+  redirect(`/admin/projects/${slug}`);
 }

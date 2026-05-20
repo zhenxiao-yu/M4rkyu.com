@@ -46,6 +46,7 @@ export default async function NewMediaPage({
         <MediaForm
           action={createMediaAction}
           labels={{ ...labels, submit: t("create") }}
+          successMessage={tAdmin("saved")}
           cancelHref={`/${locale}/admin/media`}
         />
       </PageSection>

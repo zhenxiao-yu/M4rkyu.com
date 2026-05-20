@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
@@ -48,12 +48,26 @@ export default async function EditResourcePage({ params }: PageProps) {
       <PageSection>
         <AdminNav locale={locale} />
 
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between gap-2">
           <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
             <Link href="/admin/resources" locale={locale}>
               <ArrowLeft aria-hidden="true" className="size-4" />
               {t("backToResources")}
             </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <a
+              href={
+                row.type === "tool"
+                  ? `/${locale}/resources/${row.slug}`
+                  : row.link
+              }
+              target="_blank"
+              rel="noreferrer"
+            >
+              <ExternalLink aria-hidden="true" className="size-3.5" />
+              {tAdmin("list.view")}
+            </a>
           </Button>
         </div>
 
@@ -61,6 +75,7 @@ export default async function EditResourcePage({ params }: PageProps) {
           action={updateResourceAction}
           resource={{ ...resource, id: row.id, sortOrder: row.sort_order }}
           labels={{ ...labels, submit: t("save") }}
+          successMessage={tAdmin("saved")}
           hiddenFields={<input type="hidden" name="id" value={row.id} />}
           cancelHref={`/${locale}/admin/resources`}
         />

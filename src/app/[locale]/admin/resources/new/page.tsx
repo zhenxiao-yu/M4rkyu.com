@@ -46,6 +46,7 @@ export default async function NewResourcePage({
         <ResourceForm
           action={createResourceAction}
           labels={{ ...labels, submit: t("create") }}
+          successMessage={tAdmin("saved")}
           cancelHref={`/${locale}/admin/resources`}
         />
       </PageSection>

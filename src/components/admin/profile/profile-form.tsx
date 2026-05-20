@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SubmitButton } from "@/components/admin/submit-button";
+import { AdminForm } from "@/components/admin/admin-form";
+import type { AdminActionState } from "@/lib/admin/action-state";
 import type { Profile } from "@/content/schemas";
 
 // Single-row settings editor for the site profile. Server component —
@@ -54,17 +54,28 @@ export function ProfileForm({
   action,
   profile,
   labels,
+  successMessage,
   cancelHref,
 }: {
-  action: (formData: FormData) => void | Promise<void>;
+  action: (
+    state: AdminActionState,
+    formData: FormData,
+  ) => Promise<AdminActionState>;
   profile: Profile;
   labels: Labels;
+  successMessage: string;
   cancelHref: string;
 }) {
   const socials = profile.socials ?? {};
 
   return (
-    <form action={action} className="grid gap-8">
+    <AdminForm
+      action={action}
+      submitLabel={labels.save}
+      cancelLabel={labels.cancel}
+      cancelHref={cancelHref}
+      successMessage={successMessage}
+    >
       <Section title={labels.section.identity}>
         <Row cols={2}>
           <Field label={labels.nameLabel} name="name" defaultValue={profile.name} required />
@@ -229,14 +240,7 @@ export function ProfileForm({
         />
       </Section>
 
-      <div className="flex items-center justify-end gap-3 border-t border-border/60 pt-6">
-        <p className="mr-auto text-[0.7rem] text-muted-foreground/80">{labels.savedHint}</p>
-        <Button asChild variant="ghost" size="sm">
-          <a href={cancelHref}>{labels.cancel}</a>
-        </Button>
-        <SubmitButton size="sm">{labels.save}</SubmitButton>
-      </div>
-    </form>
+    </AdminForm>
   );
 }
 

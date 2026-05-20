@@ -46,6 +46,7 @@ export default async function NewGamePage({
         <GameForm
           action={createGameAction}
           labels={{ ...labels, submit: t("create") }}
+          successMessage={tAdmin("saved")}
           cancelHref={`/${locale}/admin/games`}
         />
       </PageSection>

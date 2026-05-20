@@ -1,15 +1,16 @@
-import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getDbProjects } from "@/lib/projects/db";
+import {
+  duplicateProjectAction,
+  reorderProjectAction,
+  setProjectStatusAction,
+} from "@/lib/projects/admin";
 import { AdminNav } from "../_components/admin-nav";
+import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,23 @@ export default async function AdminProjectsPage({
     getDbProjects(),
   ]);
 
+  const items: AdminListItem[] = projects.map((project) => ({
+    id: project.id,
+    slug: project.slug,
+    title: project.title,
+    status: project.content_status,
+    badges: [project.category, project.year].filter(Boolean),
+    subtitle: project.short_pitch || undefined,
+    viewHref: `/${locale}/work/${project.slug}`,
+  }));
+
+  const statusOptions = [
+    { value: "ready", label: t("contentStatus.ready") },
+    { value: "draft", label: t("contentStatus.draft") },
+    { value: "placeholder", label: t("contentStatus.placeholder") },
+    { value: "coming-soon", label: t("contentStatus.comingSoon") },
+  ];
+
   return (
     <PageShell locale={locale}>
       <PageHero
@@ -35,108 +53,32 @@ export default async function AdminProjectsPage({
       />
       <PageSection>
         <AdminNav locale={locale} />
-
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {t("count", { count: projects.length })}
-          </p>
-          <Button asChild size="sm">
-            <Link href="/admin/projects/new" locale={locale}>
-              <Plus className="size-4" aria-hidden="true" />
-              {t("newProject")}
-            </Link>
-          </Button>
-        </div>
-
-        {projects.length === 0 ? (
-          <Card className="bg-card/80">
-            <CardContent className="grid gap-3 py-8 text-center">
-              <p className="text-sm text-muted-foreground">{t("emptyTitle")}</p>
-              <p className="text-xs text-muted-foreground/80">
-                {t("emptyDescription")}
-              </p>
-              <div className="flex justify-center pt-1">
-                <Button asChild size="sm">
-                  <Link href="/admin/projects/new" locale={locale}>
-                    <Plus className="size-4" aria-hidden="true" />
-                    {t("newProject")}
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <ul className="grid gap-3">
-            {projects.map((project) => (
-              <li key={project.id}>
-                <Card className="bg-card/80">
-                  <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
-                    <div className="grid gap-1.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[0.6rem]"
-                        >
-                          {project.category}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[0.6rem]"
-                        >
-                          {project.year}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[0.6rem]"
-                        >
-                          {project.content_status}
-                        </Badge>
-                        {project.featured ? (
-                          <Badge
-                            variant="success"
-                            className="font-mono text-[0.6rem]"
-                          >
-                            {t("featured")}
-                          </Badge>
-                        ) : null}
-                      </div>
-                      <CardTitle className="text-base">{project.title}</CardTitle>
-                      <p className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/80">
-                        /{project.slug}
-                      </p>
-                    </div>
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/admin/projects/${project.slug}`}
-                        locale={locale}
-                      >
-                        {t("edit")}
-                      </Link>
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="grid gap-3 text-sm leading-6 text-muted-foreground">
-                    <p className="line-clamp-2">
-                      {project.short_pitch || t("noPitch")}
-                    </p>
-                    {project.tags && project.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5">
-                        {project.tags.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="outline"
-                            className="font-mono text-[0.6rem]"
-                          >
-                            #{tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        )}
+        <AdminList
+          items={items}
+          locale={locale}
+          editBase="/admin/projects"
+          newHref="/admin/projects/new"
+          statusOptions={statusOptions}
+          setStatusAction={setProjectStatusAction}
+          reorderAction={reorderProjectAction}
+          duplicateAction={duplicateProjectAction}
+          labels={{
+            searchPlaceholder: tAdmin("list.search"),
+            statusAll: tAdmin("list.allStatuses"),
+            edit: t("edit"),
+            view: tAdmin("list.view"),
+            duplicate: tAdmin("list.duplicate"),
+            moveUp: tAdmin("list.moveUp"),
+            moveDown: tAdmin("list.moveDown"),
+            statusAria: tAdmin("list.status"),
+            noMatches: tAdmin("list.noMatches"),
+            results: tAdmin("list.results"),
+            newLabel: t("newProject"),
+            countLabel: t("count", { count: items.length }),
+            emptyTitle: t("emptyTitle"),
+            emptyDescription: t("emptyDescription"),
+          }}
+        />
       </PageSection>
     </PageShell>
   );

@@ -1,16 +1,15 @@
 import type { ReactNode } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SubmitButton } from "@/components/admin/submit-button";
+import type { AdminActionState } from "@/lib/admin/action-state";
+import { AdminForm } from "@/components/admin/admin-form";
+import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import { SlugField } from "@/components/admin/slug-field";
 import type { Project } from "@/content/schemas";
 
-// Shared form used by both /admin/projects/new and /admin/projects/[slug].
-// Server component — all interactivity flows through native form
-// submission to the server actions. Array fields serialize as
-// newline-separated strings.
-
-const inputClass =
-  "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+// Form used by /admin/projects/new and /admin/projects/[slug]. Server
+// component — the field body is server-rendered and handed to the
+// client <AdminForm> shell, which wires the action through
+// useActionState for inline error/success feedback. Array fields
+// serialize as newline-separated strings.
 
 interface Labels {
   required: string;
@@ -78,16 +77,36 @@ export function ProjectForm({
   action,
   project,
   labels,
+  successMessage,
   hiddenFields,
   cancelHref,
 }: {
-  action: (formData: FormData) => void | Promise<void>;
+  action: (
+    state: AdminActionState,
+    formData: FormData,
+  ) => Promise<AdminActionState>;
   project?: Project & { id?: string; sortOrder?: number };
   labels: Labels;
+  successMessage: string;
   hiddenFields?: ReactNode;
   cancelHref: string;
 }) {
-  const defaults = {
+  const categoryOptions = (
+    Object.entries(labels.category) as [keyof Labels["category"], string][]
+  ).map(([value, label]) => ({ value, label }));
+
+  const statusOptions = (
+    Object.entries(labels.status) as [keyof Labels["status"], string][]
+  ).map(([value, label]) => ({ value, label }));
+
+  const contentStatusOptions = [
+    { value: "ready", label: labels.contentStatus.ready },
+    { value: "draft", label: labels.contentStatus.draft },
+    { value: "placeholder", label: labels.contentStatus.placeholder },
+    { value: "coming-soon", label: labels.contentStatus.comingSoon },
+  ];
+
+  const d = {
     title: project?.title ?? "",
     slug: project?.slug ?? "",
     shortPitch: project?.shortPitch ?? "",
@@ -117,77 +136,59 @@ export function ProjectForm({
   };
 
   return (
-    <form action={action} className="grid gap-8">
-      {hiddenFields}
-
+    <AdminForm
+      action={action}
+      submitLabel={labels.submit}
+      cancelLabel={labels.cancel}
+      cancelHref={cancelHref}
+      successMessage={successMessage}
+      hiddenFields={hiddenFields}
+    >
       <Section title={labels.basics}>
         <Row cols={2}>
-          <Field label={labels.titleLabel} name="title" defaultValue={defaults.title} required />
-          <Field
-            label={labels.slugLabel}
+          <Field label={labels.titleLabel} name="title" defaultValue={d.title} required />
+          <SlugField
             name="slug"
-            defaultValue={defaults.slug}
-            pattern="[a-z0-9-]+"
+            sourceName="title"
+            label={labels.slugLabel}
             hint={labels.slugHint}
-            required
+            defaultValue={d.slug}
           />
         </Row>
         <Row cols={3}>
-          <Field
-            label={labels.yearLabel}
-            name="year"
-            defaultValue={defaults.year}
-            required
-          />
+          <Field label={labels.yearLabel} name="year" defaultValue={d.year} required />
           <Select
             label={labels.categoryLabel}
             name="category"
-            defaultValue={defaults.category}
-            options={(
-              Object.entries(labels.category) as [keyof Labels["category"], string][]
-            ).map(([value, label]) => ({ value, label }))}
+            defaultValue={d.category}
+            options={categoryOptions}
           />
           <Field
             label={labels.sortOrderLabel}
             name="sortOrder"
             type="number"
-            defaultValue={defaults.sortOrder}
+            defaultValue={d.sortOrder}
           />
         </Row>
         <Row cols={2}>
           <Select
             label={labels.statusLabel}
             name="status"
-            defaultValue={defaults.status}
-            options={(
-              Object.entries(labels.status) as [keyof Labels["status"], string][]
-            ).map(([value, label]) => ({ value, label }))}
+            defaultValue={d.status}
+            options={statusOptions}
           />
           <Select
             label={labels.contentStatusLabel}
             name="contentStatus"
-            defaultValue={defaults.contentStatus}
-            options={[
-              { value: "ready", label: labels.contentStatus.ready },
-              { value: "draft", label: labels.contentStatus.draft },
-              { value: "placeholder", label: labels.contentStatus.placeholder },
-              { value: "coming-soon", label: labels.contentStatus.comingSoon },
-            ]}
+            defaultValue={d.contentStatus}
+            options={contentStatusOptions}
           />
         </Row>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="featured"
-            defaultChecked={defaults.featured}
-            className="size-4 rounded border-border accent-ring"
-          />
-          <span>{labels.featured}</span>
-        </label>
+        <Checkbox label={labels.featured} name="featured" defaultChecked={d.featured} />
         <Field
           label={labels.shortPitchLabel}
           name="shortPitch"
-          defaultValue={defaults.shortPitch}
+          defaultValue={d.shortPitch}
           hint={labels.shortPitchHint}
           multiline
           rows={3}
@@ -196,41 +197,17 @@ export function ProjectForm({
       </Section>
 
       <Section title={labels.caseStudy}>
-        <Field
-          label={labels.problemLabel}
-          name="problem"
-          defaultValue={defaults.problem}
-          multiline
-          rows={4}
-        />
-        <Field
-          label={labels.solutionLabel}
-          name="solution"
-          defaultValue={defaults.solution}
-          multiline
-          rows={4}
-        />
+        <Field label={labels.problemLabel} name="problem" defaultValue={d.problem} multiline rows={4} />
+        <Field label={labels.solutionLabel} name="solution" defaultValue={d.solution} multiline rows={4} />
         <Row cols={2}>
-          <Field
-            label={labels.roleLabel}
-            name="role"
-            defaultValue={defaults.role}
-            multiline
-            rows={3}
-          />
-          <Field
-            label={labels.outcomeLabel}
-            name="outcome"
-            defaultValue={defaults.outcome}
-            multiline
-            rows={3}
-          />
+          <Field label={labels.roleLabel} name="role" defaultValue={d.role} multiline rows={3} />
+          <Field label={labels.outcomeLabel} name="outcome" defaultValue={d.outcome} multiline rows={3} />
         </Row>
         <Row cols={2}>
           <Field
             label={labels.stackLabel}
             name="stack"
-            defaultValue={defaults.stack}
+            defaultValue={d.stack}
             hint={labels.stackHint}
             multiline
             rows={4}
@@ -238,24 +215,18 @@ export function ProjectForm({
           <Field
             label={labels.tagsLabel}
             name="tags"
-            defaultValue={defaults.tags}
+            defaultValue={d.tags}
             hint={labels.tagsHint}
             multiline
             rows={4}
           />
         </Row>
         <Row cols={2}>
-          <Field
-            label={labels.featuresLabel}
-            name="features"
-            defaultValue={defaults.features}
-            multiline
-            rows={5}
-          />
+          <Field label={labels.featuresLabel} name="features" defaultValue={d.features} multiline rows={5} />
           <Field
             label={labels.architectureLabel}
             name="architectureNotes"
-            defaultValue={defaults.architectureNotes}
+            defaultValue={d.architectureNotes}
             multiline
             rows={5}
           />
@@ -264,21 +235,21 @@ export function ProjectForm({
           <Field
             label={labels.challengesLabel}
             name="challenges"
-            defaultValue={defaults.challenges}
+            defaultValue={d.challenges}
             multiline
             rows={4}
           />
           <Field
             label={labels.lessonsLabel}
             name="lessonsLearned"
-            defaultValue={defaults.lessonsLearned}
+            defaultValue={d.lessonsLearned}
             multiline
             rows={4}
           />
           <Field
             label={labels.nextStepsLabel}
             name="nextSteps"
-            defaultValue={defaults.nextSteps}
+            defaultValue={d.nextSteps}
             multiline
             rows={4}
           />
@@ -287,163 +258,28 @@ export function ProjectForm({
 
       <Section title={labels.links}>
         <Row cols={2}>
-          <Field
-            label={labels.liveUrlLabel}
-            name="liveUrl"
-            type="url"
-            defaultValue={defaults.liveUrl}
-          />
-          <Field
-            label={labels.githubUrlLabel}
-            name="githubUrl"
-            type="url"
-            defaultValue={defaults.githubUrl}
-          />
+          <Field label={labels.liveUrlLabel} name="liveUrl" type="url" defaultValue={d.liveUrl} />
+          <Field label={labels.githubUrlLabel} name="githubUrl" type="url" defaultValue={d.githubUrl} />
         </Row>
       </Section>
 
       <Section title={labels.cover}>
         <Row cols={2}>
-          <Field
-            label={labels.coverSrcLabel}
-            name="coverImageSrc"
-            defaultValue={defaults.coverImageSrc}
-          />
-          <Field
-            label={labels.coverAltLabel}
-            name="coverImageAlt"
-            defaultValue={defaults.coverImageAlt}
-          />
+          <Field label={labels.coverSrcLabel} name="coverImageSrc" defaultValue={d.coverImageSrc} />
+          <Field label={labels.coverAltLabel} name="coverImageAlt" defaultValue={d.coverImageAlt} />
         </Row>
       </Section>
 
       <Section title={labels.seo}>
-        <Field
-          label={labels.seoTitleLabel}
-          name="seoTitle"
-          defaultValue={defaults.seoTitle}
-        />
+        <Field label={labels.seoTitleLabel} name="seoTitle" defaultValue={d.seoTitle} />
         <Field
           label={labels.seoDescriptionLabel}
           name="seoDescription"
-          defaultValue={defaults.seoDescription}
+          defaultValue={d.seoDescription}
           multiline
           rows={2}
         />
       </Section>
-
-      <div className="flex justify-end gap-2 border-t border-border/60 pt-6">
-        <Button asChild variant="ghost" size="sm">
-          <a href={cancelHref}>{labels.cancel}</a>
-        </Button>
-        <SubmitButton size="sm">
-          {labels.submit}
-        </SubmitButton>
-      </div>
-    </form>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="grid gap-3 rounded-lg border border-border/60 bg-card/60 p-5">
-      <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-        {title}
-      </h2>
-      <div className="grid gap-3">{children}</div>
-    </section>
-  );
-}
-
-function Row({ cols, children }: { cols: 2 | 3; children: ReactNode }) {
-  // 3-col rows wait until md (768px) so labels + textareas don't get
-  // crushed at 360px; 2-col rows kick in at sm (640px), which is
-  // already roomy enough for two short fields.
-  return (
-    <div
-      className={
-        cols === 2 ? "grid gap-3 sm:grid-cols-2" : "grid gap-3 md:grid-cols-3"
-      }
-    >
-      {children}
-    </div>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  defaultValue,
-  required,
-  multiline,
-  rows,
-  hint,
-  pattern,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  defaultValue?: string;
-  required?: boolean;
-  multiline?: boolean;
-  rows?: number;
-  hint?: string;
-  pattern?: string;
-}) {
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
-      </span>
-      {multiline ? (
-        <textarea
-          name={name}
-          defaultValue={defaultValue}
-          rows={rows ?? 4}
-          required={required}
-          className={inputClass}
-        />
-      ) : (
-        <Input
-          name={name}
-          type={type}
-          defaultValue={defaultValue}
-          required={required}
-          pattern={pattern}
-          autoComplete="off"
-        />
-      )}
-      {hint ? (
-        <span className="text-[0.7rem] text-muted-foreground/70">{hint}</span>
-      ) : null}
-    </label>
-  );
-}
-
-function Select({
-  label,
-  name,
-  options,
-  defaultValue,
-}: {
-  label: string;
-  name: string;
-  options: { value: string; label: string }[];
-  defaultValue?: string;
-}) {
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
-      </span>
-      <select name={name} defaultValue={defaultValue} className={inputClass}>
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    </AdminForm>
   );
 }

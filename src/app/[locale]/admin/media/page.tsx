@@ -1,15 +1,16 @@
-import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getDbMediaItems } from "@/lib/media/db";
+import {
+  duplicateMediaAction,
+  reorderMediaAction,
+  setMediaStatusAction,
+} from "@/lib/media/admin";
 import { AdminNav } from "../_components/admin-nav";
+import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
 
@@ -19,11 +20,27 @@ export default async function AdminMediaPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [t, tAdmin, items] = await Promise.all([
+  const [t, tAdmin, mediaList] = await Promise.all([
     getTranslations({ locale, namespace: "AdminMedia" }),
     getTranslations({ locale, namespace: "Admin" }),
     getDbMediaItems(),
   ]);
+
+  const items: AdminListItem[] = mediaList.map((item) => ({
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    status: item.status,
+    badges: [item.format],
+    subtitle: item.description || undefined,
+  }));
+
+  const statusOptions = [
+    { value: "ready", label: t("status.ready") },
+    { value: "draft", label: t("status.draft") },
+    { value: "placeholder", label: t("status.placeholder") },
+    { value: "coming-soon", label: t("status.comingSoon") },
+  ];
 
   return (
     <PageShell locale={locale}>
@@ -35,89 +52,32 @@ export default async function AdminMediaPage({
       />
       <PageSection>
         <AdminNav locale={locale} />
-
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {t("count", { count: items.length })}
-          </p>
-          <Button asChild size="sm">
-            <Link href="/admin/media/new" locale={locale}>
-              <Plus className="size-4" aria-hidden="true" />
-              {t("newMedia")}
-            </Link>
-          </Button>
-        </div>
-
-        {items.length === 0 ? (
-          <Card className="bg-card/80">
-            <CardContent className="grid gap-3 py-8 text-center">
-              <p className="text-sm text-muted-foreground">{t("emptyTitle")}</p>
-              <p className="text-xs text-muted-foreground/80">
-                {t("emptyDescription")}
-              </p>
-              <div className="flex justify-center pt-1">
-                <Button asChild size="sm">
-                  <Link href="/admin/media/new" locale={locale}>
-                    <Plus className="size-4" aria-hidden="true" />
-                    {t("newMedia")}
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <ul className="grid gap-3">
-            {items.map((item) => (
-              <li key={item.id}>
-                <Card className="bg-card/80">
-                  <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
-                    <div className="grid gap-1.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[0.6rem]"
-                        >
-                          {item.format}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[0.6rem]"
-                        >
-                          {item.status}
-                        </Badge>
-                        {item.duration ? (
-                          <Badge
-                            variant="outline"
-                            className="font-mono text-[0.6rem]"
-                          >
-                            {item.duration}
-                          </Badge>
-                        ) : null}
-                      </div>
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                      <p className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/80">
-                        /{item.slug}
-                      </p>
-                    </div>
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/admin/media/${item.slug}`}
-                        locale={locale}
-                      >
-                        {t("edit")}
-                      </Link>
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="grid gap-3 text-sm leading-6 text-muted-foreground">
-                    <p className="line-clamp-2">
-                      {item.description || t("noDescription")}
-                    </p>
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        )}
+        <AdminList
+          items={items}
+          locale={locale}
+          editBase="/admin/media"
+          newHref="/admin/media/new"
+          statusOptions={statusOptions}
+          setStatusAction={setMediaStatusAction}
+          reorderAction={reorderMediaAction}
+          duplicateAction={duplicateMediaAction}
+          labels={{
+            searchPlaceholder: tAdmin("list.search"),
+            statusAll: tAdmin("list.allStatuses"),
+            edit: t("edit"),
+            view: tAdmin("list.view"),
+            duplicate: tAdmin("list.duplicate"),
+            moveUp: tAdmin("list.moveUp"),
+            moveDown: tAdmin("list.moveDown"),
+            statusAria: tAdmin("list.status"),
+            noMatches: tAdmin("list.noMatches"),
+            results: tAdmin("list.results"),
+            newLabel: t("newMedia"),
+            countLabel: t("count", { count: items.length }),
+            emptyTitle: t("emptyTitle"),
+            emptyDescription: t("emptyDescription"),
+          }}
+        />
       </PageSection>
     </PageShell>
   );

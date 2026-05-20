@@ -1227,7 +1227,19 @@
     "usersDescription": "最近注册的资料，最新在前。",
     "usersEmpty": "暂无用户。",
     "usersUnnamed": "未命名用户",
-    "usersPromoteHint": "如需提升或撤销管理员权限，请按 supabase/README.md 中的 SQL 操作。"
+    "usersPromoteHint": "如需提升或撤销管理员权限，请按 supabase/README.md 中的 SQL 操作。",
+    "saved": "已保存",
+    "list": {
+      "search": "按标题或标识符搜索……",
+      "allStatuses": "全部状态",
+      "view": "在网站查看",
+      "duplicate": "复制",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "status": "状态",
+      "noMatches": "没有匹配的结果。",
+      "results": "项"
+    }
   },
   "AdminGallery": {
     "title": "影像管理",

@@ -1227,7 +1227,19 @@
     "usersDescription": "Most recent profiles, newest first.",
     "usersEmpty": "No users yet.",
     "usersUnnamed": "Unnamed user",
-    "usersPromoteHint": "To promote or demote an admin, run the SQL in supabase/README.md."
+    "usersPromoteHint": "To promote or demote an admin, run the SQL in supabase/README.md.",
+    "saved": "Saved",
+    "list": {
+      "search": "Search by title or slug…",
+      "allStatuses": "All statuses",
+      "view": "View on site",
+      "duplicate": "Duplicate",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "status": "Status",
+      "noMatches": "Nothing matches your search.",
+      "results": "shown"
+    }
   },
   "AdminGallery": {
     "title": "Gallery",

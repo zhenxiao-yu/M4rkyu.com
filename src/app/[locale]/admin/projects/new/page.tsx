@@ -46,6 +46,7 @@ export default async function NewProjectPage({
         <ProjectForm
           action={createProjectAction}
           labels={{ ...labels, submit: t("create") }}
+          successMessage={tAdmin("saved")}
           cancelHref={`/${locale}/admin/projects`}
         />
       </PageSection>

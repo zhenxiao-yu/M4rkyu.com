@@ -55,6 +55,7 @@ export default async function EditMediaPage({ params }: PageProps) {
           action={updateMediaAction}
           item={{ ...item, id: row.id, sortOrder: row.sort_order }}
           labels={{ ...labels, submit: t("save") }}
+          successMessage={tAdmin("saved")}
           hiddenFields={<input type="hidden" name="id" value={row.id} />}
           cancelHref={`/${locale}/admin/media`}
         />
