@@ -18,6 +18,7 @@ import {
   dbProjectRowToProject,
   getDbProjectBySlug,
 } from "@/lib/projects/db";
+import { contentImageUrlFor } from "@/lib/content-images/storage";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { buildProjectFormLabels } from "../_labels";
 
@@ -66,6 +67,8 @@ export default async function EditProjectPage({ params }: PageProps) {
         <ProjectForm
           action={updateProjectAction}
           project={{ ...project, id: row.id, sortOrder: row.sort_order }}
+          coverImageSrc={row.cover_image_src ?? ""}
+          coverImageUrl={contentImageUrlFor(row.cover_path)}
           labels={{ ...labels, submit: t("save") }}
           successMessage={tAdmin("saved")}
           hiddenFields={<input type="hidden" name="id" value={row.id} />}

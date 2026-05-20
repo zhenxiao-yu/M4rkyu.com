@@ -23,6 +23,13 @@ export async function buildMediaFormLabels(locale: Locale) {
     descriptionLabel: t("descriptionLabel"),
     durationLabel: t("durationLabel"),
     durationHint: t("durationHint"),
+    media: t("section.media"),
+    imageLabel: t("imageLabel"),
+    imageHint: t("imageHint"),
+    imageReplaceHint: t("imageReplaceHint"),
+    posterAltLabel: t("posterAltLabel"),
+    posterAltHint: t("posterAltHint"),
+    currentImage: t("currentImage"),
     submit: t("save"),
     cancel: t("cancel"),
     format: {

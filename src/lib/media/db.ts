@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { contentImageUrlFor } from "@/lib/content-images/storage";
 import type { MediaItem } from "@/content/schemas";
 
 // DB-backed media reads. Wrapped in React cache() so multiple
@@ -18,11 +19,13 @@ export interface DbMediaRow {
   status: MediaItem["status"];
   description: string;
   duration: string | null;
+  poster_path: string | null;
+  poster_alt: string;
   sort_order: number;
 }
 
 const SELECT_COLUMNS =
-  "id, slug, title, format, status, description, duration, sort_order";
+  "id, slug, title, format, status, description, duration, poster_path, poster_alt, sort_order";
 
 // `createSupabaseServerClient` reads request cookies, which throws
 // when Next is enumerating `generateStaticParams` /
@@ -68,6 +71,7 @@ export const getDbMediaBySlug = cache(
 // Map a DB row to the MediaItem shape consumed by /media.
 // duration is nullable in the DB but optional in the schema.
 export function dbMediaRowToItem(row: DbMediaRow): MediaItem {
+  const posterSrc = contentImageUrlFor(row.poster_path);
   return {
     title: row.title,
     slug: row.slug,
@@ -75,5 +79,8 @@ export function dbMediaRowToItem(row: DbMediaRow): MediaItem {
     status: row.status,
     description: row.description,
     duration: row.duration ?? undefined,
+    poster: posterSrc
+      ? { src: posterSrc, alt: row.poster_alt || row.title }
+      : undefined,
   };
 }

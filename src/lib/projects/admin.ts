@@ -12,6 +12,10 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import {
+  uploadContentImage,
+  deleteContentImage,
+} from "@/lib/content-images/storage";
 
 // Admin server actions for projects. requireAdmin gate, Zod-validated
 // input, RLS as the underlying enforcement layer. create/update return
@@ -149,6 +153,19 @@ function toRow(parsed: z.infer<typeof projectFormSchema>) {
   };
 }
 
+async function uploadCoverIfPresent(
+  formData: FormData,
+  slug: string,
+): Promise<{ path: string | null; error?: true }> {
+  const file = formData.get("image");
+  if (file instanceof File && file.size > 0) {
+    const upload = await uploadContentImage(file, `projects/${slug}`);
+    if (!upload) return { path: null, error: true };
+    return { path: upload.path };
+  }
+  return { path: null };
+}
+
 function revalidateProjects(slug?: string) {
   revalidatePath("/(.*)/admin/projects", "page");
   revalidatePath("/(.*)/work", "page");
@@ -167,9 +184,19 @@ export async function createProjectAction(
     if (error instanceof z.ZodError) return zodToActionState(error);
     throw error;
   }
+  const upload = await uploadCoverIfPresent(formData, parsed.slug);
+  if (upload.error) {
+    return adminError(dbErrorToMessage("upload failed"), { image: " " });
+  }
+
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("projects").insert(toRow(parsed));
-  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+  const { error } = await supabase
+    .from("projects")
+    .insert({ ...toRow(parsed), cover_path: upload.path });
+  if (error) {
+    if (upload.path) await deleteContentImage(upload.path);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
+  }
 
   revalidateProjects(parsed.slug);
   redirect(`/admin/projects/${parsed.slug}`);
@@ -190,8 +217,35 @@ export async function updateProjectAction(
     throw error;
   }
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("projects").update(toRow(parsed)).eq("id", id);
-  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+  const upload = await uploadCoverIfPresent(formData, parsed.slug);
+  if (upload.error) {
+    return adminError(dbErrorToMessage("upload failed"), { image: " " });
+  }
+
+  const patch = upload.path
+    ? { ...toRow(parsed), cover_path: upload.path }
+    : toRow(parsed);
+
+  // Grab the old path first so a successful re-upload can clean up.
+  let oldPath: string | null = null;
+  if (upload.path) {
+    const { data } = await supabase
+      .from("projects")
+      .select("cover_path")
+      .eq("id", id)
+      .maybeSingle();
+    oldPath = (data?.cover_path as string | null | undefined) ?? null;
+  }
+
+  const { error } = await supabase.from("projects").update(patch).eq("id", id);
+  if (error) {
+    if (upload.path) await deleteContentImage(upload.path);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
+  }
+
+  if (upload.path && oldPath && oldPath !== upload.path) {
+    await deleteContentImage(oldPath);
+  }
 
   revalidateProjects(parsed.slug);
   return adminSuccess();
@@ -203,8 +257,17 @@ export async function deleteProjectAction(formData: FormData) {
   if (!id) throw new Error("missing id");
 
   const supabase = await createSupabaseServerClient();
+  const { data: row } = await supabase
+    .from("projects")
+    .select("cover_path")
+    .eq("id", id)
+    .maybeSingle();
+  const coverPath = row?.cover_path as string | null | undefined;
+
   const { error } = await supabase.from("projects").delete().eq("id", id);
   if (error) throw new Error(error.message);
+
+  if (coverPath) await deleteContentImage(coverPath);
 
   revalidateProjects();
   redirect("/admin/projects");

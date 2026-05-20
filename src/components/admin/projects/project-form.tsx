@@ -1,7 +1,15 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
-import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import {
+  Section,
+  Row,
+  Field,
+  Select,
+  Checkbox,
+  FileField,
+} from "@/components/admin/form-kit";
 import { SlugField } from "@/components/admin/slug-field";
 import type { Project } from "@/content/schemas";
 
@@ -44,6 +52,10 @@ interface Labels {
   cover: string;
   coverSrcLabel: string;
   coverAltLabel: string;
+  imageLabel: string;
+  imageHint: string;
+  imageReplaceHint: string;
+  currentImage: string;
   seo: string;
   seoTitleLabel: string;
   seoDescriptionLabel: string;
@@ -76,6 +88,8 @@ interface Labels {
 export function ProjectForm({
   action,
   project,
+  coverImageSrc,
+  coverImageUrl,
   labels,
   successMessage,
   hiddenFields,
@@ -86,6 +100,11 @@ export function ProjectForm({
     formData: FormData,
   ) => Promise<AdminActionState>;
   project?: Project & { id?: string; sortOrder?: number };
+  /** External cover URL (cover_image_src column). Kept separate from the
+   *  uploaded image so re-saving never writes a storage URL back into it. */
+  coverImageSrc?: string;
+  /** Resolved public URL of the uploaded cover (content-images bucket). */
+  coverImageUrl?: string | null;
   labels: Labels;
   successMessage: string;
   hiddenFields?: ReactNode;
@@ -128,7 +147,7 @@ export function ProjectForm({
     nextSteps: project?.nextSteps?.join("\n") ?? "",
     liveUrl: project?.liveUrl ?? "",
     githubUrl: project?.githubUrl ?? "",
-    coverImageSrc: project?.screenshots?.[0]?.src ?? "",
+    coverImageSrc: coverImageSrc ?? project?.screenshots?.[0]?.src ?? "",
     coverImageAlt: project?.screenshots?.[0]?.alt ?? "",
     seoTitle: project?.seo?.title ?? "",
     seoDescription: project?.seo?.description ?? "",
@@ -264,6 +283,28 @@ export function ProjectForm({
       </Section>
 
       <Section title={labels.cover}>
+        {coverImageUrl ? (
+          <div className="grid gap-1.5">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+              {labels.currentImage}
+            </span>
+            <div className="relative aspect-16/10 max-w-xs overflow-hidden rounded-md border border-border/60">
+              <Image
+                src={coverImageUrl}
+                alt={d.coverImageAlt || d.title}
+                fill
+                sizes="320px"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        ) : null}
+        <FileField
+          label={labels.imageLabel}
+          name="image"
+          accept="image/*"
+          hint={coverImageUrl ? labels.imageReplaceHint : labels.imageHint}
+        />
         <Row cols={2}>
           <Field label={labels.coverSrcLabel} name="coverImageSrc" defaultValue={d.coverImageSrc} />
           <Field label={labels.coverAltLabel} name="coverImageAlt" defaultValue={d.coverImageAlt} />

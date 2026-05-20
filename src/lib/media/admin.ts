@@ -12,6 +12,10 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import {
+  uploadContentImage,
+  deleteContentImage,
+} from "@/lib/content-images/storage";
 
 // Admin server actions for media. requireAdmin gate, Zod-validated
 // input, RLS as the underlying enforcement layer. create/update return
@@ -31,11 +35,12 @@ const mediaFormSchema = z.object({
   status: CONTENT_STATUS.default("draft"),
   description: z.string().default(""),
   duration: z.string().max(80).default(""),
+  posterAlt: z.string().max(240).default(""),
   sortOrder: z.coerce.number().int().default(0),
 });
 
 const DATA_COLUMNS =
-  "slug, title, format, status, description, duration, sort_order";
+  "slug, title, format, status, description, duration, poster_path, poster_alt, sort_order";
 
 function pickField(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -55,6 +60,7 @@ function parseForm(formData: FormData) {
     status: pickField(formData, "status") || "draft",
     description: pickField(formData, "description"),
     duration: pickField(formData, "duration"),
+    posterAlt: pickField(formData, "posterAlt"),
     sortOrder: pickField(formData, "sortOrder") || "0",
   });
 }
@@ -67,8 +73,22 @@ function toRow(parsed: z.infer<typeof mediaFormSchema>) {
     status: parsed.status,
     description: parsed.description,
     duration: nullishText(parsed.duration),
+    poster_alt: parsed.posterAlt,
     sort_order: parsed.sortOrder,
   };
+}
+
+async function uploadPosterIfPresent(
+  formData: FormData,
+  slug: string,
+): Promise<{ path: string | null; error?: true }> {
+  const file = formData.get("image");
+  if (file instanceof File && file.size > 0) {
+    const upload = await uploadContentImage(file, `media/${slug}`);
+    if (!upload) return { path: null, error: true };
+    return { path: upload.path };
+  }
+  return { path: null };
 }
 
 function revalidateMedia(slug?: string) {
@@ -89,9 +109,19 @@ export async function createMediaAction(
     if (error instanceof z.ZodError) return zodToActionState(error);
     throw error;
   }
+  const upload = await uploadPosterIfPresent(formData, parsed.slug);
+  if (upload.error) {
+    return adminError(dbErrorToMessage("upload failed"), { image: " " });
+  }
+
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("media_items").insert(toRow(parsed));
-  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+  const { error } = await supabase
+    .from("media_items")
+    .insert({ ...toRow(parsed), poster_path: upload.path });
+  if (error) {
+    if (upload.path) await deleteContentImage(upload.path);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
+  }
 
   revalidateMedia(parsed.slug);
   redirect(`/admin/media/${parsed.slug}`);
@@ -112,8 +142,34 @@ export async function updateMediaAction(
     throw error;
   }
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("media_items").update(toRow(parsed)).eq("id", id);
-  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+  const upload = await uploadPosterIfPresent(formData, parsed.slug);
+  if (upload.error) {
+    return adminError(dbErrorToMessage("upload failed"), { image: " " });
+  }
+
+  const patch = upload.path
+    ? { ...toRow(parsed), poster_path: upload.path }
+    : toRow(parsed);
+
+  let oldPath: string | null = null;
+  if (upload.path) {
+    const { data } = await supabase
+      .from("media_items")
+      .select("poster_path")
+      .eq("id", id)
+      .maybeSingle();
+    oldPath = (data?.poster_path as string | null | undefined) ?? null;
+  }
+
+  const { error } = await supabase.from("media_items").update(patch).eq("id", id);
+  if (error) {
+    if (upload.path) await deleteContentImage(upload.path);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
+  }
+
+  if (upload.path && oldPath && oldPath !== upload.path) {
+    await deleteContentImage(oldPath);
+  }
 
   revalidateMedia(parsed.slug);
   return adminSuccess();
@@ -124,8 +180,18 @@ export async function deleteMediaAction(formData: FormData) {
   const id = pickField(formData, "id");
   if (!id) throw new Error("missing id");
   const supabase = await createSupabaseServerClient();
+  const { data: row } = await supabase
+    .from("media_items")
+    .select("poster_path")
+    .eq("id", id)
+    .maybeSingle();
+  const posterPath = row?.poster_path as string | null | undefined;
+
   const { error } = await supabase.from("media_items").delete().eq("id", id);
   if (error) throw new Error(error.message);
+
+  if (posterPath) await deleteContentImage(posterPath);
+
   revalidateMedia();
   redirect("/admin/media");
 }
@@ -189,9 +255,15 @@ export async function duplicateMediaAction(id: string) {
     if (n > 50) return;
   }
 
-  const { error } = await supabase
-    .from("media_items")
-    .insert({ ...source, slug, title: `${source.title} (copy)`, status: "draft" });
+  // Null the poster on the copy so two rows never point at one storage
+  // object (a later delete of one would orphan the other's image).
+  const { error } = await supabase.from("media_items").insert({
+    ...source,
+    slug,
+    title: `${source.title} (copy)`,
+    status: "draft",
+    poster_path: null,
+  });
   if (error) return;
   revalidateMedia();
   redirect(`/admin/media/${slug}`);

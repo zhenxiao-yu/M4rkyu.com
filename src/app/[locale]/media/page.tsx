@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -62,7 +63,17 @@ export default async function MediaPage({
                 key={item.slug}
                 className="overflow-hidden bg-card/80 hover:border-ring/50 hover:shadow-md"
               >
-                {item.format === "video" || item.format === "reel" ? (
+                {item.poster ? (
+                  <div className="relative aspect-video border-b">
+                    <Image
+                      src={item.poster.src}
+                      alt={item.poster.alt}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : item.format === "video" || item.format === "reel" ? (
                   <PlaceholderVideo
                     label={t("videoPosterTbd")}
                     className="rounded-none border-0 border-b"

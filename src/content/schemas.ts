@@ -279,6 +279,9 @@ export const mediaItemSchema = z.object({
   status: contentStatusSchema,
   description: z.string().min(1),
   duration: z.string().optional(),
+  // Optional poster/still uploaded via the admin CMS. When present the
+  // /media surfaces render it instead of the placeholder frame.
+  poster: imageSchema.optional(),
 });
 
 export const serviceSchema = z.object({

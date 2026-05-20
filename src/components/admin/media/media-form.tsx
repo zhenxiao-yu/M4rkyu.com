@@ -1,7 +1,14 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
-import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import {
+  Section,
+  Row,
+  Field,
+  Select,
+  FileField,
+} from "@/components/admin/form-kit";
 import { SlugField } from "@/components/admin/slug-field";
 import type { MediaItem } from "@/content/schemas";
 
@@ -23,6 +30,13 @@ interface Labels {
   descriptionLabel: string;
   durationLabel: string;
   durationHint: string;
+  media: string;
+  imageLabel: string;
+  imageHint: string;
+  imageReplaceHint: string;
+  posterAltLabel: string;
+  posterAltHint: string;
+  currentImage: string;
   submit: string;
   cancel: string;
   format: {
@@ -78,8 +92,10 @@ export function MediaForm({
     status: item?.status ?? "draft",
     description: item?.description ?? "",
     duration: item?.duration ?? "",
+    posterAlt: item?.poster?.alt ?? "",
     sortOrder: String(item?.sortOrder ?? 0),
   };
+  const posterUrl = item?.poster?.src ?? null;
 
   return (
     <AdminForm
@@ -137,6 +153,37 @@ export function MediaForm({
           name="duration"
           defaultValue={d.duration}
           hint={labels.durationHint}
+        />
+      </Section>
+
+      <Section title={labels.media}>
+        {posterUrl ? (
+          <div className="grid gap-1.5">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+              {labels.currentImage}
+            </span>
+            <div className="relative aspect-video max-w-md overflow-hidden rounded-md border border-border/60">
+              <Image
+                src={posterUrl}
+                alt={d.posterAlt || d.title}
+                fill
+                sizes="448px"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        ) : null}
+        <FileField
+          label={labels.imageLabel}
+          name="image"
+          accept="image/*"
+          hint={posterUrl ? labels.imageReplaceHint : labels.imageHint}
+        />
+        <Field
+          label={labels.posterAltLabel}
+          name="posterAlt"
+          defaultValue={d.posterAlt}
+          hint={labels.posterAltHint}
         />
       </Section>
     </AdminForm>

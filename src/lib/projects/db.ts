@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { contentImageUrlFor } from "@/lib/content-images/storage";
 import type { Project } from "@/content/schemas";
 
 // DB-backed projects reads. Wrapped in React cache() so multiple
@@ -35,13 +36,14 @@ export interface DbProjectRow {
   github_url: string | null;
   cover_image_src: string | null;
   cover_image_alt: string;
+  cover_path: string | null;
   seo_title: string;
   seo_description: string;
   sort_order: number;
 }
 
 const SELECT_COLUMNS =
-  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
+  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, cover_path, seo_title, seo_description, sort_order";
 
 // `createSupabaseServerClient` reads request cookies, which throws
 // when Next is enumerating `generateStaticParams` /
@@ -107,9 +109,12 @@ export function dbProjectRowToProject(row: DbProjectRow): Project {
     features: row.features,
     architectureNotes: row.architecture_notes,
     challenges: row.challenges,
-    screenshots: row.cover_image_src
-      ? [{ src: row.cover_image_src, alt: row.cover_image_alt || row.title }]
-      : [],
+    // Uploaded cover (content-images bucket) wins over an external URL.
+    screenshots: (() => {
+      const uploaded = contentImageUrlFor(row.cover_path);
+      const src = uploaded ?? row.cover_image_src;
+      return src ? [{ src, alt: row.cover_image_alt || row.title }] : [];
+    })(),
     liveUrl: row.live_url ?? undefined,
     githubUrl: row.github_url ?? undefined,
     outcome: row.outcome,
