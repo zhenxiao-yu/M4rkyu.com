@@ -38,6 +38,8 @@ export interface ProfileRow {
 export interface UserPreferencesRow {
   user_id: string;
   email_notifications: boolean;
+  browser_notifications: boolean;
+  notification_last_seen_at: string | null;
   theme_preference: "light" | "dark" | "system" | null;
   locale_preference: "en" | "zh" | null;
   created_at: string;

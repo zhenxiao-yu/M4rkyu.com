@@ -75,6 +75,82 @@
     "heroCtaEmail": "Email Mark",
     "heroCtaLogs": "Read the logs",
     "heroCmdkHint": ">_ press ⌘K",
+    "compass": {
+      "eyebrow": "00 / start here",
+      "heading": "Find your way around.",
+      "body": "I'm Mark — a creative developer in Ontario, working across software, games, and visual systems. This site is one archive instead of seven scattered profiles.",
+      "cta": "Pick a thread",
+      "tiles": {
+        "work": {
+          "label": "Work",
+          "description": "Production builds and case studies."
+        },
+        "games": {
+          "label": "Games",
+          "description": "Prototypes, jam entries, devlogs."
+        },
+        "archive": {
+          "label": "Archive",
+          "description": "Photo collections and visual experiments."
+        },
+        "logs": {
+          "label": "Logs",
+          "description": "Devlogs, field notes, things I'm thinking about."
+        },
+        "resources": {
+          "label": "Resources",
+          "description": "Tools I built, links I trust."
+        },
+        "about": {
+          "label": "About",
+          "description": "The longer version, with portrait."
+        }
+      }
+    },
+    "games": {
+      "eyebrow": "02 / games",
+      "heading": "In the workshop.",
+      "lede": "Prototypes and engine studies — systems, input, and game feel. Most are still cooking; here's what's on the bench.",
+      "open": "All games"
+    },
+    "visual": {
+      "eyebrow": "03 / visual",
+      "heading": "Frames & films.",
+      "lede": "Black-and-white photography, digital art, and short films. Stills and motion, filed as they're finished.",
+      "openArchive": "Open archive",
+      "openMedia": "Watch media",
+      "framesCount": "{count} frames",
+      "collectionLabel": "collection",
+      "openCollection": "Open collection",
+      "galleryAria": "Gallery collections",
+      "prev": "Previous collection",
+      "next": "Next collection",
+      "framesSoon": "Frames are being edited — the structure's ready, the images land next."
+    },
+    "resources": {
+      "eyebrow": "05 / resources",
+      "heading": "Tools & links.",
+      "lede": "A working stack — in-browser dev utilities I built, plus the links I actually keep open. Each with a note on why.",
+      "open": "Open resources",
+      "toolsCount": "{count} tools",
+      "linksCount": "{count} links"
+    },
+    "aboutPreview": {
+      "eyebrow": "06 / about",
+      "heading": "The person behind it.",
+      "lede": "A cross-cultural path, Ontario-based. Software, games, and images — one practice across many surfaces.",
+      "open": "The full story",
+      "currentlyLabel": "currently",
+      "valuesLabel": "what I optimize for",
+      "placesLabel": "{cities} cities · {countries} countries",
+      "stackLabel": "core stack",
+      "kinds": {
+        "building": "building",
+        "reading": "reading",
+        "listening": "listening",
+        "watching": "watching"
+      }
+    },
     "aboutBriefly": {
       "eyebrow": "01 / who",
       "heading": "Mark, briefly.",
@@ -83,7 +159,7 @@
       "subnote": "Cross-cultural path. Ontario-based. Operates one archive instead of seven scattered profiles."
     },
     "selectedWork": {
-      "eyebrow": "02 / selected",
+      "eyebrow": "01 / selected",
       "heading": "Things I shipped.",
       "lede": "A short loop of the projects worth showing — ready ones in front, drafts dimmed behind them.",
       "titleWord": "WORK",
@@ -115,7 +191,8 @@
       "openLabel": "tap me",
       "closeLabel": "close",
       "emailDirect": "Email directly",
-      "sendBrief": "Send a brief"
+      "sendBrief": "Send a brief",
+      "followLabel": "Follow the work"
     },
     "capabilities": {
       "eyebrow": "05 / capabilities",
@@ -444,23 +521,25 @@
       "portraitPrevious": "Previous portrait",
       "portraitNext": "Next portrait",
       "timelineEyebrow": "route",
-      "timelineTitle": "somewhere along the way",
+      "timelineTitle": "places I stayed",
       "timelineNow": "Now",
-      "timelineNowBody": "Editing the archive. Keeping fewer, better pieces.",
+      "timelineNowBody": "Ontario. around here for now.",
       "toolsEyebrow": "tools",
       "toolsTitle": "things I actually use",
-      "toolsBody": "Grouped by practice, not confidence theater.",
+      "toolsBody": "A short version. The rest can stay off-screen.",
+      "expandTools": "Open tool group",
+      "collapseTools": "Close tool group",
       "toolGroups": {
-        "frontend_development": "Frontend development",
-        "backend_development": "Backend development",
-        "game_development": "Game development",
-        "design_and_art": "Design & art"
+        "code": "Code",
+        "data": "Data",
+        "creative": "Creative",
+        "workflow": "Workflow"
       },
       "toolDescriptions": {
-        "frontend_development": "Interfaces, motion, layout, and the browser layer.",
-        "backend_development": "APIs, data systems, services, and the unglamorous glue.",
-        "game_development": "Engines, interaction, levels, physics, and playful systems.",
-        "design_and_art": "Visual direction, UI structure, typography, and production art."
+        "code": "The usual stack.",
+        "data": "Where things get stored, shaped, and moved.",
+        "creative": "Games, images, interfaces.",
+        "workflow": "The part before shipping."
       },
       "closingEyebrow": "exit",
       "closingTitle": "Enough about me.",
@@ -477,9 +556,16 @@
       "repos": "repos",
       "stars": "stars",
       "followers": "follows",
+      "recently": "recently",
+      "commits": "pushes",
+      "languages": "language mix",
+      "lastActive": "last active",
+      "library": "library",
+      "level": "level",
       "games": "games",
       "hours": "hours",
       "noGame": "No game surfaced.",
+      "noActivity": "quiet lately",
       "openGithub": "Open GitHub profile",
       "openSteam": "Open Steam profile"
     },
@@ -857,11 +943,14 @@
     "label": "Notifications",
     "open": "Open notifications",
     "heading": "What's new",
-    "subheading": "Recent log entries since you last stopped by.",
-    "empty": "All caught up. New logs will surface here.",
+    "subheading": "Logs, work, and small site updates since you last stopped by.",
+    "empty": "All caught up. New updates will surface here.",
     "markRead": "Mark all read",
     "viewAll": "View all logs",
     "newBadge": "new",
+    "enableBrowser": "Enable browser notifications on this device",
+    "toastTitle": "New update",
+    "toastDescription": "{count, plural, one {# unread item} other {# unread items}} waiting in the bell.",
     "unreadStatus": "{count, plural, =0 {No unread updates} one {# unread update} other {# unread updates}}"
   },
   "CommandPalette": {
@@ -981,6 +1070,7 @@
     "commentsEmpty": "You haven't commented yet.",
     "settingsTitle": "Settings",
     "settingsDescription": "Profile fields and visibility preferences.",
+    "notificationsSectionTitle": "Notifications",
     "fields": {
       "displayName": "Display name",
       "username": "Username",
@@ -994,6 +1084,12 @@
       "displayName": "Up to 60 characters.",
       "username": "Lowercase letters, numbers, dashes, underscores. 3–24 characters.",
       "bio": "Up to 280 characters."
+    },
+    "notifications": {
+      "browserTitle": "Browser notifications",
+      "browserDescription": "Let the bell raise a quiet system notification while this device has the site open.",
+      "emailTitle": "Email notifications",
+      "emailDescription": "Reserved for future account updates. Off by default."
     },
     "save": "Save changes",
     "saving": "Saving…",
@@ -1103,6 +1199,10 @@
     "overview": "Overview",
     "gallery": "Gallery",
     "projects": "Projects",
+    "games": "Games",
+    "media": "Media",
+    "resources": "Resources",
+    "profile": "Profile",
     "comments": "Comments",
     "users": "Users",
     "overviewTitle": "Operations",
@@ -1256,6 +1356,198 @@
       "placeholder": "Placeholder",
       "comingSoon": "Coming soon"
     }
+  },
+  "AdminGames": {
+    "title": "Games",
+    "description": "Create and edit game-development archive entries. Public /games falls back to src/content/games.ts when the table is empty.",
+    "count": "{count, plural, =0 {No games} one {# game} other {# games}}",
+    "newGame": "New game",
+    "newGameTitle": "New game",
+    "newGameDescription": "Add a game-development archive entry. Save as draft until the build is ready to show.",
+    "editGameDescription": "Edit this archive entry.",
+    "backToGames": "All games",
+    "create": "Create game",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "emptyTitle": "No games in the table yet",
+    "emptyDescription": "Public /games still renders the static src/content/games.ts list. Add a game here to start migrating.",
+    "noPitch": "No pitch yet.",
+    "dangerZone": "Danger zone",
+    "deleteGame": "Delete game",
+    "deleteGameConfirm": "Delete \"{title}\"? Public /games falls back to the static array. Cannot be undone.",
+    "deleteWarning": "Permanently removes this game. Public /games falls back to the static array. Cannot be undone.",
+    "required": "Required",
+    "section": {
+      "basics": "Basics",
+      "detail": "Detail",
+      "media": "Media",
+      "buildLinks": "Build links"
+    },
+    "titleLabel": "Title",
+    "slugLabel": "Slug",
+    "slugHint": "Lowercase letters, numbers, hyphens. Used in the URL.",
+    "engineLabel": "Engine",
+    "yearLabel": "Year",
+    "statusLabel": "Status",
+    "sortOrderLabel": "Sort order",
+    "pitchLabel": "Pitch",
+    "roleLabel": "Role",
+    "notesLabel": "Notes",
+    "notesHint": "One note per line.",
+    "platformsLabel": "Platforms",
+    "pillarsLabel": "Design pillars",
+    "postmortemLabel": "Postmortem",
+    "outcomeLabel": "Outcome",
+    "coverSrcLabel": "Cover image URL",
+    "coverAltLabel": "Cover alt text",
+    "trailerUrlLabel": "Trailer URL",
+    "buildLinksLabel": "Build links",
+    "buildLinksHint": "One per line: Label | https://url",
+    "status": {
+      "ready": "Ready",
+      "draft": "Draft",
+      "placeholder": "Placeholder",
+      "comingSoon": "Coming soon"
+    }
+  },
+  "AdminMedia": {
+    "title": "Media",
+    "description": "Manage video, reels, process clips, and posters. Public /media falls back to src/content/media.ts when the table is empty.",
+    "count": "{count, plural, =0 {No media} one {# media item} other {# media items}}",
+    "newMedia": "New media",
+    "newMediaTitle": "New media",
+    "newMediaDescription": "Add a video, reel, process clip, or poster to the media library.",
+    "editMediaDescription": "Edit this media item's details, status, and ordering.",
+    "backToMedia": "All media",
+    "create": "Create media",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "emptyTitle": "No media in the table yet",
+    "emptyDescription": "Public /media still renders the static src/content/media.ts list. Add an item here to start migrating.",
+    "noDescription": "No description yet.",
+    "dangerZone": "Danger zone",
+    "deleteMedia": "Delete media",
+    "deleteMediaConfirm": "Delete \"{title}\"? This can't be undone.",
+    "deleteWarning": "Deleting removes this item from the media page permanently.",
+    "required": "Required",
+    "section": {
+      "basics": "Basics",
+      "detail": "Detail"
+    },
+    "titleLabel": "Title",
+    "slugLabel": "Slug",
+    "slugHint": "Lowercase letters, numbers, hyphens. Used in the URL.",
+    "formatLabel": "Format",
+    "statusLabel": "Status",
+    "sortOrderLabel": "Sort order",
+    "descriptionLabel": "Description",
+    "durationLabel": "Duration",
+    "durationHint": "Optional, e.g. 1:24.",
+    "format": {
+      "video": "Video",
+      "reel": "Reel",
+      "process": "Process",
+      "poster": "Poster"
+    },
+    "status": {
+      "ready": "Ready",
+      "draft": "Draft",
+      "placeholder": "Placeholder",
+      "comingSoon": "Coming soon"
+    }
+  },
+  "AdminResources": {
+    "title": "Resources",
+    "description": "The tools and links catalog, editable from the database. Public /resources falls back to src/content/resources.ts when the table is empty.",
+    "count": "{count, plural, =0 {No resources yet} one {# resource} other {# resources}}",
+    "newResource": "New resource",
+    "newResourceTitle": "New resource",
+    "newResourceDescription": "Add a tool or link to the catalog.",
+    "editResourceDescription": "Edit this resource.",
+    "backToResources": "All resources",
+    "create": "Create resource",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "featured": "Featured",
+    "emptyTitle": "No resources in the table yet",
+    "emptyDescription": "Public /resources still renders the static src/content/resources.ts catalog. Add a resource here to start migrating.",
+    "noDescription": "No description yet.",
+    "dangerZone": "Danger zone",
+    "deleteResource": "Delete resource",
+    "deleteResourceConfirm": "Delete \"{name}\"? This can't be undone.",
+    "deleteWarning": "Permanently removes this resource. Public /resources falls back to the static catalog. Cannot be undone.",
+    "required": "Required",
+    "section": {
+      "basics": "Basics",
+      "detail": "Detail",
+      "links": "Link"
+    },
+    "nameLabel": "Name",
+    "slugLabel": "Slug",
+    "slugHint": "Lowercase letters, numbers, hyphens. Used in the URL.",
+    "categoryLabel": "Category",
+    "typeLabel": "Type",
+    "statusLabel": "Status",
+    "pricingLabel": "Pricing",
+    "sortOrderLabel": "Sort order",
+    "linkLabel": "Link",
+    "descriptionLabel": "Description",
+    "whyLabel": "Why I reach for it",
+    "tagsLabel": "Tags",
+    "tagsHint": "One tag per line.",
+    "iconKeyLabel": "Icon key",
+    "iconKeyHint": "lucide icon name",
+    "type": {
+      "link": "Link",
+      "tool": "Tool"
+    },
+    "status": {
+      "ready": "Ready",
+      "draft": "Draft",
+      "placeholder": "Placeholder",
+      "comingSoon": "Coming soon"
+    }
+  },
+  "AdminProfile": {
+    "title": "Profile",
+    "description": "The single source of truth for the /about page — name, intro, socials, and the structured data behind the timeline, skills, and travel map.",
+    "save": "Save profile",
+    "cancel": "Cancel",
+    "savedHint": "Changes go live across the site on save.",
+    "required": "Required",
+    "structuredHint": "These fields are authored as JSON and validated on save. Keep the shape — a bad entry is rejected with the field name so you know where to fix it.",
+    "jsonHint": "Valid JSON, validated against the profile schema on save.",
+    "section": {
+      "identity": "Identity",
+      "intro": "Intro",
+      "socials": "Socials",
+      "structured": "Structured data (JSON)"
+    },
+    "nameLabel": "Name",
+    "titleLabel": "Title",
+    "locationLabel": "Location",
+    "emailLabel": "Email",
+    "githubHandleLabel": "GitHub handle",
+    "resumeUrlLabel": "Résumé URL",
+    "introLabel": "Intro",
+    "socialGithubLabel": "GitHub URL",
+    "socialDevtoLabel": "dev.to URL",
+    "socialLinkedinLabel": "LinkedIn URL",
+    "socialBlueskyLabel": "Bluesky URL",
+    "socialTwitterLabel": "X / Twitter URL",
+    "socialInstagramLabel": "Instagram URL",
+    "socialMastodonLabel": "Mastodon URL",
+    "socialFacebookLabel": "Facebook URL",
+    "socialYoutubeLabel": "YouTube URL",
+    "timelineLabel": "Timeline",
+    "valuesLabel": "Values",
+    "skillsLabel": "Skills",
+    "citiesLabel": "Cities",
+    "currentlyLabel": "Currently",
+    "portraitsLabel": "Portraits"
   },
   "AudioPlayer": {
     "title": "Audio settings",

@@ -9,19 +9,39 @@ export const profile = profileSchema.parse({
     "Mark builds at the intersection of software, games, visual systems, and digital art. The remake frames that range as one coherent archive: serious engineering, cinematic restraint, and creative systems thinking.",
   timeline: [
     {
-      label: "China to Canada",
-      detail: "A cross-cultural path that informs the site's bilingual and editorial direction.",
-      date: "2013 onward",
+      label: "Changchun, Jilin",
+      detail: "early years",
+      date: "2001-2007",
     },
     {
-      label: "Western University",
-      detail: "Software engineering foundation, research exposure, and systems thinking.",
-      date: "University",
+      label: "Beijing",
+      detail: "school years",
+      date: "2007-2014",
+    },
+    {
+      label: "Saskatchewan",
+      detail: "grade 7 to high school",
+      date: "2014-2019",
+    },
+    {
+      label: "London, Ontario",
+      detail: "Western years",
+      date: "2019-2024",
     },
     {
       label: "J.D. Power",
-      detail: "Full-stack internship experience across Java, Spring Boot, data workflows, and UI work.",
+      detail: "one real office chapter",
       date: "2022-2023",
+    },
+    {
+      label: "Oakville / GTA",
+      detail: "family nearby",
+      date: "in between",
+    },
+    {
+      label: "Canada / Asia",
+      detail: "in motion for a while",
+      date: "after grad",
     },
   ],
   values: [
@@ -37,50 +57,44 @@ export const profile = profileSchema.parse({
   resumeUrl: "/resume.pdf",
   githubHandle: "zhenxiao-yu",
 
-  // Skills — grouped by `group`. SkillsRail buckets visually.
-  // No fake levels; optional `note` only where a one-word qualifier helps.
+  // Skills — grouped by the about page's tool sections. Kept intentionally
+  // selective so the page reads as a current toolkit, not an archive dump.
   skills: [
-    // Frontend
-    { label: "React", group: "Frontend", note: "daily" },
-    { label: "Next.js", group: "Frontend", note: "App Router" },
-    { label: "TypeScript", group: "Frontend" },
-    { label: "Tailwind", group: "Frontend", note: "v4 internals" },
-    { label: "Motion", group: "Frontend" },
-    { label: "Storybook", group: "Frontend" },
-    { label: "Radix", group: "Frontend" },
-    { label: "Vite", group: "Frontend" },
-    { label: "HTML5", group: "Frontend" },
-    { label: "CSS", group: "Frontend" },
+    // Code
+    { label: "TypeScript", group: "Code" },
+    { label: "React", group: "Code" },
+    { label: "Next.js", group: "Code" },
+    { label: "Tailwind CSS", group: "Code" },
+    { label: "Node.js", group: "Code" },
+    { label: "Java", group: "Code" },
+    { label: "Spring Boot", group: "Code" },
+    { label: "Python", group: "Code" },
 
-    // Backend & Infra
-    { label: "Node", group: "Backend & Infra" },
-    { label: "PostgreSQL", group: "Backend & Infra" },
-    { label: "Supabase", group: "Backend & Infra" },
-    { label: "Resend", group: "Backend & Infra" },
-    { label: "Vercel", group: "Backend & Infra" },
-    { label: "REST", group: "Backend & Infra" },
-    { label: "OAuth", group: "Backend & Infra" },
+    // Data
+    { label: "PostgreSQL", group: "Data" },
+    { label: "MySQL", group: "Data" },
+    { label: "MongoDB", group: "Data" },
+    { label: "Redis", group: "Data" },
+    { label: "Kafka", group: "Data" },
+    { label: "Supabase", group: "Data" },
+    { label: "Zod", group: "Data" },
 
-    // Game & Interaction
-    { label: "Unity", group: "Game & Interaction" },
-    { label: "C#", group: "Game & Interaction" },
-    { label: "URP", group: "Game & Interaction" },
-    { label: "Input systems", group: "Game & Interaction" },
-    { label: "Game feel", group: "Game & Interaction" },
+    // Creative
+    { label: "Unity", group: "Creative" },
+    { label: "C#", group: "Creative" },
+    { label: "C++", group: "Creative" },
+    { label: "Unreal Engine", group: "Creative" },
+    { label: "Blender", group: "Creative" },
+    { label: "Figma", group: "Creative" },
+    { label: "Photoshop", group: "Creative" },
 
-    // Creative & Visual
-    { label: "Photography", group: "Creative & Visual" },
-    { label: "Film", group: "Creative & Visual" },
-    { label: "GLSL", group: "Creative & Visual", note: "shaders" },
-    { label: "Color", group: "Creative & Visual" },
-    { label: "Typography", group: "Creative & Visual" },
-
-    // Tooling
-    { label: "Git", group: "Tooling" },
-    { label: "Figma", group: "Tooling" },
-    { label: "Linear", group: "Tooling" },
-    { label: "Claude Code", group: "Tooling" },
-    { label: "Shell", group: "Tooling" },
+    // Workflow
+    { label: "Playwright", group: "Workflow" },
+    { label: "Storybook", group: "Workflow" },
+    { label: "Git", group: "Workflow" },
+    { label: "GitHub Actions", group: "Workflow" },
+    { label: "Docker", group: "Workflow" },
+    { label: "ESLint", group: "Workflow" },
   ],
 
   // Cities — WGS84 coordinates. `visitedAt` omitted; map renders
@@ -146,8 +160,12 @@ export const profile = profileSchema.parse({
     { kind: "watching", label: "Severance, season 2" },
   ],
 
-  // Portrait — drop a file at public/portrait.jpg (or any path under
-  // /public) and update the src below. The card renders a placeholder
-  // slot until a real src is set.
+  // Portraits — drop 4-5 optimized images under /public, then add them
+  // here. The About page uses next/image with a fixed 4:5 frame, so
+  // portrait or near-portrait crops work best.
+  // portraits: [
+  //   { src: "/portraits/mark-01.jpg", alt: "Mark Yu", caption: "frame 01", focal: "center" },
+  // ],
+  // Single-image fallback still works:
   // portrait: { src: "/portrait.jpg", alt: "Mark Yu, 2026", focal: "center" },
 });

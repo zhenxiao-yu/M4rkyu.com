@@ -8,8 +8,12 @@ import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 const TABS = [
   { href: "/admin", key: "overview" as const },
-  { href: "/admin/gallery", key: "gallery" as const },
   { href: "/admin/projects", key: "projects" as const },
+  { href: "/admin/games", key: "games" as const },
+  { href: "/admin/media", key: "media" as const },
+  { href: "/admin/gallery", key: "gallery" as const },
+  { href: "/admin/resources", key: "resources" as const },
+  { href: "/admin/profile", key: "profile" as const },
   { href: "/admin/comments", key: "comments" as const },
   { href: "/admin/users", key: "users" as const },
 ];

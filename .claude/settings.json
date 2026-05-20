@@ -18,7 +18,14 @@
       "Bash(git commit *)",
       "Bash(git commit -m ' *)",
       "Bash(git branch *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(rm -v \"src/app/[locale]/portal/page.tsx\" \"src/app/[locale]/portal/loading.tsx\")",
+      "Bash(rmdir \"src/app/[locale]/portal\")",
+      "Bash(xargs grep -l \"throw new Error\")",
+      "Bash(curl -sS -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(NEXT_DIST_DIR=.next-dev-3000 timeout 20 npm run dev -- --hostname 127.0.0.1 --port 3000)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(NEXT_DIST_DIR=.next-dev-3000 npm run dev -- --hostname 127.0.0.1 --port 3000)"
     ]
   }
 }

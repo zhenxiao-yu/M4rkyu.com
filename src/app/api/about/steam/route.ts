@@ -21,6 +21,10 @@ export interface SteamStats {
   // headline when not in-game.
   recentGame?: string;
   recentGameHours2w?: number;
+  recentGames: Array<{
+    name: string;
+    hours2w: number;
+  }>;
   level?: number;
   totalGames: number;
   totalHours: number;
@@ -68,7 +72,7 @@ export async function GET(): Promise<NextResponse<SteamStats | null>> {
       `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${key}&steamid=${id}&include_played_free_games=1`,
     ),
     fetchJson<{ response: { games?: RecentGame[] } }>(
-      `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${key}&steamid=${id}&count=1`,
+      `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${key}&steamid=${id}&count=3`,
     ),
     fetchJson<{ response: { player_level?: number } }>(
       `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=${key}&steamid=${id}`,
@@ -84,6 +88,16 @@ export async function GET(): Promise<NextResponse<SteamStats | null>> {
     0,
   );
   const recent = recentRes?.response.games?.[0];
+  const recentGames =
+    recentRes?.response.games
+      ?.filter((game): game is Required<Pick<RecentGame, "name" | "playtime_2weeks">> =>
+        Boolean(game.name && game.playtime_2weeks),
+      )
+      .slice(0, 3)
+      .map((game) => ({
+        name: game.name,
+        hours2w: Math.round((game.playtime_2weeks / 60) * 10) / 10,
+      })) ?? [];
 
   return NextResponse.json({
     persona: player.personaname ?? "",
@@ -95,6 +109,7 @@ export async function GET(): Promise<NextResponse<SteamStats | null>> {
     recentGameHours2w: recent?.playtime_2weeks
       ? Math.round((recent.playtime_2weeks / 60) * 10) / 10
       : undefined,
+    recentGames,
     level: levelRes?.response.player_level,
     totalGames: ownedRes?.response.game_count ?? ownedGames.length,
     totalHours: Math.round(totalMinutes / 60),

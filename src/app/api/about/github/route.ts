@@ -26,6 +26,9 @@ export interface GithubStats {
   followers: number;
   totalStars: number;
   topLanguages: string[];
+  latestActivityAt?: string;
+  recentCommitCount: number;
+  recentlyActiveRepos: string[];
   // Trailing 8-week commit totals across recent public PushEvent
   // activity. Index 0 = oldest of the 8, index 7 = the current week.
   weeklyCommits: number[];
@@ -37,6 +40,7 @@ export interface GithubStats {
 interface PushEvent {
   type?: string;
   created_at?: string;
+  repo?: { name?: string };
   payload?: { commits?: unknown[] };
 }
 
@@ -146,7 +150,20 @@ export async function GET(): Promise<NextResponse<GithubStats | null>> {
     // Bucket PushEvent commits into the trailing 8 weeks.
     const now = Date.now();
     const weeklyCommits = Array.from({ length: ACTIVITY_WEEKS }, () => 0);
+    const recentlyActiveRepos: string[] = [];
+    let latestActivityAt: string | undefined;
     for (const e of events) {
+      if (!latestActivityAt && e.created_at) {
+        latestActivityAt = e.created_at;
+      }
+      const repoName = e.repo?.name?.replace(`${handle}/`, "");
+      if (
+        repoName &&
+        e.repo?.name?.startsWith(`${handle}/`) &&
+        !recentlyActiveRepos.includes(repoName)
+      ) {
+        recentlyActiveRepos.push(repoName);
+      }
       if (e.type !== "PushEvent" || !e.created_at) continue;
       const ts = Date.parse(e.created_at);
       if (Number.isNaN(ts)) continue;
@@ -158,6 +175,7 @@ export async function GET(): Promise<NextResponse<GithubStats | null>> {
         : 0;
       weeklyCommits[idx] += commitCount;
     }
+    const recentCommitCount = weeklyCommits.reduce((sum, n) => sum + n, 0);
 
     return NextResponse.json({
       handle,
@@ -166,6 +184,9 @@ export async function GET(): Promise<NextResponse<GithubStats | null>> {
       followers: user.followers ?? 0,
       totalStars,
       topLanguages,
+      latestActivityAt,
+      recentCommitCount,
+      recentlyActiveRepos: recentlyActiveRepos.slice(0, 3),
       weeklyCommits,
       languageBytes,
     });

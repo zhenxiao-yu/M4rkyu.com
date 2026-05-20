@@ -6,7 +6,7 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
-import { games } from "@/content/games";
+import { getGamesSource } from "@/lib/games/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { localize } from "@/lib/content/localize";
@@ -35,6 +35,7 @@ export default async function GamesPage({
   const { locale } = await params;
   const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const tGame = await getTranslations({ locale, namespace: "Game" });
+  const games = await getGamesSource();
   const summary = summarize(games);
   const readyCount = summary.ready;
   const draftCount = summary.total - summary.ready;

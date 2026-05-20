@@ -1,27 +1,29 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ArrowUpRight, MapPin } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageSection } from "@/components/layout/page-section";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BioCard } from "@/components/about/bio-card";
-import { GithubStatsCard } from "@/components/about/github-stats-card";
-import { SteamStatsCard } from "@/components/about/steam-stats-card";
-import { SkillsRail } from "@/components/about/skills-rail";
-import { TravelMapCard } from "@/components/about/travel-map-card";
-import { ObsessionsCard } from "@/components/about/obsessions-card";
-import { TimelineCard } from "@/components/about/timeline-card";
+import { AboutSignalsCard } from "@/components/about/about-signals-card";
 import { BentoFx, BentoGrid } from "@/components/about/bento-fx";
-import { CurrentlyCarouselCard } from "@/components/about/currently-carousel-card";
-import { GithubChartsCard } from "@/components/about/github-charts-card";
-import { PortraitCard } from "@/components/about/portrait-card";
-import { GlitchText } from "@/components/motion/glitch-text";
-import { profile } from "@/content/profile";
+import {
+  PortraitStack,
+  type PortraitStackItem,
+} from "@/components/about/portrait-stack";
+import { ToolsCollapsibleCard } from "@/components/about/tools-collapsible-card";
+import { PageSection } from "@/components/layout/page-section";
+import { PageShell } from "@/components/layout/page-shell";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Profile } from "@/content/schemas";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { getProfileSource } from "@/lib/profile/source";
 import { buildAlternates } from "@/lib/seo/alternates";
+
+const toolOrder = [
+  "Code",
+  "Data",
+  "Creative",
+  "Workflow",
+];
 
 export async function generateMetadata({
   params,
@@ -43,116 +45,186 @@ export default async function AboutPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "About" });
+  const t = await getTranslations({ locale, namespace: "About.refined" });
+  const profile = await getProfileSource();
+  const portraits = getPortraits(profile);
+  const toolGroups = groupTools(profile.skills);
 
   return (
     <PageShell locale={locale}>
-      <PageSection>
-        {/* Hero strip — name + location only, agent-voice silence on titles. */}
-        <Card className="relative overflow-hidden border-border/70 bg-card/80">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-cyber-grid opacity-25"
-          />
-          <CardContent className="relative grid gap-4 px-5 py-7 sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-6 sm:px-7">
-            <div className="grid gap-2">
-              <p className="font-mono text-[0.6rem] uppercase tracking-[0.28em] text-muted-foreground">
-                {t("metaCard.eyebrow")}
-              </p>
-              <h1 className="font-display text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-none tracking-tight">
-                <GlitchText>{profile.name.toUpperCase()}</GlitchText>
-              </h1>
-              <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                <MapPin className="size-3" aria-hidden="true" />
-                {profile.location}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="success" className="font-mono text-[0.6rem]">
-                <span className="mr-1 inline-block size-1.5 rounded-full bg-current align-middle" />
-                {t("metaCard.available")}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8">
-          {t("intro")}
-        </p>
-
-        {/* Bento grid. Mobile = single col; md = 2 cols; lg = 4 cols
-         * across 6 rows. Layout reads left-to-right, top-to-bottom:
-         *   Row 1  ─ Portrait(1)        Bio(3)
-         *   Row 2  ─ GithubStats(2)     SkillsRail(2)
-         *   Row 3  ─ TravelMap(3)       SteamStats(1)
-         *   Row 4  ─ Timeline(2)        GithubCharts(2)
-         *   Row 5  ─ Obsessions(2)      Currently(2)
-         *   Row 6  ─ Contact CTA(4)
-         * The TravelMap opts out of the shared dots pattern because
-         * it already renders an opaque map underneath. */}
-        <BentoGrid className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          <BentoFx pattern="dots" className="md:col-span-1 lg:col-span-1">
-            <PortraitCard locale={locale} />
-          </BentoFx>
-          <BentoFx pattern="dots" className="md:col-span-1 lg:col-span-3">
-            <BioCard locale={locale} />
-          </BentoFx>
-
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <GithubStatsCard />
-          </BentoFx>
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <SkillsRail locale={locale} />
-          </BentoFx>
-
+      <PageSection className="py-14 sm:py-18 lg:py-20">
+        <BentoGrid className="grid auto-rows-auto gap-4 md:grid-cols-6 lg:grid-cols-12">
           <BentoFx
-            pattern="none"
-            spotlight={false}
-            className="md:col-span-2 lg:col-span-3"
+            pattern="cyber-grid"
+            className="md:col-span-6 lg:col-span-8"
           >
-            <TravelMapCard locale={locale} />
-          </BentoFx>
-          <BentoFx pattern="dots" className="lg:col-span-1">
-            <SteamStatsCard />
-          </BentoFx>
-
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <TimelineCard locale={locale} />
-          </BentoFx>
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <GithubChartsCard />
-          </BentoFx>
-
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <ObsessionsCard locale={locale} />
-          </BentoFx>
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-2">
-            <CurrentlyCarouselCard />
-          </BentoFx>
-
-          <BentoFx pattern="dots" className="md:col-span-2 lg:col-span-4">
-            <Card className="h-full bg-card/80">
-              <CardContent className="grid h-full gap-4 p-5 sm:flex sm:items-center sm:justify-between">
-                <div className="grid gap-2">
-                  <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-                    /contact
+            <Card className="relative h-full overflow-hidden bg-card/85">
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ring/50 to-transparent"
+              />
+              <CardContent className="relative flex min-h-[26rem] flex-col justify-between gap-12 p-6 sm:p-8 lg:p-10">
+                <div className="grid gap-5">
+                  <p className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    <MapPin className="size-3" aria-hidden="true" />
+                    {profile.location}
                   </p>
-                  <h2 className="text-lg font-semibold">{t("cta.title")}</h2>
-                  <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                    {t("cta.body")}
-                  </p>
+                  <div className="grid gap-5">
+                    <h1 className="max-w-4xl text-balance font-display text-[clamp(3.25rem,9vw,7.5rem)] font-semibold leading-[0.88] tracking-normal">
+                      {t("heroTitle")}
+                    </h1>
+                    <p className="max-w-xl text-balance text-base leading-8 text-muted-foreground sm:text-lg">
+                      {t("heroBody")}
+                    </p>
+                  </div>
                 </div>
-                <Button asChild className="w-fit shrink-0">
-                  <Link href="/contact" locale={locale}>
-                    {t("cta.button")}
-                    <ArrowUpRight aria-hidden="true" className="size-4" />
-                  </Link>
-                </Button>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button asChild>
+                    <Link href="/work" locale={locale}>
+                      {t("seeWork")}
+                      <ArrowUpRight className="size-4" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="/contact" locale={locale}>
+                      {t("sayHello")}
+                    </Link>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
+          </BentoFx>
+
+          <BentoFx pattern="dots" className="md:col-span-6 lg:col-span-4">
+            <PortraitStack
+              eyebrow={t("portraitEyebrow")}
+              title={t("portraitTitle")}
+              placeholder={t("portraitPlaceholder")}
+              previousLabel={t("portraitPrevious")}
+              nextLabel={t("portraitNext")}
+              items={portraits}
+            />
+          </BentoFx>
+
+          <BentoFx pattern="dots" className="md:col-span-3 lg:col-span-5">
+            <TimelineCard locale={locale} timeline={profile.timeline} />
+          </BentoFx>
+
+          <BentoFx pattern="dots" className="md:col-span-3 lg:col-span-7">
+            <ToolsCollapsibleCard groups={toolGroups} />
+          </BentoFx>
+
+          <BentoFx pattern="dots" className="md:col-span-6 lg:col-span-7">
+            <AboutSignalsCard />
+          </BentoFx>
+
+          <BentoFx pattern="radial" className="md:col-span-6 lg:col-span-5">
+            <ClosingCard locale={locale} />
           </BentoFx>
         </BentoGrid>
       </PageSection>
     </PageShell>
   );
+}
+
+async function TimelineCard({
+  locale,
+  timeline,
+}: {
+  locale: Locale;
+  timeline: Profile["timeline"];
+}) {
+  const t = await getTranslations({ locale, namespace: "About.refined" });
+
+  return (
+    <Card className="h-full bg-card/85">
+      <CardHeader>
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+          {t("timelineEyebrow")}
+        </p>
+        <CardTitle className="text-base">{t("timelineTitle")}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid max-h-[16rem] gap-4 overflow-y-auto pr-2 [scrollbar-gutter:stable]">
+          {timeline.map((item) => (
+            <div key={item.label} className="relative border-l pl-5">
+              <span className="absolute -left-1 top-1.5 size-2 rounded-full bg-ring" />
+              <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground">
+                {item.date}
+              </p>
+              <h2 className="mt-1 text-sm font-semibold">{item.label}</h2>
+              <p className="mt-1 max-w-[32ch] text-xs leading-5 text-muted-foreground">
+                {item.detail}
+              </p>
+            </div>
+          ))}
+          <div className="relative border-l border-dashed pl-5">
+            <span className="absolute -left-1 top-1.5 size-2 rounded-full border border-ring bg-background" />
+            <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground">
+              {t("timelineNow")}
+            </p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              {t("timelineNowBody")}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+async function ClosingCard({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: "About.refined" });
+
+  return (
+    <Card className="h-full bg-card/85">
+      <CardContent className="flex h-full min-h-[16rem] flex-col justify-between gap-8 p-6 sm:p-7">
+        <div className="grid gap-3">
+          <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+            {t("closingEyebrow")}
+          </p>
+          <h2 className="max-w-xl text-balance font-display text-3xl font-semibold leading-tight">
+            {t("closingTitle")}
+          </h2>
+          <p className="max-w-md text-sm leading-6 text-muted-foreground">
+            {t("closingBody")}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild>
+            <Link href="/contact" locale={locale}>
+              {t("sayHello")}
+              <ArrowUpRight className="size-4" aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/work" locale={locale}>
+              {t("seeWork")}
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function getPortraits(profile: Profile): PortraitStackItem[] {
+  if (profile.portraits.length > 0) {
+    return profile.portraits;
+  }
+  return profile.portrait ? [profile.portrait] : [];
+}
+
+function groupTools(skills: Profile["skills"]) {
+  const byGroup = new Map<string, Profile["skills"]>();
+  for (const group of toolOrder) {
+    byGroup.set(group, []);
+  }
+  for (const skill of skills) {
+    const list = byGroup.get(skill.group);
+    if (!list) continue;
+    list.push(skill);
+  }
+  return Array.from(byGroup.entries()).filter(([, items]) => items.length > 0);
 }

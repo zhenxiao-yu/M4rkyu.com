@@ -71,6 +71,8 @@ const nextConfig: NextConfig = {
       // Supabase Storage CDN for the gallery-images bucket. Single
       // hostname per Supabase project, wildcard covers any project ref.
       { protocol: "https", hostname: "*.supabase.co" },
+      // Steam profile avatars for the compact about-page signal card.
+      { protocol: "https", hostname: "avatars.steamstatic.com" },
     ],
   },
   experimental: {

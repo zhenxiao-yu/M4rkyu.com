@@ -7,7 +7,7 @@ import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { FeaturedBentoRotator } from "@/components/resources/featured-bento-rotator";
 import { LinksExplorer } from "@/components/resources/links-explorer";
-import { resources } from "@/content/resources";
+import { getResourcesSource } from "@/lib/resources/source";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -34,6 +34,7 @@ export default async function ResourcesLinksPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Resources" });
 
+  const resources = await getResourcesSource();
   const links = resources.filter(
     (resource) => resource.type === "link" && resource.status === "ready",
   );

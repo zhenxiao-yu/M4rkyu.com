@@ -23,6 +23,7 @@ export function devtoArticleToPost(article: DevtoArticleListItem): Post | null {
     category,
     excerpt: article.description,
     date: article.readable_publish_date,
+    publishedAt: article.published_at,
     readingTime: `${article.reading_time_minutes} min read`,
     tags: article.tag_list,
     status: "ready",

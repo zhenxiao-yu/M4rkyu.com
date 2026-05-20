@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/seo/json-ld";
 import { PointerSpotlight } from "@/components/ui/magic/pointer-spotlight";
 import { ToolIcon } from "@/components/resources/tool-icon";
-import { resources } from "@/content/resources";
+import { getResourcesSource } from "@/lib/resources/source";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -40,6 +40,7 @@ export default async function ResourcesLandingPage({
   const t = await getTranslations({ locale, namespace: "Resources" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
 
+  const resources = await getResourcesSource();
   const tools = resources.filter(
     (resource) => resource.type === "tool" && resource.status === "ready",
   );

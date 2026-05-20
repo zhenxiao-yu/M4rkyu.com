@@ -1,50 +1,76 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Bell, BellRing } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Bell, BellRing, MonitorCheck } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { useLastSeen } from "@/lib/hooks/use-last-seen";
+import type {
+  NotificationStateResponse,
+} from "@/app/api/notifications/state/route";
+import type { SiteNotification } from "@/lib/notifications/feed";
+import {
+  dispatchStoredValueChanged,
+  readStoredString,
+  subscribeStoredValue,
+  writeStoredString,
+} from "@/lib/browser/safe-storage";
+import { playNotificationCue } from "@/lib/audio/ui-sound";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
-/** Minimal post shape the bell needs — keeps the prop surface narrow. */
-interface NotificationPost {
-  slug: string;
-  title: string;
-  date: string;
-  category: string;
-  canonicalUrl?: string;
-}
-
 interface NotificationBellProps {
-  posts: NotificationPost[];
+  items: SiteNotification[];
   locale: Locale;
 }
 
 const LAST_SEEN_KEY = "m4rkyu.notifications.lastSeen";
+const PREF_EVENT = "m4rkyu:notifications:change";
 
-/** Sort posts newest first by parsed date; unparseable dates sink. */
-function sortNewestFirst(posts: NotificationPost[]): NotificationPost[] {
-  return [...posts].sort((a, b) => {
-    const ta = Date.parse(a.date);
-    const tb = Date.parse(b.date);
-    if (Number.isNaN(ta) && Number.isNaN(tb)) return 0;
-    if (Number.isNaN(ta)) return 1;
-    if (Number.isNaN(tb)) return -1;
-    return tb - ta;
-  });
-}
-
-export function NotificationBell({ posts, locale }: NotificationBellProps) {
+export function NotificationBell({ items, locale }: NotificationBellProps) {
   const t = useTranslations("Notifications");
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
-  const { lastSeen, markSeen: markAllRead } = useLastSeen(LAST_SEEN_KEY);
+  const [state, setState] = useState<NotificationStateResponse>(() => ({
+    signedIn: false,
+    lastSeenAt: localLastSeenIso(),
+    browserNotifications: false,
+    emailNotifications: false,
+  }));
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const previousUnreadRef = useRef<number | null>(null);
 
-  // Close on outside click or Escape.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/notifications/state")
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return (await response.json()) as NotificationStateResponse;
+      })
+      .then((data) => {
+        if (!cancelled) {
+          setState((current) => ({
+            ...data,
+            lastSeenAt: data.lastSeenAt ?? current.lastSeenAt,
+          }));
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    return subscribeStoredValue(LAST_SEEN_KEY, PREF_EVENT, () => {
+      setState((current) => ({
+        ...current,
+        lastSeenAt: readStoredString(LAST_SEEN_KEY) || current.lastSeenAt,
+      }));
+    });
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     function onPointer(event: MouseEvent) {
@@ -64,23 +90,56 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
     };
   }, [open]);
 
-  const ordered = useMemo(() => sortNewestFirst(posts).slice(0, 6), [posts]);
-
+  const ordered = useMemo(() => sortNewestFirst(items).slice(0, 12), [items]);
+  const lastSeen = state.lastSeenAt ? Date.parse(state.lastSeenAt) : 0;
   const unreadCount = useMemo(() => {
-    // On the SSR pass / before hydration, serverSnapshot returns
-    // Infinity so this loop yields 0 — the badge stays hidden until
-    // the client has the real lastSeen value, avoiding a flash.
-    return ordered.reduce((count, post) => {
-      const stamp = Date.parse(post.date);
+    return ordered.reduce((count, item) => {
+      const stamp = Date.parse(item.occurredAt);
       if (!Number.isFinite(stamp)) return count;
       return stamp > lastSeen ? count + 1 : count;
     }, 0);
   }, [ordered, lastSeen]);
 
-  const ariaStatus = t("unreadStatus", { count: unreadCount });
+  useEffect(() => {
+    if (previousUnreadRef.current === null) {
+      previousUnreadRef.current = unreadCount;
+      return;
+    }
+    if (unreadCount > previousUnreadRef.current) {
+      playNotificationCue({ highValue: unreadCount > 1 });
+      toast(t("toastTitle"), {
+        description: t("toastDescription", { count: unreadCount }),
+      });
+      maybeShowBrowserNotification(t("toastTitle"), t("toastDescription", { count: unreadCount }), state);
+    }
+    previousUnreadRef.current = unreadCount;
+  }, [state, t, unreadCount]);
 
-  // Motion presets — single source of truth so reduced-motion can
-  // collapse them to instant transitions in one place.
+  const markAllRead = useCallback(() => {
+    const iso = new Date().toISOString();
+    writeStoredString(LAST_SEEN_KEY, iso);
+    dispatchStoredValueChanged(PREF_EVENT);
+    setState((current) => ({ ...current, lastSeenAt: iso }));
+    if (state.signedIn) {
+      void patchNotificationState({ lastSeenAt: iso }).then((next) => {
+        if (next) setState((current) => ({ ...current, ...next }));
+      });
+    }
+  }, [state.signedIn]);
+
+  const enableBrowserNotifications = useCallback(async () => {
+    if (typeof window === "undefined" || !("Notification" in window)) return;
+    const permission = await Notification.requestPermission();
+    const enabled = permission === "granted";
+    setState((current) => ({ ...current, browserNotifications: enabled }));
+    if (state.signedIn) {
+      void patchNotificationState({ browserNotifications: enabled }).then((next) => {
+        if (next) setState((current) => ({ ...current, ...next }));
+      });
+    }
+  }, [state.signedIn]);
+
+  const ariaStatus = t("unreadStatus", { count: unreadCount });
   const panelInitial = reduceMotion
     ? { opacity: 0 }
     : { opacity: 0, y: -8, scale: 0.96 };
@@ -90,6 +149,10 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
   const panelTransition = reduceMotion
     ? { duration: 0.12 }
     : { duration: 0.18, ease: [0.2, 0.7, 0.2, 1] as const };
+  const canEnableBrowser =
+    typeof window !== "undefined" &&
+    "Notification" in window &&
+    Notification.permission !== "granted";
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -137,99 +200,168 @@ export function NotificationBell({ posts, locale }: NotificationBellProps) {
             animate={panelAnimate}
             exit={panelInitial}
             transition={panelTransition}
-            className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-[min(22rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-xl border border-border/80 bg-background/95 shadow-xl shadow-black/10 backdrop-blur-xl"
+            className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-[min(24rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-xl border border-border/80 bg-background/95 shadow-xl shadow-black/10 backdrop-blur-xl"
           >
-          <header className="flex items-baseline justify-between gap-3 border-b border-border/60 px-4 py-3">
-            <div>
-              <p className="text-sm font-semibold text-foreground">{t("heading")}</p>
-              <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
-                {t("subheading")}
-              </p>
-            </div>
-            {ordered.length > 0 ? (
+            <header className="flex items-start justify-between gap-3 border-b border-border/60 px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground">{t("heading")}</p>
+                <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+                  {t("subheading")}
+                </p>
+              </div>
+              {ordered.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={markAllRead}
+                  disabled={unreadCount === 0}
+                  className={cn(
+                    "shrink-0 rounded-sm font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40",
+                    FOCUS_RING,
+                  )}
+                >
+                  {t("markRead")}
+                </button>
+              ) : null}
+            </header>
+
+            {canEnableBrowser ? (
               <button
                 type="button"
-                onClick={markAllRead}
-                disabled={unreadCount === 0}
+                onClick={enableBrowserNotifications}
                 className={cn(
-                  "shrink-0 rounded-sm font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40",
+                  "flex w-full items-center gap-2 border-b border-border/60 px-4 py-2.5 text-left text-xs text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground",
                   FOCUS_RING,
                 )}
               >
-                {t("markRead")}
+                <MonitorCheck className="size-4" aria-hidden="true" />
+                <span>{t("enableBrowser")}</span>
               </button>
             ) : null}
-          </header>
 
-          {ordered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-              {t("empty")}
-            </div>
-          ) : (
-            <ul className="max-h-80 overflow-y-auto py-1">
-              {ordered.map((post) => {
-                const stamp = Date.parse(post.date);
-                const isNew = Number.isFinite(stamp) && stamp > lastSeen;
-                return (
-                  <li key={post.slug}>
-                    <Link
-                      href={`/logs/${post.slug}`}
-                      locale={locale}
-                      onClick={() => {
-                        markAllRead();
-                        setOpen(false);
-                      }}
-                      className="group flex items-start gap-3 px-4 py-3 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 focus-visible:bg-muted/60 focus-visible:outline-none"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          "mt-1.5 inline-block size-1.5 shrink-0 rounded-full",
-                          isNew ? "bg-ring" : "bg-border",
-                        )}
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-2">
-                          <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-                            {post.category}
-                          </span>
-                          {isNew ? (
-                            <span className="rounded-sm border border-ring/40 bg-ring/10 px-1 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-ring">
-                              {t("newBadge")}
+            {ordered.length === 0 ? (
+              <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                {t("empty")}
+              </div>
+            ) : (
+              <ul className="max-h-96 overflow-y-auto py-1">
+                {ordered.map((item) => {
+                  const stamp = Date.parse(item.occurredAt);
+                  const isNew = Number.isFinite(stamp) && stamp > lastSeen;
+                  return (
+                    <li key={item.id}>
+                      <Link
+                        href={item.href}
+                        locale={locale}
+                        onClick={() => {
+                          markAllRead();
+                          setOpen(false);
+                        }}
+                        className="group flex items-start gap-3 px-4 py-3 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 focus-visible:bg-muted/60 focus-visible:outline-none"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "mt-1.5 inline-block size-1.5 shrink-0 rounded-full",
+                            isNew ? "bg-ring" : "bg-border",
+                          )}
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                              {item.label}
                             </span>
-                          ) : null}
+                            {isNew ? (
+                              <span className="rounded-sm border border-ring/40 bg-ring/10 px-1 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-ring">
+                                {t("newBadge")}
+                              </span>
+                            ) : null}
+                          </span>
+                          <span className="mt-1 block truncate text-sm font-medium text-foreground group-hover:text-foreground">
+                            {item.title}
+                          </span>
+                          <span className="mt-1 block line-clamp-2 text-xs leading-5 text-muted-foreground">
+                            {item.body}
+                          </span>
+                          <span className="mt-1 block font-mono text-[0.65rem] text-muted-foreground">
+                            {formatDate(item.occurredAt, locale)}
+                          </span>
                         </span>
-                        <span className="mt-1 block truncate text-sm font-medium text-foreground group-hover:text-foreground">
-                          {post.title}
-                        </span>
-                        <span className="mt-1 block font-mono text-[0.65rem] text-muted-foreground">
-                          {post.date}
-                        </span>
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
 
-          <footer className="border-t border-border/60 px-4 py-3">
-            <Link
-              href="/logs"
-              locale={locale}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
-                FOCUS_RING,
-              )}
-            >
-              <span className="truncate">{t("viewAll")}</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          </footer>
+            <footer className="border-t border-border/60 px-4 py-3">
+              <Link
+                href="/logs"
+                locale={locale}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+                  FOCUS_RING,
+                )}
+              >
+                <span className="truncate">{t("viewAll")}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </footer>
           </motion.div>
         ) : null}
       </AnimatePresence>
     </div>
   );
+}
+
+function sortNewestFirst(items: SiteNotification[]): SiteNotification[] {
+  return [...items].sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt));
+}
+
+function localLastSeenIso() {
+  const value = readStoredString(LAST_SEEN_KEY);
+  return value || null;
+}
+
+async function patchNotificationState(body: {
+  lastSeenAt?: string;
+  browserNotifications?: boolean;
+  emailNotifications?: boolean;
+}) {
+  try {
+    const response = await fetch("/api/notifications/state", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) return null;
+    return (await response.json()) as NotificationStateResponse;
+  } catch {
+    return null;
+  }
+}
+
+function maybeShowBrowserNotification(
+  title: string,
+  body: string,
+  state: NotificationStateResponse,
+) {
+  if (!state.browserNotifications) return;
+  if (typeof window === "undefined" || !("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+  try {
+    new Notification(title, { body, tag: "m4rkyu-notifications" });
+  } catch {
+    // Browser notification support is best-effort.
+  }
+}
+
+function formatDate(value: string, locale: Locale) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 }

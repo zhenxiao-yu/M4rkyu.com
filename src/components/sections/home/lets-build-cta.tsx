@@ -33,6 +33,11 @@ interface LetsBuildCtaProps {
 export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
   const t = useTranslations("Home.letsBuild");
   const githubHref = profile.socials?.github ?? "https://github.com/zhenxiao-yu";
+  const devtoHref = profile.socials?.devto;
+  const followLinks = [
+    { label: "GitHub", href: githubHref },
+    ...(devtoHref ? [{ label: "dev.to", href: devtoHref }] : []),
+  ];
 
   return (
     <section
@@ -79,28 +84,41 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
           {t("body")}
         </p>
 
-        {/* CTA cluster. Below sm the buttons stack full-width so each
-          * primary action is a comfortable tap target on phones; from
-          * sm up they wrap inline with breathing room. */}
+        {/* Contact cluster — primary "start a project" into /contact,
+          * email as the lighter alternative. Below sm the buttons stack
+          * full-width so each is a comfortable tap target on phones. */}
         <div className="mt-10 flex flex-col items-stretch justify-center gap-2.5 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
           <Button asChild variant="default" size="lg" className="w-full sm:w-auto">
-            <a href={`mailto:${profile.email}`}>
-              <Mail className="size-4" aria-hidden="true" />
-              {t("emailDirect")}
-            </a>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-            <a href={githubHref} target="_blank" rel="noopener noreferrer">
-              <Code2 className="size-4" aria-hidden="true" />
-              GitHub
-            </a>
-          </Button>
-          <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
             <Link href="/contact" locale={locale}>
               {t("sendBrief")}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </Button>
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+            <a href={`mailto:${profile.email}`}>
+              <Mail className="size-4" aria-hidden="true" />
+              {t("emailDirect")}
+            </a>
+          </Button>
+        </div>
+
+        {/* Follow row — passive "keep up with the work" links. */}
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+            {t("followLabel")}
+          </span>
+          {followLinks.map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring hover:underline"
+            >
+              <Code2 className="size-3.5" aria-hidden="true" />
+              {social.label}
+            </a>
+          ))}
         </div>
       </div>
     </section>

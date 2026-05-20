@@ -225,6 +225,7 @@ export const postSchema = z.object({
   category: z.string().min(1),
   excerpt: z.string().min(1),
   date: z.string().min(1),
+  publishedAt: z.string().optional(),
   readingTime: z.string().min(1),
   tags: z.array(z.string()),
   status: contentStatusSchema,

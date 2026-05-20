@@ -1,13 +1,14 @@
 import { HeroSection } from "@/components/sections/hero-section";
-import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { IntroLoaderIsland } from "@/components/system/intro-loader-island";
 import { HomeSmoothScroll } from "@/providers/home-smooth-scroll";
-import { AnimatedSeparator } from "@/components/sections/home/animated-separator";
-import { AboutBriefly } from "@/components/sections/home/about-briefly";
+import { CompassSection } from "@/components/sections/home/compass-section";
 import { SelectedWork } from "@/components/sections/home/selected-work";
-import { FramesGallery } from "@/components/sections/home/frames-gallery";
-import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
+import { GamesPreview } from "@/components/sections/home/games-preview";
+import { VisualPreview } from "@/components/sections/home/visual-preview";
 import { WritingPulseSection } from "@/components/sections/home/writing-pulse-section";
+import { ResourcesPreview } from "@/components/sections/home/resources-preview";
+import { AboutPreview } from "@/components/sections/home/about-preview";
+import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
 import { PageShell } from "@/components/layout/page-shell";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getProjectsSource } from "@/lib/projects/source";
@@ -25,7 +26,12 @@ export async function generateMetadata({
   };
 }
 
-// Home spine — sections compose through HomeSection for shared rhythm; HomeSmoothScroll lazy-registers Lenis + ScrollTrigger (home-only).
+// Home spine — a storybook of full-page snap slides, each an
+// entry-point dashboard into one area of the site:
+//   Hero (identity) → Compass (orientation map) → Work → Games →
+//   Visual (archive + media) → Writing → Resources → About → CTA.
+// Snap is owned by HomeSmoothScroll (Lenis Snap on desktop, native CSS
+// scroll-snap on touch); every HomeSection defaults to a snap point.
 export default async function HomePage({
   params,
 }: {
@@ -39,12 +45,13 @@ export default async function HomePage({
       <HomeSmoothScroll>
         <IntroLoaderIsland />
         <HeroSection locale={locale} />
-        <AnimatedSeparator mode="marquee" />
-        <AboutBriefly locale={locale} />
-        <CapabilitiesSection locale={locale} />
+        <CompassSection locale={locale} />
         <SelectedWork locale={locale} projects={allProjects} />
-        <FramesGallery locale={locale} />
+        <GamesPreview locale={locale} />
+        <VisualPreview locale={locale} />
         <WritingPulseSection locale={locale} />
+        <ResourcesPreview locale={locale} />
+        <AboutPreview locale={locale} />
         <LetsBuildCta locale={locale} />
       </HomeSmoothScroll>
     </PageShell>

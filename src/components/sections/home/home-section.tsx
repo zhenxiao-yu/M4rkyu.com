@@ -12,6 +12,17 @@ interface HomeSectionProps {
   action?: ReactNode;
   /** Tint variant for visual rhythm between sections. */
   tone?: "default" | "muted";
+  /**
+   * Whether the section is a snap-point in the home spine.
+   *
+   * `true` (default) — forces `min-h-dvh`, emits `data-snap="section"`,
+   *   and vertically centers content. Use for tentpole moments (Hero,
+   *   Selected Work, Closing CTA).
+   * `false` — section sizes to content with the standard
+   *   `py-24 sm:py-28 lg:py-32` rhythm; no snap. Use for soft sections
+   *   (Compass, Writing Pulse) so the home doesn't pay 100vh per band.
+   */
+  snap?: boolean;
   /** Section content. */
   children: ReactNode;
   /** Forwarded for special cases (the SelectedWork backdrop). */
@@ -43,6 +54,7 @@ export function HomeSection({
   lede,
   action,
   tone = "default",
+  snap = true,
   children,
   className,
   dataSection,
@@ -50,9 +62,10 @@ export function HomeSection({
   return (
     <section
       data-section={dataSection}
-      data-snap="section"
+      data-snap={snap ? "section" : "skip"}
       className={cn(
-        "relative isolate flex min-h-dvh flex-col justify-center",
+        "relative isolate flex flex-col",
+        snap ? "min-h-dvh justify-center" : "justify-start",
         tone === "muted" && "bg-muted/8 dark:bg-muted/10",
         "py-24 sm:py-28 lg:py-32",
         className,

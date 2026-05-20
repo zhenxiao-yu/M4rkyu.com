@@ -23,6 +23,8 @@ export type ProfileFormState =
   | { status: "ok" }
   | { status: "error"; messageKey: string };
 
+export type PreferencesFormState = ProfileFormState;
+
 export async function updateProfileAction(
   _prev: ProfileFormState,
   formData: FormData,
@@ -64,6 +66,32 @@ export async function updateProfileAction(
     }
     return { status: "error", messageKey: "saveFailed" };
   }
+  revalidatePath("/", "layout");
+  return { status: "ok" };
+}
+
+export async function updatePreferencesAction(
+  _prev: PreferencesFormState,
+  formData: FormData,
+): Promise<PreferencesFormState> {
+  if (!isSupabaseConfigured()) {
+    return { status: "error", messageKey: "unconfigured" };
+  }
+  const user = await getCurrentUser();
+  if (!user) return { status: "error", messageKey: "guest" };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("user_preferences").upsert(
+    {
+      user_id: user.id,
+      email_notifications: formData.get("email_notifications") === "on",
+      browser_notifications: formData.get("browser_notifications") === "on",
+    },
+    { onConflict: "user_id" },
+  );
+
+  if (error) return { status: "error", messageKey: "saveFailed" };
+
   revalidatePath("/", "layout");
   return { status: "ok" };
 }

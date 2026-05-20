@@ -75,6 +75,82 @@
     "heroCtaEmail": "写信给 Mark",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",
+    "compass": {
+      "eyebrow": "00 / 起点",
+      "heading": "先看看这里有什么。",
+      "body": "我是 Mark —— 一名定居安大略的创意开发者，做软件、游戏与视觉系统。这个网站是一份完整的档案，而不是七个零散的账号。",
+      "cta": "选一条线索",
+      "tiles": {
+        "work": {
+          "label": "作品",
+          "description": "生产级项目与案例研究。"
+        },
+        "games": {
+          "label": "游戏",
+          "description": "原型、Game Jam、开发日志。"
+        },
+        "archive": {
+          "label": "影像档案",
+          "description": "摄影集与视觉实验。"
+        },
+        "logs": {
+          "label": "日志",
+          "description": "开发日志、现场笔记、当下在想的事。"
+        },
+        "resources": {
+          "label": "资源",
+          "description": "我做的工具，我信得过的链接。"
+        },
+        "about": {
+          "label": "关于",
+          "description": "更长的版本，附肖像。"
+        }
+      }
+    },
+    "games": {
+      "eyebrow": "02 / 游戏",
+      "heading": "工作台上。",
+      "lede": "原型与引擎研究 —— 系统、输入与手感。大多还在打磨；这是台面上的几个。",
+      "open": "全部游戏"
+    },
+    "visual": {
+      "eyebrow": "03 / 影像",
+      "heading": "帧与影片。",
+      "lede": "黑白摄影、数字艺术与短片。静与动，做完一件归档一件。",
+      "openArchive": "进入档案",
+      "openMedia": "观看影片",
+      "framesCount": "{count} 帧",
+      "collectionLabel": "合集",
+      "openCollection": "打开合集",
+      "galleryAria": "影像合集",
+      "prev": "上一组",
+      "next": "下一组",
+      "framesSoon": "影像正在修整 —— 结构已就位，正片随后补上。"
+    },
+    "resources": {
+      "eyebrow": "05 / 资源",
+      "heading": "工具与链接。",
+      "lede": "一套在用的工具 —— 我自己写的浏览器小工具，加上我真的常开的链接。每个都附一句为什么。",
+      "open": "打开资源",
+      "toolsCount": "{count} 款工具",
+      "linksCount": "{count} 条链接"
+    },
+    "aboutPreview": {
+      "eyebrow": "06 / 关于",
+      "heading": "做这些的人。",
+      "lede": "跨文化的路径，定居安大略。软件、游戏与影像 —— 一种实践，多个面向。",
+      "open": "完整故事",
+      "currentlyLabel": "正在",
+      "valuesLabel": "我在意的",
+      "placesLabel": "{cities} 座城市 · {countries} 个国家",
+      "stackLabel": "核心栈",
+      "kinds": {
+        "building": "在做",
+        "reading": "在读",
+        "listening": "在听",
+        "watching": "在看"
+      }
+    },
     "aboutBriefly": {
       "eyebrow": "01 / 关于",
       "heading": "Mark，简介。",
@@ -83,7 +159,7 @@
       "subnote": "跨文化路径，定居安大略。一个档案，而不是七个零散的账号。"
     },
     "selectedWork": {
-      "eyebrow": "02 / 精选",
+      "eyebrow": "01 / 精选",
       "heading": "我做过的几件事。",
       "lede": "一组值得展示的项目 —— 完成的在前，草稿淡淡地排在后面。",
       "titleWord": "WORK",
@@ -115,7 +191,8 @@
       "openLabel": "点这里",
       "closeLabel": "收起",
       "emailDirect": "直接邮件",
-      "sendBrief": "提交简报"
+      "sendBrief": "提交简报",
+      "followLabel": "关注进展"
     },
     "capabilities": {
       "eyebrow": "05 / 能力",
@@ -444,23 +521,25 @@
       "portraitPrevious": "上一张肖像",
       "portraitNext": "下一张肖像",
       "timelineEyebrow": "路线",
-      "timelineTitle": "路上的几个点",
+      "timelineTitle": "住过的地方",
       "timelineNow": "现在",
-      "timelineNowBody": "继续编辑档案。留下更少、更好的东西。",
+      "timelineNowBody": "安大略。暂时在这里。",
       "toolsEyebrow": "工具",
       "toolsTitle": "真的会用的东西",
-      "toolsBody": "按实践分类，不做信心打分。",
+      "toolsBody": "短版。剩下的不用摆出来。",
+      "expandTools": "展开工具组",
+      "collapseTools": "收起工具组",
       "toolGroups": {
-        "frontend_development": "前端开发",
-        "backend_development": "后端开发",
-        "game_development": "游戏开发",
-        "design_and_art": "设计与艺术"
+        "code": "代码",
+        "data": "数据",
+        "creative": "创作",
+        "workflow": "流程"
       },
       "toolDescriptions": {
-        "frontend_development": "界面、动效、布局，以及浏览器这一层。",
-        "backend_development": "API、数据系统、服务，以及不太显眼的连接部分。",
-        "game_development": "引擎、交互、关卡、物理和可玩的系统。",
-        "design_and_art": "视觉方向、UI 结构、字体排版和生产用美术。"
+        "code": "常用的那套。",
+        "data": "存、整理、流动。",
+        "creative": "游戏、图像、界面。",
+        "workflow": "发布前的部分。"
       },
       "closingEyebrow": "出口",
       "closingTitle": "关于我，说这些就够了。",
@@ -477,9 +556,16 @@
       "repos": "项目",
       "stars": "stars",
       "followers": "关注",
+      "recently": "最近",
+      "commits": "pushes",
+      "languages": "语言混合",
+      "lastActive": "最近活跃",
+      "library": "库存",
+      "level": "等级",
       "games": "游戏",
       "hours": "小时",
       "noGame": "暂时没有游戏浮上来。",
+      "noActivity": "最近很安静",
       "openGithub": "打开 GitHub 主页",
       "openSteam": "打开 Steam 主页"
     },
@@ -857,11 +943,14 @@
     "label": "通知",
     "open": "打开通知",
     "heading": "新动态",
-    "subheading": "你上次到访以来的日志更新。",
-    "empty": "暂时没有新的更新。新日志会出现在这里。",
+    "subheading": "你上次到访以来的日志、作品和小更新。",
+    "empty": "暂时没有新的更新。新动态会出现在这里。",
     "markRead": "全部标为已读",
     "viewAll": "查看全部日志",
     "newBadge": "新",
+    "enableBrowser": "在此设备启用浏览器通知",
+    "toastTitle": "有新动态",
+    "toastDescription": "{count, plural, other {铃铛里有 # 条未读。}}",
     "unreadStatus": "{count, plural, =0 {没有未读更新} other {# 条未读更新}}"
   },
   "CommandPalette": {
@@ -981,6 +1070,7 @@
     "commentsEmpty": "你还没有评论过任何内容。",
     "settingsTitle": "设置",
     "settingsDescription": "资料字段与可见性偏好。",
+    "notificationsSectionTitle": "通知",
     "fields": {
       "displayName": "显示名",
       "username": "用户名",
@@ -994,6 +1084,12 @@
       "displayName": "最多 60 个字符。",
       "username": "小写字母、数字、短横线、下划线，3–24 个字符。",
       "bio": "最多 280 个字符。"
+    },
+    "notifications": {
+      "browserTitle": "浏览器通知",
+      "browserDescription": "网站打开时，让铃铛在此设备上发出安静的系统通知。",
+      "emailTitle": "邮件通知",
+      "emailDescription": "预留给未来账户更新。默认关闭。"
     },
     "save": "保存修改",
     "saving": "保存中…",
@@ -1103,6 +1199,10 @@
     "overview": "概览",
     "gallery": "影像",
     "projects": "项目",
+    "games": "游戏",
+    "media": "媒体",
+    "resources": "资源",
+    "profile": "个人资料",
     "comments": "评论",
     "users": "用户",
     "overviewTitle": "运营面板",
@@ -1256,6 +1356,198 @@
       "placeholder": "Placeholder",
       "comingSoon": "Coming soon"
     }
+  },
+  "AdminGames": {
+    "title": "游戏",
+    "description": "创建和编辑游戏开发归档条目。当数据表为空时，公开的 /games 会回退到 src/content/games.ts。",
+    "count": "{count, plural, other {# 个游戏}}",
+    "newGame": "新建游戏",
+    "newGameTitle": "新建游戏",
+    "newGameDescription": "添加一条游戏开发归档条目。在成品可展示前先保存为草稿。",
+    "editGameDescription": "编辑该归档条目。",
+    "backToGames": "全部游戏",
+    "create": "创建游戏",
+    "save": "保存更改",
+    "cancel": "取消",
+    "edit": "编辑",
+    "emptyTitle": "数据表中暂无游戏",
+    "emptyDescription": "公开的 /games 仍渲染静态的 src/content/games.ts 列表。在此添加游戏即可开始迁移。",
+    "noPitch": "暂无简介。",
+    "dangerZone": "危险操作",
+    "deleteGame": "删除游戏",
+    "deleteGameConfirm": "确定删除“{title}”吗？公开的 /games 会回退到静态数组。此操作无法撤销。",
+    "deleteWarning": "将永久移除该游戏。公开的 /games 会回退到静态数组。此操作无法撤销。",
+    "required": "必填",
+    "section": {
+      "basics": "基本信息",
+      "detail": "详情",
+      "media": "媒体",
+      "buildLinks": "构建链接"
+    },
+    "titleLabel": "标题",
+    "slugLabel": "标识符",
+    "slugHint": "仅限小写字母、数字和连字符，用于网址。",
+    "engineLabel": "引擎",
+    "yearLabel": "年份",
+    "statusLabel": "状态",
+    "sortOrderLabel": "排序",
+    "pitchLabel": "简介",
+    "roleLabel": "职责",
+    "notesLabel": "备注",
+    "notesHint": "每行一条备注。",
+    "platformsLabel": "平台",
+    "pillarsLabel": "设计支柱",
+    "postmortemLabel": "复盘总结",
+    "outcomeLabel": "成果",
+    "coverSrcLabel": "封面图片链接",
+    "coverAltLabel": "封面替代文本",
+    "trailerUrlLabel": "预告片链接",
+    "buildLinksLabel": "构建链接",
+    "buildLinksHint": "每行一条：标签 | https://url",
+    "status": {
+      "ready": "已就绪",
+      "draft": "草稿",
+      "placeholder": "占位",
+      "comingSoon": "即将推出"
+    }
+  },
+  "AdminMedia": {
+    "title": "媒体",
+    "description": "管理视频、短片、过程片段与海报。当数据表为空时，公开的 /media 会回退到 src/content/media.ts。",
+    "count": "{count, plural, other {# 个媒体项目}}",
+    "newMedia": "新建媒体",
+    "newMediaTitle": "新建媒体",
+    "newMediaDescription": "向媒体库添加视频、短片、过程片段或海报。",
+    "editMediaDescription": "编辑该媒体项目的详情、状态与排序。",
+    "backToMedia": "全部媒体",
+    "create": "创建媒体",
+    "save": "保存更改",
+    "cancel": "取消",
+    "edit": "编辑",
+    "emptyTitle": "数据表中暂无媒体",
+    "emptyDescription": "公开的 /media 仍渲染静态的 src/content/media.ts 列表。在此添加项目即可开始迁移。",
+    "noDescription": "暂无描述。",
+    "dangerZone": "危险操作",
+    "deleteMedia": "删除媒体",
+    "deleteMediaConfirm": "确定删除“{title}”吗？此操作无法撤销。",
+    "deleteWarning": "删除后将从媒体页面永久移除该项目。",
+    "required": "必填",
+    "section": {
+      "basics": "基本信息",
+      "detail": "详细内容"
+    },
+    "titleLabel": "标题",
+    "slugLabel": "标识符",
+    "slugHint": "仅限小写字母、数字和连字符，用于网址。",
+    "formatLabel": "格式",
+    "statusLabel": "状态",
+    "sortOrderLabel": "排序",
+    "descriptionLabel": "描述",
+    "durationLabel": "时长",
+    "durationHint": "选填，例如 1:24。",
+    "format": {
+      "video": "视频",
+      "reel": "短片",
+      "process": "过程",
+      "poster": "海报"
+    },
+    "status": {
+      "ready": "已就绪",
+      "draft": "草稿",
+      "placeholder": "占位",
+      "comingSoon": "即将上线"
+    }
+  },
+  "AdminResources": {
+    "title": "资源",
+    "description": "工具与链接目录，可从数据库中编辑。当数据表为空时，公开的 /resources 会回退到 src/content/resources.ts。",
+    "count": "{count, plural, other {# 个资源}}",
+    "newResource": "新建资源",
+    "newResourceTitle": "新建资源",
+    "newResourceDescription": "向目录中添加一个工具或链接。",
+    "editResourceDescription": "编辑此资源。",
+    "backToResources": "全部资源",
+    "create": "创建资源",
+    "save": "保存更改",
+    "cancel": "取消",
+    "edit": "编辑",
+    "featured": "精选",
+    "emptyTitle": "数据表中暂无资源",
+    "emptyDescription": "公开的 /resources 仍渲染静态的 src/content/resources.ts 目录。在此添加资源即可开始迁移。",
+    "noDescription": "暂无描述。",
+    "dangerZone": "危险操作",
+    "deleteResource": "删除资源",
+    "deleteResourceConfirm": "确定删除“{name}”吗？此操作无法撤销。",
+    "deleteWarning": "将永久移除此资源。公开的 /resources 会回退到静态目录。此操作无法撤销。",
+    "required": "必填",
+    "section": {
+      "basics": "基本信息",
+      "detail": "详情",
+      "links": "链接"
+    },
+    "nameLabel": "名称",
+    "slugLabel": "标识符",
+    "slugHint": "仅限小写字母、数字和连字符，用于网址。",
+    "categoryLabel": "分类",
+    "typeLabel": "类型",
+    "statusLabel": "状态",
+    "pricingLabel": "定价",
+    "sortOrderLabel": "排序",
+    "linkLabel": "链接",
+    "descriptionLabel": "描述",
+    "whyLabel": "我为何常用它",
+    "tagsLabel": "标签",
+    "tagsHint": "每行一个标签。",
+    "iconKeyLabel": "图标标识",
+    "iconKeyHint": "lucide 图标名称",
+    "type": {
+      "link": "链接",
+      "tool": "工具"
+    },
+    "status": {
+      "ready": "已就绪",
+      "draft": "草稿",
+      "placeholder": "占位",
+      "comingSoon": "即将推出"
+    }
+  },
+  "AdminProfile": {
+    "title": "个人资料",
+    "description": "关于页的唯一数据源 —— 姓名、简介、社交链接，以及时间线、技能与旅行地图背后的结构化数据。",
+    "save": "保存资料",
+    "cancel": "取消",
+    "savedHint": "保存后将即时同步到全站。",
+    "required": "必填",
+    "structuredHint": "这些字段以 JSON 编写，保存时会进行校验。请保持结构正确 —— 出错时会连同字段名一并提示，便于定位修改。",
+    "jsonHint": "需为合法 JSON，保存时按资料结构进行校验。",
+    "section": {
+      "identity": "身份信息",
+      "intro": "简介",
+      "socials": "社交链接",
+      "structured": "结构化数据（JSON）"
+    },
+    "nameLabel": "姓名",
+    "titleLabel": "头衔",
+    "locationLabel": "所在地",
+    "emailLabel": "邮箱",
+    "githubHandleLabel": "GitHub 用户名",
+    "resumeUrlLabel": "简历链接",
+    "introLabel": "简介",
+    "socialGithubLabel": "GitHub 链接",
+    "socialDevtoLabel": "dev.to 链接",
+    "socialLinkedinLabel": "LinkedIn 链接",
+    "socialBlueskyLabel": "Bluesky 链接",
+    "socialTwitterLabel": "X / Twitter 链接",
+    "socialInstagramLabel": "Instagram 链接",
+    "socialMastodonLabel": "Mastodon 链接",
+    "socialFacebookLabel": "Facebook 链接",
+    "socialYoutubeLabel": "YouTube 链接",
+    "timelineLabel": "时间线",
+    "valuesLabel": "理念",
+    "skillsLabel": "技能",
+    "citiesLabel": "城市",
+    "currentlyLabel": "近况",
+    "portraitsLabel": "照片"
   },
   "AudioPlayer": {
     "title": "音频设置",

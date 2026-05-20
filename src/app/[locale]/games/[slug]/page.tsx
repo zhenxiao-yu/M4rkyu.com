@@ -13,6 +13,7 @@ import {
 import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { games } from "@/content/games";
+import { getGameFromSource, getGamesSource } from "@/lib/games/source";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -46,7 +47,8 @@ export default async function GameDetailPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const game = games.find((item) => item.slug === slug);
+  const allGames = await getGamesSource();
+  const game = await getGameFromSource(slug);
   if (!game) notFound();
 
   const tGame = await getTranslations({ locale, namespace: "Game" });
@@ -54,10 +56,10 @@ export default async function GameDetailPage({
   const localized = localize(game, locale);
 
   // Adjacent navigation in archive order — predictable, no clever sort.
-  const gameIndex = games.findIndex((g) => g.slug === game.slug);
-  const prevGame = gameIndex > 0 ? games[gameIndex - 1] : undefined;
+  const gameIndex = allGames.findIndex((g) => g.slug === game.slug);
+  const prevGame = gameIndex > 0 ? allGames[gameIndex - 1] : undefined;
   const nextGame =
-    gameIndex < games.length - 1 ? games[gameIndex + 1] : undefined;
+    gameIndex < allGames.length - 1 ? allGames[gameIndex + 1] : undefined;
   const prev = prevGame
     ? (() => {
         const localizedPrev = localize(prevGame, locale);

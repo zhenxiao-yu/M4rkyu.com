@@ -9,7 +9,7 @@ import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { MediaFrame } from "@/components/placeholders/media-frame";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { getTranslations } from "next-intl/server";
-import { mediaItems } from "@/content/media";
+import { getMediaSource } from "@/lib/media/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 
@@ -35,6 +35,7 @@ export default async function MediaPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Media" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
+  const mediaItems = await getMediaSource();
 
   return (
     <PageShell locale={locale}>

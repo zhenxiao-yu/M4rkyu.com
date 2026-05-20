@@ -903,11 +903,32 @@ html {
   }
 }
 
-/* Home-page "fullpage" scroll snap is owned by Lenis' `Snap` helper
- * (registered in `src/providers/home-smooth-scroll.tsx`). It picks up
- * every `[data-snap=section]` element, snaps to it on a debounced
- * scroll-end with eased lerp, and integrates with the rest of Lenis'
- * wheel/touch loop so no native CSS scroll-snap is needed. */
+/* Home-page full-page slide snapping.
+ *
+ *  - Desktop (pointer: fine): owned by Lenis' `Snap` plugin in
+ *    `src/providers/home-smooth-scroll.tsx`, which snaps every
+ *    `[data-snap="section"]` start into the smooth-wheel loop. No CSS
+ *    snap there — `scroll-snap-type` on the document would fight Lenis'
+ *    programmatic scrolling.
+ *  - Mobile / coarse pointer: Lenis is skipped, so native CSS
+ *    scroll-snap drives the slides. `proximity` (not `mandatory`) keeps
+ *    sections taller than the viewport fully scrollable and never traps
+ *    the user mid-section.
+ *  - Reduced motion: no snap on either path — the provider only sets
+ *    `data-home-snap` when motion is allowed, and this rule also
+ *    requires `prefers-reduced-motion: no-preference`.
+ *
+ * Scoped to the home route via the `data-home-snap` flag the provider
+ * toggles on <html>, so other routes never become snap containers. */
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  html[data-home-snap] {
+    scroll-snap-type: y proximity;
+  }
+  html[data-home-snap] [data-snap="section"] {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

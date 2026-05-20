@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { FeaturedBentoRotator } from "@/components/resources/featured-bento-rotator";
 import { ResourcesExplorer } from "@/components/resources/resources-explorer";
 import { ToolsMarquee } from "@/components/resources/tools-marquee";
-import { resources } from "@/content/resources";
+import { getResourcesSource } from "@/lib/resources/source";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -37,6 +37,7 @@ export default async function ResourcesToolsPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Resources" });
 
+  const resources = await getResourcesSource();
   const tools = resources.filter(
     (resource) => resource.type === "tool" && resource.status === "ready",
   );

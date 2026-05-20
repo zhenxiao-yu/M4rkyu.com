@@ -11,7 +11,7 @@ import { CommandPaletteIconTrigger } from "@/components/system/command-palette-i
 import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
 import { SignInSheet } from "@/components/auth/sign-in-sheet";
-import { getPosts } from "@/lib/blog/get-posts";
+import { getNotificationFeed } from "@/lib/notifications/feed";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
 import { DesktopNav } from "./desktop-nav";
@@ -122,21 +122,13 @@ export async function Header({ locale }: { locale: Locale }) {
 
 function LazyNotificationBell({ locale }: { locale: Locale }) {
   return (
-    <Suspense fallback={<NotificationBell posts={[]} locale={locale} />}>
+    <Suspense fallback={<NotificationBell items={[]} locale={locale} />}>
       <NotificationBellFeed locale={locale} />
     </Suspense>
   );
 }
 
 async function NotificationBellFeed({ locale }: { locale: Locale }) {
-  const posts = await getPosts();
-  const notificationFeed = posts.slice(0, 8).map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    date: post.date,
-    category: post.category,
-    canonicalUrl: post.canonicalUrl,
-  }));
-
-  return <NotificationBell posts={notificationFeed} locale={locale} />;
+  const notificationFeed = await getNotificationFeed(locale);
+  return <NotificationBell items={notificationFeed} locale={locale} />;
 }
