@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 import type { Resource } from "@/content/schemas";
+import type { Product } from "@/content/shop";
 import { SITE_URL } from "@/lib/seo/site";
 
 export function buildSiteJsonLd(locale: Locale) {
@@ -71,6 +72,33 @@ export function buildToolJsonLd(resource: Resource, locale: Locale) {
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     keywords: resource.tags.join(", "),
     author: { "@id": `${SITE_URL}/#person` },
+  };
+}
+
+// Product graph for a single /shop/[slug] page so search engines can
+// render price + availability rich results. Money is integer cents in
+// the catalog; schema.org wants a decimal string.
+export function buildProductJsonLd(product: Product, locale: Locale) {
+  const url = `${SITE_URL}/${locale}/shop/${product.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.summary,
+    category: product.category,
+    ...(product.image ? { image: product.image.src } : {}),
+    url,
+    brand: { "@type": "Brand", name: "M4rkyu" },
+    offers: {
+      "@type": "Offer",
+      url,
+      price: (product.priceInCents / 100).toFixed(2),
+      priceCurrency: product.currency.toUpperCase(),
+      availability: product.inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      seller: { "@id": `${SITE_URL}/#person` },
+    },
   };
 }
 

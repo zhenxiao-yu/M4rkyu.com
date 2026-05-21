@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { AddToCart } from "@/components/shop/add-to-cart";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Link } from "@/i18n/navigation";
 import { getShopProducts } from "@/content/shop";
 import { getProductFromSource } from "@/lib/shop/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { buildProductJsonLd } from "@/lib/seo/structured-data";
 import { formatPrice } from "@/lib/shop/format";
 
 export function generateStaticParams() {
@@ -58,6 +60,7 @@ export default async function ProductPage({
 
   return (
     <PageShell locale={locale}>
+      <JsonLd data={buildProductJsonLd(product, locale)} />
       <PageSection innerClassName="pt-28 sm:pt-32">
         <BlurFade>
           <Button asChild variant="ghost" size="sm" className="mb-8 -ml-3">

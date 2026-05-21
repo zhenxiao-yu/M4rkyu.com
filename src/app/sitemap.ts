@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getProjectsSource } from "@/lib/projects/source";
+import { getShopProductsSource } from "@/lib/shop/source";
 import { games } from "@/content/games";
 import { galleryCollections } from "@/content/gallery";
 import { resources } from "@/content/resources";
@@ -88,6 +89,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((resource) => resource.type === "tool" && resource.status === "ready")
     .flatMap((tool) => entry(`/resources/${tool.slug}`, "monthly", 0.5));
 
+  // Shop products — DB-first source (ready-only), so each live product
+  // is its own crawlable URL alongside the /shop index.
+  const products = await getShopProductsSource();
+  const shopEntries = products
+    .filter((product) => product.status === "ready")
+    .flatMap((product) => entry(`/shop/${product.slug}`, "monthly", 0.5));
+
   return [
     ...staticEntries,
     ...projectEntries,
@@ -95,5 +103,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...galleryEntries,
     ...blogEntries,
     ...toolEntries,
+    ...shopEntries,
   ];
 }
