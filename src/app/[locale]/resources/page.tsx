@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, Layers, Link2 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -14,6 +14,12 @@ import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { buildToolsCollectionJsonLd } from "@/lib/seo/structured-data";
 import { cn, FOCUS_RING } from "@/lib/utils";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 const PREVIEW_COUNT = 4;
 
@@ -37,6 +43,7 @@ export default async function ResourcesLandingPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Resources" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
 

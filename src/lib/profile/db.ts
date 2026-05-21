@@ -1,8 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { profileSchema, type Profile } from "@/content/schemas";
 
 // DB-backed profile read. The site profile is a singleton row in
@@ -19,9 +18,9 @@ import { profileSchema, type Profile } from "@/content/schemas";
 // then returns the static `profile` object, which is the intended
 // build-time behaviour until the table is the source of truth.
 export const getDbProfile = cache(async (): Promise<Profile | null> => {
-  if (!isSupabaseConfigured()) return null;
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return null;
   try {
-    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("site_profile")
       .select("data")

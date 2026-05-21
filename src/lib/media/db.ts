@@ -1,8 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { contentImageUrlFor } from "@/lib/content-images/storage";
 import type { MediaItem } from "@/content/schemas";
 
@@ -35,9 +34,9 @@ const SELECT_COLUMNS =
 // static `mediaItems` array, which is the intended build-time
 // behaviour until the media table is the source of truth.
 export const getDbMediaItems = cache(async (): Promise<DbMediaRow[]> => {
-  if (!isSupabaseConfigured()) return [];
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
   try {
-    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("media_items")
       .select(SELECT_COLUMNS)
@@ -52,9 +51,9 @@ export const getDbMediaItems = cache(async (): Promise<DbMediaRow[]> => {
 
 export const getDbMediaBySlug = cache(
   async (slug: string): Promise<DbMediaRow | null> => {
-    if (!isSupabaseConfigured()) return null;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
     try {
-      const supabase = await createSupabaseServerClient();
       const { data, error } = await supabase
         .from("media_items")
         .select(SELECT_COLUMNS)

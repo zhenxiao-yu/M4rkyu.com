@@ -68,7 +68,9 @@
     ".next-shot/types/**/*.ts",
     ".next-shot/dev/types/**/*.ts",
     ".next-perf/types/**/*.ts",
-    ".next-perf/dev/types/**/*.ts"
+    ".next-perf/dev/types/**/*.ts",
+    ".next-rollout/types/**/*.ts",
+    ".next-rollout/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

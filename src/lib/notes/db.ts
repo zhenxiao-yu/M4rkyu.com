@@ -1,8 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { parseTiers } from "@/lib/notes/tiers";
 import type { Note } from "@/content/schemas";
 
@@ -31,9 +30,9 @@ const SELECT_COLUMNS =
   "id, slug, kind, title, body, status, tags, published_at, link_url, link_label, rating, tiers, sort_order";
 
 export const getDbNotes = cache(async (): Promise<DbNoteRow[]> => {
-  if (!isSupabaseConfigured()) return [];
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
   try {
-    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("notes")
       .select(SELECT_COLUMNS)
@@ -49,9 +48,9 @@ export const getDbNotes = cache(async (): Promise<DbNoteRow[]> => {
 
 export const getDbNoteBySlug = cache(
   async (slug: string): Promise<DbNoteRow | null> => {
-    if (!isSupabaseConfigured()) return null;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
     try {
-      const supabase = await createSupabaseServerClient();
       const { data, error } = await supabase
         .from("notes")
         .select(SELECT_COLUMNS)

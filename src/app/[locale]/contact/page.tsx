@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -11,6 +11,11 @@ import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { ContactForm } from "./_contact-form";
+
+// No DB reads — static shell + client form. setRequestLocale →
+// prerender statically, revalidate hourly.
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -32,6 +37,7 @@ export default async function ContactPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Contact" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
 

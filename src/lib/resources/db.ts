@@ -1,8 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import type { Resource } from "@/content/schemas";
 
 // DB-backed resources reads. Wrapped in React cache() so multiple
@@ -38,9 +37,9 @@ const SELECT_COLUMNS =
 // static `resources` array, which is the intended build-time
 // behaviour until the resources table is the source of truth.
 export const getDbResources = cache(async (): Promise<DbResourceRow[]> => {
-  if (!isSupabaseConfigured()) return [];
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
   try {
-    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("resources")
       .select(SELECT_COLUMNS)
@@ -55,9 +54,9 @@ export const getDbResources = cache(async (): Promise<DbResourceRow[]> => {
 
 export const getDbResourceBySlug = cache(
   async (slug: string): Promise<DbResourceRow | null> => {
-    if (!isSupabaseConfigured()) return null;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
     try {
-      const supabase = await createSupabaseServerClient();
       const { data, error } = await supabase
         .from("resources")
         .select(SELECT_COLUMNS)

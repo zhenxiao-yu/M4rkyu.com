@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,12 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { buildToolJsonLd } from "@/lib/seo/structured-data";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath; new DB-only slugs render on demand).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 interface ToolPageProps {
   params: Promise<{ locale: Locale; slug: string }>;
@@ -44,6 +50,7 @@ export async function generateMetadata({
 
 export default async function ToolPage({ params }: ToolPageProps) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const resource = resolveResource(slug);
 
   // Unknown slug → 404. External-link entries → redirect to source URL

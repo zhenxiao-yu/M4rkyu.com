@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { AboutSignalsCard } from "@/components/about/about-signals-card";
 import { BentoFx, BentoGrid } from "@/components/about/bento-fx";
@@ -17,6 +17,12 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getProfileSource } from "@/lib/profile/source";
 import { buildAlternates } from "@/lib/seo/alternates";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 const toolOrder = [
   "Code",
@@ -45,6 +51,7 @@ export default async function AboutPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "About.refined" });
   const profile = await getProfileSource();
   const portraits = getPortraits(profile);
