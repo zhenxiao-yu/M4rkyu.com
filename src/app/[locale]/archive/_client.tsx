@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { FrameTile, orderFrames } from "@/components/gallery/frame-tile";
+import { useGallerySaves } from "@/lib/social/use-gallery-saves";
 import type { GalleryItem } from "@/content/schemas";
 
 // Lightbox is only needed after a user clicks a frame — defer the
@@ -21,9 +22,6 @@ const GalleryLightbox = dynamic(
 interface GalleryGridProps {
   items: GalleryItem[];
   locale: string;
-  /** Slugs the current user has saved (gallery item_type). Empty when guest. */
-  savedSlugs: string[];
-  signedIn: boolean;
   /** Tile style — "card" (default) or "bare" image wall. */
   variant?: "card" | "bare";
   /** Show the keyboard-nav hint strip above the grid. */
@@ -33,12 +31,12 @@ interface GalleryGridProps {
 export function GalleryGrid({
   items,
   locale,
-  savedSlugs,
-  signedIn,
   variant = "card",
   showHint = true,
 }: GalleryGridProps) {
-  const savedSet = useMemo(() => new Set(savedSlugs), [savedSlugs]);
+  // Per-user saved state is read client-side so the host page can be
+  // statically rendered / ISR (no per-request cookies()).
+  const { savedSlugs: savedSet, signedIn } = useGallerySaves();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { FrameTile, orderFrames } from "@/components/gallery/frame-tile";
+import { useGallerySaves } from "@/lib/social/use-gallery-saves";
 import type { GalleryItem } from "@/content/schemas";
 
 const GalleryLightbox = dynamic(
@@ -30,17 +31,12 @@ const GAP = 12; // matches gap-3 (0.75rem)
 interface GalleryMasonryProps {
   items: GalleryItem[];
   locale: string;
-  savedSlugs: string[];
-  signedIn: boolean;
 }
 
-export function GalleryMasonry({
-  items,
-  locale,
-  savedSlugs,
-  signedIn,
-}: GalleryMasonryProps) {
-  const savedSet = useMemo(() => new Set(savedSlugs), [savedSlugs]);
+export function GalleryMasonry({ items, locale }: GalleryMasonryProps) {
+  // Per-user saved state is read client-side so the host page can be
+  // statically rendered / ISR (no per-request cookies()).
+  const { savedSlugs: savedSet, signedIn } = useGallerySaves();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

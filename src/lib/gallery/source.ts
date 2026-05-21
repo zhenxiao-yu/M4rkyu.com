@@ -3,8 +3,8 @@ import "server-only";
 import { cache } from "react";
 import { galleryCollections, galleryItems } from "@/content/gallery";
 import {
-  getDbGalleryCollections,
-  getDbGalleryItems,
+  getPublicDbGalleryCollections,
+  getPublicDbGalleryItems,
   storageUrlFor,
   type DbCollection,
   type DbItem,
@@ -27,8 +27,8 @@ export interface GallerySource {
 
 export const getGallerySource = cache(async (): Promise<GallerySource> => {
   const [dbCollections, dbItems] = await Promise.all([
-    getDbGalleryCollections(),
-    getDbGalleryItems(),
+    getPublicDbGalleryCollections(),
+    getPublicDbGalleryItems(),
   ]);
 
   if (dbCollections.length === 0) {

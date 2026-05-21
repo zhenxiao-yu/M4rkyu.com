@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { env } from "@/lib/env";
 
@@ -174,6 +175,65 @@ export const getDbCollectionBySlug = cache(
   async (slug: string): Promise<DbCollection | null> => {
     if (!isSupabaseConfigured()) return null;
     const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("gallery_collections")
+      .select(
+        "id, slug, title, description, cover_path, cover_alt, status, sort_order, featured, mood",
+      )
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error || !data) return null;
+    return rowToCollection(data as CollectionRow);
+  },
+);
+
+// Cookieless public twins of the reads above. These use the anon read
+// client (no `cookies()`), so the public /archive surface can be
+// statically rendered / ISR instead of forced dynamic. Gallery RLS
+// (`status = 'ready' OR is_admin`) means an anon read returns ONLY ready
+// rows — correct for the public archive — while the cookie-bound reads
+// above stay for admin (which must see drafts).
+export const getPublicDbGalleryCollections = cache(
+  async (): Promise<DbCollection[]> => {
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return [];
+    const { data, error } = await supabase
+      .from("gallery_collections")
+      .select(
+        "id, slug, title, description, cover_path, cover_alt, status, sort_order, featured, mood",
+      )
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    if (error || !data) return [];
+    return (data as CollectionRow[]).map(rowToCollection);
+  },
+);
+
+export const getPublicDbGalleryItems = cache(async (): Promise<DbItem[]> => {
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("gallery_items")
+    .select(
+      "id, collection_id, slug, title, caption, type, status, storage_path, alt, width, height, aspect, captured_at, location, mood, tags, featured, pinned, sort_order, collection:gallery_collections(slug)",
+    )
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return (
+    data as (ItemRow & { collection: { slug: string } | { slug: string }[] | null })[]
+  ).map((row) => {
+    const collectionSlug = Array.isArray(row.collection)
+      ? row.collection[0]?.slug
+      : row.collection?.slug;
+    return rowToItem(row, collectionSlug ?? "");
+  });
+});
+
+export const getPublicDbCollectionBySlug = cache(
+  async (slug: string): Promise<DbCollection | null> => {
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
     const { data, error } = await supabase
       .from("gallery_collections")
       .select(

@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { GalleryMasonry } from "@/components/gallery/gallery-masonry";
-import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { getSavedKeysOfType } from "@/lib/social/saves";
 import { getGallerySource } from "@/lib/gallery/source";
 import type { GalleryCollection } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 
-// Data-driven (DB-first via getGallerySource) + reads request cookies
-// for save state, so this route renders dynamically.
-export const dynamic = "force-dynamic";
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly. Per-user saved state moved
+// client-side (useGallerySaves), so this no longer reads request cookies.
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -40,18 +41,14 @@ export default async function GalleryCollectionPage({
   params: Promise<{ locale: Locale; collection: string }>;
 }) {
   const { locale, collection } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Gallery" });
-  const [{ collections, items }, user, savedSlugs] = await Promise.all([
-    getGallerySource(),
-    getCurrentUser(),
-    getSavedKeysOfType("gallery"),
-  ]);
+  const { collections, items } = await getGallerySource();
 
   const item = collections.find((entry) => entry.slug === collection);
   if (!item) notFound();
 
   const frames = items.filter((entry) => entry.collection === item.slug);
-  const signedIn = Boolean(user);
   // Only render a cover panel when a real uploaded image exists (the
   // source falls back to a `/gallery/<slug>.svg` path that may not).
   const cover = item.cover?.src?.includes("/storage/") ? item.cover : null;
@@ -99,12 +96,11 @@ export default async function GalleryCollectionPage({
       </PageHero>
 
       <PageSection>
-        <GalleryMasonry
-          items={frames}
-          locale={locale}
-          savedSlugs={savedSlugs}
-          signedIn={signedIn}
-        />
+        {/* GalleryMasonry reads ?frame= via useSearchParams; Suspense is
+         * required under static rendering. */}
+        <Suspense fallback={null}>
+          <GalleryMasonry items={frames} locale={locale} />
+        </Suspense>
       </PageSection>
     </PageShell>
   );
