@@ -2,7 +2,10 @@ import "server-only";
 
 import { cache } from "react";
 import { allProjects } from "@/content/projects";
-import { dbProjectRowToProject, getDbProjects } from "@/lib/projects/db";
+import {
+  dbProjectRowToProject,
+  getPublicDbProjects,
+} from "@/lib/projects/db";
 import type { Project } from "@/content/schemas";
 
 // Unified read of projects — DB first, static src/content/projects.ts
@@ -14,7 +17,7 @@ import type { Project } from "@/content/schemas";
 // remains authoritative.
 
 export const getProjectsSource = cache(async (): Promise<Project[]> => {
-  const rows = await getDbProjects();
+  const rows = await getPublicDbProjects();
   if (rows.length === 0) return allProjects;
   return rows.map(dbProjectRowToProject);
 });

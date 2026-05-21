@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageSection } from "@/components/layout/page-section";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,12 @@ import {
   buildProductJsonLd,
 } from "@/lib/seo/structured-data";
 import { formatPrice } from "@/lib/shop/format";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return getShopProducts().flatMap((product) => [
@@ -51,6 +57,7 @@ export default async function ProductPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const product = await getProductFromSource(slug);
   if (!product || product.status !== "ready") notFound();
 

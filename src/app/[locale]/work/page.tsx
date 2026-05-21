@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -9,6 +9,12 @@ import { buildAlternates } from "@/lib/seo/alternates";
 import { summarize } from "@/lib/content/summary";
 import { getProjectsSource } from "@/lib/projects/source";
 import { ProjectsClient } from "./_client";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -30,6 +36,7 @@ export default async function ProjectsPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Projects" });
   const allProjects = await getProjectsSource();
   const summary = summarize(allProjects, (p) => p.contentStatus);

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
@@ -22,6 +22,12 @@ import {
   getProjectsSource,
 } from "@/lib/projects/source";
 import { cn, FOCUS_RING } from "@/lib/utils";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const projects = await getProjectsSource();
@@ -55,6 +61,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   // Fan out: project lookup + three translation namespaces in parallel.
   // getProjectFromSource is React-cached so the duplicate read for
   // adjacent-nav below is free.

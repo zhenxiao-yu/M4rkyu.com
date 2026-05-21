@@ -12,8 +12,15 @@ import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
 import { PageShell } from "@/components/layout/page-shell";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getProjectsSource } from "@/lib/projects/source";
+import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+
+// Public content via the cookieless read source + setRequestLocale →
+// prerender statically, revalidate hourly (admin edits also bust the
+// cache via revalidatePath).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -38,6 +45,7 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const allProjects = await getProjectsSource();
 
   return (

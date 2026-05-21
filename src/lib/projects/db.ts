@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { contentImageUrlFor } from "@/lib/content-images/storage";
 import type { Project } from "@/content/schemas";
@@ -84,6 +85,38 @@ export const getDbProjectBySlug = cache(
     } catch {
       return null;
     }
+  },
+);
+
+// Cookieless public twins of the reads above. These use the anon read
+// client (no `cookies()`), so callers can be statically rendered / ISR
+// instead of forced dynamic. RLS (`content_status = 'ready' OR is_admin`)
+// means an anon read returns ONLY ready rows — correct for public /work,
+// while the cookie-bound `getDbProjects` above stays for admin (drafts).
+export const getPublicDbProjects = cache(async (): Promise<DbProjectRow[]> => {
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("projects")
+    .select(SELECT_COLUMNS)
+    .order("sort_order", { ascending: true })
+    .order("year", { ascending: false })
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return data as DbProjectRow[];
+});
+
+export const getPublicDbProjectBySlug = cache(
+  async (slug: string): Promise<DbProjectRow | null> => {
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
+    const { data, error } = await supabase
+      .from("projects")
+      .select(SELECT_COLUMNS)
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as DbProjectRow;
   },
 );
 

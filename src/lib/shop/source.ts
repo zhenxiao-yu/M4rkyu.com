@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getShopProducts as getStaticShopProducts } from "@/content/shop";
-import { dbProductRowToProduct, getDbProducts } from "@/lib/shop/db";
+import { dbProductRowToProduct, getPublicDbProducts } from "@/lib/shop/db";
 import type { Product } from "@/content/shop";
 
 // Unified read of shop products — DB first, static src/content/shop.ts
@@ -17,7 +17,7 @@ import type { Product } from "@/content/shop";
 // and checkout, exactly like the static `getShopProducts()`.
 
 export const getShopProductsSource = cache(async (): Promise<Product[]> => {
-  const rows = await getDbProducts();
+  const rows = await getPublicDbProducts();
   if (rows.length === 0) return getStaticShopProducts();
   return rows.map(dbProductRowToProduct).filter((p) => p.status === "ready");
 });

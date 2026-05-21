@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { env } from "@/lib/env";
 import { type Product, productSchema } from "@/content/shop";
@@ -76,6 +77,38 @@ export const getDbProductBySlug = cache(
     } catch {
       return null;
     }
+  },
+);
+
+// Cookieless public twins of the reads above. These use the anon read
+// client (no `cookies()`), so the storefront + product pages can be
+// statically rendered / ISR. RLS (`status = 'ready' OR is_admin`) means
+// an anon read returns ONLY ready rows — correct for the public store and
+// for checkout price resolution (only ready products are purchasable).
+// The cookie-bound `getDbProducts` above stays for admin (drafts).
+export const getPublicDbProducts = cache(async (): Promise<DbProductRow[]> => {
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("products")
+    .select(SELECT_COLUMNS)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return data as DbProductRow[];
+});
+
+export const getPublicDbProductBySlug = cache(
+  async (slug: string): Promise<DbProductRow | null> => {
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
+    const { data, error } = await supabase
+      .from("products")
+      .select(SELECT_COLUMNS)
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as DbProductRow;
   },
 );
 
