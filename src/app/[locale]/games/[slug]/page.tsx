@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
@@ -17,6 +17,12 @@ import { getGameFromSource, getGamesSource } from "@/lib/games/source";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
+
+// ISR — cookieless read source means the detail page can prerender;
+// force-static + hourly revalidate (admin edits also bust via
+// revalidatePath; new DB-only slugs render on demand then cache).
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return games.flatMap((game) => [
@@ -47,6 +53,7 @@ export default async function GameDetailPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const allGames = await getGamesSource();
   const game = await getGameFromSource(slug);
   if (!game) notFound();

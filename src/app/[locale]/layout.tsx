@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
@@ -16,7 +16,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { LocalSavesMigration } from "@/components/saves/local-saves-migration";
 import { AuthStatusToast } from "@/components/auth/auth-status-toast";
 import { routing, type Locale } from "@/i18n/routing";
-import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { buildSiteJsonLd } from "@/lib/seo/structured-data";
 
 export function generateStaticParams() {
@@ -37,6 +36,9 @@ export default async function LocaleLayout({
   }
 
   const activeLocale = locale as Locale;
+  // Enables next-intl static rendering — without this the locale is read
+  // from headers() per request, which forces every page dynamic.
+  setRequestLocale(activeLocale);
   const messages = await getMessages({ locale: activeLocale });
 
   return (
@@ -67,9 +69,10 @@ export default async function LocaleLayout({
             <CursorTrail />
             <CookieConsentBanner />
             <ConsentAwareAnalytics />
-            <Suspense fallback={null}>
-              <SignedInSavesMigration />
-            </Suspense>
+            {/* Self-determines sign-in client-side, so the layout needs
+              * no per-request cookie read — keeping pages statically
+              * renderable. */}
+            <LocalSavesMigration />
             {/* Surfaces ?authError / ?accountDeleted URL params as
              * Sonner toasts on first paint, then strips them from the
              * URL so a refresh doesn't replay. Wrapped in Suspense
@@ -88,10 +91,4 @@ export default async function LocaleLayout({
       </ThemeProvider>
     </NextIntlClientProvider>
   );
-}
-
-async function SignedInSavesMigration() {
-  const currentUser = await getCurrentUser();
-
-  return <LocalSavesMigration signedIn={Boolean(currentUser)} />;
 }

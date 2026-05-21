@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
@@ -8,6 +8,8 @@ import {
   readLegacyLocalSavedSlugs,
 } from "@/lib/social/local-saves";
 import { importLocalSavesAction } from "@/lib/social/saves-actions";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * Renders nothing visually but, on first mount for a signed-in user
@@ -18,9 +20,27 @@ import { importLocalSavesAction } from "@/lib/social/saves-actions";
  * once in the locale layout — multiple mounts are safe (the toast
  * has a stable id) but unnecessary.
  */
-export function LocalSavesMigration({ signedIn }: { signedIn: boolean }) {
+export function LocalSavesMigration() {
   const t = useTranslations("Social");
   const seenRef = useRef(false);
+  // Determine sign-in client-side so the layout doesn't need a
+  // per-request cookie read (keeps pages statically renderable).
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    const supabase = createSupabaseBrowserClient();
+    let active = true;
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        if (active) setSignedIn(Boolean(data.user));
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!signedIn || seenRef.current) return;

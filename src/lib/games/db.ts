@@ -1,8 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createSupabaseReadClient } from "@/lib/supabase/read";
 import type { Game } from "@/content/schemas";
 
 // DB-backed games reads. Wrapped in React cache() so multiple
@@ -42,9 +41,9 @@ const SELECT_COLUMNS =
 // static `games` array, which is the intended build-time
 // behaviour until the games table is the source of truth.
 export const getDbGames = cache(async (): Promise<DbGameRow[]> => {
-  if (!isSupabaseConfigured()) return [];
+  const supabase = createSupabaseReadClient();
+  if (!supabase) return [];
   try {
-    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
       .from("games")
       .select(SELECT_COLUMNS)
@@ -60,9 +59,9 @@ export const getDbGames = cache(async (): Promise<DbGameRow[]> => {
 
 export const getDbGameBySlug = cache(
   async (slug: string): Promise<DbGameRow | null> => {
-    if (!isSupabaseConfigured()) return null;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return null;
     try {
-      const supabase = await createSupabaseServerClient();
       const { data, error } = await supabase
         .from("games")
         .select(SELECT_COLUMNS)
