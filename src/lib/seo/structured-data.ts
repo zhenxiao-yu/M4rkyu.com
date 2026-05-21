@@ -102,6 +102,25 @@ export function buildProductJsonLd(product: Product, locale: Locale) {
   };
 }
 
+// BreadcrumbList for a detail page so search engines render the
+// hierarchy in results. `trail` is ordered root→current; paths are
+// locale-less (e.g. "/shop", "/shop/foo").
+export function buildBreadcrumbJsonLd(
+  locale: Locale,
+  trail: Array<{ name: string; path: string }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: `${SITE_URL}/${locale}${crumb.path}`,
+    })),
+  };
+}
+
 // ItemList of every ready, runnable tool. Emitted once on the
 // /resources index so search engines understand the page hosts a
 // curated tool collection.

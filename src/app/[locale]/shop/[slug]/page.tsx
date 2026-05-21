@@ -16,7 +16,10 @@ import { getShopProducts } from "@/content/shop";
 import { getProductFromSource } from "@/lib/shop/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
-import { buildProductJsonLd } from "@/lib/seo/structured-data";
+import {
+  buildBreadcrumbJsonLd,
+  buildProductJsonLd,
+} from "@/lib/seo/structured-data";
 import { formatPrice } from "@/lib/shop/format";
 
 export function generateStaticParams() {
@@ -38,9 +41,7 @@ export async function generateMetadata({
     title: product.title,
     description: product.summary,
     alternates: buildAlternates(locale, `/shop/${slug}`),
-    openGraph: product.image
-      ? { images: [{ url: product.image.src, alt: product.image.alt }] }
-      : undefined,
+    // OG image is provided by the colocated opengraph-image.tsx route.
   };
 }
 
@@ -53,7 +54,10 @@ export default async function ProductPage({
   const product = await getProductFromSource(slug);
   if (!product || product.status !== "ready") notFound();
 
-  const t = await getTranslations({ locale, namespace: "Shop" });
+  const [t, tMeta] = await Promise.all([
+    getTranslations({ locale, namespace: "Shop" }),
+    getTranslations({ locale, namespace: "Meta" }),
+  ]);
   const gallery = product.image
     ? [product.image, ...product.gallery]
     : product.gallery;
@@ -61,6 +65,12 @@ export default async function ProductPage({
   return (
     <PageShell locale={locale}>
       <JsonLd data={buildProductJsonLd(product, locale)} />
+      <JsonLd
+        data={buildBreadcrumbJsonLd(locale, [
+          { name: tMeta("shopTitle"), path: "/shop" },
+          { name: product.title, path: `/shop/${product.slug}` },
+        ])}
+      />
       <PageSection innerClassName="pt-28 sm:pt-32">
         <BlurFade>
           <Button asChild variant="ghost" size="sm" className="mb-8 -ml-3">
@@ -122,7 +132,7 @@ export default async function ProductPage({
               ) : null}
             </div>
 
-            <h1 className="text-3xl font-[700] leading-[1.05] tracking-normal text-balance sm:text-4xl">
+            <h1 className="text-3xl font-bold leading-[1.05] tracking-normal text-balance sm:text-4xl">
               {product.title}
             </h1>
 
