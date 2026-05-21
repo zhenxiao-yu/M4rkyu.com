@@ -2,7 +2,6 @@ import { ArrowUpRight, Briefcase, Gamepad2, BookOpen, Wrench, User, Image as Ima
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BentoFx, BentoGrid, type BentoPattern } from "@/components/about/bento-fx";
-import { SystemBadge } from "@/components/ui/pixel/system-badge";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
 import type { Locale } from "@/i18n/routing";
@@ -32,7 +31,6 @@ const TILES: CompassTile[] = [
 
 export async function CompassSection({ locale }: CompassSectionProps) {
   const t = await getTranslations({ locale, namespace: "Home.compass" });
-  const tHome = await getTranslations({ locale, namespace: "Home" });
 
   return (
     <HomeSection tone="default" dataSection="compass">
@@ -49,7 +47,6 @@ export async function CompassSection({ locale }: CompassSectionProps) {
             {t("body")}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
-            <SystemBadge kind="now" label={tHome("heroAvailable")} />
             <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
               <span aria-hidden="true">↓</span>
               {t("cta")}

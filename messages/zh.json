@@ -68,11 +68,8 @@
       "line4": "认真搭建"
     },
     "heroTagShort": "软件 · 游戏 · 视觉系统",
-    "heroAvailable": "开放合作",
-    "heroEmailMe": "写信给 Mark",
     "scroll": "向下",
     "heroCtaBrowse": "看看作品",
-    "heroCtaEmail": "写信给 Mark",
     "heroCtaLogs": "阅读日志",
     "heroCmdkHint": ">_ 按 ⌘K",
     "compass": {
@@ -911,9 +908,19 @@
     "backToCart": "返回购物车"
   },
   "Notes": {
-    "eyebrow": "随手笔记",
-    "pendingTitle": "笔记还压在页边",
-    "pendingDescription": "等到积累了几条值得放出来的短笔记，再在这里逐条展开 —— 设计问题、草图、阅读旁注。"
+    "eyebrow": "动态流",
+    "pendingTitle": "动态流暂时安静",
+    "pendingDescription": "更新、转发、点评，以及偶尔的排行榜都会落在这里。目前还没有发布内容。",
+    "permalink": "链接到这条笔记",
+    "ratingLabel": "评分 {rating} / 5",
+    "linkCta": "打开链接",
+    "kind": {
+      "update": "动态",
+      "repost": "转发",
+      "note": "笔记",
+      "review": "点评",
+      "tierlist": "排行榜"
+    }
   },
   "Meta": {
     "galleryTitle": "影像",
@@ -1261,6 +1268,7 @@
     "games": "游戏",
     "media": "媒体",
     "resources": "资源",
+    "notes": "笔记",
     "shop": "商店",
     "profile": "个人资料",
     "comments": "评论",
@@ -1358,6 +1366,68 @@
     },
     "status": {
       "ready": "已发布",
+      "draft": "草稿",
+      "placeholder": "占位",
+      "comingSoon": "即将推出"
+    }
+  },
+  "AdminNotes": {
+    "title": "笔记",
+    "description": "管理 /notes 动态流 —— 动态、转发、笔记、点评与排行榜。公开页仅显示 status = ready 的条目，表为空时回退到 src/content/notes.ts。",
+    "count": "{count, plural, =0 {暂无笔记} other {# 条笔记}}",
+    "newNote": "新建笔记",
+    "newNoteTitle": "新建笔记",
+    "newNoteDescription": "发一条动态、转发一个链接、写一条笔记、打个分，或者排个榜。",
+    "editNoteDescription": "编辑这条笔记的类型、内容、日期与状态。",
+    "backToNotes": "全部笔记",
+    "create": "发布笔记",
+    "save": "保存更改",
+    "cancel": "取消",
+    "edit": "编辑",
+    "emptyTitle": "表中还没有笔记",
+    "emptyDescription": "公开 /notes 仍渲染静态的 src/content/notes.ts 种子内容。在此新建一条即可开始发布。",
+    "dangerZone": "危险操作",
+    "deleteNote": "删除笔记",
+    "deleteNoteConfirm": "删除“{title}”？此操作无法撤销。",
+    "deleteWarning": "删除会将这条笔记从动态流中永久移除。",
+    "section": {
+      "basics": "基础",
+      "content": "内容",
+      "link": "链接（转发与点评）",
+      "review": "评分（点评）",
+      "tierlist": "分级（排行榜）"
+    },
+    "kindLabel": "类型",
+    "titleLabel": "标题",
+    "titleHint": "动态可不填；点评填写对象；排行榜填写榜单名。",
+    "slugLabel": "短链",
+    "slugHint": "小写字母、数字、连字符。即该笔记在 /notes 上的 #锚点。",
+    "statusLabel": "状态",
+    "publishedAtLabel": "日期",
+    "sortOrderLabel": "置顶顺序",
+    "sortOrderHint": "保持 0 即按时间倒序；数字越小越靠前。",
+    "bodyLabel": "正文（Markdown）",
+    "bodyHint": "Markdown —— 标题、链接、代码、列表、引用均可渲染。",
+    "tagsLabel": "标签",
+    "tagsHint": "每行一个标签。",
+    "linkUrlLabel": "链接地址",
+    "linkUrlHint": "你要转发或点评的对象。",
+    "linkLabelLabel": "链接文字",
+    "linkLabelHint": "链接按钮的可选文字；默认显示域名。",
+    "ratingLabel": "评分",
+    "ratingHint": "仅用于点评类笔记。",
+    "ratingNone": "不评分",
+    "tiersLabel": "分级",
+    "tiersHint": "每行一档，例如“S: Inter, Berkeley Mono”。仅用于排行榜。",
+    "kind": {
+      "update": "动态",
+      "repost": "转发",
+      "note": "笔记",
+      "review": "点评",
+      "tierlist": "排行榜"
+    },
+    "status": {
+      "ready": "就绪（公开）",
       "draft": "草稿",
       "placeholder": "占位",
       "comingSoon": "即将推出"
@@ -1727,6 +1797,10 @@
     "sfxVolume": "音效",
     "sfxTest": "试听",
     "sfxTestAria": "试听音效",
-    "playlist": "播放列表"
+    "playlist": "播放列表",
+    "autoplayTitle": "播放背景音乐？",
+    "autoplayBody": "本站配有背景音乐。现在开启，并在以后访问时自动播放？",
+    "autoplayEnable": "开启",
+    "autoplayDismiss": "暂不"
   }
 }

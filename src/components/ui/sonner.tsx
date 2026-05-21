@@ -42,6 +42,14 @@ export function Toaster({ ...props }: ToasterProps) {
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
       }}
+      // Graceful vertical stacking: multiple toasts sit one above the
+      // other with comfortable spacing instead of overlapping or
+      // replacing each other. `expand` keeps the stack open so several
+      // are readable at once; older ones past `visibleToasts` fold away.
+      position="bottom-right"
+      expand
+      visibleToasts={4}
+      gap={12}
       richColors
       closeButton
       {...props}

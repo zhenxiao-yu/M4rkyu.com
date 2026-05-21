@@ -4,7 +4,6 @@ import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
 import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
-import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -101,7 +100,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           </ul>
         </div>
 
-        {/* Top-right tag + email — hidden below sm */}
+        {/* Top-right tag — hidden below sm */}
         <div
           data-boot="subtitle"
           className="absolute right-4 top-20 z-10 hidden max-w-xs text-right sm:right-8 sm:top-24 sm:block"
@@ -109,14 +108,6 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           <p className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-foreground/75 sm:text-[0.65rem]">
             {t("heroTagShort")}
           </p>
-          <a
-            href={`mailto:${profile.email}`}
-            className="mt-3 inline-flex items-center gap-1.5 text-sm leading-snug underline-offset-4 hover:underline focus-visible:outline-none focus-visible:underline"
-          >
-            {t("heroAvailable")}
-            <span aria-hidden="true">→</span>
-            <span className="font-medium">{t("heroEmailMe")}</span>
-          </a>
         </div>
 
         {/* Bottom band — marquee, solid-bg headline, marquee */}

@@ -64,6 +64,13 @@ interface AudioPlayerContextValue {
   currentTrackIndex: number;
   currentTrack: MusicTrack | undefined;
 
+  // Web Audio analyser tap — lazily built on first play (autoplay is
+  // blocked, so the user gesture that starts audio is also what unlocks
+  // the AudioContext). Visualizers read `getAudioGraph()` to attach an
+  // AudioMotion instance to the live signal without re-routing speakers.
+  audioGraphReady: boolean;
+  getAudioGraph: () => { ctx: AudioContext; tap: AudioNode } | null;
+
   // Transport state
   isPlaying: boolean;
   playerState: "idle" | "loading" | "ready" | "playing" | "paused" | "error";
@@ -104,6 +111,20 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   const wantsPlaybackRef = useRef(false);
   const currentTrackRef = useRef<MusicTrack | undefined>(undefined);
   const currentTrackIndexRef = useRef(0);
+
+  // Lazy Web Audio graph for visualizers. Built once on first play():
+  //   audio A ─┐
+  //   audio B ─┤─→ tap (GainNode) ─→ ctx.destination
+  // Both audible elements feed one tap node; AudioMotion analysers
+  // connect to `tap` without re-routing output. The metadata-only
+  // preload element is intentionally excluded. `.volume`-based
+  // crossfade still works — element volume applies before the source
+  // node. Built in an event handler (not an effect) to dodge React
+  // StrictMode's double-invoke, which would throw on a second
+  // createMediaElementSource() for the same element.
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const tapNodeRef = useRef<GainNode | null>(null);
+  const [audioGraphReady, setAudioGraphReady] = useState(false);
 
   // Init from storage (synchronous, so the first render matches what
   // the user will see). SSR returns defaults; that's fine — the
@@ -234,11 +255,62 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     [pickNextAvailableIndex],
   );
 
+  // Build the analyser graph once, lazily, inside the play() gesture.
+  // No-op after the first successful build or if Web Audio is missing.
+  const ensureAudioGraph = useCallback(() => {
+    if (typeof window === "undefined" || audioCtxRef.current) return;
+    const a = audioARef.current;
+    const b = audioBRef.current;
+    if (!a || !b) return;
+    const Ctor =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!Ctor) return;
+    let ctx: AudioContext;
+    try {
+      ctx = new Ctor();
+    } catch {
+      return;
+    }
+    try {
+      const srcA = ctx.createMediaElementSource(a);
+      const srcB = ctx.createMediaElementSource(b);
+      const tap = ctx.createGain();
+      tap.gain.value = 1;
+      srcA.connect(tap);
+      srcB.connect(tap);
+      tap.connect(ctx.destination);
+      audioCtxRef.current = ctx;
+      tapNodeRef.current = tap;
+      setAudioGraphReady(true);
+    } catch (err) {
+      // Most likely cause: an element was already tapped. Tear the
+      // half-built context down so audio keeps flowing to the speakers
+      // through the untouched <audio> elements.
+      void ctx.close().catch(() => undefined);
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[audio] visualizer graph init skipped:", err);
+      }
+    }
+  }, []);
+
+  const getAudioGraph = useCallback(() => {
+    const ctx = audioCtxRef.current;
+    const tap = tapNodeRef.current;
+    return ctx && tap ? { ctx, tap } : null;
+  }, []);
+
   const play = useCallback(() => {
     const audio = activeAudioRef.current;
     if (!audio || !currentTrack) {
       setPlayerState("idle");
       return;
+    }
+    // First play() is a user gesture — safe to build + unlock the graph.
+    ensureAudioGraph();
+    if (audioCtxRef.current?.state === "suspended") {
+      void audioCtxRef.current.resume().catch(() => undefined);
     }
     wantsPlaybackRef.current = true;
     failedTrackIdsRef.current.delete(currentTrack.id);
@@ -248,7 +320,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       // Autoplay block / network error — keep state in sync.
       markTrackUnavailable(currentTrack, true);
     });
-  }, [bgmVolume, currentTrack, markTrackUnavailable]);
+  }, [bgmVolume, currentTrack, markTrackUnavailable, ensureAudioGraph]);
 
   const pause = useCallback(() => {
     wantsPlaybackRef.current = false;
@@ -525,6 +597,8 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       tracks: musicTracks,
       currentTrackIndex,
       currentTrack,
+      audioGraphReady,
+      getAudioGraph,
       isPlaying,
       playerState,
       currentTime,
@@ -548,6 +622,8 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     [
       currentTrackIndex,
       currentTrack,
+      audioGraphReady,
+      getAudioGraph,
       isPlaying,
       playerState,
       currentTime,

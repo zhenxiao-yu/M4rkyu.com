@@ -62,7 +62,13 @@
     ".next-dev-3000/types/**/*.ts",
     ".next-dev-3000/dev/types/**/*.ts",
     ".next-build-check/types/**/*.ts",
-    ".next-build-check/dev/types/**/*.ts"
+    ".next-build-check/dev/types/**/*.ts",
+    ".next-build/types/**/*.ts",
+    ".next-build/dev/types/**/*.ts",
+    ".next-shot/types/**/*.ts",
+    ".next-shot/dev/types/**/*.ts",
+    ".next-perf/types/**/*.ts",
+    ".next-perf/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

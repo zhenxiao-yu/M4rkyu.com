@@ -292,6 +292,46 @@ export const serviceSchema = z.object({
   status: contentStatusSchema,
 });
 
+// /notes is a personal microblog — a persona feed of short posts. Each
+// note is one of five kinds; kind-specific fields stay optional so a
+// plain "update" validates without carrying review/tierlist baggage.
+export const noteKindSchema = z.enum([
+  "update", // a status / what-I'm-doing post
+  "repost", // sharing an external link with commentary
+  "note", // a longer free-form thought
+  "review", // a rated take on a book / film / album / game / object
+  "tierlist", // a ranked S/A/B/… list
+]);
+
+// One row of a tier list — a label ("S", "A", "Honorable mentions") and
+// the items ranked into it.
+export const noteTierSchema = z.object({
+  label: z.string().min(1),
+  items: z.array(z.string()).default([]),
+});
+
+export const noteSchema = z.object({
+  slug: z.string().min(1),
+  kind: noteKindSchema.default("note"),
+  // Optional for terse "update" posts; used as the subject line for
+  // reviews and the name of a tier list.
+  title: z.string().default(""),
+  // Markdown body, rendered through the shared remark + Shiki pipeline.
+  body: z.string().default(""),
+  status: contentStatusSchema.default("draft"),
+  tags: z.array(z.string()).default([]),
+  // Display + sort date (ISO string). The feed is newest-first.
+  publishedAt: z.string().min(1),
+  // repost / review source link.
+  link: z
+    .object({ url: z.string().url(), label: z.string().default("") })
+    .optional(),
+  // review rating, 0–5 (0 = unrated).
+  rating: z.number().int().min(0).max(5).optional(),
+  // tierlist rows (empty for other kinds).
+  tiers: z.array(noteTierSchema).default([]),
+});
+
 export type Project = z.infer<typeof projectSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 export type GalleryCollection = z.infer<typeof galleryCollectionSchema>;
@@ -301,3 +341,6 @@ export type Post = z.infer<typeof postSchema>;
 export type Game = z.infer<typeof gameSchema>;
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 export type Service = z.infer<typeof serviceSchema>;
+export type Note = z.infer<typeof noteSchema>;
+export type NoteKind = z.infer<typeof noteKindSchema>;
+export type NoteTier = z.infer<typeof noteTierSchema>;

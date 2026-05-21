@@ -12,6 +12,7 @@ import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
 import { SignInSheet } from "@/components/auth/sign-in-sheet";
 import { getNotificationFeed } from "@/lib/notifications/feed";
+import { AudioNavBar } from "@/components/ui/magic/audio-visualizer";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
 import { DesktopNav } from "./desktop-nav";
@@ -53,6 +54,9 @@ export async function Header({ locale }: { locale: Locale }) {
     // remains click-through over immersive first sections.
     <header className="pointer-events-none sticky top-0 z-40 w-full">
       <HeaderDock>
+        {/* Sleek, mirror-symmetric spectrum hugging the dock's lower
+         * edge. Silent until music plays; reduced-motion safe. */}
+        <AudioNavBar />
         <Link
           href="/"
           locale={locale}

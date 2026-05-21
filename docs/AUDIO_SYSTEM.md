@@ -37,7 +37,6 @@ Reference them with leading-slash public paths:
   artist: "M4rkyu",
   src: "/audio/music/signal-garden-02.mp3",
   mood: "ambient",
-  pageFit: ["home", "work"],
   approxSeconds: 74,
   loopSafe: true,
   enabled: true,

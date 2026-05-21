@@ -4,6 +4,8 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
+import { NoteCard, type NoteCardLabels } from "@/components/notes/note-card";
+import { getNotesSource } from "@/lib/notes/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 
@@ -29,6 +31,20 @@ export default async function NotesPage({
   const { locale } = await params;
   const tNotes = await getTranslations({ locale, namespace: "Notes" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
+  const notes = await getNotesSource();
+
+  const labels: NoteCardLabels = {
+    kind: {
+      update: tNotes("kind.update"),
+      repost: tNotes("kind.repost"),
+      note: tNotes("kind.note"),
+      review: tNotes("kind.review"),
+      tierlist: tNotes("kind.tierlist"),
+    },
+    permalink: tNotes("permalink"),
+    rating: (value: number) => tNotes("ratingLabel", { rating: value }),
+    linkCta: tNotes("linkCta"),
+  };
 
   return (
     <PageShell locale={locale}>
@@ -39,10 +55,23 @@ export default async function NotesPage({
         decorativeWord="NOTES"
       />
       <PageSection innerClassName="py-10 sm:py-12 lg:py-14">
-        <EmptyArchiveState
-          title={tNotes("pendingTitle")}
-          description={tNotes("pendingDescription")}
-        />
+        {notes.length === 0 ? (
+          <EmptyArchiveState
+            title={tNotes("pendingTitle")}
+            description={tNotes("pendingDescription")}
+          />
+        ) : (
+          <div className="mx-auto grid max-w-2xl gap-4">
+            {notes.map((note) => (
+              <NoteCard
+                key={note.slug}
+                note={note}
+                locale={locale}
+                labels={labels}
+              />
+            ))}
+          </div>
+        )}
       </PageSection>
     </PageShell>
   );

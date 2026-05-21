@@ -68,11 +68,8 @@
       "line4": "Built deliberately"
     },
     "heroTagShort": "Software · Games · Visual systems",
-    "heroAvailable": "Available for projects",
-    "heroEmailMe": "Email Mark",
     "scroll": "scroll",
     "heroCtaBrowse": "See the work",
-    "heroCtaEmail": "Email Mark",
     "heroCtaLogs": "Read the logs",
     "heroCmdkHint": ">_ press ⌘K",
     "compass": {
@@ -911,9 +908,19 @@
     "backToCart": "Back to cart"
   },
   "Notes": {
-    "eyebrow": "field notes",
-    "pendingTitle": "Notes are still in the margin",
-    "pendingDescription": "Short, dated fragments will land here once a few are worth surfacing — design questions, sketches, reading marginalia."
+    "eyebrow": "the feed",
+    "pendingTitle": "The feed is quiet for now",
+    "pendingDescription": "Updates, reposts, reviews, and the occasional tier list will land here. Nothing published yet.",
+    "permalink": "Link to this note",
+    "ratingLabel": "Rated {rating} out of 5",
+    "linkCta": "Open link",
+    "kind": {
+      "update": "Update",
+      "repost": "Repost",
+      "note": "Note",
+      "review": "Review",
+      "tierlist": "Tier list"
+    }
   },
   "Meta": {
     "galleryTitle": "Gallery",
@@ -1261,6 +1268,7 @@
     "games": "Games",
     "media": "Media",
     "resources": "Resources",
+    "notes": "Notes",
     "shop": "Shop",
     "profile": "Profile",
     "comments": "Comments",
@@ -1358,6 +1366,68 @@
     },
     "status": {
       "ready": "Ready",
+      "draft": "Draft",
+      "placeholder": "Placeholder",
+      "comingSoon": "Coming soon"
+    }
+  },
+  "AdminNotes": {
+    "title": "Notes",
+    "description": "Manage the /notes feed — updates, reposts, notes, reviews, and tier lists. Public /notes shows only status = ready and falls back to src/content/notes.ts when the table is empty.",
+    "count": "{count, plural, =0 {No notes} one {# note} other {# notes}}",
+    "newNote": "New note",
+    "newNoteTitle": "New note",
+    "newNoteDescription": "Post an update, repost a link, drop a note, write a review, or rank a tier list.",
+    "editNoteDescription": "Edit this note's kind, content, date, and status.",
+    "backToNotes": "All notes",
+    "create": "Publish note",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "emptyTitle": "No notes in the table yet",
+    "emptyDescription": "Public /notes still renders the static src/content/notes.ts seed. Add a note here to start posting.",
+    "dangerZone": "Danger zone",
+    "deleteNote": "Delete note",
+    "deleteNoteConfirm": "Delete \"{title}\"? This can't be undone.",
+    "deleteWarning": "Deleting removes this note from the feed permanently.",
+    "section": {
+      "basics": "Basics",
+      "content": "Content",
+      "link": "Link (repost & review)",
+      "review": "Rating (review)",
+      "tierlist": "Tiers (tier list)"
+    },
+    "kindLabel": "Kind",
+    "titleLabel": "Title",
+    "titleHint": "Optional for updates; the subject for reviews; the list name for tier lists.",
+    "slugLabel": "Slug",
+    "slugHint": "Lowercase letters, numbers, hyphens. The note's #anchor on /notes.",
+    "statusLabel": "Status",
+    "publishedAtLabel": "Date",
+    "sortOrderLabel": "Pin order",
+    "sortOrderHint": "Leave 0 for newest-first. Lower numbers pin to the top.",
+    "bodyLabel": "Body (Markdown)",
+    "bodyHint": "Markdown — headings, links, code, lists, quotes all render.",
+    "tagsLabel": "Tags",
+    "tagsHint": "One tag per line.",
+    "linkUrlLabel": "Link URL",
+    "linkUrlHint": "The thing you're reposting or reviewing.",
+    "linkLabelLabel": "Link label",
+    "linkLabelHint": "Optional text for the link chip; defaults to the hostname.",
+    "ratingLabel": "Rating",
+    "ratingHint": "Used only for review notes.",
+    "ratingNone": "No rating",
+    "tiersLabel": "Tiers",
+    "tiersHint": "One tier per line, e.g. \"S: Inter, Berkeley Mono\". Used only for tier lists.",
+    "kind": {
+      "update": "Update",
+      "repost": "Repost",
+      "note": "Note",
+      "review": "Review",
+      "tierlist": "Tier list"
+    },
+    "status": {
+      "ready": "Ready (public)",
       "draft": "Draft",
       "placeholder": "Placeholder",
       "comingSoon": "Coming soon"
@@ -1727,6 +1797,10 @@
     "sfxVolume": "Effects",
     "sfxTest": "Test",
     "sfxTestAria": "Play test sound effect",
-    "playlist": "Playlist"
+    "playlist": "Playlist",
+    "autoplayTitle": "Play ambient music?",
+    "autoplayBody": "This site has a background soundtrack. Enable it now and on future visits?",
+    "autoplayEnable": "Enable",
+    "autoplayDismiss": "Not now"
   }
 }
