@@ -107,8 +107,7 @@ export function filterAndSortPosts(
  * `count` defaults to `BLOG_PAGE_SETTINGS.featuredPostCount` so existing
  * callers stay untouched; the rotator on /logs passes a wider value
  * (e.g. 7) to fill a full bento page without bumping the global setting,
- * which is still consumed by the legacy `featured-posts-bento.tsx` and
- * the per-card tag limit.
+ * which is still consumed by per-card tag limits.
  */
 export function selectFeaturedPosts(
   posts: Post[],

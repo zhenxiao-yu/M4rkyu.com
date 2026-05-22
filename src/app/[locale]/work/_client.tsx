@@ -1,6 +1,12 @@
 "use client";
 
-import { useDeferredValue, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, FilterX, Search, Star, X } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -30,7 +36,9 @@ const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
 ];
 
 const CATEGORY_VALUES = new Set(
-  FILTERS.map((filter) => filter.value).filter(Boolean) as Project["category"][],
+  FILTERS.map((filter) => filter.value).filter(
+    Boolean,
+  ) as Project["category"][],
 );
 
 const ALL_YEARS = "__all__";
@@ -80,8 +88,7 @@ export function ProjectsClient({
   }, [projects]);
 
   const yearOptions = useMemo(
-    () =>
-      Array.from(yearCounts.keys()).sort((a, b) => b.localeCompare(a)),
+    () => Array.from(yearCounts.keys()).sort((a, b) => b.localeCompare(a)),
     [yearCounts],
   );
   const activeYear = yearOptions.includes(yearParam ?? "")
@@ -114,7 +121,8 @@ export function ProjectsClient({
       else params.delete("featured");
     }
     if ("sort" in next) {
-      if (next.sort && next.sort !== DEFAULT_SORT) params.set("sort", next.sort);
+      if (next.sort && next.sort !== DEFAULT_SORT)
+        params.set("sort", next.sort);
       else params.delete("sort");
     }
     startTransition(() => {
@@ -154,7 +162,14 @@ export function ProjectsClient({
       );
     }
     return result;
-  }, [projects, activeCategory, activeYear, featuredOnly, deferredQuery, activeSort]);
+  }, [
+    projects,
+    activeCategory,
+    activeYear,
+    featuredOnly,
+    deferredQuery,
+    activeSort,
+  ]);
 
   // Debounce the URL sync so router.replace doesn't fire per keystroke.
   useEffect(() => {
@@ -200,8 +215,8 @@ export function ProjectsClient({
 
   return (
     <>
-      <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_28rem]">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           {FILTERS.map(({ labelKey, value }) => {
             const active = activeCategory === value;
             return (
@@ -243,7 +258,10 @@ export function ProjectsClient({
                   "hover:border-foreground/40 hover:text-foreground",
               )}
             >
-              <Star aria-hidden="true" className={cn("size-3", featuredOnly && "fill-current")} />
+              <Star
+                aria-hidden="true"
+                className={cn("size-3", featuredOnly && "fill-current")}
+              />
               {t("featuredOn")}
             </Badge>
           </Button>
@@ -252,8 +270,8 @@ export function ProjectsClient({
           </span>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-[8rem_8rem_1fr]">
-          <label className="grid gap-1.5 text-xs text-muted-foreground">
+        <div className="grid min-w-0 gap-3 md:grid-cols-[8rem_8rem_minmax(0,1fr)]">
+          <label className="grid min-w-0 gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
               {t("yearLabel")}
             </span>
@@ -283,15 +301,13 @@ export function ProjectsClient({
             </Select>
           </label>
 
-          <label className="grid gap-1.5 text-xs text-muted-foreground">
+          <label className="grid min-w-0 gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
               {t("sortLabel")}
             </span>
             <Select
               value={activeSort}
-              onValueChange={(value) =>
-                updateUrl({ sort: value as SortMode })
-              }
+              onValueChange={(value) => updateUrl({ sort: value as SortMode })}
             >
               <SelectTrigger aria-label={t("sortLabel")}>
                 <SelectValue />
@@ -306,7 +322,7 @@ export function ProjectsClient({
             </Select>
           </label>
 
-          <label className="grid gap-1.5 text-xs text-muted-foreground">
+          <label className="grid min-w-0 gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
               {t("searchLabel")}
             </span>

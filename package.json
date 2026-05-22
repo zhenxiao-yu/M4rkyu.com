@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit --incremental false",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
+    "clean": "node scripts/clean-artifacts.mjs",
     "validate": "npm run lint && npm run typecheck",
     "analyze": "cross-env ANALYZE=true next build",
     "storybook": "storybook dev -p 6006",
