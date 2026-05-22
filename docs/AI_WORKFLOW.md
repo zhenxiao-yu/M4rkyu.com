@@ -24,7 +24,7 @@ Every phase ships as a single squash-merged PR off `main`.
   semantic change), `chore` (infra, scripts, docs, content
   hygiene), `fix`.
 - Commit message + PR title share the same line. Body explains
-  *why* the change exists, scoped per phase.
+  _why_ the change exists, scoped per phase.
 - One concern per PR. If a code-review finding lands a refactor
   that's worth doing, file it as the next phase, not as a tag-along
   in the current PR.
@@ -55,7 +55,7 @@ These are hard-won, not stylistic.
 - **Hardcoded easings inside `motion/react`** get an inline
   carve-out comment — `transition.ease` cannot read CSS variables.
 - **`Button` variants**: `default | secondary | outline | ghost |
-  link`. No `destructive` variant.
+link`. No `destructive` variant.
 - **External `<a>` carries `rel="noopener noreferrer"`**.
 - **Do not touch `next.config.ts`, `package.json`,
   `package-lock.json`, `tsconfig.json`** unless the phase
@@ -131,7 +131,7 @@ file:line references.
 - **NIT**: optional, judgment call.
 
 The subagent is opinionated and sometimes wrong. The reviewer's
-report is *input* — the implementing agent verifies before
+report is _input_ — the implementing agent verifies before
 applying. Several phases this round flagged-and-pushed-back on
 NIT-level items; that's healthy.
 
@@ -215,7 +215,40 @@ already moving, output a short message and continue.
 
 ---
 
-## 9. What's in scope for "vibe coding"
+## 9. Token-thrifty vibe-coding plans
+
+The best agent plan here is small enough to survive contact with the codebase:
+
+```text
+Intent: one sentence.
+Touch: 2-6 likely files or folders.
+Risk: what could break.
+Check: the first targeted command, then the broader gate.
+Stop: the condition that requires asking the user.
+```
+
+Do not write a roadmap when a patch will teach you more. Start with read-only
+context, make the smallest coherent edit, run the closest check, then widen.
+This keeps sessions cheap and prevents the agent from spending tokens defending
+a plan that the code disproves five minutes later.
+
+Anti-pitfalls checklist:
+
+- Keep one concern per commit; split unrelated discoveries into follow-up
+  notes.
+- Prefer deletion of confirmed dead code over "just in case" parking lots.
+- Prefer local fixes over new shared abstractions unless duplication is already
+  hurting.
+- Validate UI changes with Playwright or Storybook when layout, responsive
+  behavior, or interaction changed.
+- Never let generated artifacts or failed-test reports become part of the
+  commit.
+- End with what changed, what passed, what did not run, and the commit/push
+  state.
+
+---
+
+## 10. What's in scope for "vibe coding"
 
 For this codebase, vibe coding means:
 
@@ -233,7 +266,7 @@ For this codebase, vibe coding means:
 
 ---
 
-## 10. When the playbook breaks
+## 11. When the playbook breaks
 
 If a step here is wrong for the situation:
 

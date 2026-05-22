@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The Next.js portfolio for m4rkyu.com. Single-app repo at the root. Node `22.x`.
 
 <!-- BEGIN:nextjs-agent-rules -->
+
 ## This is NOT the Next.js you know
 
 Next.js 16 + React 19 + Tailwind 4. APIs, conventions, and file structure
@@ -13,6 +14,7 @@ differ from older training data — read the relevant guide in
 runtime config. Heed deprecation notices. The `edge` runtime has been dropped
 from all OG image routes (see recent commit `4ff0a5e`); do not re-introduce
 it.
+
 <!-- END:nextjs-agent-rules -->
 
 ## Commands
@@ -56,13 +58,13 @@ npm run dev -- --hostname 127.0.0.1 --port 3000
 `[locale]` segment is driven by `next-intl` (`src/i18n/routing.ts`, locales
 `en` + `zh`, `localePrefix: "always"`, default `en`). Top-level
 `src/app/{layout,page,sitemap,robots,icon}.tsx` plus the locale-less
-`opengraph-image.tsx` are infrastructure — the *site* is everything under
+`opengraph-image.tsx` are infrastructure — the _site_ is everything under
 `[locale]`. The `[locale]` layer hosts route segments for `about`, `work`,
 `games`, `media`, `archive`, `resources`, `logs`, `contact`, `portal`, each
 with co-located `opengraph-image.tsx` route handlers.
 
 **i18n contract.** Every visible string routes through `next-intl` and must
-exist in *both* `messages/en.json` and `messages/zh.json`. CJK is
+exist in _both_ `messages/en.json` and `messages/zh.json`. CJK is
 hand-translated, never transliterated. `next-intl`'s `Link` resolves locale
 from context — do not pass a `locale` prop.
 
@@ -167,6 +169,44 @@ When polishing on your own initiative, anchor every choice to the existing
 doctrine docs (`docs/COPY_VOICE.md`, `docs/REDESIGN_DIRECTION.md`, anything
 under `docs/architecture/`). The doctrine is the budget — work within it
 freely.
+
+## Vibe-Coding Operating Loop
+
+Optimize for small, verified momentum. Before editing, run a 5-minute context
+scan: `git status`, the nearest route/component files, existing helpers, and
+the relevant Next docs if touching App Router APIs. Then write the smallest
+useful plan: **goal → files likely touched → validation command**. Do not paste
+long plans, file dumps, or speculative architecture notes into chat.
+
+Token thrift matters:
+
+- Prefer `rg`, targeted `Get-Content`, and file diffs over reading whole
+  directories.
+- Summarize what you learned instead of quoting large files.
+- Reuse existing project vocabulary and components; do not re-explain the
+  stack back to the user.
+- Keep final summaries to changed behavior, validation, commit/push status,
+  and any real risk.
+
+Common vibe-coding traps to avoid:
+
+- **Big rewrite gravity:** if the request is polish or cleanup, do not redesign
+  routes, data schemas, package structure, or visual language.
+- **Invented abstractions:** only add a helper when the third caller or real
+  complexity appears. One-off cleanup should stay local.
+- **Validation theater:** run the smallest failing/affected check first, then
+  broaden. Do not claim safety from lint alone when UI/layout changed.
+- **Stale-doc confidence:** Next 16 + React 19 behavior must be checked against
+  `node_modules/next/dist/docs/` before route handler, metadata, proxy, cache,
+  or runtime edits.
+- **Translation drift:** any visible English copy change requires the matching
+  `messages/zh.json` update in the same commit.
+- **Generated-output churn:** never commit `.next*`, `storybook-static`,
+  Playwright reports, logs, or screenshots. Use `npm run clean` before commit
+  if a run produced local artifacts.
+- **Over-chatting:** report progress only when it changes the user's
+  understanding: blocker found, validation failed, scope changed, commit/push
+  completed.
 
 **Green zone — proceed without asking:**
 
