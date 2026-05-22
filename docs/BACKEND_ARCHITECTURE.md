@@ -1,18 +1,17 @@
 ---
 title: M4rkyu.com — Backend Architecture (Supabase)
-status: draft — Phase 1 audit only, not implemented
+status: historical audit — partially superseded by implemented Supabase auth/CMS
 audience: implementation agents (Claude, Codex), reviewers
 last_updated: 2026-05-16
 ---
 
-# Backend Architecture — Phase 1 Audit
+# Backend Architecture — Historical Phase 1 Audit
 
-> **Status: this document is a Phase 1 *audit* and *proposed plan***.
-> No package installs, schema migrations, env changes, route handlers,
-> server actions, or middleware have been added. Everything below is a
-> map of what exists and a proposal for what comes next. Implementation
-> is gated on author approval — see §13 _Decisions required before
-> Phase 2_.
+> **Status: historical.** Supabase auth, RLS migrations, admin surfaces,
+> comments, saves, shop, and CMS tables now exist in the app. Treat this file
+> as background context, not current implementation doctrine. Current request
+> interception is `src/proxy.ts` (Next 16 proxy), not legacy `middleware.ts`.
+> Current routes are the folders under `src/app/[locale]/`.
 
 ---
 
@@ -24,14 +23,14 @@ user profiles + auth-gated saves + auth-gated comments.
 That direction **contradicts** the existing living spec at
 [GALLERY_SOCIAL_SPEC.md](./GALLERY_SOCIAL_SPEC.md):
 
-| Spec rule (today)                                                                                                                                | New request                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| §5 _Likes UI_: "Anonymous-only (no login). Visitor identity = a stable cookie ID."                                                               | OAuth login, user profiles                           |
-| §6 _Comments UI_: "Anonymous post with a display-name field (free-form, validated)" · "Forbidden: Login walls."                                  | Comments require sign-in                             |
-| §7 _Save / Favorite_: localStorage + (Phase 2) "Optional sync to backend keyed on visitor **cookie ID**."                                        | Saves require sign-in                                |
-| §14 _Backend Options_: "**Recommendation:** Upstash Redis (or Vercel KV) for Phase 1 likes; add Supabase in Phase 2 when comments land."         | Supabase from day one                                |
-| §17 _Admin Controls_: "Gated by env-secret bearer token (no public login)."                                                                      | Admin route gated by `role='admin'` in `profiles`    |
-| §22 _Future Phase_: "Visitor recovery code for cross-device save sync" (still anonymous)                                                         | Identity is now the user account, not a cookie       |
+| Spec rule (today)                                                                                                                        | New request                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| §5 _Likes UI_: "Anonymous-only (no login). Visitor identity = a stable cookie ID."                                                       | OAuth login, user profiles                        |
+| §6 _Comments UI_: "Anonymous post with a display-name field (free-form, validated)" · "Forbidden: Login walls."                          | Comments require sign-in                          |
+| §7 _Save / Favorite_: localStorage + (Phase 2) "Optional sync to backend keyed on visitor **cookie ID**."                                | Saves require sign-in                             |
+| §14 _Backend Options_: "**Recommendation:** Upstash Redis (or Vercel KV) for Phase 1 likes; add Supabase in Phase 2 when comments land." | Supabase from day one                             |
+| §17 _Admin Controls_: "Gated by env-secret bearer token (no public login)."                                                              | Admin route gated by `role='admin'` in `profiles` |
+| §22 _Future Phase_: "Visitor recovery code for cross-device save sync" (still anonymous)                                                 | Identity is now the user account, not a cookie    |
 
 The new direction is coherent and reasonable — every modern personal
 site that wants comments + moderation lands on auth eventually — but it
@@ -49,31 +48,29 @@ update `GALLERY_SOCIAL_SPEC.md` to match, or (b) redirect to a hybrid
 
 ### 1.1 Route map (everything under `src/app/[locale]/`)
 
-| Route                        | Renderer    | Data source                                                                  |
-| ---------------------------- | ----------- | ---------------------------------------------------------------------------- |
-| `/[locale]` (home)           | SSR         | `src/content/projects.ts` + home sections                                    |
-| `/[locale]/about`            | SSR         | `src/content/profile.ts`                                                     |
-| `/[locale]/work`             | SSR + island| `src/content/projects.ts`                                                    |
-| `/[locale]/work/[slug]`      | SSR         | `src/content/projects.ts` (+ `src/lib/content/localize.ts`)                  |
-| `/[locale]/games`            | SSR + island| `src/content/games.ts`                                                       |
-| `/[locale]/games/[slug]`     | SSR         | `src/content/games.ts`                                                       |
-| `/[locale]/archive`          | SSR + island| `src/content/gallery.ts`                                                     |
-| `/[locale]/archive/[collection]` | SSR     | `src/content/gallery.ts`                                                     |
-| `/[locale]/archive/saved`    | SSR + island| `src/content/gallery.ts` + `localStorage` (`m4_saved_frames`)                |
-| `/[locale]/logs`             | SSR (ISR 24h) | `src/lib/blog/get-posts.ts` → dev.to API (`username=markyu`)               |
-| `/[locale]/logs/[slug]`      | SSR (ISR 24h) | `src/lib/blog/get-post.ts` → dev.to API                                    |
-| `/[locale]/media`            | SSR         | `src/content/media.ts`                                                       |
-| `/[locale]/resources`        | SSR + island| `src/content/resources.ts`                                                   |
-| `/[locale]/contact`          | SSR + form  | `src/content/services.ts` + server action `_actions.ts` (Resend + Turnstile) |
-| `/[locale]/notes`            | SSR (empty) | none yet — `EmptyArchiveState` only                                          |
-| `/[locale]/shop`             | SSR (stub)  | none yet                                                                     |
-| `/[locale]/portal`           | SSR         | translations only — purely thematic, **not an admin portal**                 |
+| Route                            | Renderer      | Data source                                                                  |
+| -------------------------------- | ------------- | ---------------------------------------------------------------------------- |
+| `/[locale]` (home)               | SSR           | `src/content/projects.ts` + home sections                                    |
+| `/[locale]/about`                | SSR           | `src/content/profile.ts`                                                     |
+| `/[locale]/work`                 | SSR + island  | `src/content/projects.ts`                                                    |
+| `/[locale]/work/[slug]`          | SSR           | `src/content/projects.ts` (+ `src/lib/content/localize.ts`)                  |
+| `/[locale]/games`                | SSR + island  | `src/content/games.ts`                                                       |
+| `/[locale]/games/[slug]`         | SSR           | `src/content/games.ts`                                                       |
+| `/[locale]/archive`              | SSR + island  | `src/content/gallery.ts`                                                     |
+| `/[locale]/archive/[collection]` | SSR           | `src/content/gallery.ts`                                                     |
+| `/[locale]/archive/saved`        | SSR + island  | `src/content/gallery.ts` + `localStorage` (`m4_saved_frames`)                |
+| `/[locale]/logs`                 | SSR (ISR 24h) | `src/lib/blog/get-posts.ts` → dev.to API (`username=markyu`)                 |
+| `/[locale]/logs/[slug]`          | SSR (ISR 24h) | `src/lib/blog/get-post.ts` → dev.to API                                      |
+| `/[locale]/media`                | SSR           | `src/content/media.ts`                                                       |
+| `/[locale]/resources`            | SSR + island  | `src/content/resources.ts`                                                   |
+| `/[locale]/contact`              | SSR + form    | `src/content/services.ts` + server action `_actions.ts` (Resend + Turnstile) |
+| `/[locale]/notes`                | SSR (empty)   | none yet — `EmptyArchiveState` only                                          |
+| `/[locale]/shop`                 | SSR (stub)    | none yet                                                                     |
 
-`localePrefix: "always"` (locales: `en`, `zh`). **No `middleware.ts`
-exists** at root or under `src/`. Locale routing works via the
-`[locale]` segment and next-intl's `routing.ts` alone. Adding Supabase
-SSR will require introducing a `middleware.ts` that composes with
-next-intl's middleware — this is a non-trivial integration point (§5.4).
+`localePrefix: "always"` (locales: `en`, `zh`). Request interception is already
+implemented in `src/proxy.ts`, where Next 16 proxy composes next-intl locale
+negotiation with Supabase session refresh. Do not add a legacy
+`middleware.ts` alongside it.
 
 ### 1.2 Content sources
 
@@ -304,7 +301,7 @@ profile populated from OAuth metadata (`name`, `avatar_url`).
 
 - `user_id uuid references profiles(id) on delete cascade`
 - `item_type text not null check (item_type in
-  ('project','gallery','log','game','resource','note'))`
+('project','gallery','log','game','resource','note'))`
 - `item_key text not null`
 - `saved_at timestamptz default now()`
 - `primary key (user_id, item_type, item_key)`
@@ -316,11 +313,11 @@ profile populated from OAuth metadata (`name`, `avatar_url`).
 - `parent_id uuid references comments(id) on delete cascade` (flat in
   MVP — we set `parent_id` but UI doesn't render nested threads yet)
 - `item_type text not null check (item_type in
-  ('project','gallery','log','game','note'))`
+('project','gallery','log','game','note'))`
 - `item_key text not null`
 - `body text not null check (char_length(body) between 1 and 2000)`
 - `status text not null default 'pending' check (status in
-  ('pending','approved','rejected','hidden'))`
+('pending','approved','rejected','hidden'))`
 - `is_edited boolean not null default false`
 - `created_at`, `updated_at`.
 - Indexes: `(item_type, item_key, status, created_at desc)`,
@@ -392,7 +389,7 @@ header. Not on the homepage tiles (keeps the home quiet).
 - Body rendered as **plain text** (escape on output), no HTML/MDX. URL
   auto-linking is optional — recommend not, to dodge phishing surface.
 - Edit / delete own comments allowed while `status in
-  ('pending','rejected','hidden')`; `approved` comments are
+('pending','rejected','hidden')`; `approved` comments are
   edit-locked (or marked `is_edited=true` if we allow editing).
 
 Mounted on: work detail, log detail, gallery lightbox, game detail.
@@ -452,13 +449,13 @@ Note in §13.
 
 Policies (high-level — full SQL lands in the migration):
 
-| Table              | Read                                          | Insert                              | Update                                              | Delete                          |
-| ------------------ | --------------------------------------------- | ----------------------------------- | --------------------------------------------------- | ------------------------------- |
-| `profiles`         | public (`public_profile=true` or own row)     | trigger only                        | own row, except `role` (admin only)                 | own row                         |
-| `user_preferences` | own row                                       | own row                             | own row                                             | own row                         |
-| `user_saved_items` | own rows                                      | own rows                            | own rows                                            | own rows                        |
-| `comments`         | approved comments; own + admin see all states | signed-in as self                   | own row when status≠'approved'; admin status field  | own row; admin any              |
-| `admin_settings`   | admin                                         | admin                               | admin                                               | admin                           |
+| Table              | Read                                          | Insert            | Update                                             | Delete             |
+| ------------------ | --------------------------------------------- | ----------------- | -------------------------------------------------- | ------------------ |
+| `profiles`         | public (`public_profile=true` or own row)     | trigger only      | own row, except `role` (admin only)                | own row            |
+| `user_preferences` | own row                                       | own row           | own row                                            | own row            |
+| `user_saved_items` | own rows                                      | own rows          | own rows                                           | own rows           |
+| `comments`         | approved comments; own + admin see all states | signed-in as self | own row when status≠'approved'; admin status field | own row; admin any |
+| `admin_settings`   | admin                                         | admin             | admin                                              | admin              |
 
 Service-role key, if eventually needed, is `SUPABASE_SERVICE_ROLE_KEY`
 on `server` only, never in `runtimeEnv`'s `client` side, and never
@@ -590,7 +587,7 @@ repo CLAUDE.md:
      in the Supabase SQL editor after first sign-in.
    - `ADMIN_BOOTSTRAP_EMAIL` env var → `handle_new_user` trigger sets
      `role='admin'` on match.
-   Recommend the first (no env var coupling).
+     Recommend the first (no env var coupling).
 
 Once these are answered, Phase 2 (package install, lib scaffolding) can
 begin. **Until then this document is the only artifact.**

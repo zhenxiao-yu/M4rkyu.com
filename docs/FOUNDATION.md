@@ -26,27 +26,26 @@ don't have to grep the whole tree. Pair with the doctrine docs:
 
 ## Theming
 
-- Library: `next-themes` (`src/components/theme/theme-provider.tsx`,
-  mounted inside `[locale]/layout.tsx`).
+- Library: owned provider in `src/components/theme/theme-provider.tsx`.
+  The before-paint bootstrap script lives in `src/app/layout.tsx`.
 - Attribute contract: `[data-theme="light" | "dark"]` on `<html>`.
 - View Transitions: `ThemeSwitcher` opts into
   `document.startViewTransition()` when available, plays the theme-sweep
   keyframe in `globals.css` (circle expanding from click position).
-- Adding a third theme is CSS-only: declare a new
-  `[data-theme="..."]` block in `globals.css`, register the theme name
-  with `next-themes`. No component changes required.
+- Adding a third theme requires extending the provider theme union and
+  declaring a new `[data-theme="..."]` block in `globals.css`.
 
 ## Design tokens (in `:root`, light)
 
-| Group | Tokens |
-|-------|--------|
-| Colour | `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, `--border`, `--input`, `--ring`, `--signal`, `--success`, `--warning` |
-| Motion | `--motion-micro` 120ms · `--motion-fast` 180ms · `--motion-medium` 280ms · `--motion-slow` 500ms · `--motion-cinematic` 800ms |
-| Easing | `--ease-premium` (cubic-bezier(0.2, 0.7, 0.2, 1)) |
-| Layout | `--dock-h` (sticky header reserved flow) |
-| Radius | `--radius` (0.5rem) + Tailwind `@theme` aliases sm/md/lg/xl |
-| Type | `--font-sans` (Geist) · `--font-mono` (Geist Mono) · `--font-display` (Syne) · `--font-pixel` (VT323; `:lang(zh)` rewires it to Syne) |
-| Atmospheric | `.bg-cyber-grid` · `.noise-layer` · `.scanline-layer` · `.archive-vignette` · `.contact-sheet` · `.placeholder-noise` |
+| Group       | Tokens                                                                                                                                                                                                                                        |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Colour      | `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, `--border`, `--input`, `--ring`, `--signal`, `--success`, `--warning` |
+| Motion      | `--motion-micro` 120ms · `--motion-fast` 180ms · `--motion-medium` 280ms · `--motion-slow` 500ms · `--motion-cinematic` 800ms                                                                                                                 |
+| Easing      | `--ease-premium` (cubic-bezier(0.2, 0.7, 0.2, 1))                                                                                                                                                                                             |
+| Layout      | `--dock-h` (sticky header reserved flow)                                                                                                                                                                                                      |
+| Radius      | `--radius` (0.5rem) + Tailwind `@theme` aliases sm/md/lg/xl                                                                                                                                                                                   |
+| Type        | `--font-sans` (Geist) · `--font-mono` (Geist Mono) · `--font-display` (Syne) · `--font-pixel` (VT323; `:lang(zh)` rewires it to Syne)                                                                                                         |
+| Atmospheric | `.bg-cyber-grid` · `.noise-layer` · `.scanline-layer` · `.archive-vignette` · `.contact-sheet` · `.placeholder-noise`                                                                                                                         |
 
 Dark mode mirrors the colour group under `[data-theme="dark"]` —
 motion / easing / radius are inherited from `:root`.
@@ -55,12 +54,12 @@ motion / easing / radius are inherited from `:root`.
 
 Stock Tailwind v4 scale (no overrides):
 
-| Token | Width |
-|-------|-------|
-| `sm:` | 640px |
-| `md:` | 768px |
-| `lg:` | 1024px |
-| `xl:` | 1280px |
+| Token  | Width  |
+| ------ | ------ |
+| `sm:`  | 640px  |
+| `md:`  | 768px  |
+| `lg:`  | 1024px |
+| `xl:`  | 1280px |
 | `2xl:` | 1536px |
 
 Layout shifts at `sm:` (typography), `lg:` (desktop nav reveal, full
@@ -97,34 +96,34 @@ Cmd-K trigger). Pages target 360 / 768 / 1280 / 1920 widths per
 Validated at module load through `@t3-oss/env-nextjs`. Required keys
 fail the build with a descriptive error, not a silent prod 500.
 
-| Key | Scope | Required | Purpose |
-|-----|-------|----------|---------|
-| `RESEND_API_KEY` | server | yes | Resend client for `/contact` |
-| `INQUIRY_FROM_EMAIL` | server | yes | Resend `from:` (must be on a verified domain) |
-| `INQUIRY_TO_EMAIL` | server | yes | Inbox that receives inquiries |
-| `TURNSTILE_SECRET_KEY` | server | optional | Cloudflare Turnstile verify; omit for local dev |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | client | optional | Renders Turnstile widget when present |
-| `NEXT_PUBLIC_FIREBASE_*` | client | optional | Firebase Web SDK (see `.env.example`) |
-| `NEXT_DIST_DIR` | runtime | optional | Override `.next` output dir (Windows EISDIR workaround) |
-| `ANALYZE` | runtime | optional | `npm run analyze` sets this to `"true"` |
+| Key                              | Scope   | Required | Purpose                                                 |
+| -------------------------------- | ------- | -------- | ------------------------------------------------------- |
+| `RESEND_API_KEY`                 | server  | yes      | Resend client for `/contact`                            |
+| `INQUIRY_FROM_EMAIL`             | server  | yes      | Resend `from:` (must be on a verified domain)           |
+| `INQUIRY_TO_EMAIL`               | server  | yes      | Inbox that receives inquiries                           |
+| `TURNSTILE_SECRET_KEY`           | server  | optional | Cloudflare Turnstile verify; omit for local dev         |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | client  | optional | Renders Turnstile widget when present                   |
+| `NEXT_PUBLIC_FIREBASE_*`         | client  | optional | Firebase Web SDK (see `.env.example`)                   |
+| `NEXT_DIST_DIR`                  | runtime | optional | Override `.next` output dir (Windows EISDIR workaround) |
+| `ANALYZE`                        | runtime | optional | `npm run analyze` sets this to `"true"`                 |
 
 Add new keys to `src/lib/env.ts` **and** `.env.example`. Update this
 table in the same PR.
 
 ## Integrations
 
-| Service | Use | File |
-|---------|-----|------|
-| dev.to | Syndicated post timeline, palette index, notification feed | `src/lib/blog/devto.ts` + `get-posts.ts` |
-| Resend | `/contact` inquiry send | `src/lib/email/client.ts` + `_actions.ts` |
-| React Email | Inquiry template HTML + plaintext | `src/lib/email/templates/inquiry.tsx` |
-| Cloudflare Turnstile | `/contact` spam protection | `src/lib/server/turnstile.ts` + client widget in `_contact-form.tsx` |
-| Vercel Analytics | Page view + Web Vitals | `src/app/layout.tsx` |
-| Vercel Speed Insights | Real-user perf | `src/app/layout.tsx` |
-| `next-intl` | en / zh routing + translations | `src/i18n/routing.ts`, `messages/` |
-| `next-themes` | Light / dark + view-transition sweep | `src/components/theme/*` |
-| `motion/react` | Component-level animation (notification bell, blur fade, hero) | mixed |
-| GSAP | Hero boot sequence | `src/components/sections/hero-boot-sequence.tsx` |
+| Service               | Use                                                            | File                                                                 |
+| --------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
+| dev.to                | Syndicated post timeline, palette index, notification feed     | `src/lib/blog/devto.ts` + `get-posts.ts`                             |
+| Resend                | `/contact` inquiry send                                        | `src/lib/email/client.ts` + `_actions.ts`                            |
+| React Email           | Inquiry template HTML + plaintext                              | `src/lib/email/templates/inquiry.tsx`                                |
+| Cloudflare Turnstile  | `/contact` spam protection                                     | `src/lib/server/turnstile.ts` + client widget in `_contact-form.tsx` |
+| Vercel Analytics      | Page view + Web Vitals                                         | `src/app/layout.tsx`                                                 |
+| Vercel Speed Insights | Real-user perf                                                 | `src/app/layout.tsx`                                                 |
+| `next-intl`           | en / zh routing + translations                                 | `src/i18n/routing.ts`, `messages/`                                   |
+| owned theme provider  | Light / dark + view-transition sweep                           | `src/components/theme/*`                                             |
+| `motion/react`        | Component-level animation (notification bell, blur fade, hero) | mixed                                                                |
+| GSAP                  | Hero boot sequence                                             | `src/components/sections/hero-boot-sequence.tsx`                     |
 
 ## Scripts
 

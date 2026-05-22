@@ -1,5 +1,9 @@
 # Performance Audit
 
+> **Current-status note:** this audit predates the removal of `/portal` and the
+> replacement of `next-themes` with the owned theme provider. Treat portal rows
+> and `next-themes` mentions as historical until this audit is rerun.
+
 Surgical audit of M4RKYU.SYS first-load performance. No redesign, no
 new dependencies, no removal of the cyber-pixel system. Findings and
 fixes target initial JS, image strategy, atmospheric effects, fonts,
@@ -7,16 +11,14 @@ and per-route budgets.
 
 ## 1. Measurement constraints
 
-- **Local production build (Windows, H: drive):** blocked by a known
-  `readlink EISDIR` on `src/app/robots.ts` regardless of
-  `NEXT_DIST_DIR`. Same caveat documented in [CLAUDE.md](../CLAUDE.md).
-- **CI / Vercel build:** green on every recent PR — bundle sizes
-  recorded there are the source of truth. Re-measure against the
-  Vercel preview deployed for this PR.
+- **Local production build:** currently expected to run with `npm run build`.
+  If Windows filesystem locks appear, use `npm run clean` and/or an isolated
+  `NEXT_DIST_DIR` before rerunning.
+- **CI / Vercel build:** remains the deployment source of truth. Re-measure
+  field-facing performance against the Vercel preview deployed for the PR.
 - **Speed Insights:** `@vercel/speed-insights` is already wired into
   the root layout — field data accumulates on production.
-- **Lighthouse:** must be run against the Vercel preview (local build
-  blocked).
+- **Lighthouse:** prefer the Vercel preview for deploy-parity results.
 
 This audit therefore relies on (a) the most recent CI build output,
 (b) static analysis of the source tree, (c) explicit reasoning about
@@ -24,18 +26,18 @@ what is and is not in the initial JS payload.
 
 ## 2. Likely LCP element per route
 
-| Route        | Likely LCP element                              | Strategy in place |
-| ------------ | ----------------------------------------------- | ----------------- |
-| `/`          | `<h1>` headline inside `HeroSection`            | Text. No image to prioritize. `BlurFade` wraps the column — animates after hydration, not before paint. |
-| `/work`      | Section heading + first project tile            | Text + lazy `next/image` for tile thumbs. |
-| `/work/[slug]` | Cover image in case-study hero                | `priority` set on the cover `<Image>` ([work/[slug]/page.tsx:113](../src/app/[locale]/work/[slug]/page.tsx#L113)). |
-| `/archive`   | First gallery tile (above the fold)             | `<Image fill sizes=...>`, no `priority`. Acceptable: text heading paints first; tile fades in. |
-| `/archive/[collection]` | Collection hero image                | `<Image fill sizes=...>`. Add `priority` for first tile when collection has a hero — TODO follow-up. |
-| `/logs`      | Pinned post card hero                            | `<Image>` with `sizes`. Adequate. |
-| `/logs/[slug]` | Post hero / first inline image                 | Markdown-driven; first image is lazy-loaded via `post-body.tsx`. |
-| `/games`     | First game tile                                  | Lazy image. |
-| `/games/[slug]` | Cover image                                   | `priority` set ([games/[slug]/page.tsx:100](../src/app/[locale]/games/[slug]/page.tsx#L100)). |
-| `/portal`    | Particles canvas + headline text                 | Canvas mounts post-hydration; text is LCP. |
+| Route                   | Likely LCP element                   | Strategy in place                                                                                                  |
+| ----------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `/`                     | `<h1>` headline inside `HeroSection` | Text. No image to prioritize. `BlurFade` wraps the column — animates after hydration, not before paint.            |
+| `/work`                 | Section heading + first project tile | Text + lazy `next/image` for tile thumbs.                                                                          |
+| `/work/[slug]`          | Cover image in case-study hero       | `priority` set on the cover `<Image>` ([work/[slug]/page.tsx:113](../src/app/[locale]/work/[slug]/page.tsx#L113)). |
+| `/archive`              | First gallery tile (above the fold)  | `<Image fill sizes=...>`, no `priority`. Acceptable: text heading paints first; tile fades in.                     |
+| `/archive/[collection]` | Collection hero image                | `<Image fill sizes=...>`. Add `priority` for first tile when collection has a hero — TODO follow-up.               |
+| `/logs`                 | Pinned post card hero                | `<Image>` with `sizes`. Adequate.                                                                                  |
+| `/logs/[slug]`          | Post hero / first inline image       | Markdown-driven; first image is lazy-loaded via `post-body.tsx`.                                                   |
+| `/games`                | First game tile                      | Lazy image.                                                                                                        |
+| `/games/[slug]`         | Cover image                          | `priority` set ([games/[slug]/page.tsx:100](../src/app/[locale]/games/[slug]/page.tsx#L100)).                      |
+| `/portal`               | Particles canvas + headline text     | Canvas mounts post-hydration; text is LCP.                                                                         |
 
 ## 3. INP risks
 
@@ -81,7 +83,7 @@ Mounted in the root layout, ships on every page:
 Mounted in `[locale]/layout.tsx`, ships on every locale page:
 
 - `NextIntlClientProvider` — required for client `useTranslations`.
-- `ThemeProvider` (`next-themes`) — required for dark/light.
+- Owned `ThemeProvider` — required for dark/light.
 - `TooltipProvider` (Radix) — required for any `<Tooltip>` consumer.
 - `CommandPaletteProvider` → statically imports `CommandPalette`,
   which pulls in **cmdk + 14 lucide icons + Radix Dialog + the entire
@@ -116,14 +118,14 @@ Per-page hot spots:
 
 ## 8. Atmospheric effects audit
 
-| Effect | Location | Status |
-| ------ | -------- | ------ |
-| `noise-layer` + `scanline-layer` | hero section | CSS-only. No JS cost. |
-| `Particles` canvas | `/portal` only | Reduced-motion gated. Canvas, not DOM. |
-| `PixelTransitionOverlay` | route transitions | Reduced-motion → returns null. Phase-9 fix. |
-| `StatusPulse` halo | status badges | Reduced-motion skips halo. Phase-9 fix. |
-| Lenis smooth scroll | every route | **No reduced-motion gate.** Fix below. |
-| `BlurFade`, `FadeIn`, `Stagger` | content sections | `BlurFade` uses `useReducedMotion`. Others use `viewport whileInView` — animations only fire on visible content, so offscreen sections don't run. |
+| Effect                           | Location          | Status                                                                                                                                            |
+| -------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `noise-layer` + `scanline-layer` | hero section      | CSS-only. No JS cost.                                                                                                                             |
+| `Particles` canvas               | `/portal` only    | Reduced-motion gated. Canvas, not DOM.                                                                                                            |
+| `PixelTransitionOverlay`         | route transitions | Reduced-motion → returns null. Phase-9 fix.                                                                                                       |
+| `StatusPulse` halo               | status badges     | Reduced-motion skips halo. Phase-9 fix.                                                                                                           |
+| Lenis smooth scroll              | every route       | **No reduced-motion gate.** Fix below.                                                                                                            |
+| `BlurFade`, `FadeIn`, `Stagger`  | content sections  | `BlurFade` uses `useReducedMotion`. Others use `viewport whileInView` — animations only fire on visible content, so offscreen sections don't run. |
 
 ## 9. Fonts
 
@@ -173,22 +175,22 @@ client bundles. Negligible per file, but the codebase has scattered
 ## 11. Route budgets
 
 These are the initial-JS budgets the project should hold against on
-the Vercel build output. They are *advisory*, not enforced in CI yet.
+the Vercel build output. They are _advisory_, not enforced in CI yet.
 A future PR can wire a CI guardrail.
 
-| Route                  | First-load JS (target) | Notes |
-| ---------------------- | ---------------------- | ----- |
-| `/` (home)             | ≤ 220 KB               | Includes shared chunk + intl + theme + nav. After F.2. |
-| `/work`                | ≤ 200 KB               | Server-rendered list + tiny client filter. |
-| `/work/[slug]`         | ≤ 215 KB               | Adds case-study cover image priority. |
-| `/archive`             | ≤ 210 KB               | After F.3 (lightbox lazy). |
-| `/archive/[collection]`| ≤ 215 KB               | After F.3. |
-| `/archive/saved`       | ≤ 210 KB               | After F.3. |
-| `/logs`                | ≤ 215 KB               | Post timeline + toolbar. |
-| `/logs/[slug]`         | ≤ 225 KB               | Reading-progress + post body (shiki is server-only). |
-| `/games`               | ≤ 200 KB               | Server-rendered list. |
-| `/portal`              | ≤ 220 KB               | Includes particles canvas. |
-| `/contact`             | ≤ 200 KB               | Tiny form. |
+| Route                   | First-load JS (target) | Notes                                                  |
+| ----------------------- | ---------------------- | ------------------------------------------------------ |
+| `/` (home)              | ≤ 220 KB               | Includes shared chunk + intl + theme + nav. After F.2. |
+| `/work`                 | ≤ 200 KB               | Server-rendered list + tiny client filter.             |
+| `/work/[slug]`          | ≤ 215 KB               | Adds case-study cover image priority.                  |
+| `/archive`              | ≤ 210 KB               | After F.3 (lightbox lazy).                             |
+| `/archive/[collection]` | ≤ 215 KB               | After F.3.                                             |
+| `/archive/saved`        | ≤ 210 KB               | After F.3.                                             |
+| `/logs`                 | ≤ 215 KB               | Post timeline + toolbar.                               |
+| `/logs/[slug]`          | ≤ 225 KB               | Reading-progress + post body (shiki is server-only).   |
+| `/games`                | ≤ 200 KB               | Server-rendered list.                                  |
+| `/portal`               | ≤ 220 KB               | Includes particles canvas.                             |
+| `/contact`              | ≤ 200 KB               | Tiny form.                                             |
 
 **Shared baseline (loaded on every route):** ≤ 95 KB. After
 F.1/F.2 this should drop because Lenis + cmdk + lucide-react are
@@ -207,7 +209,7 @@ not in the shared chunk anymore.
 ## 13. Follow-ups (next PR, not this one)
 
 - Wire `@next/bundle-analyzer` as a dev-only opt-in (`ANALYZE=true
-  npm run build`) — useful but adds a devDependency, defer to a
+npm run build`) — useful but adds a devDependency, defer to a
   dedicated PR.
 - Enforce route budgets via CI (e.g. a small script that parses the
   Next build output and fails on regression).

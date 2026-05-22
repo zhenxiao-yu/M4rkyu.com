@@ -14,8 +14,7 @@ export function Toaster({ ...props }: ToasterProps) {
 
   return (
     <SonnerToaster
-      // `next-themes` may surface "system" before hydration; coerce to
-      // a valid Sonner theme to avoid a TS narrowing dance.
+      // The site provider resolves system before this reaches Sonner.
       theme={(resolvedTheme as ToasterProps["theme"]) ?? "system"}
       className="toaster group"
       style={
@@ -25,10 +24,12 @@ export function Toaster({ ...props }: ToasterProps) {
           "--normal-border": "var(--border)",
           "--success-bg": "var(--popover)",
           "--success-text": "var(--popover-foreground)",
-          "--success-border": "color-mix(in srgb, var(--success) 35%, var(--border))",
+          "--success-border":
+            "color-mix(in srgb, var(--success) 35%, var(--border))",
           "--error-bg": "var(--popover)",
           "--error-text": "var(--popover-foreground)",
-          "--error-border": "color-mix(in srgb, var(--destructive) 40%, var(--border))",
+          "--error-border":
+            "color-mix(in srgb, var(--destructive) 40%, var(--border))",
         } as React.CSSProperties
       }
       toastOptions={{

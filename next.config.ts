@@ -1,12 +1,12 @@
 import createNextIntlPlugin from "next-intl/plugin";
-import createMDX from "@next/mdx";
 import nextBundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  distDir: process.env.NEXT_DIST_DIR ?? (process.env.VERCEL ? ".next" : ".next-node22"),
+  distDir:
+    process.env.NEXT_DIST_DIR ??
+    (process.env.VERCEL ? ".next" : ".next-node22"),
   outputFileTracingRoot: process.cwd(),
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   // PR #59 route migration — preserve inbound links to the previous
   // /projects, /gallery, /blog URLs (and their slug children) by
   // issuing 308 permanent redirects to the renamed segments. Both
@@ -19,8 +19,16 @@ const nextConfig: NextConfig = {
     return [
       // /projects → /work
       { source: "/projects", destination: "/work", permanent: true },
-      { source: "/projects/:slug*", destination: "/work/:slug*", permanent: true },
-      { source: "/:locale(en|zh)/projects", destination: "/:locale/work", permanent: true },
+      {
+        source: "/projects/:slug*",
+        destination: "/work/:slug*",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|zh)/projects",
+        destination: "/:locale/work",
+        permanent: true,
+      },
       {
         source: "/:locale(en|zh)/projects/:slug*",
         destination: "/:locale/work/:slug*",
@@ -33,7 +41,11 @@ const nextConfig: NextConfig = {
         destination: "/archive/:collection*",
         permanent: true,
       },
-      { source: "/:locale(en|zh)/gallery", destination: "/:locale/archive", permanent: true },
+      {
+        source: "/:locale(en|zh)/gallery",
+        destination: "/:locale/archive",
+        permanent: true,
+      },
       {
         source: "/:locale(en|zh)/gallery/:collection*",
         destination: "/:locale/archive/:collection*",
@@ -42,7 +54,11 @@ const nextConfig: NextConfig = {
       // /blog → /logs
       { source: "/blog", destination: "/logs", permanent: true },
       { source: "/blog/:slug*", destination: "/logs/:slug*", permanent: true },
-      { source: "/:locale(en|zh)/blog", destination: "/:locale/logs", permanent: true },
+      {
+        source: "/:locale(en|zh)/blog",
+        destination: "/:locale/logs",
+        permanent: true,
+      },
       {
         source: "/:locale(en|zh)/blog/:slug*",
         destination: "/:locale/logs/:slug*",
@@ -94,7 +110,6 @@ const nextConfig: NextConfig = {
 };
 
 const withNextIntl = createNextIntlPlugin();
-const withMDX = createMDX({});
 // Wrap last so it sees the fully composed config. Runs only when
 // `ANALYZE=true` is set (via the `analyze` npm script); otherwise it's
 // a no-op and the build runs identically to before.
@@ -102,4 +117,4 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));
+export default withBundleAnalyzer(withNextIntl(nextConfig));

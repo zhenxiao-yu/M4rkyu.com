@@ -1,17 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  GeoJSON,
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-} from "react-leaflet";
-import { useTheme } from "next-themes";
+import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
+import { useTheme } from "@/components/theme/theme-provider";
 import type { Profile } from "@/content/schemas";
 
 interface TravelMapLeafletProps {
@@ -67,7 +61,7 @@ export function TravelMapLeaflet({ cities, ariaLabel }: TravelMapLeafletProps) {
     }
     return `hsl(${raw})`;
     // resolvedTheme intentionally tracked so the memo recomputes when
-    // next-themes flips the data-theme attribute.
+    // the site theme provider flips the data-theme attribute.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedTheme]);
 
@@ -92,11 +86,7 @@ export function TravelMapLeaflet({ cities, ariaLabel }: TravelMapLeafletProps) {
   }, [geo]);
 
   const visited = useMemo(
-    () =>
-      new Set(
-        cities
-          .map((c) => COUNTRY_ALIASES[c.country] ?? c.country),
-      ),
+    () => new Set(cities.map((c) => COUNTRY_ALIASES[c.country] ?? c.country)),
     [cities],
   );
 

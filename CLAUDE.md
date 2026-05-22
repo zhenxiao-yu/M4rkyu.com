@@ -26,8 +26,9 @@ npm run start               # next start
 npm run lint                # eslint src .storybook tests next.config.ts playwright.config.ts
 npm run typecheck           # tsc --noEmit --incremental false
 npm run validate            # lint + typecheck (the pre-PR gate)
-npm run format              # prettier --check
+npm run format              # legacy whole-repo prettier check; currently noisy
 npm run format:write        # prettier --write
+npm run clean               # remove generated local build/test artifacts
 npm run analyze             # ANALYZE=true next build (bundle analyzer)
 npm run storybook           # storybook dev -p 6006
 npm run build-storybook     # storybook build
@@ -59,9 +60,11 @@ npm run dev -- --hostname 127.0.0.1 --port 3000
 `en` + `zh`, `localePrefix: "always"`, default `en`). Top-level
 `src/app/{layout,page,sitemap,robots,icon}.tsx` plus the locale-less
 `opengraph-image.tsx` are infrastructure — the _site_ is everything under
-`[locale]`. The `[locale]` layer hosts route segments for `about`, `work`,
-`games`, `media`, `archive`, `resources`, `logs`, `contact`, `portal`, each
-with co-located `opengraph-image.tsx` route handlers.
+`[locale]`. Current public route segments are `about`, `work`, `games`,
+`media`, `archive`, `resources`, `logs`, `notes`, `shop`, and `contact`.
+Admin/account/auth routes also live under `[locale]`. There is no `/portal`
+route in the current app; older docs that mention it are archival drift unless
+they are explicitly updated in the same change.
 
 **i18n contract.** Every visible string routes through `next-intl` and must
 exist in _both_ `messages/en.json` and `messages/zh.json`. CJK is
@@ -107,15 +110,16 @@ leave the inline carve-out comment when you do this.
 **Server boundaries.** Server-only utilities live in `src/lib/server/`,
 forms/email in `src/lib/email/` + `src/lib/forms/`, social/share in
 `src/lib/social/`, audio in `src/lib/audio/`. Env access goes through
-`src/lib/env.ts` (`@t3-oss/env-nextjs`). Middleware (`src/middleware.ts`)
-handles the next-intl locale negotiation.
+`src/lib/env.ts` (`@t3-oss/env-nextjs`). Request interception lives in
+`src/proxy.ts` (Next 16 proxy, not legacy `middleware.ts`) and composes
+next-intl locale negotiation with Supabase session refresh.
 
 **Verification & doctrine docs.** The repo's design + workflow doctrine
 lives under `docs/` — `AI_WORKFLOW.md` (PR cadence, validation gate),
 `COPY_VOICE.md` (tone test, §6 is the bar for autonomous copy), the
-`REDESIGN_DIRECTION.md` / `UNIFIED_VISUAL_DIRECTION.md` pair (visual
-budget), and `architecture/`. When polishing on your own initiative, anchor
-choices to these.
+`REDESIGN_DIRECTION.md` / `UNIFIED_VISUAL_DIRECTION.md` pair (visual budget).
+Treat older phase docs as historical unless they match the current file tree.
+When polishing on your own initiative, anchor choices to current docs and code.
 
 ## Stack Rules
 
@@ -165,10 +169,11 @@ header" task may reasonably touch nav copy, focus styles, and a missing
 translation key in the same change. The user prefers one well-shaped commit
 over five timid ones.
 
-When polishing on your own initiative, anchor every choice to the existing
-doctrine docs (`docs/COPY_VOICE.md`, `docs/REDESIGN_DIRECTION.md`, anything
-under `docs/architecture/`). The doctrine is the budget — work within it
-freely.
+When polishing on your own initiative, anchor every choice to the current
+doctrine docs (`docs/COPY_VOICE.md`, `docs/REDESIGN_DIRECTION.md`,
+`docs/UNIFIED_VISUAL_DIRECTION.md`) and the actual file tree. The doctrine is
+the budget — work within it freely, but do not resurrect historical routes or
+libraries from stale docs.
 
 ## Vibe-Coding Operating Loop
 

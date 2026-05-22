@@ -9,12 +9,18 @@ companion: docs/UNIFIED_VISUAL_DIRECTION.md, docs/COMPONENT_MAP.md, docs/UI_LIBR
 
 # Final Site Architecture — "M4RKYU.SYS"
 
+> **Current-status note:** this document still contains historical Phase 8
+> route ideas, including `/portal`. The current app tree does not include a
+> portal route. Use `CLAUDE.md`, `README.md`, and `src/app/[locale]/` as the
+> current route source of truth until this long-form architecture doc is fully
+> refreshed.
+
 The source of truth for the post-Phase-8 site shape: IA, routes, header
 model, page-by-page wow factors, the component source matrix, motion rules,
 terminal mode, bilingual constraints, performance budget, and the PR
 roadmap that will get us there.
 
-This doc collects decisions; the *why* lives in the companions linked
+This doc collects decisions; the _why_ lives in the companions linked
 above. When this doc and an older doc disagree, **this one wins for
 structure**, the older docs win for visual tone and existing component
 contracts.
@@ -25,12 +31,12 @@ contracts.
 
 - [REDESIGN_DIRECTION.md](./REDESIGN_DIRECTION.md) — the original north
   star (premium / editorial / quiet-futuristic). Still authoritative on
-  *tone*.
+  _tone_.
 - [UNIFIED_VISUAL_DIRECTION.md](./UNIFIED_VISUAL_DIRECTION.md) — the
-  cyber-pixel hybrid thesis. Still authoritative on *visual hierarchy*
+  cyber-pixel hybrid thesis. Still authoritative on _visual hierarchy_
   and the 70 / 20 / 10 split.
 - [COMPONENT_MAP.md](./COMPONENT_MAP.md) — page-by-page composition for
-  the *current* route structure. Will be migrated to the new routes as
+  the _current_ route structure. Will be migrated to the new routes as
   PR #59 lands.
 - [UI_LIBRARY_STRATEGY.md](./UI_LIBRARY_STRATEGY.md) — which library each
   primitive comes from (shadcn / Magic UI / owned-pixel / PixelAct /
@@ -43,7 +49,7 @@ contracts.
 ## 1. Final identity
 
 > **M4RKYU.SYS — a premium cyber-pixel command center.**
-> A bilingual, editorially-paced archive that *boots up* like a developer
+> A bilingual, editorially-paced archive that _boots up_ like a developer
 > console. Software, games, and quiet frames — one operator.
 
 Voice: **indie, precise, quietly cinematic, technically literate.**
@@ -144,6 +150,7 @@ desktop dropdown groups as collapsible sections.
 ### 4.3 Dropdown contents
 
 **Work**
+
 ```
 All Work          → /work
 Software          → /work?type=software
@@ -154,6 +161,7 @@ Experiments       → /work?type=experiment
 ```
 
 **Archive**
+
 ```
 Visual Archive    → /archive
 Photography       → /archive/photography
@@ -163,6 +171,7 @@ Collections       → /archive (collection list)
 ```
 
 **Logs**
+
 ```
 Writing           → /logs?type=writing
 Devlog            → /logs?type=devlog
@@ -172,13 +181,13 @@ Resources         → /resources
 
 ### 4.4 Primitives used
 
-| Surface         | Primitive                    |
-| --------------- | ---------------------------- |
-| Desktop dropdown| shadcn `NavigationMenu`      |
-| Mobile menu     | shadcn `Sheet`               |
-| Cmd-K palette   | shadcn `Command`             |
-| Theme + lang    | existing owned switchers     |
-| Sound toggle    | existing owned toggle        |
+| Surface          | Primitive                |
+| ---------------- | ------------------------ |
+| Desktop dropdown | shadcn `NavigationMenu`  |
+| Mobile menu      | shadcn `Sheet`           |
+| Cmd-K palette    | shadcn `Command`         |
+| Theme + lang     | existing owned switchers |
+| Sound toggle     | existing owned toggle    |
 
 **Do not custom-build accessibility on top of nav.** Use shadcn/Radix
 behavior; theme the surface with pixel tokens only.
@@ -191,53 +200,66 @@ Compressed layout per page. Full composition lives (or will live, post
 migration) in [COMPONENT_MAP.md](./COMPONENT_MAP.md).
 
 ### 5.1 Home (`/[locale]`)
+
 CommandHero · numbered capability spine · featured work strip · recent
 logs strip · archive teaser · HUD strip.
 
 ### 5.2 Work index (`/[locale]/work`)
+
 Filter chips (All / Software / Games / AI / Enterprise / Experiments) ·
 MissionModuleCard grid · selector glyph on hover.
 
 ### 5.3 Work detail (`/[locale]/work/[slug]`)
+
 ProjectCartridge header (category-aware: SYSTEM MODULE / GAME MODULE) ·
 metadata strip · long-form sections · media module · related work.
 
 ### 5.4 Archive index (`/[locale]/archive`)
+
 Contact-sheet grid (photographic, **not** pixelated, **not** cyan-tinted)
 · hover metadata reveal · quiet lightbox · collection links.
 
 ### 5.5 Archive collection (`/[locale]/archive/[collection]`)
+
 Film-slate opener (name · place/date · short note · frame count) · hero
 print frame · contact-sheet grid for the collection.
 
 ### 5.6 Logs index (`/[locale]/logs`)
+
 Dated timeline · log type chip · reading time · tag channel · hover
 preview line.
 
 ### 5.7 Log detail (`/[locale]/logs/[slug]`)
+
 Editorial title · mono metadata strip · system-label tags · calm
 readable body (**no pixel font in article body**) · related logs.
 
 ### 5.8 Resources (`/[locale]/resources`)
+
 Inventory-style categories · resource cards with "why it exists" ·
 optional FileTree stack panel.
 
 ### 5.9 About (`/[locale]/about`)
+
 Portrait/avatar · current-focus panel · timeline · values · one human
 line.
 
 ### 5.10 Contact (`/[locale]/contact`)
+
 Big email headline · terminal prompt label · contact methods as command
 rows · form as secondary · restrained success state.
 
 ### 5.11 Resume (`/[locale]/resume`)
+
 Clean document layout · experience as system records · skills by
 category · download CTA · print-friendly CSS.
 
 ### 5.12 Terminal (`/[locale]/terminal`)
+
 See §9.
 
 ### 5.13 Portal (`/[locale]/portal`)
+
 Locked kernel screen · one interactive reveal · link back to main site.
 **Not in main nav.**
 
@@ -247,21 +269,21 @@ Locked kernel screen · one interactive reveal · link back to main site.
 
 Every page gets **one** signature moment — not zero, not five.
 
-| Route        | Wow factor                                            | Status |
-| ------------ | ----------------------------------------------------- | ------ |
-| `/`          | Cinematic boot-sequence command hero                  | ✓ shipped (PR #63 — GSAP hero boot sequence + SplitText headline) |
-| `/work`      | Mission-file deck reveal — tiles drop in with stagger | ✓ shipped (GSAP `WorkDeckReveal`) |
-| `/work/[s]`  | System cartridge case-study header                    | pending |
-| `/archive`   | Contact-sheet flash — random-stagger frame reveal     | ✓ shipped (GSAP `ContactSheetFlash`) |
-| `/archive/[c]` | Film-slate opener                                   | pending |
-| `/logs`      | Field-note timeline                                   | pending |
-| `/logs/[s]`  | Field-report article header                           | pending |
-| `/resources` | Stack map / tool inventory                            | pending |
-| `/about`     | Operator dossier                                      | pending |
-| `/contact`   | Open-channel console                                  | pending |
-| `/resume`    | Printable system dossier                              | pending |
-| `/terminal`  | Navigable portfolio shell                             | pending |
-| `/portal`    | Controlled easter egg                                 | pending |
+| Route          | Wow factor                                            | Status                                                            |
+| -------------- | ----------------------------------------------------- | ----------------------------------------------------------------- |
+| `/`            | Cinematic boot-sequence command hero                  | ✓ shipped (PR #63 — GSAP hero boot sequence + SplitText headline) |
+| `/work`        | Mission-file deck reveal — tiles drop in with stagger | ✓ shipped (GSAP `WorkDeckReveal`)                                 |
+| `/work/[s]`    | System cartridge case-study header                    | pending                                                           |
+| `/archive`     | Contact-sheet flash — random-stagger frame reveal     | ✓ shipped (GSAP `ContactSheetFlash`)                              |
+| `/archive/[c]` | Film-slate opener                                     | pending                                                           |
+| `/logs`        | Field-note timeline                                   | pending                                                           |
+| `/logs/[s]`    | Field-report article header                           | pending                                                           |
+| `/resources`   | Stack map / tool inventory                            | pending                                                           |
+| `/about`       | Operator dossier                                      | pending                                                           |
+| `/contact`     | Open-channel console                                  | pending                                                           |
+| `/resume`      | Printable system dossier                              | pending                                                           |
+| `/terminal`    | Navigable portfolio shell                             | pending                                                           |
+| `/portal`      | Controlled easter egg                                 | pending                                                           |
 
 Cross-route route-transition engine: View Transitions API via
 `TransitionLink` (see
@@ -284,11 +306,13 @@ Five sources, strict boundaries. The detailed rules are in
 | One controlled hero moment      | **Aceternity** (max one route)      |
 
 ### 7.1 shadcn used for
+
 DropdownMenu, NavigationMenu, Sheet, Dialog, Command, Tabs, Popover,
 Select, Form, Input, Textarea, ScrollArea, Accordion, Carousel, Sonner,
 AspectRatio, Avatar.
 
 ### 7.2 Magic UI used for
+
 BlurFade, BentoGrid, BorderBeam, AnimatedGridPattern, PointerSpotlight,
 ShineBorder, NumberTicker, AnimatedBeam, ShimmerButton, FileTree.
 
@@ -297,6 +321,7 @@ gradients. No neon overload. No body-text effects. No particles on
 mobile. No more than one BorderBeam in view at once.
 
 ### 7.3 Owned pixel primitives
+
 PixelPanel, PixelButton, SystemBadge, SectionFrame, StatusPulse,
 PixelTransitionOverlay, SoundToggle, CommandHero, GameHud,
 MissionModuleCard, ProjectCartridge.
@@ -305,11 +330,13 @@ These accept tokens only — no hardcoded hex, no `bg-zinc-*` palette
 names. Storybook coverage matrix lives in §13.
 
 ### 7.4 PixelAct UI
+
 Inspiration only. Pull design ideas (button, terminal input, pixel
 border, status chip) but do **not** install or replace existing shadcn
 primitives.
 
 ### 7.5 Aceternity
+
 At most one controlled moment site-wide (e.g. hero spotlight OR
 container scroll OR link preview — pick one). Not for 3D cards,
 vortex backgrounds, sparkles, or loud gradients.
@@ -321,7 +348,7 @@ vortex backgrounds, sparkles, or loud gradients.
 ### 8.1 Rules
 
 - One atmospheric effect per viewport.
-- Transitions are *cinematic*, not playful: 200–400ms ease-out for
+- Transitions are _cinematic_, not playful: 200–400ms ease-out for
   microinteractions, 400–700ms for route transitions.
 - Pixel transitions on route change (PixelTransitionOverlay) cap at
   one per navigation event.
@@ -483,15 +510,15 @@ into their own PRs.
 These items shipped as `DEFERRED` in [PHASE_8_AUDIT.md](./PHASE_8_AUDIT.md)
 and need to be addressed during the matching roadmap PR:
 
-| Item                                              | Lands in PR |
-| ------------------------------------------------- | ----------- |
-| Reduced-motion early-returns (PixelTransitionOverlay, StatusPulse) | #57 |
-| GameHud `<nav><ul>` semantics                     | #57         |
-| SoundToggle tooltip dedupe                        | #68         |
-| Atmospheric layer WCAG AA contrast measurement    | #70         |
-| Storybook coverage matrix for pixel primitives    | #57         |
-| Token-only styling audit (no `bg-zinc-*`, no hex) | #57         |
-| `@axe-core/playwright` + Lighthouse CI            | #70         |
+| Item                                                               | Lands in PR |
+| ------------------------------------------------------------------ | ----------- |
+| Reduced-motion early-returns (PixelTransitionOverlay, StatusPulse) | #57         |
+| GameHud `<nav><ul>` semantics                                      | #57         |
+| SoundToggle tooltip dedupe                                         | #68         |
+| Atmospheric layer WCAG AA contrast measurement                     | #70         |
+| Storybook coverage matrix for pixel primitives                     | #57         |
+| Token-only styling audit (no `bg-zinc-*`, no hex)                  | #57         |
+| `@axe-core/playwright` + Lighthouse CI                             | #70         |
 
 ---
 

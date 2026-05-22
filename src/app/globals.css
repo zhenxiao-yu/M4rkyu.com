@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
-/* next-themes writes data-theme="dark" on <html>; bridge that to
- * Tailwind 4's `dark:` variant so component-level dark utilities
- * (icons, color tweaks) just work. */
+/* The site theme provider writes data-theme="dark" on <html>; bridge
+ * that to Tailwind 4's `dark:` variant so component-level dark
+ * utilities (icons, color tweaks) just work. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* Theme view-transition: when ThemeSwitcher sets data-theme-sweep="on"

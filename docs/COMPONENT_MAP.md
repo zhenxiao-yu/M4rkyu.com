@@ -812,9 +812,12 @@ why-this-exists, link, optional pricing chip.
 
 ---
 
-## 13. Portal — `/[locale]/portal`
+## 13. Portal — removed
 
-Source today: [src/app/[locale]/portal/page.tsx](../src/app/[locale]/portal/page.tsx).
+The previous `/[locale]/portal` surface no longer exists in the current app
+tree. Do not recreate it from this historical map unless a new phase explicitly
+restores the route and updates the route map, navigation, sitemap, and docs in
+the same change.
 
 **Purpose.** The one weird, atmospheric, un-marketing page. Easter egg
 energy. Outside main nav cadence.

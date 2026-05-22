@@ -99,11 +99,22 @@ Before pushing any PR:
 npm run validate    # lint + typecheck
 ```
 
-Both must be silent. Local `npm run build` hits a known Windows
-EISDIR issue — Vercel CI on Linux is the source of truth for the
-production build. The PR CI workflow
-(`.github/workflows/pr.yml`) runs `validate` plus the Playwright
-smoke spec on every PR; merges are blocked on either failing.
+Both must be silent. For code, routing, dependency, or config changes, also run
+the closest affected gate first and then broaden as needed:
+
+```bash
+npm run build
+npm run build-storybook
+npm run test:e2e
+```
+
+The PR CI workflow (`.github/workflows/pr.yml`) runs `validate` plus the
+Playwright smoke spec on every PR; merges are blocked on either failing.
+
+`npm run format` is still a whole-repo legacy Prettier check and is currently
+noisy against old files. For now, format the files you touch with
+`npx prettier --write <paths>` and do not use global format output as a merge
+signal until the repo has a dedicated formatting baseline commit.
 
 If validate is silent but the PR CI Playwright job fails, **read
 the failure carefully**. The new PR CI in Phase 5.3 caught a stale

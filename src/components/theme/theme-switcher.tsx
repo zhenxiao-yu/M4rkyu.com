@@ -14,8 +14,8 @@ import { cn, FOCUS_RING } from "@/lib/utils";
  * Single-icon dark ↔ light toggle. Both icons are rendered; the
  * Tailwind `dark:` variant hides whichever isn't current. This
  * avoids the JS-side `mounted` dance and any hydration mismatch —
- * the SSR markup matches the client, then `next-themes` flips the
- * `data-theme` attribute which the CSS selectors respond to.
+ * the SSR markup matches the client, then the site theme provider
+ * flips the `data-theme` attribute which the CSS selectors respond to.
  *
  * Clicking always lands the visitor on the *opposite* of the
  * currently-active resolved theme. When the View Transitions API

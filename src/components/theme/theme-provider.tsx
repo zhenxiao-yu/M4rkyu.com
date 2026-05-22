@@ -48,9 +48,8 @@ function systemPreference(): ResolvedTheme {
 /**
  * Suppress CSS transitions for one frame so a theme swap flips
  * instantly instead of fading every transitioning element over its
- * normal duration. Mirrors `next-themes`'s `disableTransitionOnChange`
- * behavior. Returns a cleanup that re-enables on the next animation
- * frame, after the new attribute has had a chance to apply.
+ * normal duration. Returns a cleanup that re-enables on the next
+ * animation frame, after the new attribute has had a chance to apply.
  */
 function suppressTransitions(): () => void {
   if (typeof document === "undefined") return () => undefined;
@@ -73,12 +72,10 @@ function suppressTransitions(): () => void {
 }
 
 /**
- * Hand-rolled theme provider — replaces next-themes, which emits a
- * "script tag in client component" warning under React 19. The
- * before-paint `data-theme` attribute is set by an inline `<script>`
- * in `src/app/layout.tsx` (server component, so no warning); this
- * provider keeps a React mirror of the same state and writes it back
- * to localStorage + the `data-theme` attribute as the user changes it.
+ * Owned theme provider. The before-paint `data-theme` attribute is set
+ * by `src/app/layout.tsx`; this provider keeps a React mirror of the
+ * same state and writes it back to localStorage + the `data-theme`
+ * attribute as the user changes it.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   // Initialize from storage on first client render so the React tree
@@ -100,8 +97,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return () => media.removeEventListener("change", update);
   }, []);
 
-  const resolvedTheme: ResolvedTheme =
-    theme === "system" ? systemPref : theme;
+  const resolvedTheme: ResolvedTheme = theme === "system" ? systemPref : theme;
 
   // Reflect resolvedTheme into `<html data-theme>` so the CSS variants
   // (`@custom-variant dark` in globals.css) update.
@@ -148,9 +144,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Same shape as `next-themes`'s `useTheme` so consumers stay
- * mechanically identical. If called outside a provider (e.g. early
- * SSR), returns a safe no-op shape instead of throwing.
+ * If called outside a provider (e.g. early SSR), returns a safe no-op
+ * shape instead of throwing.
  */
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);

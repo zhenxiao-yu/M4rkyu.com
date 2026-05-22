@@ -42,53 +42,55 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: activeLocale });
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <>
       <JsonLd data={buildSiteJsonLd(activeLocale)} />
-      <ThemeProvider>
-        <TooltipProvider delayDuration={400} skipDelayDuration={150}>
-          <AudioPlayerProvider>
-            <CommandPaletteProvider>
-            {/*
-             * `lang={locale}` lives on a `display: contents` wrapper so
-             * the DOM exposes the active locale without altering layout.
-             * This is what lets the `:lang(zh)` CJK guard in globals.css
-             * fire on the /zh route (root <html> stays `lang="en"`),
-             * which in turn lets the pixel layer use `font-pixel` on
-             * translated strings (Phase 7 cleanup of Phase 3's NIT).
-             */}
-            <Suspense fallback={null}>
-              <NavigationProgress />
-            </Suspense>
-            <div lang={locale} className="contents">
-              {children}
-            </div>
-            {/* First-visit ambient-audio prompt. Persists the choice and
-             * starts playback on the consenting gesture (browser autoplay
-             * policy forbids sound before a user gesture). */}
-            <AudioAutoplayConsent />
-            <CursorTrail />
-            <CookieConsentBanner />
-            <ConsentAwareAnalytics />
-            {/* Self-determines sign-in client-side, so the layout needs
-              * no per-request cookie read — keeping pages statically
-              * renderable. */}
-            <LocalSavesMigration />
-            {/* Surfaces ?authError / ?accountDeleted URL params as
-             * Sonner toasts on first paint, then strips them from the
-             * URL so a refresh doesn't replay. Wrapped in Suspense
-             * because the underlying useSearchParams() opts the
-             * client side into URL-driven rendering. */}
-            <Suspense fallback={null}>
-              <AuthStatusToast />
-            </Suspense>
-            {/* Sonner toaster mounts inside ThemeProvider so it tracks
-             * the active data-theme. Any client island can fire
-             * `toast.success(...)` from this point onward. */}
-            <Toaster />
-          </CommandPaletteProvider>
-          </AudioPlayerProvider>
-        </TooltipProvider>
-      </ThemeProvider>
-    </NextIntlClientProvider>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <ThemeProvider>
+          <TooltipProvider delayDuration={400} skipDelayDuration={150}>
+            <AudioPlayerProvider>
+              <CommandPaletteProvider>
+                {/*
+                 * `lang={locale}` lives on a `display: contents` wrapper so
+                 * the DOM exposes the active locale without altering layout.
+                 * This is what lets the `:lang(zh)` CJK guard in globals.css
+                 * fire on the /zh route (root <html> stays `lang="en"`),
+                 * which in turn lets the pixel layer use `font-pixel` on
+                 * translated strings (Phase 7 cleanup of Phase 3's NIT).
+                 */}
+                <Suspense fallback={null}>
+                  <NavigationProgress />
+                </Suspense>
+                <div lang={locale} className="contents">
+                  {children}
+                </div>
+                {/* First-visit ambient-audio prompt. Persists the choice and
+                 * starts playback on the consenting gesture (browser autoplay
+                 * policy forbids sound before a user gesture). */}
+                <AudioAutoplayConsent />
+                <CursorTrail />
+                <CookieConsentBanner />
+                <ConsentAwareAnalytics />
+                {/* Self-determines sign-in client-side, so the layout needs
+                 * no per-request cookie read — keeping pages statically
+                 * renderable. */}
+                <LocalSavesMigration />
+                {/* Surfaces ?authError / ?accountDeleted URL params as
+                 * Sonner toasts on first paint, then strips them from the
+                 * URL so a refresh doesn't replay. Wrapped in Suspense
+                 * because the underlying useSearchParams() opts the
+                 * client side into URL-driven rendering. */}
+                <Suspense fallback={null}>
+                  <AuthStatusToast />
+                </Suspense>
+                {/* Sonner toaster mounts inside ThemeProvider so it tracks
+                 * the active data-theme. Any client island can fire
+                 * `toast.success(...)` from this point onward. */}
+                <Toaster />
+              </CommandPaletteProvider>
+            </AudioPlayerProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </NextIntlClientProvider>
+    </>
   );
 }
