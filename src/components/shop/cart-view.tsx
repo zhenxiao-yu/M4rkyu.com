@@ -126,7 +126,7 @@ export function CartView({ locale, products }: CartViewProps) {
       <ul className="grid gap-4">
         {resolved.lines.map((line) => (
           <li key={line.product.slug}>
-            <Card className="bg-card/80">
+            <Card glass>
               <CardContent className="flex gap-4 p-4">
                 <Link
                   href={`/shop/${line.product.slug}`}
@@ -225,7 +225,7 @@ export function CartView({ locale, products }: CartViewProps) {
         ))}
       </ul>
 
-      <Card className="bg-card/80 lg:sticky lg:top-24">
+      <Card glass className="lg:sticky lg:top-24">
         <CardContent className="grid gap-4 p-5">
           {/* Promo code */}
           <div className="grid gap-2">

@@ -50,7 +50,7 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
                 href={`/games/${game.slug}`}
                 locale={locale}
                 className={cn(
-                  "group relative flex h-full flex-col gap-3 rounded-lg border border-border/70 bg-card/60 p-5 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+                  "group relative flex h-full flex-col gap-3 rounded-lg glass-surface glass-interactive p-5",
                   FOCUS_RING,
                 )}
               >

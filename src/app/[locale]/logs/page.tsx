@@ -59,7 +59,7 @@ export default async function BlogPage({
         description={t("description")}
         decorativeWord="LOGS"
       >
-        <Card className="bg-background/70 shadow-lg shadow-black/5 backdrop-blur-xl hover:border-ring/50 dark:shadow-black/20">
+        <Card glass>
           <CardHeader>
             <CardTitle as="h2">{t("archiveStatus")}</CardTitle>
           </CardHeader>

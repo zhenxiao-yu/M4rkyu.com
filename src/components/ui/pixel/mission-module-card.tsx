@@ -55,8 +55,9 @@ export async function MissionModuleCard({
         className={cn("group block h-full rounded-lg", FOCUS_RING)}
       >
         <Card
+          glass
           className={cn(
-            "relative h-full overflow-hidden bg-card/80 transition duration-(--motion-medium) ease-(--ease-premium) group-hover:-translate-y-1 group-hover:border-ring/40 group-hover:shadow-lg group-hover:shadow-ring/5",
+            "glass-interactive relative h-full overflow-hidden",
             NOTCH_CLASS,
           )}
         >

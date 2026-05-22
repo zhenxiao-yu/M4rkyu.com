@@ -4,11 +4,14 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
+import { Pagination, usePagination } from "@/components/ui/pagination";
 import { BlogResults } from "@/components/blog/blog-results";
 import { BlogToolbar } from "@/components/blog/blog-toolbar";
 import { useViewMode } from "@/components/blog/use-view-mode";
@@ -26,6 +29,10 @@ import {
 interface BlogTimelineProps {
   posts: Post[];
 }
+
+// Archive timeline page size. Featured posts live in the rotator above,
+// so this paginates only the long-tail archive.
+const ARCHIVE_PAGE_SIZE = 9;
 
 /**
  * Client wrapper around the `/logs` timeline. Data stays server-loaded;
@@ -143,6 +150,23 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
     () => filterAndSortPosts(posts, filters),
     [posts, filters],
   );
+  const {
+    page,
+    setPage,
+    pageCount,
+    pageItems: pagedPosts,
+  } = usePagination(filtered, ARCHIVE_PAGE_SIZE);
+  const reduceMotion = useReducedMotion();
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  function goToPage(next: number) {
+    setPage(next);
+    resultsRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+
   const hasActiveFilters =
     Boolean(query.trim()) ||
     activeTag !== null ||
@@ -182,10 +206,19 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
         onViewModeChange={setViewMode}
       />
 
-      <BlogResults
-        posts={filtered}
-        viewMode={viewMode}
-        onClearFilters={clearFilters}
+      <div ref={resultsRef} className="scroll-mt-24">
+        <BlogResults
+          posts={pagedPosts}
+          viewMode={viewMode}
+          onClearFilters={clearFilters}
+        />
+      </div>
+
+      <Pagination
+        page={page}
+        pageCount={pageCount}
+        onPageChange={goToPage}
+        className="mt-4"
       />
     </div>
   );

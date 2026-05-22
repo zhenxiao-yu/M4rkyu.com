@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ArrowUpRight, ChevronDown, Menu, Search, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -27,9 +27,20 @@ interface MobileNavProps {
   locale: Locale;
   groups: NavDropdownGroup[];
   flatLinks: NavFlatLink[];
+  /**
+   * Account control (UserMenu / SignInSheet). Lives in the sheet's
+   * system tray on mobile — identity belongs in the menu hub, not on
+   * the cramped top rail.
+   */
+  account?: ReactNode;
 }
 
-export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
+export function MobileNav({
+  locale,
+  groups,
+  flatLinks,
+  account,
+}: MobileNavProps) {
   const t = useTranslations("Navigation");
   const tPalette = useTranslations("CommandPalette");
   const { setOpen: setPaletteOpen } = useCommandPalette();
@@ -47,6 +58,18 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
       ),
     )?.id ?? null;
   const [openGroup, setOpenGroup] = useState<string | null>(initialOpenGroup);
+
+  // Close the sheet on any route change. Adjusting state during render
+  // by tracking the previous path (React's recommended alternative to a
+  // setState-in-effect) — the relocated account control is a plain Link
+  // to /account, not wrapped in SheetClose, so without this the menu
+  // would linger over a freshly-navigated page. A nested sign-in dialog
+  // doesn't change the path, so it won't trip this.
+  const [trackedPath, setTrackedPath] = useState(pathname);
+  if (pathname !== trackedPath) {
+    setTrackedPath(pathname);
+    setSheetOpen(false);
+  }
 
   function isActive(href: string) {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -339,11 +362,18 @@ export function MobileNav({ locale, groups, flatLinks }: MobileNavProps) {
           </nav>
         </div>
 
+        {/* System tray — identity on the left, environment controls on
+            the right. The account control is relocated here from the top
+            rail so sign-in / account lives in the menu hub. */}
         <div className="relative flex shrink-0 items-center justify-between gap-3 border-t border-border/70 bg-background/80 px-4 py-4 sm:px-6">
-          <span className="hidden font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground sm:inline">
-            {locale.toUpperCase()} · m4rkyu
-          </span>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex min-w-0 items-center">
+            {account ?? (
+              <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+                {locale.toUpperCase()} · m4rkyu
+              </span>
+            )}
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
             <LanguageSwitcher />
             <ThemeSwitcher />
             <SoundSettingsButton />

@@ -1,4 +1,10 @@
 {
+  "Pagination": {
+    "label": "分页",
+    "previous": "上一页",
+    "next": "下一页",
+    "goToPage": "前往第 {page} 页"
+  },
   "Navigation": {
     "home": "首页",
     "projects": "项目",
@@ -914,6 +920,7 @@
     "permalink": "链接到这条笔记",
     "ratingLabel": "评分 {rating} / 5",
     "linkCta": "打开链接",
+    "latest": "最新",
     "kind": {
       "update": "动态",
       "repost": "转发",

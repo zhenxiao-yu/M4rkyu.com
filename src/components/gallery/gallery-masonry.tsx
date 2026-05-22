@@ -3,9 +3,11 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { FrameTile, orderFrames } from "@/components/gallery/frame-tile";
+import { Pagination, usePagination } from "@/components/ui/pagination";
 import { useGallerySaves } from "@/lib/social/use-gallery-saves";
 import type { GalleryItem } from "@/content/schemas";
 
@@ -27,6 +29,7 @@ const GalleryLightbox = dynamic(
 // the observer only tightens the vertical packing.
 const ROW = 8;
 const GAP = 12; // matches gap-3 (0.75rem)
+const PAGE_SIZE = 12; // frames per page; the lightbox still spans all
 
 interface GalleryMasonryProps {
   items: GalleryItem[];
@@ -45,6 +48,11 @@ export function GalleryMasonry({ items, locale }: GalleryMasonryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const orderedItems = useMemo(() => orderFrames(items), [items]);
+  const { page, setPage, pageCount, pageItems } = usePagination(
+    orderedItems,
+    PAGE_SIZE,
+  );
+  const reduceMotion = useReducedMotion();
 
   const setOpenSlug = useCallback(
     (slug: string | null) => {
@@ -91,7 +99,16 @@ export function GalleryMasonry({ items, locale }: GalleryMasonryProps) {
     }
 
     return () => observer.disconnect();
-  }, [orderedItems]);
+    // Re-measure when the page changes — a new set of cells is mounted.
+  }, [orderedItems, page]);
+
+  function goToPage(next: number) {
+    setPage(next);
+    containerRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }
 
   if (orderedItems.length === 0) {
     return (
@@ -109,10 +126,10 @@ export function GalleryMasonry({ items, locale }: GalleryMasonryProps) {
       </p>
       <div
         ref={containerRef}
-        className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(11rem,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))]"
+        className="grid scroll-mt-24 gap-3 grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(14rem,1fr))]"
         style={{ gridAutoRows: `${ROW}px` }}
       >
-        {orderedItems.map((item) => (
+        {pageItems.map((item) => (
           <div key={item.slug} data-masonry-cell>
             <FrameTile
               item={item}
@@ -128,6 +145,13 @@ export function GalleryMasonry({ items, locale }: GalleryMasonryProps) {
           </div>
         ))}
       </div>
+
+      <Pagination
+        page={page}
+        pageCount={pageCount}
+        onPageChange={goToPage}
+        className="mt-8"
+      />
 
       {frame !== null ? (
         <GalleryLightbox

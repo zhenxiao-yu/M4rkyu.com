@@ -63,7 +63,7 @@ export async function CompassSection({ locale }: CompassSectionProps) {
                 href={tile.href}
                 locale={locale}
                 className={cn(
-                  "group relative flex h-full items-start gap-3 rounded-lg border border-border/70 bg-card/60 p-4 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+                  "group relative flex h-full items-start gap-3 rounded-lg glass-surface glass-interactive p-4",
                   FOCUS_RING,
                 )}
               >

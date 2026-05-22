@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/sections/section-heading";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { CartButton } from "@/components/shop/cart-button";
 import { ProductCard } from "@/components/shop/product-card";
+import { Paginated } from "@/components/system/paginated";
 import { getShopProductsSource } from "@/lib/shop/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -82,11 +83,14 @@ export default async function ShopPage({
               title={tShop("catalogTitle")}
               description={tShop("catalogDescription")}
             />
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <Paginated
+              pageSize={9}
+              className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            >
               {products.map((product) => (
                 <ProductCard key={product.slug} product={product} locale={locale} />
               ))}
-            </div>
+            </Paginated>
           </PageSection>
         </>
       )}

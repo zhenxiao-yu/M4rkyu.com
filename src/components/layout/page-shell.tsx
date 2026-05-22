@@ -22,8 +22,8 @@ export async function PageShell({
         * removed in the polish pass — its mix-blend-difference circle
         * read as a random floating artifact against typographic
         * content rather than a deliberate cursor cue. DotGrid +
-        * TiltedCard + Magnet already carry the "cursor responds to
-        * you" feeling at the element level. */}
+        * TiltedCard already carry the "cursor responds to you"
+        * feeling at the element level. */}
       <ClickSpark />
       <a
         href="#main-content"

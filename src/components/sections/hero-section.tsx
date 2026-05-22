@@ -65,51 +65,6 @@ export async function HeroSection({ locale }: { locale: Locale }) {
       </div>
 
       <HeroBootSequence>
-        {/* Top-left mono status panel. Each line scrambles in via
-          * DecryptedText with staggered delay so the panel reads as
-          * a system feed coming online (matches the boot loader's
-          * grammar). EN-only — for ZH the chars decrypt to CJK which
-          * doesn't read well in a glyph-shuffle, so plain text is
-          * fine as a fallback (locale check inside each line). */}
-        <div
-          data-boot="eyebrow"
-          className="absolute left-4 top-20 z-10 max-w-xs sm:left-8 sm:top-24"
-        >
-          <ul className="space-y-1 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-foreground/75 sm:text-[0.65rem]">
-            {[
-              { text: t("eyebrow"), delay: 0 },
-              { text: t("heroStatus.line2"), delay: 140 },
-              { text: t("heroStatus.line3"), delay: 280 },
-              { text: t("heroStatus.line4"), delay: 420 },
-            ].map(({ text, delay }) => (
-              <li key={text}>
-                {locale === "en" ? (
-                  <DecryptedText
-                    text={text}
-                    sequential
-                    speed={18}
-                    animateOn="mount"
-                    delay={delay}
-                    encryptedClassName="text-foreground/40"
-                  />
-                ) : (
-                  text
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Top-right tag — hidden below sm */}
-        <div
-          data-boot="subtitle"
-          className="absolute right-4 top-20 z-10 hidden max-w-xs text-right sm:right-8 sm:top-24 sm:block"
-        >
-          <p className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-foreground/75 sm:text-[0.65rem]">
-            {t("heroTagShort")}
-          </p>
-        </div>
-
         {/* Bottom band — marquee, solid-bg headline, marquee */}
         <div
           data-boot="hud"

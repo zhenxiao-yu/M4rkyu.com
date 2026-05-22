@@ -8,7 +8,7 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 const tileBase =
-  "relative flex h-full flex-col gap-3 rounded-lg border border-border/70 bg-card/60 p-5";
+  "relative flex h-full flex-col gap-3 rounded-lg glass-surface p-5";
 const tileLabel =
   "font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground";
 

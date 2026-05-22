@@ -1,14 +1,23 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-export function Card({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  /**
+   * Frosted-glass surface (the "glass over cyber" language). Swaps the
+   * opaque `border bg-card shadow-sm` treatment for the `.glass-surface`
+   * utility — translucent fill, backdrop blur, hairline ring + sheen in
+   * box-shadow. Add `glass-interactive` via `className` for the hover
+   * lift. Defaults off so existing cards are unchanged.
+   */
+  glass?: boolean;
+};
+
+export function Card({ className, glass = false, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border bg-card text-card-foreground shadow-sm transition-[border-color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium)",
+        "rounded-lg text-card-foreground transition-[border-color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium)",
+        glass ? "glass-surface" : "border bg-card shadow-sm",
         className,
       )}
       {...props}

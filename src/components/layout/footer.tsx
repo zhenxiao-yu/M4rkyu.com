@@ -19,7 +19,7 @@ import { DotGrid } from "@/components/ui/magic/dot-grid";
 import { GhostedWord } from "@/components/ui/magic/ghosted-word";
 import { ShinyText } from "@/components/ui/magic/shiny-text";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
-import { MagnetLines } from "@/components/ui/magic/magnet-lines";
+import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern";
 import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { StatusPulse } from "@/components/ui/pixel/status-pulse";
 import { FooterClock } from "./footer-clock";
@@ -173,33 +173,33 @@ export async function Footer({ locale }: { locale: Locale }) {
           <FooterClock label={t("localTimeLabel")} />
         </div>
 
-        {/* 2. Hero CTA — magnetic theater. MagnetLines is the
-            centerpiece, mounted as a wide ambient backdrop. Copy +
-            CTAs read centered on top. Edge-fades into the surrounding
-            atmosphere via a radial mask so the field never feels
-            "rectangular." */}
+        {/* 2. Hero CTA — the centerpiece. An animated grid (opacity-only,
+            GPU-cheap, no pointer cost) replaces the old cursor-driven
+            MagnetLines field, which recalculated 300+ DOM transforms on
+            every pointermove and felt laggy. Copy + CTAs read centered on
+            top; the grid edge-fades into the surrounding atmosphere via a
+            radial mask so the field never feels "rectangular." */}
         <section className="relative isolate overflow-hidden py-20 sm:py-28 lg:py-32">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 grid place-items-center"
+            className="pointer-events-none absolute inset-0"
             style={{
               WebkitMaskImage:
-                "radial-gradient(ellipse 72% 60% at 50% 50%, black 55%, transparent 92%)",
+                "radial-gradient(ellipse 72% 62% at 50% 50%, black 45%, transparent 90%)",
               maskImage:
-                "radial-gradient(ellipse 72% 60% at 50% 50%, black 55%, transparent 92%)",
+                "radial-gradient(ellipse 72% 62% at 50% 50%, black 45%, transparent 90%)",
             }}
           >
-            <MagnetLines
-              rows={14}
-              columns={22}
-              containerSize="100%"
-              lineColor="color-mix(in srgb, var(--foreground) 26%, transparent)"
-              lineHeight="14px"
-              className="h-full w-full max-w-6xl"
+            <AnimatedGridPattern
+              numSquares={24}
+              maxOpacity={0.2}
+              duration={5}
+              repeatDelay={0.6}
+              className="text-foreground/25"
             />
           </div>
 
-          {/* Copy + CTA cluster centered above the magnetic field */}
+          {/* Copy + CTA cluster centered above the animated grid */}
           <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-7 text-center sm:gap-8">
             <div className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-muted-foreground">
               <StarGlyph className="size-2.5 text-ring" />

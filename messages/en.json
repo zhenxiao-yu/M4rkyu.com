@@ -1,4 +1,10 @@
 {
+  "Pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "goToPage": "Go to page {page}"
+  },
   "Navigation": {
     "home": "Home",
     "projects": "Projects",
@@ -914,6 +920,7 @@
     "permalink": "Link to this note",
     "ratingLabel": "Rated {rating} out of 5",
     "linkCta": "Open link",
+    "latest": "latest",
     "kind": {
       "update": "Update",
       "repost": "Repost",

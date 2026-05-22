@@ -23,7 +23,10 @@ export async function ProductCard({ product, locale }: ProductCardProps) {
       className={cn("group block h-full rounded-lg", FOCUS_RING)}
       aria-label={product.title}
     >
-      <Card className="relative h-full overflow-hidden bg-card/80 transition-transform duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:shadow-lg hover:shadow-ring/5 motion-safe:group-hover:-translate-y-1">
+      <Card
+        glass
+        className="glass-interactive relative h-full overflow-hidden"
+      >
         <div className="relative aspect-16/10 overflow-hidden border-b bg-muted">
           {product.image ? (
             <Image

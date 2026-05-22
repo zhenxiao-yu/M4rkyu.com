@@ -7,7 +7,6 @@ import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
-import { CommandPaletteIconTrigger } from "@/components/system/command-palette-icon-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
 import { SignInSheet } from "@/components/auth/sign-in-sheet";
@@ -102,21 +101,23 @@ export async function Header({ locale }: { locale: Locale }) {
           </Suspense>
         </div>
 
-        {/* Compact rail (<lg): the language and theme controls stay
-         * directly reachable; secondary sound/music/QR controls move
-         * into the sheet to keep the dock readable on 360px screens. */}
+        {/* Compact rail (<lg): pared down to the two glanceable controls
+         * — unread notifications and the instant theme toggle — plus the
+         * menu trigger. Search, language, sound, QR and account all live
+         * inside the full-screen sheet, so the dock stays uncramped and
+         * legible on 360px screens instead of clamping the desktop rail. */}
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
-          <CommandPaletteIconTrigger />
           <LazyNotificationBell locale={locale} />
-          <Suspense fallback={<SignInSheet />}>
-            <UserMenu locale={locale} />
-          </Suspense>
-          <LanguageSwitcher />
           <ThemeSwitcher />
           <MobileNav
             locale={locale}
             groups={structure.groups}
             flatLinks={structure.flatLinks}
+            account={
+              <Suspense fallback={<SignInSheet />}>
+                <UserMenu locale={locale} />
+              </Suspense>
+            }
           />
         </div>
       </HeaderDock>

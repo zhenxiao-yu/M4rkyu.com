@@ -4,7 +4,10 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
-import { NoteCard, type NoteCardLabels } from "@/components/notes/note-card";
+import {
+  NotesTimeline,
+  type NotesTimelineLabels,
+} from "@/components/notes/notes-timeline";
 import { getNotesSource } from "@/lib/notes/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -40,7 +43,7 @@ export default async function NotesPage({
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
   const notes = await getNotesSource();
 
-  const labels: NoteCardLabels = {
+  const labels: NotesTimelineLabels = {
     kind: {
       update: tNotes("kind.update"),
       repost: tNotes("kind.repost"),
@@ -51,6 +54,7 @@ export default async function NotesPage({
     permalink: tNotes("permalink"),
     rating: (value: number) => tNotes("ratingLabel", { rating: value }),
     linkCta: tNotes("linkCta"),
+    latest: tNotes("latest"),
   };
 
   return (
@@ -68,16 +72,7 @@ export default async function NotesPage({
             description={tNotes("pendingDescription")}
           />
         ) : (
-          <div className="mx-auto grid max-w-2xl gap-4">
-            {notes.map((note) => (
-              <NoteCard
-                key={note.slug}
-                note={note}
-                locale={locale}
-                labels={labels}
-              />
-            ))}
-          </div>
+          <NotesTimeline notes={notes} locale={locale} labels={labels} />
         )}
       </PageSection>
     </PageShell>
