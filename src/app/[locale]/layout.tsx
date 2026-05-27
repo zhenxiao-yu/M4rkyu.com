@@ -9,7 +9,6 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { NavigationProgress } from "@/components/system/navigation-progress";
 import { CursorTrail } from "@/components/ui/magic/cursor-trail";
-import { AudioAutoplayConsent } from "@/components/system/audio-autoplay-consent";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -63,10 +62,6 @@ export default async function LocaleLayout({
                 <div lang={locale} className="contents">
                   {children}
                 </div>
-                {/* First-visit ambient-audio prompt. Persists the choice and
-                 * starts playback on the consenting gesture (browser autoplay
-                 * policy forbids sound before a user gesture). */}
-                <AudioAutoplayConsent />
                 <CursorTrail />
                 <CookieConsentBanner />
                 <ConsentAwareAnalytics />

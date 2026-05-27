@@ -17,6 +17,7 @@ import {
 import { musicTracks, type LoopMode, type MusicTrack } from "@/content/music";
 
 const STORAGE = {
+  featureEnabled: "m4rkyu.audio.featureEnabled",
   bgmVolume: "m4rkyu.audio.bgmVolume",
   sfxVolume: "m4rkyu.audio.sfxVolume",
   loopMode: "m4rkyu.audio.loopMode",
@@ -63,6 +64,7 @@ interface AudioPlayerContextValue {
   tracks: MusicTrack[];
   currentTrackIndex: number;
   currentTrack: MusicTrack | undefined;
+  featureEnabled: boolean;
 
   // Web Audio analyser tap — lazily built on first play (autoplay is
   // blocked, so the user gesture that starts audio is also what unlocks
@@ -84,6 +86,7 @@ interface AudioPlayerContextValue {
   sfxVolume: number;
 
   // Actions
+  setFeatureEnabled: (enabled: boolean) => void;
   togglePlay: () => void;
   play: () => void;
   pause: () => void;
@@ -125,6 +128,9 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const tapNodeRef = useRef<GainNode | null>(null);
   const [audioGraphReady, setAudioGraphReady] = useState(false);
+  const [featureEnabled, setFeatureEnabledState] = useState<boolean>(
+    () => readStoredString(STORAGE.featureEnabled) === "on",
+  );
 
   // Init from storage (synchronous, so the first render matches what
   // the user will see). SSR returns defaults; that's fine — the
@@ -302,6 +308,11 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const play = useCallback(() => {
+    if (!featureEnabled) {
+      wantsPlaybackRef.current = false;
+      setPlayerState("idle");
+      return;
+    }
     const audio = activeAudioRef.current;
     if (!audio || !currentTrack) {
       setPlayerState("idle");
@@ -320,7 +331,13 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       // Autoplay block / network error — keep state in sync.
       markTrackUnavailable(currentTrack, true);
     });
-  }, [bgmVolume, currentTrack, markTrackUnavailable, ensureAudioGraph]);
+  }, [
+    bgmVolume,
+    currentTrack,
+    featureEnabled,
+    markTrackUnavailable,
+    ensureAudioGraph,
+  ]);
 
   const pause = useCallback(() => {
     wantsPlaybackRef.current = false;
@@ -333,12 +350,30 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     setPlayerState("paused");
   }, []);
 
+  const setFeatureEnabled = useCallback((enabled: boolean) => {
+    setFeatureEnabledState(enabled);
+    writeStoredString(STORAGE.featureEnabled, enabled ? "on" : "off");
+    if (enabled) return;
+
+    wantsPlaybackRef.current = false;
+    if (fadeTimerRef.current) {
+      window.clearInterval(fadeTimerRef.current);
+      fadeTimerRef.current = null;
+    }
+    audioARef.current?.pause();
+    audioBRef.current?.pause();
+    setIsPlaying(false);
+    setPlayerState("idle");
+  }, []);
+
   const togglePlay = useCallback(() => {
+    if (!featureEnabled) return;
     if (activeAudioRef.current?.paused) play();
     else pause();
-  }, [play, pause]);
+  }, [featureEnabled, play, pause]);
 
   const next = useCallback(() => {
+    if (!featureEnabled) return;
     failedTrackIdsRef.current.clear();
     setCurrentTrackIndex((current) => {
       const len = musicTracks.length;
@@ -350,9 +385,10 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       }
       return (current + 1) % len;
     });
-  }, [shuffle]);
+  }, [featureEnabled, shuffle]);
 
   const prev = useCallback(() => {
+    if (!featureEnabled) return;
     failedTrackIdsRef.current.clear();
     // If we're more than 3 seconds into the track, restart it before
     // jumping to the previous track — matches the iOS / Spotify pattern.
@@ -362,19 +398,23 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       return;
     }
     setCurrentTrackIndex(() => pickNextIndex(-1));
-  }, [pickNextIndex]);
+  }, [featureEnabled, pickNextIndex]);
 
-  const playTrack = useCallback((index: number) => {
-    if (index < 0 || index >= musicTracks.length) return;
-    failedTrackIdsRef.current.clear();
-    setCurrentTrackIndex(index);
-  }, []);
+  const playTrack = useCallback(
+    (index: number) => {
+      if (!featureEnabled || index < 0 || index >= musicTracks.length) return;
+      failedTrackIdsRef.current.clear();
+      setCurrentTrackIndex(index);
+    },
+    [featureEnabled],
+  );
 
   const seekTo = useCallback((seconds: number) => {
+    if (!featureEnabled) return;
     const audio = activeAudioRef.current;
     if (!audio) return;
     audio.currentTime = Math.min(Math.max(0, seconds), audio.duration || 0);
-  }, []);
+  }, [featureEnabled]);
 
   const setBgmVolume = useCallback((value: number) => {
     setBgmVolumeState(clamp01(value));
@@ -389,8 +429,9 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleShuffle = useCallback(() => {
+    if (!featureEnabled) return;
     setShuffle((current) => !current);
-  }, []);
+  }, [featureEnabled]);
 
   const clearFadeTimer = useCallback(() => {
     if (!fadeTimerRef.current) return;
@@ -597,6 +638,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       tracks: musicTracks,
       currentTrackIndex,
       currentTrack,
+      featureEnabled,
       audioGraphReady,
       getAudioGraph,
       isPlaying,
@@ -607,6 +649,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       shuffle,
       bgmVolume,
       sfxVolume,
+      setFeatureEnabled,
       togglePlay,
       play,
       pause,
@@ -622,6 +665,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     [
       currentTrackIndex,
       currentTrack,
+      featureEnabled,
       audioGraphReady,
       getAudioGraph,
       isPlaying,
@@ -632,6 +676,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       shuffle,
       bgmVolume,
       sfxVolume,
+      setFeatureEnabled,
       togglePlay,
       play,
       pause,

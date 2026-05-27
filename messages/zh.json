@@ -316,6 +316,11 @@
     "viewCollection": "查看合集",
     "carouselPrev": "上一个合集",
     "carouselNext": "下一个合集",
+    "viewDetail": "查看细节",
+    "closeDetail": "关闭细节视图",
+    "detailView": "细节查看",
+    "detailHint": "打开更大的查看视图，专心观察这一帧，不会再被档案网格打断。",
+    "placeholderHint": "占位帧先维持画廊结构，等正式影像准备好后再替换。",
     "zoomIn": "放大",
     "zoomOut": "缩小"
   },
@@ -1788,6 +1793,9 @@
     "description": "背景音乐与音效控制。",
     "openLabel": "音频设置",
     "expandLabel": "打开播放器",
+    "collapseLabel": "收起播放器",
+    "featureToggleLabel": "环境播放器",
+    "featureToggleDescription": "开启背景音乐和导航栏迷你播放器。",
     "nowPlaying": "正在播放",
     "noTrack": "未加载曲目",
     "noEnabledTracks": "添加音乐文件后即可播放。",
@@ -1805,10 +1813,6 @@
     "sfxVolume": "音效",
     "sfxTest": "试听",
     "sfxTestAria": "试听音效",
-    "playlist": "播放列表",
-    "autoplayTitle": "播放背景音乐？",
-    "autoplayBody": "本站配有背景音乐。现在开启，并在以后访问时自动播放？",
-    "autoplayEnable": "开启",
-    "autoplayDismiss": "暂不"
+    "playlist": "播放列表"
   }
 }

@@ -57,6 +57,7 @@ export function AudioPlayerDialog({
     tracks,
     currentTrack,
     currentTrackIndex,
+    featureEnabled,
     isPlaying,
     playerState,
     currentTime,
@@ -65,6 +66,7 @@ export function AudioPlayerDialog({
     shuffle,
     bgmVolume,
     sfxVolume,
+    setFeatureEnabled,
     togglePlay,
     next,
     prev,
@@ -90,6 +92,7 @@ export function AudioPlayerDialog({
   const LoopIcon = loopMode === "track" ? Repeat1 : Repeat;
   const isLoading = playerState === "loading";
   const hasTracks = tracks.length > 0;
+  const canUseMusic = featureEnabled && hasTracks;
   const isUnavailable = hasTracks && playerState === "error";
   const loopLabelKey =
     loopMode === "off"
@@ -152,6 +155,41 @@ export function AudioPlayerDialog({
           </div>
         </div>
 
+        <div className="border-b border-border/70 bg-background/45 px-5 py-3">
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-muted/25 px-3 py-2.5 shadow-sm">
+            <div className="min-w-0">
+              <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-foreground">
+                {t("featureToggleLabel")}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {t("featureToggleDescription")}
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={featureEnabled}
+              aria-label={t("featureToggleLabel")}
+              onClick={() => setFeatureEnabled(!featureEnabled)}
+              className={cn(
+                "relative h-7 w-12 shrink-0 rounded-full border transition-[background-color,border-color] duration-(--motion-fast) ease-(--ease-premium)",
+                featureEnabled
+                  ? "border-ring/60 bg-ring/25"
+                  : "border-border bg-background/70",
+                FOCUS_RING,
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute top-1 grid size-5 place-items-center rounded-full bg-foreground shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium)",
+                  featureEnabled ? "translate-x-5" : "translate-x-1",
+                )}
+              />
+            </button>
+          </div>
+        </div>
+
         {/* Seek bar */}
         <div className="px-5 pt-4">
           <input
@@ -161,8 +199,9 @@ export function AudioPlayerDialog({
             step={0.1}
             value={progress}
             onChange={handleSeek}
+            disabled={!canUseMusic || !duration}
             aria-label={t("seekLabel")}
-            className="w-full"
+            className="w-full disabled:cursor-not-allowed disabled:opacity-45"
             style={
               {
                 // Custom-property bridge so the runtime fill width
@@ -183,19 +222,19 @@ export function AudioPlayerDialog({
           <TransportButton
             label={t("shuffle")}
             active={shuffle}
-            disabled={!hasTracks}
+            disabled={!canUseMusic}
             onClick={toggleShuffle}
           >
             <Shuffle className="size-4" />
           </TransportButton>
-          <TransportButton label={t("prev")} disabled={!hasTracks} onClick={prev}>
+          <TransportButton label={t("prev")} disabled={!canUseMusic} onClick={prev}>
             <SkipBack className="size-5" />
           </TransportButton>
           <button
             type="button"
             onClick={togglePlay}
             aria-label={isPlaying ? t("pause") : t("play")}
-            disabled={isLoading || !hasTracks}
+            disabled={!canUseMusic || isLoading}
             className={cn(
               "grid size-14 place-items-center rounded-full border border-border bg-foreground text-background shadow-sm transition-[transform,background-color] duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-55 motion-safe:active:scale-95",
               FOCUS_RING,
@@ -209,13 +248,13 @@ export function AudioPlayerDialog({
               <Play className="size-6 translate-x-px" />
             )}
           </button>
-          <TransportButton label={t("next")} disabled={!hasTracks} onClick={next}>
+          <TransportButton label={t("next")} disabled={!canUseMusic} onClick={next}>
             <SkipForward className="size-5" />
           </TransportButton>
           <TransportButton
             label={t(loopLabelKey)}
             active={loopMode !== "off"}
-            disabled={!hasTracks}
+            disabled={!canUseMusic}
             onClick={() => setLoopMode(LOOP_ROTATION[loopMode])}
           >
             <LoopIcon className="size-4" />
@@ -235,6 +274,7 @@ export function AudioPlayerDialog({
             label={t("bgmVolume")}
             value={bgmVolume}
             onChange={setBgmVolume}
+            disabled={!featureEnabled}
           />
           <VolumeRow
             icon={<Waves className="size-4" />}
@@ -280,8 +320,9 @@ export function AudioPlayerDialog({
                   <button
                     type="button"
                     onClick={() => playTrack(index)}
+                    disabled={!featureEnabled}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted",
+                      "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50",
                       active && "bg-muted text-foreground",
                     )}
                     aria-current={active ? "true" : undefined}
@@ -356,12 +397,14 @@ function VolumeRow({
   label,
   value,
   onChange,
+  disabled,
   trailing,
 }: {
   icon: React.ReactNode;
   label: string;
   value: number;
   onChange: (value: number) => void;
+  disabled?: boolean;
   trailing?: React.ReactNode;
 }) {
   return (
@@ -378,9 +421,10 @@ function VolumeRow({
         max={1}
         step={0.01}
         value={value}
+        disabled={disabled}
         onChange={(event) => onChange(Number(event.target.value))}
         aria-label={label}
-        className="flex-1"
+        className="flex-1 disabled:cursor-not-allowed disabled:opacity-45"
         style={
           {
             "--progress": `${value * 100}%`,

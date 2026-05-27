@@ -316,6 +316,11 @@
     "viewCollection": "View collection",
     "carouselPrev": "Previous collection",
     "carouselNext": "Next collection",
+    "viewDetail": "View detail",
+    "closeDetail": "Close detail view",
+    "detailView": "Detail view",
+    "detailHint": "Open a larger inspection view to study the frame without the archive grid getting in the way.",
+    "placeholderHint": "Placeholder frame keeps the gallery structure in place until the final image is ready.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out"
   },
@@ -1788,6 +1793,9 @@
     "description": "Background music and sound effect controls.",
     "openLabel": "Audio settings",
     "expandLabel": "Open player",
+    "collapseLabel": "Collapse player",
+    "featureToggleLabel": "Ambient player",
+    "featureToggleDescription": "Enable background music and the navbar mini-player.",
     "nowPlaying": "Now playing",
     "noTrack": "No track loaded",
     "noEnabledTracks": "Add music files to enable playback.",
@@ -1805,10 +1813,6 @@
     "sfxVolume": "Effects",
     "sfxTest": "Test",
     "sfxTestAria": "Play test sound effect",
-    "playlist": "Playlist",
-    "autoplayTitle": "Play ambient music?",
-    "autoplayBody": "This site has a background soundtrack. Enable it now and on future visits?",
-    "autoplayEnable": "Enable",
-    "autoplayDismiss": "Not now"
+    "playlist": "Playlist"
   }
 }
