@@ -1787,6 +1787,7 @@
     "title": "Audio settings",
     "description": "Background music and sound effect controls.",
     "openLabel": "Audio settings",
+    "expandLabel": "Open player",
     "nowPlaying": "Now playing",
     "noTrack": "No track loaded",
     "noEnabledTracks": "Add music files to enable playback.",

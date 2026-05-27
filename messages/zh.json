@@ -1787,6 +1787,7 @@
     "title": "音频设置",
     "description": "背景音乐与音效控制。",
     "openLabel": "音频设置",
+    "expandLabel": "打开播放器",
     "nowPlaying": "正在播放",
     "noTrack": "未加载曲目",
     "noEnabledTracks": "添加音乐文件后即可播放。",

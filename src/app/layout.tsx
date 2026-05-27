@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono, Noto_Sans_SC, VT323 } from "next/font/google";
 import { SmoothScroll } from "@/providers/smooth-scroll";
+import { ThemeScript } from "@/components/theme/theme-script";
 import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
 
@@ -143,15 +144,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full bg-background text-foreground"
       >
-        {/* Apply the stored / system theme before first paint so dark-mode
-         * loads do not flash light first. Keep this as a raw inline script:
-         * moving it to next/script beforeInteractive caused delayed client
-         * hydration for the header controls in Playwright. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=(!s||s==='system')?m:s;document.documentElement.setAttribute('data-theme',r);}catch(e){}})()`,
-          }}
-        />
+        <ThemeScript />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

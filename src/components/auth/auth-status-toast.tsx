@@ -26,10 +26,17 @@ export function AuthStatusToast() {
     const accountDeleted = params.get("accountDeleted");
     if (!authError && !accountDeleted) return;
 
+    // Stable ids → a repeat call (StrictMode double-invoke in dev, or
+    // the re-run triggered when router.replace below changes `params`)
+    // updates the same toast instead of stacking a duplicate.
     if (authError) {
-      toast.error(t(`callbackError.${classify(authError)}`));
+      toast.error(t(`callbackError.${classify(authError)}`), {
+        id: "auth-callback-error",
+      });
     } else if (accountDeleted) {
-      toast.success(t("accountDeletedToast"));
+      toast.success(t("accountDeletedToast"), {
+        id: "auth-account-deleted",
+      });
     }
 
     // Strip the signal params from the URL so a refresh doesn't

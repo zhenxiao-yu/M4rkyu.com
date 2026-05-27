@@ -48,7 +48,7 @@ export function DesktopNav({
             isActive(group.href) ||
             group.items.some((item) => isActive(item.href));
           return (
-            <li key={group.id} className="group/menu relative">
+            <li key={group.id} className="nav-group group/menu relative">
               <Link
                 href={group.href}
                 locale={locale}

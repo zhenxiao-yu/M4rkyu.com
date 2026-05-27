@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Headphones, Pause, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
 import { playCue } from "@/lib/audio/ui-sound";
+import { AUDIO_PLAYER_OPEN_EVENT } from "@/lib/audio/player-events";
 import { AudioPlayerDialog } from "./audio-player-dialog";
 
 /**
@@ -30,6 +31,24 @@ export function SoundSettingsButton() {
     setOpen(nextOpen);
     playCue(nextOpen ? "open" : "close");
   }
+
+  // The now-playing HUD in the header ribbon lives outside this tree; it
+  // asks for the full dialog via a window event rather than shared state.
+  // A ref carries the current open state so the listener stays stable
+  // (no re-subscribe per toggle) without reading a stale closure.
+  const openRef = useRef(open);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+  useEffect(() => {
+    const onOpen = () => {
+      if (openRef.current) return;
+      setOpen(true);
+      playCue("open");
+    };
+    window.addEventListener(AUDIO_PLAYER_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(AUDIO_PLAYER_OPEN_EVENT, onOpen);
+  }, []);
 
   return (
     <>
