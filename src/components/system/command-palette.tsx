@@ -1,15 +1,20 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   BookOpen,
   Briefcase,
   Camera,
+  Clock3,
   FileText,
   Gamepad2,
+  Headphones,
+  Heart,
+  HelpCircle,
   Image as ImageIcon,
   Languages,
   Layers,
+  ListChecks,
   Mail,
   Moon,
   NotebookPen,
@@ -40,6 +45,10 @@ import {
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { galleryItems } from "@/content/gallery";
+import { notes } from "@/content/notes";
+import { resources } from "@/content/resources";
+import { getShopProducts } from "@/content/shop";
+import { openAudioPlayer } from "@/lib/audio/player-events";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
@@ -70,9 +79,22 @@ const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
   { key: "notes", href: "/notes", icon: NotebookPen },
   { key: "media", href: "/media", icon: ImageIcon },
   { key: "resources", href: "/resources", icon: Wrench },
+  { key: "latest", href: "/latest", icon: Clock3 },
+  { key: "changelog", href: "/changelog", icon: ListChecks },
+  { key: "colophon", href: "/colophon", icon: FileText },
   { key: "about", href: "/about", icon: User },
   { key: "contact", href: "/contact", icon: Mail },
 ];
+
+const PAGE_ALIASES: Record<string, string> = {
+  gallery: "archive photos frames contact sheet images",
+  blog: "logs writing posts articles devlog",
+  projects: "work case studies portfolio",
+  resources: "tools links bookmarks utilities",
+  latest: "new recent updates feed timeline",
+  changelog: "release notes changes ship log updates",
+  colophon: "about this site stack technology credits build",
+};
 
 const THEMES = [
   { value: "light", icon: Sun, key: "themeLight" },
@@ -103,6 +125,25 @@ function rankCommand(value: string, search: string): number {
   return i === needle.length ? 0.3 : 0;
 }
 
+function HighlightedText({ text, query }: { text: string; query: string }) {
+  const needle = query.trim();
+  if (!needle) return <>{text}</>;
+  const index = text.toLowerCase().indexOf(needle.toLowerCase());
+  if (index < 0) return <>{text}</>;
+  const before = text.slice(0, index);
+  const match = text.slice(index, index + needle.length);
+  const after = text.slice(index + needle.length);
+  return (
+    <>
+      {before}
+      <mark className="rounded-sm bg-ring/20 px-0.5 text-foreground">
+        {match}
+      </mark>
+      {after}
+    </>
+  );
+}
+
 export function CommandPalette({
   open,
   onOpenChange,
@@ -115,6 +156,7 @@ export function CommandPalette({
   const pathname = usePathname();
   const locale = useLocale() as Locale;
   const { setTheme } = useTheme();
+  const [search, setSearch] = useState("");
 
   const recentFrames = useMemo(
     () => galleryItems.filter((item) => item.status === "ready").slice(0, 6),
@@ -122,6 +164,21 @@ export function CommandPalette({
   );
 
   const writingItems = useMemo(() => (posts ?? []).slice(0, 20), [posts]);
+  const noteItems = useMemo(
+    () =>
+      notes
+        .filter((note) => note.status === "ready")
+        .slice(0, 16),
+    [],
+  );
+  const resourceItems = useMemo(
+    () =>
+      resources
+        .filter((resource) => resource.status === "ready")
+        .slice(0, 18),
+    [],
+  );
+  const shopItems = useMemo(() => getShopProducts().slice(0, 8), []);
 
   const filter = useCallback(
     (value: string, search: string) => rankCommand(value, search),
@@ -146,6 +203,20 @@ export function CommandPalette({
     onOpenChange(false);
     const rest = pathname.replace(/^\/(en|zh)/, "") || "/";
     router.replace(rest, { locale: nextLocale });
+  }
+
+  function openAudio() {
+    onOpenChange(false);
+    window.setTimeout(() => {
+      const trigger = document.querySelector<HTMLButtonElement>(
+        'button[data-audio-settings-trigger="true"]',
+      );
+      if (trigger) {
+        trigger.click();
+        return;
+      }
+      openAudioPlayer();
+    }, 0);
   }
 
   return (
@@ -193,6 +264,8 @@ export function CommandPalette({
         >
           <CommandInput
             placeholder={tPalette("searchPlaceholder")}
+            value={search}
+            onValueChange={setSearch}
             // The input is the natural autofocus target — cmdk handles
             // this for us, but we ensure the CSS height stays large
             // enough for a tappable surface on touch.
@@ -213,14 +286,16 @@ export function CommandPalette({
                 return (
                   <CommandItem
                     key={page.href}
-                    value={`${label} ${page.key} ${page.href}`}
+                    value={`${label} ${page.key} ${page.href} ${PAGE_ALIASES[page.key] ?? ""}`}
                     onSelect={() => go(page.href)}
                   >
                     <Icon
                       aria-hidden="true"
                       className="size-4 shrink-0 opacity-70"
                     />
-                    <span className="truncate">{label}</span>
+                    <span className="truncate">
+                      <HighlightedText text={label} query={search} />
+                    </span>
                     <span
                       aria-hidden="true"
                       className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
@@ -246,7 +321,9 @@ export function CommandPalette({
                         aria-hidden="true"
                         className="size-4 shrink-0 opacity-70"
                       />
-                      <span className="truncate">{item.title}</span>
+                      <span className="truncate">
+                        <HighlightedText text={item.title} query={search} />
+                      </span>
                       <span
                         aria-hidden="true"
                         className="ml-auto shrink-0 truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
@@ -273,7 +350,9 @@ export function CommandPalette({
                         aria-hidden="true"
                         className="size-4 shrink-0 opacity-70"
                       />
-                      <span className="truncate">{post.title}</span>
+                      <span className="truncate">
+                        <HighlightedText text={post.title} query={search} />
+                      </span>
                       <span
                         aria-hidden="true"
                         className="ml-auto shrink-0 truncate font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
@@ -285,6 +364,137 @@ export function CommandPalette({
                 </CommandGroup>
               </>
             ) : null}
+
+            {noteItems.length > 0 ? (
+              <>
+                <CommandSeparator />
+                <CommandGroup heading={tPalette("notesGroup")}>
+                  {noteItems.map((note) => (
+                    <CommandItem
+                      key={note.slug}
+                      value={`${note.title ?? note.body} ${note.kind} ${note.tags.join(" ")}`}
+                      onSelect={() => go(`/notes#${note.slug}`)}
+                    >
+                      <NotebookPen
+                        aria-hidden="true"
+                        className="size-4 shrink-0 opacity-70"
+                      />
+                      <span className="truncate">
+                        <HighlightedText
+                          text={note.title ?? note.body.split("\n")[0] ?? note.slug}
+                          query={search}
+                        />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                      >
+                        {note.kind}
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
+
+            {resourceItems.length > 0 ? (
+              <>
+                <CommandSeparator />
+                <CommandGroup heading={tPalette("resourcesGroup")}>
+                  {resourceItems.map((resource) => (
+                    <CommandItem
+                      key={resource.slug}
+                      value={`${resource.name} ${resource.category} ${resource.tags.join(" ")} ${resource.type}`}
+                      onSelect={() => go(`/resources/${resource.slug}`)}
+                    >
+                      <Wrench
+                        aria-hidden="true"
+                        className="size-4 shrink-0 opacity-70"
+                      />
+                      <span className="truncate">
+                        <HighlightedText text={resource.name} query={search} />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                      >
+                        {resource.category}
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
+
+            {shopItems.length > 0 ? (
+              <>
+                <CommandSeparator />
+                <CommandGroup heading={tPalette("shopGroup")}>
+                  {shopItems.map((product) => (
+                    <CommandItem
+                      key={product.slug}
+                      value={`${product.title} ${product.category} ${product.tags.join(" ")}`}
+                      onSelect={() => go(`/shop/${product.slug}`)}
+                    >
+                      <ShoppingBag
+                        aria-hidden="true"
+                        className="size-4 shrink-0 opacity-70"
+                      />
+                      <span className="truncate">
+                        <HighlightedText text={product.title} query={search} />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                      >
+                        {product.category}
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
+
+            <CommandSeparator />
+
+            <CommandGroup heading={tPalette("quickActionsGroup")}>
+              <CommandItem
+                value={`audio music sound player ${tPalette("openAudio")}`}
+                onSelect={openAudio}
+              >
+                <Headphones
+                  aria-hidden="true"
+                  className="size-4 shrink-0 opacity-70"
+                />
+                <span className="truncate">{tPalette("openAudio")}</span>
+              </CommandItem>
+              <CommandItem
+                value={`saved bookmarks favorites ${tPalette("openSaved")}`}
+                onSelect={() => go("/account/saved")}
+              >
+                <Heart
+                  aria-hidden="true"
+                  className="size-4 shrink-0 opacity-70"
+                />
+                <span className="truncate">{tPalette("openSaved")}</span>
+              </CommandItem>
+              <CommandItem
+                value={`keyboard shortcuts help command palette ${tPalette("shortcutsHelp")}`}
+                onSelect={() => setSearch("shortcut")}
+              >
+                <HelpCircle
+                  aria-hidden="true"
+                  className="size-4 shrink-0 opacity-70"
+                />
+                <span className="truncate">{tPalette("shortcutsHelp")}</span>
+                <span
+                  aria-hidden="true"
+                  className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                >
+                  ⌘K · ↑↓ · ↵ · esc
+                </span>
+              </CommandItem>
+            </CommandGroup>
 
             <CommandSeparator />
 

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
+import { CopyCitationButton } from "@/components/system/copy-citation-button";
 
 interface PostHeaderProps {
   title: string;
@@ -35,6 +36,7 @@ export async function PostHeader({
   username,
 }: PostHeaderProps) {
   const t = await getTranslations("Blog");
+  const citation = `${title} — M4rkyu.com. ${canonicalUrl}`;
   return (
     <header className="relative overflow-hidden border-b">
       <ReadingProgress />
@@ -134,6 +136,7 @@ export async function PostHeader({
               <ArrowUpRight aria-hidden="true" className="size-3.5" />
             </a>
           </Button>
+          <CopyCitationButton citation={citation} />
           {commentsCount > 0 ? (
             <Button asChild variant="ghost" size="sm">
               <a

@@ -15,6 +15,10 @@ const routes = [
   "/en/resources/contrast-checker",
   "/en/resources/color-converter",
   "/en/resources/shadow-generator",
+  "/en/latest",
+  "/en/changelog",
+  "/en/colophon",
+  "/en/notes?tag=css",
   "/en/about",
   "/en/contact",
 ];
@@ -62,4 +66,67 @@ test("theme toggle flips data-theme on click", async ({ page }) => {
     .not.toBe(before);
   const after = await page.locator("html").getAttribute("data-theme");
   expect(["dark", "light"]).toContain(after);
+});
+
+test("command palette finds shop items and navigates", async ({ page }) => {
+  await page.goto("/en");
+  const trigger = page.getByRole("button", { name: "Command palette" });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  await expect(page.getByPlaceholder("Search pages, frames, settings…")).toBeVisible();
+
+  await page.getByPlaceholder("Search pages, frames, settings…").fill("wallpaper");
+  await page.getByRole("option", { name: /Desktop Wallpaper Pack/i }).click();
+  await expect(page).toHaveURL(/\/en\/shop\/wallpaper-pack$/);
+});
+
+test("command palette opens audio settings quick action", async ({ page }) => {
+  await page.goto("/en");
+  const trigger = page.getByRole("button", { name: "Command palette" });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  await expect(page.getByPlaceholder("Search pages, frames, settings…")).toBeVisible();
+  await page.getByPlaceholder("Search pages, frames, settings…").fill("audio");
+  await page.getByRole("option", { name: /Open audio settings/i }).click();
+
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(page.getByRole("switch", { name: "Ambient player" })).toHaveAttribute(
+    "aria-checked",
+    "false",
+  );
+});
+
+test("audio settings are directly reachable on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/en");
+
+  const audioButton = page.locator('button[aria-label="Audio settings"]:visible').first();
+  await expect(audioButton).toBeVisible();
+  await audioButton.click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+test("public feeds expose latest notes and logs", async ({ request }) => {
+  const rss = await request.get("/feed.xml");
+  expect(rss.ok()).toBe(true);
+  expect(rss.headers()["content-type"]).toContain("application/rss+xml");
+  expect(await rss.text()).toContain("<rss");
+
+  const json = await request.get("/feed.json");
+  expect(json.ok()).toBe(true);
+  expect(json.headers()["content-type"]).toContain("application/feed+json");
+  const payload = await json.json();
+  expect(payload.version).toBe("https://jsonfeed.org/version/1.1");
+  expect(Array.isArray(payload.items)).toBe(true);
+  expect(payload.items.length).toBeGreaterThan(0);
+});
+
+test("citation actions are available on readable detail pages", async ({ page }) => {
+  await page.goto("/en/resources/contrast-checker");
+  await expect(page.getByRole("button", { name: "Copy citation" })).toBeVisible();
+
+  await page.goto(
+    "/en/logs/the-true-cost-of-poor-data-quality-why-it-matters-and-how-to-improve-it-2epi",
+  );
+  await expect(page.getByRole("button", { name: "Copy citation" })).toBeVisible();
 });

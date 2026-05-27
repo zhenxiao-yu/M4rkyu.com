@@ -90,6 +90,10 @@ export const metadata: Metadata = {
       en: "/en",
       zh: "/zh",
     },
+    types: {
+      "application/rss+xml": "/feed.xml",
+      "application/feed+json": "/feed.json",
+    },
   },
   openGraph: {
     type: "website",

@@ -13,6 +13,9 @@
     "blog": "Writing",
     "media": "Media",
     "resources": "Resources",
+    "latest": "Latest",
+    "changelog": "Changelog",
+    "colophon": "Colophon",
     "about": "About",
     "contact": "Contact",
     "menu": "Open menu",
@@ -926,6 +929,10 @@
     "ratingLabel": "Rated {rating} out of 5",
     "linkCta": "Open link",
     "latest": "latest",
+    "tagFilterLabel": "Filter notes by tag",
+    "allTags": "All notes",
+    "noTagResultsTitle": "Nothing under this tag yet",
+    "noTagResultsDescription": "Try another tag or return to the full notes feed.",
     "kind": {
       "update": "Update",
       "repost": "Repost",
@@ -933,6 +940,53 @@
       "review": "Review",
       "tierlist": "Tier list"
     }
+  },
+  "Latest": {
+    "eyebrow": "everything new",
+    "featured": "Featured",
+    "kind": {
+      "note": "Note",
+      "log": "Log",
+      "work": "Work",
+      "frame": "Frame",
+      "resource": "Resource",
+      "shop": "Shop"
+    }
+  },
+  "Changelog": {
+    "eyebrow": "release notes",
+    "empty": "No release notes are available yet. Check back soon."
+  },
+  "Colophon": {
+    "eyebrow": "site notes",
+    "app": {
+      "title": "Application core",
+      "body": "Next.js App Router, React, and TypeScript shape the public routes, admin surfaces, and server-rendered content."
+    },
+    "interface": {
+      "title": "Interface layer",
+      "body": "Tailwind tokens, Radix primitives, and restrained motion carry the glass HUD and archive/pixel visual language."
+    },
+    "data": {
+      "title": "Content and data",
+      "body": "Zod-validated content falls back cleanly while Supabase powers accounts, saves, comments, and admin edits."
+    },
+    "commerce": {
+      "title": "Commerce and email",
+      "body": "Stripe handles checkout paths, Resend handles transactional mail, and Vercel keeps previews close to production."
+    },
+    "quality": {
+      "title": "Quality gates",
+      "body": "ESLint, TypeScript, Playwright, and Storybook cover the pieces that need to keep behaving as the site grows."
+    },
+    "delivery": {
+      "title": "Delivery surface",
+      "body": "ISR pages, route metadata, sitemap generation, and OG image handlers keep the archive crawlable and shareable."
+    },
+    "auditEyebrow": "public trail",
+    "auditTitle": "Want the ship log?",
+    "auditBody": "The changelog mirrors the repository history in a visitor-readable form, without exposing private project notes.",
+    "changelogCta": "Read changelog"
   },
   "Meta": {
     "galleryTitle": "Gallery",
@@ -950,13 +1004,22 @@
     "shopTitle": "Shop",
     "shopDescription": "Limited prints, posters, and small editions — the storefront opens once the first run is ready.",
     "notesTitle": "Notes",
-    "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated."
+    "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated.",
+    "latestTitle": "Latest",
+    "latestDescription": "A single feed of new notes, logs, work, frames, resources, and shop pieces across the archive.",
+    "changelogTitle": "Changelog",
+    "changelogDescription": "Public release notes and repository changes for m4rkyu.com.",
+    "colophonTitle": "About this site",
+    "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio."
   },
   "Common": {
     "comingSoon": "Coming soon",
     "readMore": "Read more",
     "status": "Status",
-    "replaceFinalContent": "Replace with final content"
+    "replaceFinalContent": "Replace with final content",
+    "copyCitation": "Copy citation",
+    "citationCopied": "Citation copied",
+    "citationCopyFailed": "Could not copy citation"
   },
   "Footer": {
     "statusOpen": "open channel",
@@ -982,12 +1045,17 @@
     "linkGames": "Games",
     "linkArchive": "Archive",
     "linkLogs": "Logs",
+    "linkLatest": "Latest",
     "linkTools": "Tools",
     "linkLinks": "Links",
+    "linkRss": "RSS",
+    "linkJsonFeed": "JSON feed",
     "linkNotes": "Notes",
     "linkShop": "Shop",
     "linkAbout": "About",
     "linkContact": "Contact",
+    "linkChangelog": "Changelog",
+    "linkColophon": "Colophon",
     "linkResume": "Resume",
     "resumePending": "pending",
     "wordmarkSince": "Crafted since 2024",
@@ -1038,6 +1106,13 @@
     "searchPlaceholder": "Search pages, frames, settings…",
     "pagesGroup": "Pages",
     "recentGroup": "Recent frames",
+    "notesGroup": "Notes",
+    "resourcesGroup": "Resources",
+    "shopGroup": "Shop",
+    "quickActionsGroup": "Quick actions",
+    "openAudio": "Open audio settings",
+    "openSaved": "Open saved items",
+    "shortcutsHelp": "Show keyboard shortcuts",
     "settingsGroup": "Settings",
     "themeLight": "Light theme",
     "themeDark": "Dark theme",

@@ -13,6 +13,9 @@
     "blog": "写作",
     "media": "媒体",
     "resources": "资源",
+    "latest": "最新",
+    "changelog": "更新日志",
+    "colophon": "技术说明",
     "about": "关于",
     "contact": "联系",
     "menu": "打开菜单",
@@ -926,6 +929,10 @@
     "ratingLabel": "评分 {rating} / 5",
     "linkCta": "打开链接",
     "latest": "最新",
+    "tagFilterLabel": "按标签筛选笔记",
+    "allTags": "全部笔记",
+    "noTagResultsTitle": "这个标签下暂时没有内容",
+    "noTagResultsDescription": "试试其他标签，或回到完整笔记流。",
     "kind": {
       "update": "动态",
       "repost": "转发",
@@ -933,6 +940,53 @@
       "review": "点评",
       "tierlist": "排行榜"
     }
+  },
+  "Latest": {
+    "eyebrow": "所有新内容",
+    "featured": "精选",
+    "kind": {
+      "note": "笔记",
+      "log": "日志",
+      "work": "作品",
+      "frame": "影像",
+      "resource": "资源",
+      "shop": "商店"
+    }
+  },
+  "Changelog": {
+    "eyebrow": "发布记录",
+    "empty": "暂无发布记录，请稍后再来查看。"
+  },
+  "Colophon": {
+    "eyebrow": "站点说明",
+    "app": {
+      "title": "应用核心",
+      "body": "Next.js App Router、React 与 TypeScript 负责公开页面、管理后台和服务端渲染内容。"
+    },
+    "interface": {
+      "title": "界面层",
+      "body": "Tailwind token、Radix 组件和克制的动效共同支撑玻璃 HUD 与像素档案视觉语言。"
+    },
+    "data": {
+      "title": "内容与数据",
+      "body": "Zod 校验的内容可稳定回退；Supabase 提供账号、保存、评论和管理编辑能力。"
+    },
+    "commerce": {
+      "title": "商店与邮件",
+      "body": "Stripe 处理结账路径，Resend 处理交易邮件，Vercel 让预览环境贴近生产环境。"
+    },
+    "quality": {
+      "title": "质量门槛",
+      "body": "ESLint、TypeScript、Playwright 与 Storybook 覆盖需要长期稳定的交互与组件。"
+    },
+    "delivery": {
+      "title": "交付表面",
+      "body": "ISR 页面、路由元数据、站点地图和 OG 图片处理器让档案更易索引与分享。"
+    },
+    "auditEyebrow": "公开轨迹",
+    "auditTitle": "想看发布记录？",
+    "auditBody": "更新日志用访客可读的方式呈现仓库历史，同时不暴露私人项目记录。",
+    "changelogCta": "阅读更新日志"
   },
   "Meta": {
     "galleryTitle": "影像",
@@ -950,13 +1004,22 @@
     "shopTitle": "商店",
     "shopDescription": "限量印刷、海报与小批量物件 —— 第一批准备就绪后即开放。",
     "notesTitle": "笔记",
-    "notesDescription": "短篇笔记 —— 设计片段、随手想法与读书旁注，简短并标注日期。"
+    "notesDescription": "短篇笔记 —— 设计片段、随手想法与读书旁注，简短并标注日期。",
+    "latestTitle": "最新",
+    "latestDescription": "汇总笔记、日志、作品、影像、资源和商店条目的单一更新流。",
+    "changelogTitle": "更新日志",
+    "changelogDescription": "m4rkyu.com 的公开发布记录与仓库变更。",
+    "colophonTitle": "关于本站",
+    "colophonDescription": "这个 Next.js 作品集背后的技术栈、系统与设计取舍。"
   },
   "Common": {
     "comingSoon": "即将开放",
     "readMore": "继续阅读",
     "status": "状态",
-    "replaceFinalContent": "正式内容替换中"
+    "replaceFinalContent": "正式内容替换中",
+    "copyCitation": "复制引用",
+    "citationCopied": "引用已复制",
+    "citationCopyFailed": "无法复制引用"
   },
   "Footer": {
     "statusOpen": "频道开放",
@@ -982,12 +1045,17 @@
     "linkGames": "游戏",
     "linkArchive": "档案",
     "linkLogs": "日志",
+    "linkLatest": "最新",
     "linkTools": "工具",
     "linkLinks": "链接",
+    "linkRss": "RSS",
+    "linkJsonFeed": "JSON Feed",
     "linkNotes": "笔记",
     "linkShop": "商店",
     "linkAbout": "关于",
     "linkContact": "联系",
+    "linkChangelog": "更新日志",
+    "linkColophon": "技术说明",
     "linkResume": "简历",
     "resumePending": "筹备中",
     "wordmarkSince": "始于 2024",
@@ -1038,6 +1106,13 @@
     "searchPlaceholder": "搜索页面、影像或设置…",
     "pagesGroup": "页面",
     "recentGroup": "最近影像",
+    "notesGroup": "笔记",
+    "resourcesGroup": "资源",
+    "shopGroup": "商店",
+    "quickActionsGroup": "快捷操作",
+    "openAudio": "打开音频设置",
+    "openSaved": "打开已保存项目",
+    "shortcutsHelp": "显示键盘快捷键",
     "settingsGroup": "设置",
     "themeLight": "亮色主题",
     "themeDark": "暗色主题",

@@ -71,15 +71,20 @@ export async function Footer({ locale }: { locale: Locale }) {
   ];
 
   const resourceLinks: FooterLink[] = [
+    { label: t("linkLatest"), href: "/latest" },
     { label: t("linkTools"), href: "/resources/tools" },
     { label: t("linkLinks"), href: "/resources/links" },
     { label: t("linkNotes"), href: "/notes" },
+    { label: t("linkRss"), href: "/feed.xml", external: true },
+    { label: t("linkJsonFeed"), href: "/feed.json", external: true },
     { label: t("linkShop"), href: "/shop" },
   ];
 
   const studioLinks: FooterLink[] = [
     { label: t("linkAbout"), href: "/about" },
     { label: t("linkContact"), href: "/contact" },
+    { label: t("linkChangelog"), href: "/changelog" },
+    { label: t("linkColophon"), href: "/colophon" },
     resumeReady && resumeHref
       ? { label: t("linkResume"), href: resumeHref, external: true }
       : { label: t("linkResume"), href: "/about", pending: true },

@@ -81,12 +81,12 @@ export async function Header({ locale }: { locale: Locale }) {
 
         {/* Desktop right rail (lg+) — positioned at the end of its
          * grid column so the centered DesktopNav stays viewport-anchored. */}
-        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex lg:justify-self-end">
+        <div className="ml-auto hidden shrink-0 items-center gap-1.5 lg:flex lg:justify-self-end">
           <CommandPaletteTrigger />
           {/* Tinted utility cluster — bell, lang, theme, single sound
            * settings button (replaces the old SoundToggle + MusicToggle
            * pair; opens the media-player dialog), QR. */}
-          <div className="flex items-center gap-0.5 rounded-xl border-border/60 bg-muted/30 p-0.5">
+          <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
             <LazyNotificationBell locale={locale} />
             <LanguageSwitcher />
             <ThemeSwitcher />
@@ -109,6 +109,7 @@ export async function Header({ locale }: { locale: Locale }) {
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
           <LazyNotificationBell locale={locale} />
           <ThemeSwitcher />
+          <SoundSettingsButton />
           <MobileNav
             locale={locale}
             groups={structure.groups}

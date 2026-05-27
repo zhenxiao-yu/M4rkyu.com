@@ -57,6 +57,7 @@ export function SoundSettingsButton() {
           <button
             type="button"
             data-state={isPlaying ? "playing" : "paused"}
+            data-audio-settings-trigger="true"
             aria-label={t("openLabel")}
             onClick={() => handleOpenChange(true)}
             className={cn(
