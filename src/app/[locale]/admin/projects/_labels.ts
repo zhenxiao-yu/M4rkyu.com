@@ -2,6 +2,7 @@ import "server-only";
 
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { buildDropzoneLabels } from "@/lib/admin/dropzone-labels";
 
 // Shared label bag for ProjectForm. Built once per page from
 // AdminProjects.* + Categories.* + Status.* namespaces so the form
@@ -10,8 +11,10 @@ import type { Locale } from "@/i18n/routing";
 export async function buildProjectFormLabels(locale: Locale) {
   const t = await getTranslations({ locale, namespace: "AdminProjects" });
   const tCategories = await getTranslations({ locale, namespace: "Categories" });
+  const dropzone = await buildDropzoneLabels(locale);
 
   return {
+    dropzone,
     required: t("required"),
     basics: t("section.basics"),
     titleLabel: t("titleLabel"),

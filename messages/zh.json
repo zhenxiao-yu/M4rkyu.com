@@ -1362,6 +1362,18 @@
   },
   "Admin": {
     "eyebrow": "管理",
+    "dropzone": {
+      "prompt": "将图片拖至此处，或点击选择",
+      "replacePrompt": "拖入新图片以替换",
+      "current": "正在显示当前图片",
+      "browse": "选择文件",
+      "clear": "移除所选图片",
+      "tooLarge": "图片超过 10 MB——请选择更小的文件。",
+      "wrongType": "格式不支持。请使用 JPG、PNG、WebP、AVIF 或 GIF。"
+    },
+    "manageHeading": "管理内容",
+    "manageOpen": "打开",
+    "manageNew": "新建",
     "navLabel": "管理分区",
     "overview": "概览",
     "gallery": "影像",

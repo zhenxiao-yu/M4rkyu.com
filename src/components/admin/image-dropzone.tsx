@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ImageUp, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 // Robust image picker for the admin CMS. Wraps a real <input type="file">
 // (so the file still posts through the multipart form naturally) and adds:
@@ -184,6 +184,8 @@ export function ImageDropzone({
       </span>
 
       <div
+        role="group"
+        aria-label={label}
         onDragOver={(e) => {
           e.preventDefault();
           setDragging(true);
@@ -244,6 +246,22 @@ export function ImageDropzone({
             </span>
           ) : null}
         </div>
+
+        {/* Real focusable control so the picker is keyboard/AT-reachable;
+            the surrounding div click is mouse-only convenience. */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            inputRef.current?.click();
+          }}
+          className={cn(
+            "rounded-md border border-border bg-muted px-3 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted/70",
+            FOCUS_RING,
+          )}
+        >
+          {labels.browse}
+        </button>
 
         <input
           ref={inputRef}

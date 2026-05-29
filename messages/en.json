@@ -1362,6 +1362,18 @@
   },
   "Admin": {
     "eyebrow": "admin",
+    "dropzone": {
+      "prompt": "Drag an image here, or click to browse",
+      "replacePrompt": "Drag a new image to replace",
+      "current": "Showing current image",
+      "browse": "Choose file",
+      "clear": "Remove selected image",
+      "tooLarge": "Image is over 10 MB — pick a smaller file.",
+      "wrongType": "Unsupported format. Use JPG, PNG, WebP, AVIF or GIF."
+    },
+    "manageHeading": "Manage content",
+    "manageOpen": "Open",
+    "manageNew": "New",
     "navLabel": "Admin sections",
     "overview": "Overview",
     "gallery": "Gallery",

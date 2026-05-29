@@ -2,14 +2,17 @@ import "server-only";
 
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { buildDropzoneLabels } from "@/lib/admin/dropzone-labels";
 
 // Shared label bag for ProductForm. Built once per page from the
 // AdminShop.* namespace so the form component stays free of next-intl
 // plumbing and the bilingual copy surface lives in one place.
 export async function buildProductFormLabels(locale: Locale) {
   const t = await getTranslations({ locale, namespace: "AdminShop" });
+  const dropzone = await buildDropzoneLabels(locale);
 
   return {
+    dropzone,
     basics: t("section.basics"),
     pricing: t("section.pricing"),
     detail: t("section.detail"),

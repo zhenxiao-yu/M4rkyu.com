@@ -2,6 +2,7 @@ import "server-only";
 
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { buildDropzoneLabels } from "@/lib/admin/dropzone-labels";
 
 // Shared label bag for MediaForm. Built once per page from the
 // AdminMedia.* namespace so the form component stays free of
@@ -9,8 +10,10 @@ import type { Locale } from "@/i18n/routing";
 // place.
 export async function buildMediaFormLabels(locale: Locale) {
   const t = await getTranslations({ locale, namespace: "AdminMedia" });
+  const dropzone = await buildDropzoneLabels(locale);
 
   return {
+    dropzone,
     required: t("required"),
     basics: t("section.basics"),
     detail: t("section.detail"),

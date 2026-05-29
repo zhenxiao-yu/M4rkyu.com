@@ -1,15 +1,11 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
+import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
 import {
-  Section,
-  Row,
-  Field,
-  Select,
-  Checkbox,
-  FileField,
-} from "@/components/admin/form-kit";
+  ImageDropzone,
+  type DropzoneLabels,
+} from "@/components/admin/image-dropzone";
 import { SlugField } from "@/components/admin/slug-field";
 import type { Product } from "@/content/shop";
 
@@ -44,6 +40,7 @@ interface Labels {
   imageLabel: string;
   imageHint: string;
   imageReplaceHint: string;
+  dropzone: DropzoneLabels;
   imageAltLabel: string;
   imageAltHint: string;
   currentImage: string;
@@ -171,27 +168,12 @@ export function ProductForm({
       </Section>
 
       <Section title={labels.media}>
-        {imageUrl ? (
-          <div className="grid gap-1.5">
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-              {labels.currentImage}
-            </span>
-            <div className="relative aspect-16/10 max-w-xs overflow-hidden rounded-md border border-border/60">
-              <Image
-                src={imageUrl}
-                alt={d.imageAlt || d.title}
-                fill
-                sizes="320px"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        ) : null}
-        <FileField
-          label={labels.imageLabel}
+        <ImageDropzone
           name="image"
-          accept="image/*"
+          label={labels.imageLabel}
           hint={imageUrl ? labels.imageReplaceHint : labels.imageHint}
+          labels={labels.dropzone}
+          currentImageUrl={imageUrl}
         />
         <Field
           label={labels.imageAltLabel}
