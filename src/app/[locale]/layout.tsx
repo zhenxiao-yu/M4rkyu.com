@@ -5,12 +5,13 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
 import { ConsentAwareAnalytics } from "@/components/privacy/consent-aware-analytics";
+import { WebVitalsReporter } from "@/components/system/web-vitals-reporter";
 import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { NavigationProgress } from "@/components/system/navigation-progress";
 import { CursorTrail } from "@/components/ui/magic/cursor-trail";
-import { AudioAutoplayConsent } from "@/components/system/audio-autoplay-consent";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
+import { AudioPlayerDialogHost } from "@/components/system/audio-player-dialog-host";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { LocalSavesMigration } from "@/components/saves/local-saves-migration";
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
         <ThemeProvider>
           <TooltipProvider delayDuration={400} skipDelayDuration={150}>
             <AudioPlayerProvider>
+              <AudioPlayerDialogHost />
               <CommandPaletteProvider>
                 {/*
                  * `lang={locale}` lives on a `display: contents` wrapper so
@@ -63,13 +65,10 @@ export default async function LocaleLayout({
                 <div lang={locale} className="contents">
                   {children}
                 </div>
-                {/* First-visit ambient-audio prompt. Persists the choice and
-                 * starts playback on the consenting gesture (browser autoplay
-                 * policy forbids sound before a user gesture). */}
-                <AudioAutoplayConsent />
                 <CursorTrail />
                 <CookieConsentBanner />
                 <ConsentAwareAnalytics />
+                <WebVitalsReporter />
                 {/* Self-determines sign-in client-side, so the layout needs
                  * no per-request cookie read — keeping pages statically
                  * renderable. */}

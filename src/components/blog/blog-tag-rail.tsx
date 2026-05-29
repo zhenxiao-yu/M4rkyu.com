@@ -110,7 +110,8 @@ export function BlogTagRail({
             <div
               id={moreId}
               role="group"
-              className="absolute left-0 top-full z-30 mt-2 grid max-h-80 w-[min(22rem,calc(100vw-2rem))] grid-cols-1 gap-1.5 overflow-y-auto rounded-lg border border-border bg-popover p-3 shadow-xl shadow-black/10 sm:grid-cols-2"
+              data-lenis-prevent
+              className="absolute left-0 top-full z-30 mt-2 grid max-h-80 w-[min(22rem,calc(100vw-2rem))] grid-cols-1 gap-1.5 overflow-y-auto overscroll-contain touch-pan-y rounded-lg border border-border bg-popover p-3 shadow-xl shadow-black/10 sm:grid-cols-2"
             >
               {restTags.map(({ value, count }) => (
                 <TagChip

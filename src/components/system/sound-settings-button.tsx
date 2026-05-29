@@ -1,110 +1,46 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Headphones, Pause, Play } from "lucide-react";
+import { Headphones } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
-import { playCue } from "@/lib/audio/ui-sound";
-import { AUDIO_PLAYER_OPEN_EVENT } from "@/lib/audio/player-events";
-import { AudioPlayerDialog } from "./audio-player-dialog";
 
 /**
- * Single audio control in the header chrome. Click opens the
- * AudioPlayerDialog — a media-player UI with transport, loop / shuffle,
- * BGM + SFX volume sliders, and the playlist. Replaces the old pair of
- * SoundToggle + MusicToggle buttons.
- *
- * The button itself shows the current playback state via the icon
- * (Headphones idle, Play paused, Pause playing) so the user gets
- * feedback without opening the dialog.
+ * Mobile audio entry point. Opens the shared AudioPlayerDialog (mounted
+ * once by AudioPlayerDialogHost) via context — the desktop HUD strip
+ * opens the same modal from its now-playing title. The icon carries a
+ * live dot when something is playing.
  */
 export function SoundSettingsButton() {
-  const [open, setOpen] = useState(false);
   const t = useTranslations("AudioPlayer");
-  const { isPlaying } = useAudioPlayer();
-
-  const Icon = isPlaying ? Pause : Headphones;
-  function handleOpenChange(nextOpen: boolean) {
-    if (nextOpen === open) return;
-    setOpen(nextOpen);
-    playCue(nextOpen ? "open" : "close");
-  }
-
-  // The now-playing HUD in the header ribbon lives outside this tree; it
-  // asks for the full dialog via a window event rather than shared state.
-  // A ref carries the current open state so the listener stays stable
-  // (no re-subscribe per toggle) without reading a stale closure.
-  const openRef = useRef(open);
-  useEffect(() => {
-    openRef.current = open;
-  }, [open]);
-  useEffect(() => {
-    const onOpen = () => {
-      if (openRef.current) return;
-      setOpen(true);
-      playCue("open");
-    };
-    window.addEventListener(AUDIO_PLAYER_OPEN_EVENT, onOpen);
-    return () => window.removeEventListener(AUDIO_PLAYER_OPEN_EVENT, onOpen);
-  }, []);
+  const { isPlaying, setDialogOpen } = useAudioPlayer();
 
   return (
-    <>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            type="button"
-            data-state={isPlaying ? "playing" : "paused"}
-            aria-label={t("openLabel")}
-            onClick={() => handleOpenChange(true)}
-            className={cn(
-              "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
-              "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
-              FOCUS_RING,
-              isPlaying && "border-ring/60 text-foreground",
-            )}
-          >
-            <Icon aria-hidden="true" className="size-4" />
-            {isPlaying ? (
-              <span
-                aria-hidden="true"
-                className="absolute -bottom-0.5 -right-0.5 size-1.5 rounded-full bg-ring shadow-[0_0_0_2px_var(--background)]"
-              />
-            ) : null}
-          </button>
-        </TooltipTrigger>
-        <TooltipContent>{t("openLabel")}</TooltipContent>
-      </Tooltip>
-      <AudioPlayerDialog open={open} onOpenChange={handleOpenChange} />
-    </>
-  );
-}
-
-// Re-export a tiny standalone Play/Pause helper for headless usage —
-// e.g. a "now playing" pill in the mobile sheet that wants to toggle
-// playback without opening the dialog.
-export function QuickPlayPauseButton({ className }: { className?: string }) {
-  const t = useTranslations("AudioPlayer");
-  const { isPlaying, togglePlay, currentTrack } = useAudioPlayer();
-  if (!currentTrack) return null;
-  return (
-    <button
-      type="button"
-      onClick={togglePlay}
-      aria-label={isPlaying ? t("pause") : t("play")}
-      className={cn(
-        "inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
-        FOCUS_RING_INSET,
-        className,
-      )}
-    >
-      {isPlaying ? (
-        <Pause aria-hidden="true" className="size-4" />
-      ) : (
-        <Play aria-hidden="true" className="size-4 translate-x-px" />
-      )}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={t("openLabel")}
+          aria-haspopup="dialog"
+          onClick={() => setDialogOpen(true)}
+          className={cn(
+            "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
+            "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
+            FOCUS_RING,
+            isPlaying && "border-ring/60 text-foreground",
+          )}
+        >
+          <Headphones aria-hidden="true" className="size-4" />
+          {isPlaying ? (
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-0.5 -right-0.5 size-1.5 rounded-full bg-ring shadow-[0_0_0_2px_var(--background)]"
+            />
+          ) : null}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{t("openLabel")}</TooltipContent>
+    </Tooltip>
   );
 }

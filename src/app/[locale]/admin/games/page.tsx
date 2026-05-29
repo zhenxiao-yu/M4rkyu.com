@@ -5,6 +5,8 @@ import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbGames } from "@/lib/games/db";
 import {
+  bulkDeleteGamesAction,
+  bulkSetGameStatusAction,
   duplicateGameAction,
   reorderGameAction,
   setGameStatusAction,
@@ -62,6 +64,8 @@ export default async function AdminGamesPage({
           setStatusAction={setGameStatusAction}
           reorderAction={reorderGameAction}
           duplicateAction={duplicateGameAction}
+          bulkStatusAction={bulkSetGameStatusAction}
+          bulkDeleteAction={bulkDeleteGamesAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),

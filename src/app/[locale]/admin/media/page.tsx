@@ -5,6 +5,8 @@ import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbMediaItems } from "@/lib/media/db";
 import {
+  bulkDeleteMediaAction,
+  bulkSetMediaStatusAction,
   duplicateMediaAction,
   reorderMediaAction,
   setMediaStatusAction,
@@ -61,6 +63,8 @@ export default async function AdminMediaPage({
           setStatusAction={setMediaStatusAction}
           reorderAction={reorderMediaAction}
           duplicateAction={duplicateMediaAction}
+          bulkStatusAction={bulkSetMediaStatusAction}
+          bulkDeleteAction={bulkDeleteMediaAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),

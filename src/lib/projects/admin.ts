@@ -308,6 +308,26 @@ export async function reorderProjectAction(id: string, direction: "up" | "down")
   revalidateProjects();
 }
 
+export async function bulkSetProjectStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("projects")
+    .update({ content_status: parsed.data })
+    .in("id", ids);
+  revalidateProjects();
+}
+
+export async function bulkDeleteProjectsAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("projects").delete().in("id", ids);
+  revalidateProjects();
+}
+
 export async function duplicateProjectAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

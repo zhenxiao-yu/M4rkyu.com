@@ -194,6 +194,23 @@ export async function reorderResourceAction(id: string, direction: "up" | "down"
   revalidateResources();
 }
 
+export async function bulkSetResourceStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("resources").update({ status: parsed.data }).in("id", ids);
+  revalidateResources();
+}
+
+export async function bulkDeleteResourcesAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("resources").delete().in("id", ids);
+  revalidateResources();
+}
+
 export async function duplicateResourceAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

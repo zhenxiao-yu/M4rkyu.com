@@ -211,6 +211,23 @@ export async function reorderNoteAction(id: string, direction: "up" | "down") {
   revalidateNotes();
 }
 
+export async function bulkSetNoteStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("notes").update({ status: parsed.data }).in("id", ids);
+  revalidateNotes();
+}
+
+export async function bulkDeleteNotesAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("notes").delete().in("id", ids);
+  revalidateNotes();
+}
+
 export async function duplicateNoteAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

@@ -997,6 +997,30 @@ html {
   }
 }
 
+/* Contact "battlestation" scene — slow yaw/pitch drift around the static
+ * base pose, plus a blinking terminal caret on the monitor. Both are
+ * motion-safe gated at the consumer (WorkspaceScene), so reduced-motion
+ * users see the still inline pose. */
+@keyframes workspace-drift {
+  0%,
+  100% {
+    transform: rotateX(-24deg) rotateY(-30deg);
+  }
+  50% {
+    transform: rotateX(-19deg) rotateY(-7deg);
+  }
+}
+@keyframes workspace-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Home-page full-page slide snapping.
  *
  *  - Desktop (pointer: fine): owned by Lenis' `Snap` plugin in

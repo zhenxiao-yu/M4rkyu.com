@@ -9,6 +9,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { ToolShell } from "@/components/tools/tool-shell";
 import { isToolSlug } from "@/components/tools/tool-registry";
 import { ToolRenderer } from "@/components/tools/tool-renderer";
+import { CopyCitationButton } from "@/components/system/copy-citation-button";
 import { resources } from "@/content/resources";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -60,6 +61,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   if (!isToolSlug(slug)) notFound();
 
   const t = await getTranslations({ locale, namespace: "Resources" });
+  const citation = `${resource.name} — M4rkyu.com. ${resource.link}`;
 
   return (
     <PageShell locale={locale}>
@@ -84,16 +86,19 @@ export default async function ToolPage({ params }: ToolPageProps) {
           category={resource.category}
           tags={resource.tags}
           actions={
-            <Button asChild variant="outline" size="sm">
-              <a
-                href={resource.link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("toolSource")}
-                <ExternalLink className="size-3.5" aria-hidden="true" />
-              </a>
-            </Button>
+            <>
+              <Button asChild variant="outline" size="sm">
+                <a
+                  href={resource.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t("toolSource")}
+                  <ExternalLink className="size-3.5" aria-hidden="true" />
+                </a>
+              </Button>
+              <CopyCitationButton citation={citation} />
+            </>
           }
         >
           <ToolRenderer slug={slug} />

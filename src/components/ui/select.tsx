@@ -59,6 +59,7 @@ export function SelectContent({
          * available content height and let the OS scrollbar (already
          * themed site-wide in globals.css) handle long option lists. */}
         <SelectPrimitive.Viewport
+          data-lenis-prevent
           className="max-h-(--radix-select-content-available-height) overflow-y-auto overscroll-contain p-1.5"
         >
           {children}

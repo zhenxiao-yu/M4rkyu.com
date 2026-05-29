@@ -261,6 +261,23 @@ export async function reorderProductAction(id: string, direction: "up" | "down")
   revalidateShop();
 }
 
+export async function bulkSetProductStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("products").update({ status: parsed.data }).in("id", ids);
+  revalidateShop();
+}
+
+export async function bulkDeleteProductsAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("products").delete().in("id", ids);
+  revalidateShop();
+}
+
 export async function duplicateProductAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

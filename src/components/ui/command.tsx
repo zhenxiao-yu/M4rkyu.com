@@ -46,6 +46,10 @@ export const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
+    // `data-lenis-prevent` excludes this list from the site's Lenis
+    // smooth-scroll wheel handler, which otherwise preventDefaults every
+    // wheel event and would block native scrolling inside the panel.
+    data-lenis-prevent
     // `flex-1 min-h-0` lets the list fill whatever vertical space the
     // parent gives it — works for both the desktop modal (Dialog caps
     // its own height) and the mobile bottom sheet (Dialog is dvh-tall).

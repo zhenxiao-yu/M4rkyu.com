@@ -13,6 +13,9 @@
     "blog": "Writing",
     "media": "Media",
     "resources": "Resources",
+    "latest": "Latest",
+    "changelog": "Changelog",
+    "colophon": "Colophon",
     "about": "About",
     "contact": "Contact",
     "menu": "Open menu",
@@ -50,7 +53,10 @@
     "switchTo": "Switch to {target}"
   },
   "Hud": {
-    "systemStatus": "System status"
+    "systemStatus": "System status",
+    "region": "Ontario · CA",
+    "nowPlaying": "Now playing",
+    "standby": "Standby"
   },
   "Status": {
     "ready": "Ready",
@@ -316,6 +322,11 @@
     "viewCollection": "View collection",
     "carouselPrev": "Previous collection",
     "carouselNext": "Next collection",
+    "viewDetail": "View detail",
+    "closeDetail": "Close detail view",
+    "detailView": "Detail view",
+    "detailHint": "Open a larger inspection view to study the frame without the archive grid getting in the way.",
+    "placeholderHint": "Placeholder frame keeps the gallery structure in place until the final image is ready.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out"
   },
@@ -346,7 +357,9 @@
     "scanShareEyebrow": "scan · share",
     "shareSiteAria": "Share m4rkyu.com",
     "openSiteAria": "Open m4rkyu.com in a new tab",
-    "closeShareAria": "Close share menu"
+    "closeShareAria": "Close share menu",
+    "copyEmail": "Copy email address",
+    "emailCopied": "Email copied"
   },
   "NotFound": {
     "eyebrow": "404 / off the contact sheet",
@@ -737,6 +750,14 @@
   "Contact": {
     "eyebrow": "collaboration",
     "formProviderTbd": "INQUIRY · LIVE",
+    "metaResponseLabel": "Response",
+    "metaResponseValue": "≈ 2 working days",
+    "metaChannelLabel": "Channel",
+    "metaChannelValue": "Resend → inbox",
+    "socialsTitle": "Find me online",
+    "starLabel": "Star this site",
+    "coffeeLabel": "Buy me a coffee",
+    "qrTitle": "Scan to open",
     "inquiryTitle": "Project inquiry",
     "projectTypeBadge": "Project type",
     "nameLabel": "Name",
@@ -921,6 +942,10 @@
     "ratingLabel": "Rated {rating} out of 5",
     "linkCta": "Open link",
     "latest": "latest",
+    "tagFilterLabel": "Filter notes by tag",
+    "allTags": "All notes",
+    "noTagResultsTitle": "Nothing under this tag yet",
+    "noTagResultsDescription": "Try another tag or return to the full notes feed.",
     "kind": {
       "update": "Update",
       "repost": "Repost",
@@ -928,6 +953,53 @@
       "review": "Review",
       "tierlist": "Tier list"
     }
+  },
+  "Latest": {
+    "eyebrow": "everything new",
+    "featured": "Featured",
+    "kind": {
+      "note": "Note",
+      "log": "Log",
+      "work": "Work",
+      "frame": "Frame",
+      "resource": "Resource",
+      "shop": "Shop"
+    }
+  },
+  "Changelog": {
+    "eyebrow": "release notes",
+    "empty": "No release notes are available yet. Check back soon."
+  },
+  "Colophon": {
+    "eyebrow": "site notes",
+    "app": {
+      "title": "Application core",
+      "body": "Next.js App Router, React, and TypeScript shape the public routes, admin surfaces, and server-rendered content."
+    },
+    "interface": {
+      "title": "Interface layer",
+      "body": "Tailwind tokens, Radix primitives, and restrained motion carry the glass HUD and archive/pixel visual language."
+    },
+    "data": {
+      "title": "Content and data",
+      "body": "Zod-validated content falls back cleanly while Supabase powers accounts, saves, comments, and admin edits."
+    },
+    "commerce": {
+      "title": "Commerce and email",
+      "body": "Stripe handles checkout paths, Resend handles transactional mail, and Vercel keeps previews close to production."
+    },
+    "quality": {
+      "title": "Quality gates",
+      "body": "ESLint, TypeScript, Playwright, and Storybook cover the pieces that need to keep behaving as the site grows."
+    },
+    "delivery": {
+      "title": "Delivery surface",
+      "body": "ISR pages, route metadata, sitemap generation, and OG image handlers keep the archive crawlable and shareable."
+    },
+    "auditEyebrow": "public trail",
+    "auditTitle": "Want the ship log?",
+    "auditBody": "The changelog mirrors the repository history in a visitor-readable form, without exposing private project notes.",
+    "changelogCta": "Read changelog"
   },
   "Meta": {
     "galleryTitle": "Gallery",
@@ -945,13 +1017,22 @@
     "shopTitle": "Shop",
     "shopDescription": "Limited prints, posters, and small editions — the storefront opens once the first run is ready.",
     "notesTitle": "Notes",
-    "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated."
+    "notesDescription": "Short-form notes — design fragments, working ideas, and reading marginalia, kept terse and dated.",
+    "latestTitle": "Latest",
+    "latestDescription": "A single feed of new notes, logs, work, frames, resources, and shop pieces across the archive.",
+    "changelogTitle": "Changelog",
+    "changelogDescription": "Public release notes and repository changes for m4rkyu.com.",
+    "colophonTitle": "About this site",
+    "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio."
   },
   "Common": {
     "comingSoon": "Coming soon",
     "readMore": "Read more",
     "status": "Status",
-    "replaceFinalContent": "Replace with final content"
+    "replaceFinalContent": "Replace with final content",
+    "copyCitation": "Copy citation",
+    "citationCopied": "Citation copied",
+    "citationCopyFailed": "Could not copy citation"
   },
   "Footer": {
     "statusOpen": "open channel",
@@ -977,12 +1058,17 @@
     "linkGames": "Games",
     "linkArchive": "Archive",
     "linkLogs": "Logs",
+    "linkLatest": "Latest",
     "linkTools": "Tools",
     "linkLinks": "Links",
+    "linkRss": "RSS",
+    "linkJsonFeed": "JSON feed",
     "linkNotes": "Notes",
     "linkShop": "Shop",
     "linkAbout": "About",
     "linkContact": "Contact",
+    "linkChangelog": "Changelog",
+    "linkColophon": "Colophon",
     "linkResume": "Resume",
     "resumePending": "pending",
     "wordmarkSince": "Crafted since 2024",
@@ -1033,6 +1119,13 @@
     "searchPlaceholder": "Search pages, frames, settings…",
     "pagesGroup": "Pages",
     "recentGroup": "Recent frames",
+    "notesGroup": "Notes",
+    "resourcesGroup": "Resources",
+    "shopGroup": "Shop",
+    "quickActionsGroup": "Quick actions",
+    "openAudio": "Open audio settings",
+    "openSaved": "Open saved items",
+    "shortcutsHelp": "Show keyboard shortcuts",
     "settingsGroup": "Settings",
     "themeLight": "Light theme",
     "themeDark": "Dark theme",
@@ -1313,7 +1406,16 @@
       "moveDown": "Move down",
       "status": "Status",
       "noMatches": "Nothing matches your search.",
-      "results": "shown"
+      "results": "shown",
+      "bulk": {
+        "selectAria": "Select {title}",
+        "selectAllAria": "Select all shown",
+        "selected": "{count} selected",
+        "setStatus": "Set status…",
+        "deleteSelected": "Delete",
+        "clearSelection": "Clear",
+        "confirmDelete": "Delete {count} item(s)? This cannot be undone."
+      }
     }
   },
   "AdminShop": {
@@ -1788,6 +1890,9 @@
     "description": "Background music and sound effect controls.",
     "openLabel": "Audio settings",
     "expandLabel": "Open player",
+    "collapseLabel": "Collapse player",
+    "featureToggleLabel": "Ambient player",
+    "featureToggleDescription": "Enable background music and the navbar mini-player.",
     "nowPlaying": "Now playing",
     "noTrack": "No track loaded",
     "noEnabledTracks": "Add music files to enable playback.",
@@ -1805,10 +1910,6 @@
     "sfxVolume": "Effects",
     "sfxTest": "Test",
     "sfxTestAria": "Play test sound effect",
-    "playlist": "Playlist",
-    "autoplayTitle": "Play ambient music?",
-    "autoplayBody": "This site has a background soundtrack. Enable it now and on future visits?",
-    "autoplayEnable": "Enable",
-    "autoplayDismiss": "Not now"
+    "playlist": "Playlist"
   }
 }

@@ -39,7 +39,7 @@ Run a single Playwright test:
 
 ```bash
 npx playwright test tests/smoke.spec.ts -g "<test name substring>"
-npx playwright test --project=chromium-1280   # one viewport project
+npx playwright test --project=1280            # one viewport project (widths: 360/390/768/1280/1920)
 ```
 
 `test:e2e` boots its own Next dev server with `NEXT_DIST_DIR=.next-playwright`

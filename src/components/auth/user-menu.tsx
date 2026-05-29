@@ -5,8 +5,10 @@ import { UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  hasSupabaseAuthCookie,
+  isSupabaseConfigured,
+} from "@/lib/supabase/config";
 import { SignInSheet } from "./sign-in-sheet";
 import type { Locale } from "@/i18n/routing";
 
@@ -32,8 +34,13 @@ export function UserMenu({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
-    const supabase = createSupabaseBrowserClient();
+    // Skip loading Supabase entirely for anonymous visitors. Every sign-in
+    // path revalidates + redirects, so UserMenu re-mounts with the cookie
+    // present — gating here loses no live update.
+    if (!hasSupabaseAuthCookie()) return;
+
     let active = true;
+    let unsubscribe: (() => void) | undefined;
 
     const apply = (
       authUser: { user_metadata?: Record<string, unknown> } | null,
@@ -55,16 +62,27 @@ export function UserMenu({ locale }: { locale: Locale }) {
       });
     };
 
-    supabase.auth
-      .getUser()
-      .then(({ data }) => apply(data.user))
-      .catch(() => apply(null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
-      apply(session?.user ?? null),
-    );
+    // Dynamic import keeps @supabase/supabase-js out of the header's
+    // first-load chunk; it loads as a separate chunk only when needed.
+    void (async () => {
+      const { createSupabaseBrowserClient } = await import(
+        "@/lib/supabase/client"
+      );
+      if (!active) return;
+      const supabase = createSupabaseBrowserClient();
+      supabase.auth
+        .getUser()
+        .then(({ data }) => apply(data.user))
+        .catch(() => apply(null));
+      const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
+        apply(session?.user ?? null),
+      );
+      unsubscribe = () => sub.subscription.unsubscribe();
+    })();
+
     return () => {
       active = false;
-      sub.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, [t]);
 

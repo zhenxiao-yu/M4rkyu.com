@@ -16,13 +16,13 @@ export function CommandPaletteTrigger() {
       onClick={() => setOpen(true)}
       aria-label={t("title")}
       className={cn(
-        "inline-flex h-9 items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-xs text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
+        "inline-flex h-9 w-60 items-center gap-2 rounded-md border border-border bg-background/70 px-3 text-xs text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
         FOCUS_RING,
       )}
     >
-      <Search aria-hidden="true" className="size-3.5" />
+      <Search aria-hidden="true" className="size-3.5 shrink-0" />
       <span>{t("trigger")}</span>
-      <kbd className="ml-2 rounded border bg-muted px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.18em]">
+      <kbd className="ml-auto shrink-0 rounded border bg-muted px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.18em]">
         ⌘K
       </kbd>
     </button>

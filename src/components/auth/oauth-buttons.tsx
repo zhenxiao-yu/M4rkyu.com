@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { resolveSiteOrigin } from "@/lib/auth/redirect-url";
 import { authProviderFlags } from "@/lib/auth/provider-flags";
 
@@ -35,6 +34,12 @@ export function OAuthButtons({ next }: OAuthButtonsProps) {
     setErrorOn(null);
     setPending(provider);
     try {
+      // Dynamic import keeps @supabase/supabase-js out of the sign-in
+      // sheet's chunk (which rides in the header on every page). It loads
+      // only when a provider button is actually clicked.
+      const { createSupabaseBrowserClient } = await import(
+        "@/lib/supabase/client"
+      );
       const supabase = createSupabaseBrowserClient();
       const origin = resolveSiteOrigin(
         typeof window !== "undefined" ? window.location.origin : null,

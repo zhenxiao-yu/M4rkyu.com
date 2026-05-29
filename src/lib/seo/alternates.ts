@@ -22,5 +22,9 @@ export function buildAlternates(
     languages: Object.fromEntries(
       routing.locales.map((entry) => [entry, `/${entry}${path}`]),
     ) as Record<string, string>,
+    types: {
+      "application/rss+xml": "/feed.xml",
+      "application/feed+json": "/feed.json",
+    },
   };
 }
