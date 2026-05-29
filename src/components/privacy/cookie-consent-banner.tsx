@@ -42,7 +42,8 @@ export function CookieConsentBanner() {
   return (
     <section
       aria-label={t("bannerLabel")}
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto max-h-[calc(100dvh-5rem)] max-w-xl overflow-y-auto rounded-lg border border-border bg-background/95 p-3 shadow-2xl shadow-black/15 backdrop-blur-xl sm:bottom-auto sm:inset-x-auto sm:right-4 sm:left-auto sm:top-[4.5rem] sm:mx-0 sm:max-w-lg sm:p-4 dark:shadow-black/40"
+      data-lenis-prevent
+      className="fixed inset-x-3 bottom-3 z-50 mx-auto max-h-[calc(100dvh-5rem)] max-w-xl overflow-y-auto overscroll-contain rounded-lg border border-border bg-background/95 p-3 shadow-2xl shadow-black/15 backdrop-blur-xl sm:bottom-auto sm:inset-x-auto sm:right-4 sm:left-auto sm:top-[4.5rem] sm:mx-0 sm:max-w-lg sm:p-4 dark:shadow-black/40"
     >
       <div className="grid gap-3">
         <div className="min-w-0">

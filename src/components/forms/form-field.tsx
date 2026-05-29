@@ -7,6 +7,7 @@ import {
   type FieldPath,
   type FieldValues,
 } from "react-hook-form";
+import { Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +48,11 @@ interface FormFieldProps<TValues extends FieldValues> {
   /** Localised error message — schema validation maps a key → t(...). */
   errorMessage?: string;
   /**
+   * When true, render a subtle success tick beside the label — the field
+   * is touched/dirty and currently passes validation. Purely decorative.
+   */
+  valid?: boolean;
+  /**
    * Custom renderer for non-text inputs (textarea, select, custom
    * widgets). When omitted, an `<Input>` is rendered with the spread
    * props from `inputProps`.
@@ -67,6 +73,7 @@ export function FormField<TValues extends FieldValues>({
   label,
   description,
   errorMessage,
+  valid,
   render,
   inputProps,
   className,
@@ -116,7 +123,15 @@ export function FormField<TValues extends FieldValues>({
 
         return (
           <label htmlFor={id} className={cn("grid gap-2 text-sm font-medium", className)}>
-            <span>{label}</span>
+            <span className="flex items-center gap-1.5">
+              {label}
+              {valid && !hasError ? (
+                <Check
+                  className="size-3.5 text-success motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-75 motion-safe:duration-(--motion-fast)"
+                  aria-hidden="true"
+                />
+              ) : null}
+            </span>
             {description ? (
               <span id={descriptionId} className="text-xs leading-5 text-muted-foreground">
                 {description}

@@ -8,7 +8,6 @@ import {
   Clock3,
   FileText,
   Gamepad2,
-  Headphones,
   Heart,
   HelpCircle,
   Image as ImageIcon,
@@ -48,7 +47,6 @@ import { galleryItems } from "@/content/gallery";
 import { notes } from "@/content/notes";
 import { resources } from "@/content/resources";
 import { getShopProducts } from "@/content/shop";
-import { openAudioPlayer } from "@/lib/audio/player-events";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
@@ -203,20 +201,6 @@ export function CommandPalette({
     onOpenChange(false);
     const rest = pathname.replace(/^\/(en|zh)/, "") || "/";
     router.replace(rest, { locale: nextLocale });
-  }
-
-  function openAudio() {
-    onOpenChange(false);
-    window.setTimeout(() => {
-      const trigger = document.querySelector<HTMLButtonElement>(
-        'button[data-audio-settings-trigger="true"]',
-      );
-      if (trigger) {
-        trigger.click();
-        return;
-      }
-      openAudioPlayer();
-    }, 0);
   }
 
   return (
@@ -458,16 +442,6 @@ export function CommandPalette({
             <CommandSeparator />
 
             <CommandGroup heading={tPalette("quickActionsGroup")}>
-              <CommandItem
-                value={`audio music sound player ${tPalette("openAudio")}`}
-                onSelect={openAudio}
-              >
-                <Headphones
-                  aria-hidden="true"
-                  className="size-4 shrink-0 opacity-70"
-                />
-                <span className="truncate">{tPalette("openAudio")}</span>
-              </CommandItem>
               <CommandItem
                 value={`saved bookmarks favorites ${tPalette("openSaved")}`}
                 onSelect={() => go("/account/saved")}

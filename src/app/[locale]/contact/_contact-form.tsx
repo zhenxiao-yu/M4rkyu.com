@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/forms/form-field";
+import { CopyEmailButton } from "./_copy-email-button";
 import { useTurnstile } from "@/lib/hooks/use-turnstile";
 import {
   inquirySchema,
@@ -47,7 +48,7 @@ export function ContactForm({ email }: { email: string }) {
     reset,
     setError,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, dirtyFields, touchedFields },
   } = useForm<InquiryInput>({
     resolver: zodResolver(inquirySchema),
     defaultValues,
@@ -111,6 +112,11 @@ export function ContactForm({ email }: { email: string }) {
 
   const submitting = pending || isSubmitting;
 
+  // A field shows its success tick once the visitor has touched/edited it
+  // (mode "onBlur") and it currently carries no validation error.
+  const isFieldValid = (field: keyof InquiryInput) =>
+    Boolean((dirtyFields[field] || touchedFields[field]) && !errors[field]);
+
   return (
     <>
       {TURNSTILE_SITE_KEY ? (
@@ -121,7 +127,7 @@ export function ContactForm({ email }: { email: string }) {
       ) : null}
 
       <form
-        className="grid gap-5"
+        className="flex flex-1 flex-col gap-5"
         aria-describedby="contact-form-note"
         onSubmit={handleSubmit(onValid)}
         noValidate
@@ -130,6 +136,7 @@ export function ContactForm({ email }: { email: string }) {
           control={control}
           name="name"
           label={t("nameLabel")}
+          valid={isFieldValid("name")}
           errorMessage={errors.name ? resolveError(t, errors.name.message) : undefined}
           inputProps={{
             placeholder: t("namePlaceholder"),
@@ -140,6 +147,7 @@ export function ContactForm({ email }: { email: string }) {
           control={control}
           name="email"
           label={t("emailLabel")}
+          valid={isFieldValid("email")}
           errorMessage={errors.email ? resolveError(t, errors.email.message) : undefined}
           inputProps={{
             type: "email",
@@ -152,6 +160,7 @@ export function ContactForm({ email }: { email: string }) {
           control={control}
           name="projectType"
           label={t("projectTypeLabel")}
+          valid={isFieldValid("projectType")}
           errorMessage={
             errors.projectType ? resolveError(t, errors.projectType.message) : undefined
           }
@@ -164,13 +173,15 @@ export function ContactForm({ email }: { email: string }) {
           control={control}
           name="message"
           label={t("messageLabel")}
+          valid={isFieldValid("message")}
+          className="!flex flex-1 flex-col gap-2"
           errorMessage={errors.message ? resolveError(t, errors.message.message) : undefined}
           render={({ id, name, value, onChange, onBlur, "aria-invalid": ai, "aria-describedby": ad }) => (
             <textarea
               id={id}
               name={name}
-              rows={7}
-              className="min-h-36 rounded-md border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              rows={5}
+              className="min-h-32 flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
               placeholder={t("messagePlaceholder")}
               value={typeof value === "string" ? value : ""}
               onChange={(event) => onChange(event.target.value)}
@@ -213,6 +224,7 @@ export function ContactForm({ email }: { email: string }) {
               {t("formDirect")}
             </a>
           </Button>
+          <CopyEmailButton email={email} />
         </div>
       </form>
     </>

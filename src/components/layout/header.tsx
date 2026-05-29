@@ -5,7 +5,6 @@ import type { Locale } from "@/i18n/routing";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundSettingsButton } from "@/components/system/sound-settings-button";
-import { QrCodeButton } from "@/components/system/qr-code-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
 import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
@@ -14,6 +13,7 @@ import { getNotificationFeed } from "@/lib/notifications/feed";
 import { AudioNavBar } from "@/components/ui/magic/audio-visualizer";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
+import { HeaderStatusStrip } from "./header-status-strip";
 import { DesktopNav } from "./desktop-nav";
 import { buildNavStructure, type NavLabels } from "./nav-structure";
 
@@ -52,6 +52,7 @@ export async function Header({ locale }: { locale: Locale }) {
     // the glass dock interactive while the surrounding header gutter
     // remains click-through over immersive first sections.
     <header className="pointer-events-none sticky top-0 z-40 w-full">
+      <HeaderStatusStrip locale={locale} />
       <HeaderDock>
         {/* Sleek, mirror-symmetric spectrum hugging the dock's lower
          * edge. Silent until music plays; reduced-motion safe. */}
@@ -83,15 +84,13 @@ export async function Header({ locale }: { locale: Locale }) {
          * grid column so the centered DesktopNav stays viewport-anchored. */}
         <div className="ml-auto hidden shrink-0 items-center gap-1.5 lg:flex lg:justify-self-end">
           <CommandPaletteTrigger />
-          {/* Tinted utility cluster — bell, lang, theme, single sound
-           * settings button (replaces the old SoundToggle + MusicToggle
-           * pair; opens the media-player dialog), QR. */}
+          {/* Tinted utility cluster — bell, lang, theme. The QR / share
+           * affordance now lives on the contact page. Audio control lives
+           * in the HUD status strip on lg+, so no audio button here. */}
           <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
             <LazyNotificationBell locale={locale} />
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <SoundSettingsButton />
-            <QrCodeButton url="https://m4rkyu.com" />
           </div>
           {/* UserMenu renders Sign-in trigger (guest) or account link
            * (signed-in). Hides entirely when Supabase env vars are

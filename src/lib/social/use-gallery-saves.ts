@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  hasSupabaseAuthCookie,
+  isSupabaseConfigured,
+} from "@/lib/supabase/config";
 
 /**
  * Client-side read of the signed-in user's saved gallery slugs.
@@ -26,10 +28,17 @@ export function useGallerySaves(): {
 
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
-    const supabase = createSupabaseBrowserClient();
+    // Guests have no saved set — skip loading the Supabase client so it
+    // stays out of First Load JS on the public /archive pages.
+    if (!hasSupabaseAuthCookie()) return;
     let active = true;
 
     void (async () => {
+      const { createSupabaseBrowserClient } = await import(
+        "@/lib/supabase/client"
+      );
+      if (!active) return;
+      const supabase = createSupabaseBrowserClient();
       const { data: userData } = await supabase.auth.getUser();
       if (!active) return;
       if (!userData.user) {

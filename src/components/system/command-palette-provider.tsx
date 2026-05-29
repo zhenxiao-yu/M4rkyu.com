@@ -10,7 +10,17 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CommandPalette, type PalettePost } from "./command-palette";
+import dynamic from "next/dynamic";
+import type { PalettePost } from "./command-palette";
+
+// The palette (cmdk + its icon set, ~127 KB) is a ⌘K modal — defer the
+// download until first open instead of shipping it in First Load JS. The
+// render is already gated behind `hasOpened`, so this only changes when the
+// chunk is fetched, not when it shows.
+const CommandPalette = dynamic(
+  () => import("./command-palette").then((m) => m.CommandPalette),
+  { ssr: false },
+);
 
 interface CommandPaletteContextValue {
   open: boolean;

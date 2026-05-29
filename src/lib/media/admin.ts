@@ -231,6 +231,23 @@ export async function reorderMediaAction(id: string, direction: "up" | "down") {
   revalidateMedia();
 }
 
+export async function bulkSetMediaStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("media_items").update({ status: parsed.data }).in("id", ids);
+  revalidateMedia();
+}
+
+export async function bulkDeleteMediaAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("media_items").delete().in("id", ids);
+  revalidateMedia();
+}
+
 export async function duplicateMediaAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

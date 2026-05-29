@@ -240,7 +240,10 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
                 {t("empty")}
               </div>
             ) : (
-              <ul className="max-h-96 overflow-y-auto py-1">
+              <ul
+                data-lenis-prevent
+                className="max-h-96 overflow-y-auto overscroll-contain touch-pan-y py-1"
+              >
                 {ordered.map((item) => {
                   const stamp = Date.parse(item.occurredAt);
                   const isNew = Number.isFinite(stamp) && stamp > lastSeen;

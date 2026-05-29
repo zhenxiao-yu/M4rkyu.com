@@ -53,7 +53,10 @@
     "switchTo": "Switch to {target}"
   },
   "Hud": {
-    "systemStatus": "System status"
+    "systemStatus": "System status",
+    "region": "Ontario · CA",
+    "nowPlaying": "Now playing",
+    "standby": "Standby"
   },
   "Status": {
     "ready": "Ready",
@@ -354,7 +357,9 @@
     "scanShareEyebrow": "scan · share",
     "shareSiteAria": "Share m4rkyu.com",
     "openSiteAria": "Open m4rkyu.com in a new tab",
-    "closeShareAria": "Close share menu"
+    "closeShareAria": "Close share menu",
+    "copyEmail": "Copy email address",
+    "emailCopied": "Email copied"
   },
   "NotFound": {
     "eyebrow": "404 / off the contact sheet",
@@ -745,6 +750,14 @@
   "Contact": {
     "eyebrow": "collaboration",
     "formProviderTbd": "INQUIRY · LIVE",
+    "metaResponseLabel": "Response",
+    "metaResponseValue": "≈ 2 working days",
+    "metaChannelLabel": "Channel",
+    "metaChannelValue": "Resend → inbox",
+    "socialsTitle": "Find me online",
+    "starLabel": "Star this site",
+    "coffeeLabel": "Buy me a coffee",
+    "qrTitle": "Scan to open",
     "inquiryTitle": "Project inquiry",
     "projectTypeBadge": "Project type",
     "nameLabel": "Name",
@@ -1393,7 +1406,16 @@
       "moveDown": "Move down",
       "status": "Status",
       "noMatches": "Nothing matches your search.",
-      "results": "shown"
+      "results": "shown",
+      "bulk": {
+        "selectAria": "Select {title}",
+        "selectAllAria": "Select all shown",
+        "selected": "{count} selected",
+        "setStatus": "Set status…",
+        "deleteSelected": "Delete",
+        "clearSelection": "Clear",
+        "confirmDelete": "Delete {count} item(s)? This cannot be undone."
+      }
     }
   },
   "AdminShop": {

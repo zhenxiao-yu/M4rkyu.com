@@ -303,7 +303,10 @@ export function AudioPlayerDialog({
         </div>
 
         {/* Playlist */}
-        <div className="border-t border-border/70 px-2 py-2 max-h-56 overflow-y-auto overscroll-contain">
+        <div
+          data-lenis-prevent
+          className="border-t border-border/70 px-2 py-2 max-h-56 overflow-y-auto overscroll-contain"
+        >
           <p className="px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
             {t("playlist")}
           </p>

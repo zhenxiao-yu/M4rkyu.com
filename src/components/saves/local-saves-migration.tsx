@@ -8,8 +8,10 @@ import {
   readLegacyLocalSavedSlugs,
 } from "@/lib/social/local-saves";
 import { importLocalSavesAction } from "@/lib/social/saves-actions";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  hasSupabaseAuthCookie,
+  isSupabaseConfigured,
+} from "@/lib/supabase/config";
 
 /**
  * Renders nothing visually but, on first mount for a signed-in user
@@ -29,14 +31,23 @@ export function LocalSavesMigration() {
 
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
-    const supabase = createSupabaseBrowserClient();
+    // Guests have nothing to migrate — skip loading the Supabase client so
+    // it stays out of First Load JS on every page.
+    if (!hasSupabaseAuthCookie()) return;
     let active = true;
-    supabase.auth
-      .getUser()
-      .then(({ data }) => {
-        if (active) setSignedIn(Boolean(data.user));
-      })
-      .catch(() => undefined);
+    void (async () => {
+      const { createSupabaseBrowserClient } = await import(
+        "@/lib/supabase/client"
+      );
+      if (!active) return;
+      const supabase = createSupabaseBrowserClient();
+      supabase.auth
+        .getUser()
+        .then(({ data }) => {
+          if (active) setSignedIn(Boolean(data.user));
+        })
+        .catch(() => undefined);
+    })();
     return () => {
       active = false;
     };

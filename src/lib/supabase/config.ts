@@ -12,6 +12,20 @@ export function isSupabaseConfigured(): boolean {
 }
 
 /**
+ * Browser-only: `true` when a Supabase auth-token cookie is present.
+ * Lets client components skip dynamically importing the (~160 KB gzip)
+ * Supabase client for anonymous visitors, keeping it out of First Load
+ * JS on every page. `@supabase/ssr` stores the session as a non-httpOnly
+ * `sb-<ref>-auth-token` cookie (chunked: `…-auth-token.0/.1`), so it is
+ * readable here. Every sign-in path revalidates + redirects, so gated
+ * components re-mount with the cookie present — no live update is lost.
+ */
+export function hasSupabaseAuthCookie(): boolean {
+  if (typeof document === "undefined") return false;
+  return /(?:^|;\s*)sb-[^=;]*-auth-token/i.test(document.cookie);
+}
+
+/**
  * Throw a clear error from server-side helpers when Supabase is
  * unconfigured. UI callers should first check `isSupabaseConfigured()`
  * and render a graceful "auth unavailable" state — but server code

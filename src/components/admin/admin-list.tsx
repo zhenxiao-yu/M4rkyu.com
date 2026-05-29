@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
   ArrowUp,
   ArrowDown,
@@ -9,6 +10,8 @@ import {
   Pencil,
   Plus,
   Search,
+  Trash2,
+  X,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -46,6 +49,7 @@ export interface AdminListLabels {
   emptyDescription: string;
 }
 
+
 interface AdminListProps {
   items: AdminListItem[];
   locale: Locale;
@@ -58,6 +62,9 @@ interface AdminListProps {
   setStatusAction: (id: string, status: string) => Promise<void>;
   reorderAction: (id: string, direction: "up" | "down") => Promise<void>;
   duplicateAction: (id: string) => Promise<void>;
+  /** Opt-in bulk operations — pass both to enable the multi-select bar. */
+  bulkStatusAction?: (ids: string[], status: string) => Promise<void>;
+  bulkDeleteAction?: (ids: string[]) => Promise<void>;
 }
 
 export function AdminList({
@@ -70,12 +77,18 @@ export function AdminList({
   setStatusAction,
   reorderAction,
   duplicateAction,
+  bulkStatusAction,
+  bulkDeleteAction,
 }: AdminListProps) {
+  const tBulk = useTranslations("Admin");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
   const [, startTransition] = useTransition();
 
+  const bulkEnabled = Boolean(bulkStatusAction && bulkDeleteAction);
   const filtering = query.trim().length > 0 || statusFilter !== "all";
 
   const filtered = useMemo(() => {
@@ -90,6 +103,45 @@ export function AdminList({
       );
     });
   }, [items, query, statusFilter]);
+
+  // Selection only ever references rows currently visible; prune anything
+  // that filtering or a refresh removed so counts never lie.
+  const visibleIds = useMemo(() => new Set(filtered.map((i) => i.id)), [filtered]);
+  const selectedIds = useMemo(
+    () => filtered.filter((i) => selected.has(i.id)).map((i) => i.id),
+    [filtered, selected],
+  );
+  const allVisibleSelected =
+    filtered.length > 0 && selectedIds.length === filtered.length;
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setSelected(allVisibleSelected ? new Set() : new Set(visibleIds));
+  }
+
+  function clearSelection() {
+    setSelected(new Set());
+  }
+
+  function runBulk(fn: () => Promise<void>) {
+    setBulkBusy(true);
+    startTransition(async () => {
+      try {
+        await fn();
+        clearSelection();
+      } finally {
+        setBulkBusy(false);
+      }
+    });
+  }
 
   function run(id: string, fn: () => Promise<void>) {
     setPendingId(id);
@@ -140,6 +192,20 @@ export function AdminList({
         {newButton}
       </div>
       <div className="flex flex-wrap items-center gap-2">
+        {bulkEnabled ? (
+          <label
+            className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-border bg-background text-muted-foreground hover:border-ring/50"
+            title={tBulk("list.bulk.selectAllAria")}
+          >
+            <input
+              type="checkbox"
+              className="size-4 accent-[var(--ring)]"
+              checked={allVisibleSelected}
+              onChange={toggleAll}
+              aria-label={tBulk("list.bulk.selectAllAria")}
+            />
+          </label>
+        ) : null}
         <div className="relative min-w-48 flex-1">
           <Search
             aria-hidden="true"
@@ -171,6 +237,66 @@ export function AdminList({
         </p>
       </div>
 
+      {bulkEnabled && selectedIds.length > 0 ? (
+        <div
+          className={cn(
+            "flex flex-wrap items-center gap-2 rounded-md border border-ring/40 bg-card/90 p-2",
+            bulkBusy && "pointer-events-none opacity-60",
+          )}
+        >
+          <span className="px-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-foreground">
+            {tBulk("list.bulk.selected", { count: selectedIds.length })}
+          </span>
+          <label className="sr-only" htmlFor="bulk-status">
+            {tBulk("list.bulk.setStatus")}
+          </label>
+          <select
+            id="bulk-status"
+            value=""
+            disabled={bulkBusy}
+            onChange={(event) => {
+              const status = event.target.value;
+              if (status) runBulk(() => bulkStatusAction!(selectedIds, status));
+            }}
+            className={cn(adminInputClass, "h-8 w-auto py-1 text-xs")}
+          >
+            <option value="">{tBulk("list.bulk.setStatus")}</option>
+            {statusOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={bulkBusy}
+            onClick={() => {
+              const message = tBulk("list.bulk.confirmDelete", {
+                count: selectedIds.length,
+              });
+              if (window.confirm(message)) {
+                runBulk(() => bulkDeleteAction!(selectedIds));
+              }
+            }}
+          >
+            <Trash2 className="size-3.5" aria-hidden="true" />
+            {tBulk("list.bulk.deleteSelected")}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={bulkBusy}
+            onClick={clearSelection}
+          >
+            <X className="size-3.5" aria-hidden="true" />
+            {tBulk("list.bulk.clearSelection")}
+          </Button>
+        </div>
+      ) : null}
+
       {filtered.length === 0 ? (
         <Card className="bg-card/80 py-8 text-center text-sm text-muted-foreground">
           {labels.noMatches}
@@ -188,8 +314,25 @@ export function AdminList({
                   className={cn(
                     "flex flex-col gap-3 bg-card/80 p-4 transition-opacity sm:flex-row sm:items-center",
                     busy && "pointer-events-none opacity-60",
+                    bulkEnabled && selected.has(item.id) && "border-ring/50",
                   )}
                 >
+                  {bulkEnabled ? (
+                    <label
+                      className="inline-flex items-center self-start sm:self-center"
+                      title={tBulk("list.bulk.selectAria", { title: item.title })}
+                    >
+                      <input
+                        type="checkbox"
+                        className="size-4 accent-[var(--ring)]"
+                        checked={selected.has(item.id)}
+                        onChange={() => toggleOne(item.id)}
+                        aria-label={tBulk("list.bulk.selectAria", {
+                          title: item.title,
+                        })}
+                      />
+                    </label>
+                  ) : null}
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex flex-wrap items-center gap-1.5">
                       {item.badges.map((badge) => (

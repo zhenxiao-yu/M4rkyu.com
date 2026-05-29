@@ -12,7 +12,7 @@ import {
 import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
-import { openAudioPlayer } from "@/lib/audio/player-events";
+import { useAudioToggle } from "@/lib/audio/use-audio-toggle";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 /**
@@ -82,15 +82,9 @@ function ScrollingTitle({
 
 function NowPlayingDock({ reducedMotion }: { reducedMotion: boolean }) {
   const t = useTranslations("AudioPlayer");
-  const {
-    currentTrack,
-    featureEnabled,
-    isPlaying,
-    togglePlay,
-    next,
-    prev,
-    audioGraphReady,
-  } = useAudioPlayer();
+  const { currentTrack, featureEnabled, isPlaying, next, prev, audioGraphReady } =
+    useAudioPlayer();
+  const { toggle } = useAudioToggle();
   const isEngaged = featureEnabled && (audioGraphReady || isPlaying);
   const [expanded, setExpanded] = useState(false);
 
@@ -121,8 +115,8 @@ function NowPlayingDock({ reducedMotion }: { reducedMotion: boolean }) {
 
         <button
           type="button"
-          onClick={openAudioPlayer}
-          aria-label={t("expandLabel")}
+          onClick={toggle}
+          aria-label={isPlaying ? t("pause") : t("play")}
           className={cn(
             "group flex min-w-0 flex-1 flex-col overflow-hidden rounded-md px-2 py-0.5 text-left",
             "transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-foreground/5",
@@ -164,7 +158,7 @@ function NowPlayingDock({ reducedMotion }: { reducedMotion: boolean }) {
 
           <button
             type="button"
-            onClick={togglePlay}
+            onClick={toggle}
             aria-label={isPlaying ? t("pause") : t("play")}
             className={cn(
               "grid place-items-center rounded-full bg-foreground text-background shadow-sm",
@@ -253,7 +247,7 @@ export function AudioNavBar() {
   const reducedMotion = useReducedMotion();
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-full z-10 flex justify-center">
+    <div className="pointer-events-none absolute inset-x-0 top-full z-10 flex justify-center lg:hidden">
       <NowPlayingDock reducedMotion={Boolean(reducedMotion)} />
     </div>
   );

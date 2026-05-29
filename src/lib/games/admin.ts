@@ -223,6 +223,23 @@ export async function reorderGameAction(id: string, direction: "up" | "down") {
   revalidateGames();
 }
 
+export async function bulkSetGameStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = CONTENT_STATUS.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("games").update({ status: parsed.data }).in("id", ids);
+  revalidateGames();
+}
+
+export async function bulkDeleteGamesAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase.from("games").delete().in("id", ids);
+  revalidateGames();
+}
+
 export async function duplicateGameAction(id: string) {
   await requireAdmin();
   const supabase = await createSupabaseServerClient();

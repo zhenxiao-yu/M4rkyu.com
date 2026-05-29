@@ -94,6 +94,7 @@ export const profileSchema = z.object({
       mastodon: z.string().url().optional(),
       facebook: z.string().url().optional(),
       youtube: z.string().url().optional(),
+      buymeacoffee: z.string().url().optional(),
     })
     .partial()
     .default({}),

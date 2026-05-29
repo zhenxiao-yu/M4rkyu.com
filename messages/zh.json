@@ -53,7 +53,10 @@
     "switchTo": "切换到 {target}"
   },
   "Hud": {
-    "systemStatus": "系统状态"
+    "systemStatus": "系统状态",
+    "region": "安大略 · 加拿大",
+    "nowPlaying": "正在播放",
+    "standby": "待机"
   },
   "Status": {
     "ready": "就绪",
@@ -354,7 +357,9 @@
     "scanShareEyebrow": "扫码 · 分享",
     "shareSiteAria": "分享 m4rkyu.com",
     "openSiteAria": "在新标签页打开 m4rkyu.com",
-    "closeShareAria": "关闭分享菜单"
+    "closeShareAria": "关闭分享菜单",
+    "copyEmail": "复制邮箱地址",
+    "emailCopied": "邮箱已复制"
   },
   "NotFound": {
     "eyebrow": "404 / 不在样片之中",
@@ -745,6 +750,14 @@
   "Contact": {
     "eyebrow": "合作",
     "formProviderTbd": "咨询通道 · 已上线",
+    "metaResponseLabel": "回复时间",
+    "metaResponseValue": "≈ 2 个工作日",
+    "metaChannelLabel": "送达方式",
+    "metaChannelValue": "Resend → 收件箱",
+    "socialsTitle": "在别处找到我",
+    "starLabel": "给本站点个星",
+    "coffeeLabel": "请我喝杯咖啡",
+    "qrTitle": "扫码打开",
     "inquiryTitle": "项目咨询",
     "projectTypeBadge": "项目类型",
     "nameLabel": "姓名",
@@ -1393,7 +1406,16 @@
       "moveDown": "下移",
       "status": "状态",
       "noMatches": "没有匹配的结果。",
-      "results": "项"
+      "results": "项",
+      "bulk": {
+        "selectAria": "选择 {title}",
+        "selectAllAria": "全选当前列表",
+        "selected": "已选 {count} 项",
+        "setStatus": "设置状态……",
+        "deleteSelected": "删除",
+        "clearSelection": "清除",
+        "confirmDelete": "删除 {count} 项？此操作无法撤销。"
+      }
     }
   },
   "AdminShop": {

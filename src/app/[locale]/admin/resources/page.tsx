@@ -5,6 +5,8 @@ import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbResources } from "@/lib/resources/db";
 import {
+  bulkDeleteResourcesAction,
+  bulkSetResourceStatusAction,
   duplicateResourceAction,
   reorderResourceAction,
   setResourceStatusAction,
@@ -65,6 +67,8 @@ export default async function AdminResourcesPage({
           setStatusAction={setResourceStatusAction}
           reorderAction={reorderResourceAction}
           duplicateAction={duplicateResourceAction}
+          bulkStatusAction={bulkSetResourceStatusAction}
+          bulkDeleteAction={bulkDeleteResourcesAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),

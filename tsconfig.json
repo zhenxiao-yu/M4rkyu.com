@@ -41,7 +41,15 @@
     ".next/dev/types/**/*.ts",
     ".next/types/**/*.ts",
     ".next-playwright/types/**/*.ts",
-    ".next-playwright/dev/types/**/*.ts"
+    ".next-playwright/dev/types/**/*.ts",
+    ".next-verify/types/**/*.ts",
+    ".next-verify/dev/types/**/*.ts",
+    ".next-verify-build/types/**/*.ts",
+    ".next-verify-build/dev/types/**/*.ts",
+    ".next-vcheck/types/**/*.ts",
+    ".next-vcheck/dev/types/**/*.ts",
+    ".next-perf/types/**/*.ts",
+    ".next-perf/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -6,6 +6,8 @@ import type { Locale } from "@/i18n/routing";
 import { getDbProducts } from "@/lib/shop/db";
 import { formatPrice } from "@/lib/shop/format";
 import {
+  bulkDeleteProductsAction,
+  bulkSetProductStatusAction,
   duplicateProductAction,
   reorderProductAction,
   setProductStatusAction,
@@ -70,6 +72,8 @@ export default async function AdminShopPage({
           setStatusAction={setProductStatusAction}
           reorderAction={reorderProductAction}
           duplicateAction={duplicateProductAction}
+          bulkStatusAction={bulkSetProductStatusAction}
+          bulkDeleteAction={bulkDeleteProductsAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),

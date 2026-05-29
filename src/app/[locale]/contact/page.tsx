@@ -1,21 +1,39 @@
 import type { Metadata } from "next";
+import type { ComponentType } from "react";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import {
+  AtSign,
+  Briefcase,
+  Camera,
+  Code2,
+  Coffee,
+  Mail,
+  MessageCircle,
+  Star,
+} from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ContentPendingLabel } from "@/components/placeholders/content-pending-label";
-import { services } from "@/content/services";
+import { StatusPulse } from "@/components/ui/pixel/status-pulse";
+import { ShineBorder } from "@/components/ui/magic/shine-border";
+import { WorkspaceScene } from "@/components/sections/contact/workspace-scene";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { cn, FOCUS_RING } from "@/lib/utils";
 import { ContactForm } from "./_contact-form";
 
 // No DB reads — static shell + client form. setRequestLocale →
 // prerender statically, revalidate hourly.
 export const dynamic = "force-static";
 export const revalidate = 3600;
+
+const REPO_URL = "https://github.com/zhenxiao-yu/M4rkyu.com";
+const SITE_URL = "https://m4rkyu.com";
+const QR_ASSET = "/qr-code.svg";
 
 export async function generateMetadata({
   params,
@@ -31,6 +49,12 @@ export async function generateMetadata({
   };
 }
 
+type SocialEntry = {
+  label: string;
+  href?: string;
+  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+};
+
 export default async function ContactPage({
   params,
 }: {
@@ -40,6 +64,21 @@ export default async function ContactPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Contact" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
+  const tFooter = await getTranslations({ locale, namespace: "Footer" });
+
+  const socials = profile.socials ?? {};
+  // Reuse the footer's social vocabulary + labels so handles stay
+  // single-sourced in profile.ts. Missing URLs render as "soon" chips.
+  const socialEntries: SocialEntry[] = [
+    { label: tFooter("socialEmail"), href: `mailto:${profile.email}`, icon: Mail },
+    { label: tFooter("socialGithub"), href: socials.github, icon: Code2 },
+    { label: tFooter("socialDevto"), href: socials.devto, icon: AtSign },
+    { label: tFooter("socialLinkedin"), href: socials.linkedin, icon: Briefcase },
+    { label: tFooter("socialTwitter"), href: socials.twitter, icon: MessageCircle },
+    { label: tFooter("socialInstagram"), href: socials.instagram, icon: Camera },
+  ];
+
+  const host = SITE_URL.replace(/^https?:\/\//, "");
 
   return (
     <PageShell locale={locale}>
@@ -50,46 +89,231 @@ export default async function ContactPage({
         decorativeWord="SEND"
       />
 
-      <PageSection innerClassName="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <PageSection innerClassName="grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
         <>
-          <div className="grid gap-5">
-            {services.map((service) => (
-              <Card
-                key={service.slug}
-                className="bg-card/80 hover:border-ring/50 hover:shadow-md"
-              >
-                <CardHeader>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline">{t("projectTypeBadge")}</Badge>
-                    <Badge variant="warning">{service.status}</Badge>
-                  </div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm leading-6 text-muted-foreground">
-                  <p>{service.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {service.fit.map((item) => (
-                      <Badge key={item} variant="outline">
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <Card className="bg-card/80 shadow-lg shadow-black/5 dark:shadow-black/20">
-            <CardHeader>
-              <ContentPendingLabel label={t("formProviderTbd")} />
-              <CardTitle>{t("inquiryTitle")}</CardTitle>
+          {/* Form console — primary action, on a glass sheet with a faint
+              grid texture bleeding from the header. */}
+          <Card glass className="relative flex flex-col overflow-hidden">
+            <div
+              aria-hidden="true"
+              className="contact-sheet absolute inset-x-0 top-0 h-40 opacity-40 mask-[linear-gradient(to_bottom,black,transparent)]"
+            />
+            <CardHeader className="relative gap-3">
+              <span className="inline-flex w-fit items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                <StatusPulse tone="live" />
+                {t("formProviderTbd")}
+              </span>
+              <CardTitle as="h2" className="text-2xl">
+                {t("inquiryTitle")}
+              </CardTitle>
+              <dl className="mt-1 flex flex-wrap gap-x-7 gap-y-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <dt className="text-muted-foreground/70">{t("metaResponseLabel")}</dt>
+                  <dd className="text-foreground/85">{t("metaResponseValue")}</dd>
+                </div>
+                <div className="flex items-center gap-2">
+                  <dt className="text-muted-foreground/70">{t("metaChannelLabel")}</dt>
+                  <dd className="text-foreground/85">{t("metaChannelValue")}</dd>
+                </div>
+              </dl>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative flex flex-1 flex-col">
               <ContactForm email={profile.email} />
+            </CardContent>
+          </Card>
+
+          {/* Connect — social rail, support CTAs, and the scannable QR. */}
+          <Card glass className="flex flex-col">
+            <CardHeader>
+              <CardTitle as="h2" className="text-2xl">
+                {t("socialsTitle")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col gap-6">
+              <div className="space-y-5">
+                <ul
+                  className="grid grid-cols-2 gap-2.5 sm:grid-cols-3"
+                  aria-label={t("socialsTitle")}
+                >
+                  {socialEntries.map((entry) => (
+                    <li key={entry.label}>
+                      <SocialChip entry={entry} pendingLabel={tFooter("socialPending")} />
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Support row — star the repo + buy a coffee */}
+                <div className="grid gap-2.5 sm:grid-cols-2">
+                  <SupportButton
+                    href={REPO_URL}
+                    icon={Star}
+                    label={t("starLabel")}
+                    variant="ghost"
+                  />
+                  <SupportButton
+                    href={socials.buymeacoffee}
+                    icon={Coffee}
+                    label={t("coffeeLabel")}
+                    pendingLabel={tFooter("socialPending")}
+                    variant="solid"
+                  />
+                </div>
+              </div>
+
+              {/* Workspace display — the 3D battlestation, centered in its own
+                  framed panel with ambient particles + a ring-tinted glow. */}
+              <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-background/30">
+                <div
+                  aria-hidden="true"
+                  className="contact-sheet absolute inset-0 opacity-[0.22] mask-[radial-gradient(circle_at_50%_58%,black,transparent_70%)]"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 50% 56%, color-mix(in srgb, var(--ring) 15%, transparent), transparent 62%)",
+                  }}
+                />
+                <WorkspaceScene className="relative" />
+                {/* Single premium edge sweep — frames the showcase. */}
+                <ShineBorder borderRadius={8} duration={16} />
+              </div>
+
+              {/* QR — scannable link to the live site, anchored to the bottom */}
+              <div className="flex items-center gap-4 rounded-lg border border-border/60 bg-background/40 p-5">
+                <a
+                  href={SITE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t("qrTitle")} · ${host}`}
+                  className={cn("shrink-0 rounded-md", FOCUS_RING)}
+                >
+                  <Image
+                    src={QR_ASSET}
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="size-24 rounded-md border border-border bg-white p-1.5"
+                    loading="lazy"
+                  />
+                </a>
+                <div className="min-w-0">
+                  <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
+                    {t("qrTitle")}
+                  </p>
+                  <p className="mt-1 truncate font-mono text-sm text-foreground">
+                    {host}
+                  </p>
+                  <p className="mt-1 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70">
+                    <Code2 className="size-3" aria-hidden="true" />
+                    {profile.githubHandle}
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </>
       </PageSection>
     </PageShell>
+  );
+}
+
+function SocialChip({
+  entry,
+  pendingLabel,
+}: {
+  entry: SocialEntry;
+  pendingLabel: string;
+}) {
+  const { label, href, icon: Icon } = entry;
+  const base = cn(
+    "inline-flex w-full items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
+    FOCUS_RING,
+  );
+
+  if (!href) {
+    return (
+      <span
+        className={cn(base, "cursor-default text-muted-foreground/45")}
+        title={`${label} · ${pendingLabel}`}
+      >
+        <Icon className="size-4 shrink-0" aria-hidden="true" />
+        <span className="truncate">{label}</span>
+        <Badge variant="outline" className="ml-auto text-[0.5rem] uppercase tracking-[0.18em]">
+          {pendingLabel}
+        </Badge>
+      </span>
+    );
+  }
+
+  const isMail = href.startsWith("mailto:");
+  return (
+    <a
+      href={href}
+      target={isMail ? undefined : "_blank"}
+      rel={isMail ? undefined : "noopener noreferrer"}
+      className={cn(
+        base,
+        "text-muted-foreground hover:border-ring/50 hover:text-foreground motion-safe:hover:-translate-y-0.5",
+      )}
+    >
+      <Icon className="size-4 shrink-0" aria-hidden="true" />
+      <span className="truncate">{label}</span>
+    </a>
+  );
+}
+
+function SupportButton({
+  href,
+  icon: Icon,
+  label,
+  pendingLabel,
+  variant,
+}: {
+  href?: string;
+  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  label: string;
+  pendingLabel?: string;
+  variant: "solid" | "ghost";
+}) {
+  const base = cn(
+    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-[color,background-color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
+    FOCUS_RING,
+  );
+
+  if (!href) {
+    return (
+      <span
+        className={cn(base, "cursor-default border text-muted-foreground/45")}
+        title={pendingLabel ? `${label} · ${pendingLabel}` : label}
+      >
+        <Icon className="size-4" aria-hidden="true" />
+        {label}
+        {pendingLabel ? (
+          <Badge variant="outline" className="text-[0.5rem] uppercase tracking-[0.18em]">
+            {pendingLabel}
+          </Badge>
+        ) : null}
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(
+        base,
+        "border motion-safe:hover:-translate-y-0.5",
+        variant === "solid"
+          ? "border-ring/60 bg-foreground text-background hover:bg-foreground/90"
+          : "text-foreground hover:border-ring/50 hover:bg-muted/40",
+      )}
+    >
+      <Icon className="size-4" aria-hidden="true" />
+      {label}
+    </a>
   );
 }

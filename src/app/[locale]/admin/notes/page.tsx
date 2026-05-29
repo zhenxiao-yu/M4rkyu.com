@@ -5,6 +5,8 @@ import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbNotes } from "@/lib/notes/db";
 import {
+  bulkDeleteNotesAction,
+  bulkSetNoteStatusAction,
   duplicateNoteAction,
   reorderNoteAction,
   setNoteStatusAction,
@@ -68,6 +70,8 @@ export default async function AdminNotesPage({
           setStatusAction={setNoteStatusAction}
           reorderAction={reorderNoteAction}
           duplicateAction={duplicateNoteAction}
+          bulkStatusAction={bulkSetNoteStatusAction}
+          bulkDeleteAction={bulkDeleteNotesAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),

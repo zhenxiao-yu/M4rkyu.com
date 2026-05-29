@@ -239,7 +239,10 @@ export function GalleryLightbox({
                 </div>
               </section>
 
-              <aside className="min-h-0 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
+              <aside
+                data-lenis-prevent
+                className="min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5 sm:py-5"
+              >
                 <div className="grid gap-5">
                   <div className="grid gap-3 rounded-[1.25rem] border border-border/70 bg-card/70 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.12)] backdrop-blur-sm">
                     <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">

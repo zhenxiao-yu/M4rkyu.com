@@ -85,6 +85,11 @@ interface AudioPlayerContextValue {
   bgmVolume: number;
   sfxVolume: number;
 
+  // Shared player dialog — one instance site-wide, opened from the HUD
+  // now-playing title (desktop) or the headphones button (mobile).
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
+
   // Actions
   setFeatureEnabled: (enabled: boolean) => void;
   togglePlay: () => void;
@@ -153,6 +158,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [playerState, setPlayerState] =
     useState<AudioPlayerContextValue["playerState"]>("idle");
   const [currentTime, setCurrentTime] = useState(0);
@@ -649,6 +655,8 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       shuffle,
       bgmVolume,
       sfxVolume,
+      dialogOpen,
+      setDialogOpen,
       setFeatureEnabled,
       togglePlay,
       play,
@@ -676,6 +684,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       shuffle,
       bgmVolume,
       sfxVolume,
+      dialogOpen,
       setFeatureEnabled,
       togglePlay,
       play,

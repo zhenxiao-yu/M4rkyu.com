@@ -5,6 +5,8 @@ import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbProjects } from "@/lib/projects/db";
 import {
+  bulkDeleteProjectsAction,
+  bulkSetProjectStatusAction,
   duplicateProjectAction,
   reorderProjectAction,
   setProjectStatusAction,
@@ -62,6 +64,8 @@ export default async function AdminProjectsPage({
           setStatusAction={setProjectStatusAction}
           reorderAction={reorderProjectAction}
           duplicateAction={duplicateProjectAction}
+          bulkStatusAction={bulkSetProjectStatusAction}
+          bulkDeleteAction={bulkDeleteProjectsAction}
           labels={{
             searchPlaceholder: tAdmin("list.search"),
             statusAll: tAdmin("list.allStatuses"),
