@@ -4,7 +4,8 @@ import { useEffect, useId, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Mail, Send } from "lucide-react";
+import { Check, Loader2, Mail, Send } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { toast } from "sonner";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,10 @@ export function ContactForm({ email }: { email: string }) {
   // Bridge RHF submit into a transition so the button can show pending without losing per-field UX.
   const [pending, startTransition] = useTransition();
   const [lastResult, setLastResult] = useState<InquiryActionState | null>(null);
+  // Optimistic submit affordance: after a successful send the button flips to
+  // a "sent" confirmation for a beat before relaxing back to idle.
+  const [sent, setSent] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const {
     containerRef: turnstileRef,
@@ -80,6 +85,9 @@ export function ContactForm({ email }: { email: string }) {
     startTransition(async () => {
       const result = await submitInquiryAction({ status: "idle" }, formData);
       setLastResult(result);
+      // Flip the button to its "sent" confirmation here (an event callback,
+      // not an effect) so we never setState during render/effect.
+      if (result.status === "success") setSent(true);
     });
   }
 
@@ -111,6 +119,14 @@ export function ContactForm({ email }: { email: string }) {
   }, [lastResult, reset, resetTurnstile, setError, t]);
 
   const submitting = pending || isSubmitting;
+  const buttonState = submitting ? "submitting" : sent ? "sent" : "idle";
+
+  // Relax the "sent" confirmation back to idle after a beat.
+  useEffect(() => {
+    if (!sent) return;
+    const id = window.setTimeout(() => setSent(false), 1800);
+    return () => window.clearTimeout(id);
+  }, [sent]);
 
   // A field shows its success tick once the visitor has touched/edited it
   // (mode "onBlur") and it currently carries no validation error.
@@ -214,9 +230,41 @@ export function ContactForm({ email }: { email: string }) {
         </p>
 
         <div className="flex flex-wrap gap-3">
-          <Button type="submit" disabled={submitting}>
-            <Send className="size-4" aria-hidden="true" />
-            {submitting ? t("formSubmitting") : t("formSubmit")}
+          <Button
+            type="submit"
+            disabled={submitting || sent}
+            className="min-w-36"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={buttonState}
+                className="inline-flex items-center gap-2"
+                initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                transition={{ duration: 0.16, ease: [0.2, 0.7, 0.2, 1] }}
+              >
+                {buttonState === "submitting" ? (
+                  <>
+                    <Loader2
+                      className="size-4 motion-safe:animate-spin"
+                      aria-hidden="true"
+                    />
+                    {t("formSubmitting")}
+                  </>
+                ) : buttonState === "sent" ? (
+                  <>
+                    <Check className="size-4" aria-hidden="true" />
+                    {t("formSent")}
+                  </>
+                ) : (
+                  <>
+                    <Send className="size-4" aria-hidden="true" />
+                    {t("formSubmit")}
+                  </>
+                )}
+              </motion.span>
+            </AnimatePresence>
           </Button>
           <Button asChild variant="outline">
             <a href={`mailto:${email}`}>

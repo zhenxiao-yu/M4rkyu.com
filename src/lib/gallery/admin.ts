@@ -54,6 +54,9 @@ const itemSchema = z.object({
   featured: z.coerce.boolean().default(false),
   pinned: z.coerce.boolean().default(false),
   sortOrder: z.coerce.number().int().default(0),
+  width: z.coerce.number().int().positive().max(60000).optional(),
+  height: z.coerce.number().int().positive().max(60000).optional(),
+  blurDataUrl: z.string().max(20000).optional(),
 });
 
 const COLLECTION_COLUMNS =
@@ -107,6 +110,9 @@ function parseItem(formData: FormData) {
     featured: booleanField(formData, "featured"),
     pinned: booleanField(formData, "pinned"),
     sortOrder: pickField(formData, "sortOrder") || "0",
+    width: pickField(formData, "width") || undefined,
+    height: pickField(formData, "height") || undefined,
+    blurDataUrl: pickField(formData, "blurDataUrl") || undefined,
   });
 }
 
@@ -323,6 +329,9 @@ export async function createItemAction(
     status: parsed.status,
     storage_path: storagePath,
     alt: parsed.alt,
+    width: storagePath ? (parsed.width ?? null) : null,
+    height: storagePath ? (parsed.height ?? null) : null,
+    blur_data_url: storagePath ? (parsed.blurDataUrl ?? null) : null,
     aspect: parsed.aspect,
     captured_at: parsed.capturedAt ?? null,
     location: parsed.location ?? null,
@@ -354,26 +363,67 @@ export async function updateItemAction(
     throw error;
   }
 
-  // Metadata-only — image re-upload is intentionally not supported here.
   const supabase = await createSupabaseServerClient();
+
+  const updates: Record<string, unknown> = {
+    slug: parsed.slug,
+    title: parsed.title,
+    caption: parsed.caption,
+    type: parsed.type,
+    status: parsed.status,
+    alt: parsed.alt,
+    aspect: parsed.aspect,
+    captured_at: parsed.capturedAt ?? null,
+    location: parsed.location ?? null,
+    featured: parsed.featured,
+    pinned: parsed.pinned,
+    sort_order: parsed.sortOrder,
+  };
+
+  // Optional image replacement. Only touch storage when a new file is
+  // actually supplied; otherwise the existing image is left untouched.
+  let oldPath: string | null = null;
+  let newPath: string | null = null;
+  const file = formData.get("image");
+  if (file instanceof File && file.size > 0) {
+    const { data: itemRow } = await supabase
+      .from("gallery_items")
+      .select("storage_path, collection:gallery_collections(slug)")
+      .eq("id", id)
+      .maybeSingle();
+    oldPath =
+      (itemRow as { storage_path: string | null } | null)?.storage_path ??
+      null;
+    const rel = (itemRow as { collection: { slug: string } | null } | null)
+      ?.collection;
+    const collectionSlug = Array.isArray(rel) ? rel[0]?.slug : rel?.slug;
+
+    const upload = await uploadGalleryImage(
+      file,
+      `${collectionSlug ?? "misc"}/${parsed.slug}`,
+    );
+    if (!upload) return adminError(dbErrorToMessage("upload failed"), { image: " " });
+    newPath = upload.path;
+    updates.storage_path = newPath;
+    updates.width = parsed.width ?? null;
+    updates.height = parsed.height ?? null;
+    updates.blur_data_url = parsed.blurDataUrl ?? null;
+  }
+
   const { error } = await supabase
     .from("gallery_items")
-    .update({
-      slug: parsed.slug,
-      title: parsed.title,
-      caption: parsed.caption,
-      type: parsed.type,
-      status: parsed.status,
-      alt: parsed.alt,
-      aspect: parsed.aspect,
-      captured_at: parsed.capturedAt ?? null,
-      location: parsed.location ?? null,
-      featured: parsed.featured,
-      pinned: parsed.pinned,
-      sort_order: parsed.sortOrder,
-    })
+    .update(updates)
     .eq("id", id);
-  if (error) return adminError(dbErrorToMessage(error.message), { slug: " " });
+  if (error) {
+    // Roll back the just-uploaded object so a failed update doesn't orphan it.
+    if (newPath) await deleteGalleryImage(newPath);
+    return adminError(dbErrorToMessage(error.message), { slug: " " });
+  }
+
+  // Update committed — now safe to drop the superseded object.
+  if (newPath && oldPath && oldPath !== newPath) {
+    await deleteGalleryImage(oldPath);
+  }
 
   revalidateGallery();
   return adminSuccess();

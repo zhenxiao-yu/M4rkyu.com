@@ -141,19 +141,34 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                           <p className="line-clamp-3 text-xs leading-5 text-muted-foreground">
                             {item.caption || t("noCaption")}
                           </p>
-                          <form action={deleteItemAction}>
-                            <input type="hidden" name="id" value={item.id} />
-                            <DeleteButton
+                          <div className="flex gap-2">
+                            <Button
+                              asChild
                               variant="outline"
                               size="sm"
-                              className="w-full text-destructive hover:text-destructive"
-                              confirmMessage={t("deleteItemConfirm", {
-                                title: item.title,
-                              })}
+                              className="flex-1"
                             >
-                              {t("deleteItem")}
-                            </DeleteButton>
-                          </form>
+                              <Link
+                                href={`/admin/gallery/${collection.slug}/${item.slug}`}
+                                locale={locale}
+                              >
+                                {t("editItem")}
+                              </Link>
+                            </Button>
+                            <form action={deleteItemAction} className="flex-1">
+                              <input type="hidden" name="id" value={item.id} />
+                              <DeleteButton
+                                variant="outline"
+                                size="sm"
+                                className="w-full text-destructive hover:text-destructive"
+                                confirmMessage={t("deleteItemConfirm", {
+                                  title: item.title,
+                                })}
+                              >
+                                {t("deleteItem")}
+                              </DeleteButton>
+                            </form>
+                          </div>
                         </CardContent>
                       </Card>
                     </li>

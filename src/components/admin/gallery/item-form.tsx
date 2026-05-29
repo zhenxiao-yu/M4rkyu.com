@@ -7,16 +7,19 @@ import {
   Field,
   Select,
   Checkbox,
-  FileField,
 } from "@/components/admin/form-kit";
+import {
+  ImageDropzone,
+  type DropzoneLabels,
+} from "@/components/admin/image-dropzone";
 import { SlugField } from "@/components/admin/slug-field";
 import type { DbItem } from "@/lib/gallery/db";
 
-// Form used to add an item (create) or edit an item's metadata. Server
-// component handing its body to the client <AdminForm> shell. Item
-// images are bespoke: the upload only happens on create, so on edit we
-// omit the FileField and show a hint that replacing the image isn't
-// supported yet.
+// Form used to add an item (create) or edit an item. Server component
+// handing its body to the client <AdminForm> shell. The image dropzone
+// is shown in both modes: required on create, optional on edit (a new
+// file replaces the current image; leaving it empty keeps the existing
+// one). Natural width/height are captured client-side and persisted.
 
 interface Labels {
   basics: string;
@@ -27,6 +30,7 @@ interface Labels {
   imageLabel: string;
   imageHint: string;
   imageReplaceHint: string;
+  dropzone: DropzoneLabels;
   captionLabel: string;
   altLabel: string;
   altHint: string;
@@ -59,6 +63,7 @@ export function ItemForm({
   item,
   collectionId,
   showImage,
+  currentImageUrl,
   labels,
   successMessage,
   hiddenFields,
@@ -70,7 +75,10 @@ export function ItemForm({
   ) => Promise<AdminActionState>;
   item?: DbItem;
   collectionId: string;
+  // True in create mode: the image is required. In edit mode this is
+  // false and `currentImageUrl` supplies the preview to replace.
   showImage: boolean;
+  currentImageUrl?: string | null;
   labels: Labels;
   successMessage: string;
   hiddenFields?: ReactNode;
@@ -133,18 +141,14 @@ export function ItemForm({
             defaultValue={d.slug}
           />
         </Row>
-        {showImage ? (
-          <FileField
-            label={labels.imageLabel}
-            name="image"
-            accept="image/*"
-            hint={labels.imageHint}
-          />
-        ) : (
-          <p className="text-[0.7rem] text-muted-foreground/70">
-            {labels.imageReplaceHint}
-          </p>
-        )}
+        <ImageDropzone
+          name="image"
+          label={labels.imageLabel}
+          hint={showImage ? labels.imageHint : labels.imageReplaceHint}
+          labels={labels.dropzone}
+          currentImageUrl={currentImageUrl}
+          required={showImage}
+        />
         <Field
           label={labels.captionLabel}
           name="caption"

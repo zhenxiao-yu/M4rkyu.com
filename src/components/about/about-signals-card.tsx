@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CountUp } from "@/components/ui/magic/count-up";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import type { GithubStats } from "@/app/api/about/github/route";
 import type { SteamStats } from "@/app/api/about/steam/route";
@@ -292,7 +293,7 @@ function SignalStat({
         {label}
       </p>
       <p className="mt-1 font-display text-xl leading-none tabular-nums">
-        {typeof value === "number" ? value.toLocaleString() : "—"}
+        {typeof value === "number" ? <CountUp value={value} /> : "—"}
       </p>
     </div>
   );

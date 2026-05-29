@@ -87,7 +87,15 @@ function dbItemToGalleryItem(row: DbItem): GalleryItem {
     type: row.type,
     status: row.status,
     caption: row.caption || row.title,
-    src: src ? { src, alt: row.alt || row.title } : undefined,
+    src: src
+      ? {
+          src,
+          alt: row.alt || row.title,
+          width: row.width ?? undefined,
+          height: row.height ?? undefined,
+          blurDataURL: row.blurDataUrl ?? undefined,
+        }
+      : undefined,
     aspect: row.aspect,
     capturedAt: row.capturedAt ?? undefined,
     location: row.location ?? undefined,

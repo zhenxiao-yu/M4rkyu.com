@@ -13,6 +13,13 @@ export const seoSchema = z.object({
 export const imageSchema = z.object({
   src: z.string().min(1),
   alt: z.string().min(1),
+  // Intrinsic pixel dimensions + a tiny base64 LQIP, captured at upload.
+  // All optional so legacy/static content validates untouched. When
+  // present, the gallery reserves the exact aspect ratio (no crop, zero
+  // CLS) and next/image shows the blur while the full image loads.
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+  blurDataURL: z.string().optional(),
 });
 
 export const contentStatusSchema = z.enum(["ready", "draft", "placeholder", "coming-soon"]);

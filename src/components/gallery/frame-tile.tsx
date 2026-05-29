@@ -43,6 +43,13 @@ export function FrameTile({
   const isDimmed = item.status === "coming-soon" || item.status === "draft";
   const aspect = aspectClass(item.aspect);
   const hasImage = Boolean(item.src);
+  // Prefer the image's true ratio (captured at upload) over the coarse
+  // `aspect` enum so the box reserves exactly the right space — no crop,
+  // zero layout shift. Falls back to the enum for legacy/static items.
+  const ratio =
+    item.src?.width && item.src?.height
+      ? `${item.src.width} / ${item.src.height}`
+      : undefined;
 
   return (
     <button
@@ -55,13 +62,22 @@ export function FrameTile({
         isDimmed && "opacity-80",
       )}
     >
-      <div className={cn("relative overflow-hidden bg-muted", aspect, variant === "card" && "border-b")}>
+      <div
+        className={cn(
+          "relative overflow-hidden bg-muted",
+          !ratio && aspect,
+          variant === "card" && "border-b",
+        )}
+        style={ratio ? { aspectRatio: ratio } : undefined}
+      >
         {hasImage && item.src ? (
           <Image
             src={item.src.src}
             alt={item.src.alt}
             fill
             sizes={sizes}
+            placeholder={item.src.blurDataURL ? "blur" : undefined}
+            blurDataURL={item.src.blurDataURL}
             className="object-cover grayscale transition duration-300 group-hover:scale-[1.02] group-hover:grayscale-0"
           />
         ) : (

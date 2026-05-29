@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { usePathname, Link } from "@/i18n/navigation";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
@@ -18,8 +19,29 @@ const PILL_BASE = cn(
   "relative inline-flex h-9 items-center rounded-full px-3 font-mono text-[0.68rem] uppercase tracking-[0.18em] transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
   FOCUS_RING,
 );
-const PILL_ACTIVE = "bg-background text-foreground shadow-sm shadow-black/5";
+// The raised background now lives in <ActivePill> (a shared-layout element)
+// so it glides between sections on navigation; the link only owns its text.
+const PILL_ACTIVE = "text-foreground";
 const PILL_INACTIVE = "text-muted-foreground";
+
+// The active highlight. A single `layoutId` is shared across every nav item,
+// so when the route changes Motion slides the same pill from the old item to
+// the new one. Reduced-motion users get a static (instant) pill.
+function ActivePill({ animate }: { animate: boolean }) {
+  const className =
+    "pointer-events-none absolute inset-0 rounded-full bg-background shadow-sm shadow-black/5";
+  if (!animate) {
+    return <span aria-hidden="true" className={className} />;
+  }
+  return (
+    <motion.span
+      aria-hidden="true"
+      layoutId="nav-active-pill"
+      className={className}
+      transition={{ type: "spring", stiffness: 460, damping: 40, mass: 0.8 }}
+    />
+  );
+}
 
 export function DesktopNav({
   locale,
@@ -28,6 +50,7 @@ export function DesktopNav({
   ariaLabel,
 }: DesktopNavProps) {
   const pathname = usePathname();
+  const animatePill = !useReducedMotion();
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
@@ -59,10 +82,11 @@ export function DesktopNav({
                   parentActive ? PILL_ACTIVE : PILL_INACTIVE,
                 )}
               >
-                <span>{group.label}</span>
+                {parentActive ? <ActivePill animate={animatePill} /> : null}
+                <span className="relative z-10">{group.label}</span>
                 <ChevronDown
                   aria-hidden="true"
-                  className="size-3 opacity-70 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover/menu:rotate-180 group-focus-within/menu:rotate-180"
+                  className="relative z-10 size-3 opacity-70 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover/menu:rotate-180 group-focus-within/menu:rotate-180"
                 />
               </Link>
 
@@ -150,20 +174,24 @@ export function DesktopNav({
           );
         })}
 
-        {flatLinks.map((link) => (
-          <li key={link.id}>
-            <Link
-              href={link.href}
-              locale={locale}
-              className={cn(
-                PILL_BASE,
-                isActive(link.href) ? PILL_ACTIVE : PILL_INACTIVE,
-              )}
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
+        {flatLinks.map((link) => {
+          const active = isActive(link.href);
+          return (
+            <li key={link.id}>
+              <Link
+                href={link.href}
+                locale={locale}
+                className={cn(
+                  PILL_BASE,
+                  active ? PILL_ACTIVE : PILL_INACTIVE,
+                )}
+              >
+                {active ? <ActivePill animate={animatePill} /> : null}
+                <span className="relative z-10">{link.label}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

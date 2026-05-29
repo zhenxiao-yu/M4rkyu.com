@@ -37,6 +37,7 @@ export interface DbItem {
   alt: string;
   width: number | null;
   height: number | null;
+  blurDataUrl: string | null;
   aspect: "1/1" | "4/5" | "3/4" | "2/3" | "16/9" | "21/9";
   capturedAt: string | null;
   location: string | null;
@@ -81,6 +82,7 @@ interface ItemRow {
   alt: string | null;
   width: number | null;
   height: number | null;
+  blur_data_url: string | null;
   aspect: DbItem["aspect"];
   captured_at: string | null;
   location: string | null;
@@ -120,6 +122,7 @@ function rowToItem(row: ItemRow, collectionSlug: string): DbItem {
     alt: row.alt ?? "",
     width: row.width,
     height: row.height,
+    blurDataUrl: row.blur_data_url,
     aspect: row.aspect,
     capturedAt: row.captured_at,
     location: row.location,
@@ -153,7 +156,7 @@ export const getDbGalleryItems = cache(async (): Promise<DbItem[]> => {
   const { data, error } = await supabase
     .from("gallery_items")
     .select(
-      "id, collection_id, slug, title, caption, type, status, storage_path, alt, width, height, aspect, captured_at, location, mood, tags, featured, pinned, sort_order, collection:gallery_collections(slug)",
+      "id, collection_id, slug, title, caption, type, status, storage_path, alt, width, height, blur_data_url, aspect, captured_at, location, mood, tags, featured, pinned, sort_order, collection:gallery_collections(slug)",
     )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -215,7 +218,7 @@ export const getPublicDbGalleryItems = cache(async (): Promise<DbItem[]> => {
   const { data, error } = await supabase
     .from("gallery_items")
     .select(
-      "id, collection_id, slug, title, caption, type, status, storage_path, alt, width, height, aspect, captured_at, location, mood, tags, featured, pinned, sort_order, collection:gallery_collections(slug)",
+      "id, collection_id, slug, title, caption, type, status, storage_path, alt, width, height, blur_data_url, aspect, captured_at, location, mood, tags, featured, pinned, sort_order, collection:gallery_collections(slug)",
     )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });

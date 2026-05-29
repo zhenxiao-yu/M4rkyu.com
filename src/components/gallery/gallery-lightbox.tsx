@@ -308,8 +308,16 @@ export function GalleryLightbox({
                             <div
                               className={cn(
                                 "relative overflow-hidden rounded-lg border border-border/70 bg-muted",
-                                aspectClass(item.aspect),
+                                !(item.src?.width && item.src?.height) &&
+                                  aspectClass(item.aspect),
                               )}
+                              style={
+                                item.src?.width && item.src?.height
+                                  ? {
+                                      aspectRatio: `${item.src.width} / ${item.src.height}`,
+                                    }
+                                  : undefined
+                              }
                             >
                               {item.src ? (
                                 <Image
@@ -318,6 +326,10 @@ export function GalleryLightbox({
                                   fill
                                   sizes="(min-width: 1024px) 220px, 42vw"
                                   loading={index < 3 ? "eager" : "lazy"}
+                                  placeholder={
+                                    item.src.blurDataURL ? "blur" : undefined
+                                  }
+                                  blurDataURL={item.src.blurDataURL}
                                   className="object-cover transition duration-300 group-hover:scale-[1.03]"
                                 />
                               ) : (
@@ -410,6 +422,8 @@ function FrameMedia({
                 fill
                 priority
                 sizes="(min-width: 1024px) 900px, 100vw"
+                placeholder={item.src.blurDataURL ? "blur" : undefined}
+                blurDataURL={item.src.blurDataURL}
                 className={cn(
                   "object-contain",
                   !reduceMotion &&
@@ -598,6 +612,8 @@ function FrameMedia({
                         fill
                         priority
                         sizes="100vw"
+                        placeholder={item.src.blurDataURL ? "blur" : undefined}
+                        blurDataURL={item.src.blurDataURL}
                         className={cn(
                           "object-contain",
                           !reduceMotion &&

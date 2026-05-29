@@ -8,6 +8,7 @@ import { PostBody } from "@/components/blog/post-body";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
+import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getPostBySlug, getAllPostSlugs } from "@/lib/blog/get-post";
@@ -88,6 +89,7 @@ export default async function BlogPostPage({
 
   return (
     <PageShell locale={locale}>
+      <ScrollProgress />
       <article>
         <PostHeader
           title={meta.title}

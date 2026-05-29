@@ -1,14 +1,38 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { useCommandPalette } from "./command-palette-provider";
 
-// Header-rail Cmd-K entry; keydown listener lives in the provider.
+// Platform-correct shortcut label. The provider binds metaKey || ctrlKey, so
+// the chip must match the user's OS: ⌘K on Apple, Ctrl K elsewhere. Resolved
+// via useSyncExternalStore so the server/first-client render is stable (Apple
+// glyph) and it swaps post-hydration with no mismatch warning.
+const noopSubscribe = () => () => {};
+function isApplePlatform() {
+  if (typeof navigator === "undefined") return true;
+  const source =
+    (navigator as { userAgentData?: { platform?: string } }).userAgentData
+      ?.platform ||
+    navigator.platform ||
+    navigator.userAgent;
+  return /mac|iphone|ipad|ipod/i.test(source);
+}
+function useShortcutLabel() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => (isApplePlatform() ? "⌘K" : "Ctrl K"),
+    () => "⌘K",
+  );
+}
+
+// Header-rail command-palette entry; keydown listener lives in the provider.
 export function CommandPaletteTrigger() {
   const { setOpen } = useCommandPalette();
   const t = useTranslations("CommandPalette");
+  const shortcut = useShortcutLabel();
 
   return (
     <button
@@ -23,7 +47,7 @@ export function CommandPaletteTrigger() {
       <Search aria-hidden="true" className="size-3.5 shrink-0" />
       <span>{t("trigger")}</span>
       <kbd className="ml-auto shrink-0 rounded border bg-muted px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.18em]">
-        ⌘K
+        {shortcut}
       </kbd>
     </button>
   );
