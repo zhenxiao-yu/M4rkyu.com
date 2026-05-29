@@ -1,11 +1,12 @@
 import { ImageResponse } from "next/og";
 
-// Next.js convention: this generates the site's primary `<link rel="icon">`
-// at build time, replacing the default browser request to /favicon.ico
-// (which 404'd on production and surfaced as a console error in the
-// Lighthouse "errors-in-console" audit). A 32×32 monogram is enough for
-// browser tab UI and avoids shipping a separate static asset.
-export const size = { width: 32, height: 32 } as const;
+// Next.js convention: generates the site's primary `<link rel="icon">`,
+// replacing the default browser request to /favicon.ico (which 404'd in
+// prod). Rendered at 512×512 so the same monogram doubles as the PWA
+// install / maskable icon — the glyph stays inside the central safe zone
+// (full-bleed background, centred M) so maskable masking never clips it.
+// The browser downscales for the tab favicon.
+export const size = { width: 512, height: 512 } as const;
 export const contentType = "image/png";
 
 export default function Icon() {
@@ -22,9 +23,9 @@ export default function Icon() {
           color: "#67e8f9",
           fontFamily:
             "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
-          fontSize: 22,
+          fontSize: 340,
           fontWeight: 700,
-          letterSpacing: -1,
+          letterSpacing: -8,
         }}
       >
         M
