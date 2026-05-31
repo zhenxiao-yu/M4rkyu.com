@@ -91,22 +91,40 @@ export default async function ContactPage({
 
       <PageSection innerClassName="grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
         <>
-          {/* Form console — primary action, on a glass sheet with a faint
-              grid texture bleeding from the header. */}
+          {/* Form console — DISPATCH № 01. The vertical ring-tinted
+              hairline on the left echoes the wall-label idiom from the
+              lightbox sidebar / auth modal / saved-items entries, so
+              this surface reads as part of the same site language. */}
           <Card glass className="relative flex flex-col overflow-hidden">
+            <span
+              aria-hidden="true"
+              className="absolute left-0 top-6 bottom-6 w-[2px] rounded-full bg-linear-to-b from-ring/55 via-ring/25 to-transparent"
+            />
             <div
               aria-hidden="true"
               className="contact-sheet absolute inset-x-0 top-0 h-40 opacity-40 mask-[linear-gradient(to_bottom,black,transparent)]"
             />
-            <CardHeader className="relative gap-3">
-              <span className="inline-flex w-fit items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-                <StatusPulse tone="live" />
-                {t("formProviderTbd")}
-              </span>
-              <CardTitle as="h2" className="text-2xl">
+            <CardHeader className="relative gap-3 pl-6">
+              <div className="flex items-start justify-between gap-3">
+                <span className="inline-flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
+                  <StatusPulse tone="live" />
+                  {t("formProviderTbd")}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="inline-flex shrink-0 items-baseline gap-1.5 font-pixel text-base leading-none uppercase tracking-wide text-muted-foreground/65"
+                >
+                  DISPATCH
+                  <span className="tabular-nums">№ 01</span>
+                </span>
+              </div>
+              <CardTitle as="h2" className="text-2xl sm:text-3xl">
                 {t("inquiryTitle")}
               </CardTitle>
-              <dl className="mt-1 flex flex-wrap gap-x-7 gap-y-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+              {/* Meta strip — single hairline rule above; key/value pairs
+                  read as a transmission header (LATENCY: T+2d / CHANNEL:
+                  Resend). Kept compact so the form below dominates. */}
+              <dl className="mt-2 grid grid-cols-1 gap-x-7 gap-y-1.5 border-t border-border/60 pt-3 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground sm:grid-cols-2">
                 <div className="flex items-center gap-2">
                   <dt className="text-muted-foreground/70">{t("metaResponseLabel")}</dt>
                   <dd className="text-foreground/85">{t("metaResponseValue")}</dd>
@@ -117,20 +135,36 @@ export default async function ContactPage({
                 </div>
               </dl>
             </CardHeader>
-            <CardContent className="relative flex flex-1 flex-col">
+            <CardContent className="relative flex flex-1 flex-col pl-6">
               <ContactForm email={profile.email} />
             </CardContent>
           </Card>
 
-          {/* Connect — social rail, support CTAs, and the scannable QR. */}
-          <Card glass className="flex flex-col">
-            <CardHeader>
-              <CardTitle as="h2" className="text-2xl">
-                {t("socialsTitle")}
-              </CardTitle>
+          {/* Direct lines — DIRECT LINES № 02. Sub-sectioned as a field
+              log: each block has its own mono eyebrow + hairline rule,
+              so the sidebar reads like a numbered transmission index
+              instead of one undifferentiated stack of widgets. */}
+          <Card glass className="relative flex flex-col overflow-hidden">
+            <span
+              aria-hidden="true"
+              className="absolute left-0 top-6 bottom-6 w-[2px] rounded-full bg-linear-to-b from-ring/55 via-ring/25 to-transparent"
+            />
+            <CardHeader className="relative gap-3 pl-6">
+              <div className="flex items-start justify-between gap-3">
+                <CardTitle as="h2" className="text-2xl sm:text-3xl">
+                  {t("directLinesTitle")}
+                </CardTitle>
+                <span
+                  aria-hidden="true"
+                  className="inline-flex shrink-0 items-baseline gap-1.5 font-pixel text-base leading-none uppercase tracking-wide text-muted-foreground/65"
+                >
+                  LINES
+                  <span className="tabular-nums">№ 02</span>
+                </span>
+              </div>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-6">
-              <div className="space-y-5">
+            <CardContent className="relative flex flex-1 flex-col gap-7 pl-6">
+              <SidebarBlock label={t("channelsLabel")}>
                 <ul
                   className="grid grid-cols-2 gap-2.5 sm:grid-cols-3"
                   aria-label={t("socialsTitle")}
@@ -141,8 +175,9 @@ export default async function ContactPage({
                     </li>
                   ))}
                 </ul>
+              </SidebarBlock>
 
-                {/* Support row — star the repo + buy a coffee */}
+              <SidebarBlock label={t("supportLabel")}>
                 <div className="grid gap-2.5 sm:grid-cols-2">
                   <SupportButton
                     href={REPO_URL}
@@ -158,64 +193,95 @@ export default async function ContactPage({
                     variant="solid"
                   />
                 </div>
-              </div>
+              </SidebarBlock>
 
-              {/* Workspace display — the 3D battlestation, centered in its own
-                  framed panel with ambient particles + a ring-tinted glow. */}
-              <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-background/30">
-                <div
-                  aria-hidden="true"
-                  className="contact-sheet absolute inset-0 opacity-[0.22] mask-[radial-gradient(circle_at_50%_58%,black,transparent_70%)]"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 50% 56%, color-mix(in srgb, var(--ring) 15%, transparent), transparent 62%)",
-                  }}
-                />
-                <WorkspaceScene className="relative" />
-                {/* Single premium edge sweep — frames the showcase. */}
-                <ShineBorder borderRadius={8} duration={16} />
-              </div>
-
-              {/* QR — scannable link to the live site, anchored to the bottom */}
-              <div className="flex items-center gap-4 rounded-lg border border-border/60 bg-background/40 p-5">
-                <a
-                  href={SITE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${t("qrTitle")} · ${host}`}
-                  className={cn("shrink-0 rounded-md", FOCUS_RING)}
-                >
-                  <Image
-                    src={QR_ASSET}
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="size-24 rounded-md border border-border bg-white p-1.5"
-                    loading="lazy"
+              <SidebarBlock label={t("workspaceLabel")} className="flex-1">
+                {/* Workspace display — 3D battlestation in its framed
+                    panel with the contact-sheet bleed + ring glow.
+                    Unchanged behaviourally; just sits under the labeled
+                    section header now. */}
+                <div className="relative flex h-full min-h-56 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-background/30">
+                  <div
+                    aria-hidden="true"
+                    className="contact-sheet absolute inset-0 opacity-[0.22] mask-[radial-gradient(circle_at_50%_58%,black,transparent_70%)]"
                   />
-                </a>
-                <div className="min-w-0">
-                  <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
-                    {t("qrTitle")}
-                  </p>
-                  <p className="mt-1 truncate font-mono text-sm text-foreground">
-                    {host}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70">
-                    <Code2 className="size-3" aria-hidden="true" />
-                    {profile.githubHandle}
-                  </p>
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 50% 56%, color-mix(in srgb, var(--ring) 15%, transparent), transparent 62%)",
+                    }}
+                  />
+                  <WorkspaceScene className="relative" />
+                  <ShineBorder borderRadius={8} duration={16} />
                 </div>
-              </div>
+              </SidebarBlock>
+
+              <SidebarBlock label={t("qrTitle")}>
+                {/* Signal anchor — scannable link to the live site. The
+                    QR holds the host + handle to its right as a single
+                    "signal" block, tighter than the previous chip card. */}
+                <div className="flex items-center gap-4 rounded-lg border border-border/60 bg-background/40 p-5">
+                  <a
+                    href={SITE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${t("qrTitle")} · ${host}`}
+                    className={cn("shrink-0 rounded-md", FOCUS_RING)}
+                  >
+                    <Image
+                      src={QR_ASSET}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="size-24 rounded-md border border-border bg-white p-1.5"
+                      loading="lazy"
+                    />
+                  </a>
+                  <div className="min-w-0">
+                    <p className="truncate font-mono text-sm text-foreground">
+                      {host}
+                    </p>
+                    <p className="mt-1 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70">
+                      <Code2 className="size-3" aria-hidden="true" />
+                      {profile.githubHandle}
+                    </p>
+                  </div>
+                </div>
+              </SidebarBlock>
             </CardContent>
           </Card>
         </>
       </PageSection>
     </PageShell>
+  );
+}
+
+/**
+ * Sidebar sub-section — mono eyebrow + hairline rule + content.
+ * Same beat as the saved-items section headers and the notes
+ * monthly headers, so the contact sidebar reads as part of the
+ * same numbered-index typography rather than a one-off treatment.
+ */
+function SidebarBlock({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={cn("grid gap-3", className)}>
+      <header className="flex items-baseline justify-between gap-3 border-b border-border/60 pb-2">
+        <h3 className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+          {label}
+        </h3>
+      </header>
+      {children}
+    </section>
   );
 }
 

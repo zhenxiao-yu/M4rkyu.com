@@ -756,6 +756,10 @@
     "metaChannelLabel": "Channel",
     "metaChannelValue": "Resend → inbox",
     "socialsTitle": "Find me online",
+    "directLinesTitle": "Direct lines",
+    "channelsLabel": "channels",
+    "workspaceLabel": "workspace",
+    "supportLabel": "support",
     "starLabel": "Star this site",
     "coffeeLabel": "Buy me a coffee",
     "qrTitle": "Scan to open",
@@ -1948,29 +1952,19 @@
     "sfxTestAria": "Play test sound effect",
     "playlist": "Playlist"
   },
-  "Search": {
-    "trigger": "Ask AI",
-    "title": "Ask this portfolio",
-    "description": "Semantic search across projects, games, writing, and more — powered by AI.",
-    "placeholder": "Try “3D web experiments” or “what does Mark use for games?”",
-    "idleHint": "Search by meaning, not just keywords. For example:",
-    "examples": ["3D web experiments", "game projects", "writing about design", "AI tools"],
-    "loading": "Searching…",
-    "emptyTitle": "No matches",
-    "emptyBody": "Nothing in the portfolio fits that yet. Try rephrasing or a broader idea.",
-    "errorTitle": "Search unavailable",
-    "errorRateLimited": "Too many searches just now — give it a minute and try again.",
-    "errorUnavailable": "AI search isn’t configured right now. Try the menu instead.",
-    "errorGeneric": "Something went wrong. Please try again.",
-    "poweredBy": "AI semantic search",
-    "types": {
-      "project": "Project",
-      "game": "Game",
-      "resource": "Resource",
-      "gallery": "Gallery",
-      "note": "Note",
-      "media": "Media",
-      "service": "Service"
-    }
+  "AskConsole": {
+    "eyebrow": "Ask the system",
+    "heading": "Interrogate the portfolio",
+    "lede": "A terminal wired into everything Mark has shipped. Ask in plain language — it answers with the work itself, linked.",
+    "statusLabel": "● online",
+    "greeting": "Query the archive. Try one of these, or ask your own:",
+    "suggestions": ["What does Mark build?", "Show me the games", "Best project for a startup?", "What’s the tech stack?"],
+    "thinking": "thinking…",
+    "inputLabel": "Ask M4RKYU.SYS a question",
+    "placeholder": "ask anything about Mark’s work…",
+    "send": "Send",
+    "stop": "Stop",
+    "errorUnavailable": "// SYSTEM OFFLINE — the AI endpoint isn’t configured yet. Try the menu instead.",
+    "errorGeneric": "// ERROR — something glitched. Try again."
   }
 }

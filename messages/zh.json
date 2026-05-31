@@ -756,6 +756,10 @@
     "metaChannelLabel": "送达方式",
     "metaChannelValue": "Resend → 收件箱",
     "socialsTitle": "在别处找到我",
+    "directLinesTitle": "直接联络",
+    "channelsLabel": "频道",
+    "workspaceLabel": "工位",
+    "supportLabel": "支持",
     "starLabel": "给本站点个星",
     "coffeeLabel": "请我喝杯咖啡",
     "qrTitle": "扫码打开",
@@ -1948,29 +1952,19 @@
     "sfxTestAria": "试听音效",
     "playlist": "播放列表"
   },
-  "Search": {
-    "trigger": "AI 搜索",
-    "title": "向作品集提问",
-    "description": "用 AI 对项目、游戏、文章等内容进行语义搜索。",
-    "placeholder": "试试「3D 网页实验」或「Mark 用什么做游戏？」",
-    "idleHint": "按含义搜索，而不只是关键词。例如：",
-    "examples": ["3D 网页实验", "游戏项目", "关于设计的文章", "AI 工具"],
-    "loading": "搜索中…",
-    "emptyTitle": "没有匹配结果",
-    "emptyBody": "作品集里暂时没有相关内容。换个说法或更宽泛的描述再试试。",
-    "errorTitle": "搜索暂不可用",
-    "errorRateLimited": "刚才搜索太频繁了——请稍等一分钟再试。",
-    "errorUnavailable": "AI 搜索当前尚未配置。可以改用菜单浏览。",
-    "errorGeneric": "出了点问题，请重试。",
-    "poweredBy": "AI 语义搜索",
-    "types": {
-      "project": "项目",
-      "game": "游戏",
-      "resource": "资源",
-      "gallery": "图库",
-      "note": "随记",
-      "media": "影像",
-      "service": "服务"
-    }
+  "AskConsole": {
+    "eyebrow": "向系统提问",
+    "heading": "审讯这份作品集",
+    "lede": "一个接入了 Mark 全部作品的终端。用大白话提问——它会带着作品本身、附上链接回答你。",
+    "statusLabel": "● 在线",
+    "greeting": "查询档案库。试试这些，或者问你自己的问题：",
+    "suggestions": ["Mark 做什么？", "看看这些游戏", "适合创业公司的项目？", "用的是什么技术栈？"],
+    "thinking": "思考中…",
+    "inputLabel": "向 M4RKYU.SYS 提问",
+    "placeholder": "问问关于 Mark 作品的任何事……",
+    "send": "发送",
+    "stop": "停止",
+    "errorUnavailable": "// 系统离线 —— AI 端点尚未配置。可改用菜单浏览。",
+    "errorGeneric": "// 错误 —— 出了点问题，请重试。"
   }
 }
