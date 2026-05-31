@@ -87,6 +87,7 @@ export default async function GalleryCollectionPage({
               src={cover.src}
               alt={cover.alt}
               fill
+              priority
               sizes="(min-width: 1024px) 22rem, 100vw"
               className="object-cover"
               style={{ objectPosition: focalPosition(cover.focal) }}

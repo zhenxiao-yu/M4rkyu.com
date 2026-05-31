@@ -19,6 +19,10 @@ companion_to: docs/UI_LIBRARY_STRATEGY.md
 > The companion doc [UI_LIBRARY_STRATEGY.md](UI_LIBRARY_STRATEGY.md)
 > defines *which* UI sources we draw from. **This** doc defines *how*
 > to compose shadcn v4 once we've drawn from it.
+>
+> **Route note:** the `/portal` slots referenced below are historical —
+> `/portal` is not in the current app tree. Read them as design intent,
+> not a live route.
 
 ## Why this doc exists
 

@@ -9,9 +9,10 @@ last_updated: 2026-05-10
 
 > **Status as of 2026-05-10**: every public route in this map has
 > shipped (homepage, projects + slug, games + slug, gallery + slug,
-> blog timeline, media, resources, about, contact, portal, 404). The
+> blog timeline, media, resources, about, contact, 404). The
 > `/tools` route was cut in Phase 4.5 — it duplicated `/resources`
-> and was orphaned. Section-by-section composition below is still
+> and was orphaned. `/portal` was removed and is no longer a live
+> route (see §13). Section-by-section composition below is still
 > useful as a reference; flag drift in a follow-up if a page strays.
 
 Page-by-page composition for the redesign. Each section answers:

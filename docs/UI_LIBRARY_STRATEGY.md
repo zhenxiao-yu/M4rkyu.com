@@ -14,6 +14,10 @@ last_updated: 2026-05-10
 > `PointerSpotlight` (Phase 4.1). One Magic-UI primitive per
 > viewport rule held — verify before adding more. Storybook covers
 > every shipped primitive.
+>
+> **Route note:** `/portal` mentions below are historical — that route is
+> not in the current app tree. Read them as design intent (where a
+> primitive *would* go), not a live route.
 
 This document defines **which UI sources** the redesign is allowed to draw
 from, **what each one is for**, and **how to keep the site from looking like

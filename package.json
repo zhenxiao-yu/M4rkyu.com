@@ -9,16 +9,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src .storybook tests next.config.ts playwright.config.ts",
+    "lint": "eslint src .storybook tests next.config.ts playwright.config.ts vitest.config.ts",
     "typecheck": "tsc --noEmit --incremental false",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "clean": "node scripts/clean-artifacts.mjs",
+    "seed:content": "npx --yes tsx --env-file=.env.local scripts/seed-content.mts",
     "validate": "npm run lint && npm run typecheck",
     "analyze": "cross-env ANALYZE=true next build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -85,7 +88,8 @@
     "prettier": "^3.8.3",
     "storybook": "^10.3.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   },
   "overrides": {
     "postcss": "8.5.10"

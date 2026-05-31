@@ -1,0 +1,20 @@
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
+
+// Unit tests only. Schemas/utilities are pure, so the default `node`
+// environment is enough — no jsdom, no Next runtime. Playwright owns
+// the browser-level route smoke matrix under tests/ (see playwright.config.ts,
+// which ignores tests/unit/**). Keep the two runners non-overlapping.
+export default defineConfig({
+  resolve: {
+    alias: {
+      // Mirror the tsconfig `@/*` -> `src/*` path so tests import the
+      // same way app code does.
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  test: {
+    environment: "node",
+    include: ["tests/unit/**/*.test.ts"],
+  },
+});

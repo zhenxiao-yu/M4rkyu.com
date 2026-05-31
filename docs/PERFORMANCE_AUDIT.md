@@ -1,8 +1,12 @@
 # Performance Audit
 
-> **Current-status note:** this audit predates the removal of `/portal` and the
-> replacement of `next-themes` with the owned theme provider. Treat portal rows
-> and `next-themes` mentions as historical until this audit is rerun.
+> **Status (refreshed 2026-05-30):** fixes F.1–F.4 are implemented, and the
+> §13 collection-cover `priority` follow-up has landed. The `/portal` route and
+> `next-themes` have been removed (owned `ThemeProvider` now), and the font
+> stack moved from Geist to self-hosted woff2 (Clash Display / Cabinet Grotesk /
+> Satoshi) plus `next/font/google` for JetBrains Mono, Noto Sans SC, and VT323.
+> Rows below that still mention `/portal`, Geist, or `next-themes` are retained
+> only for historical context.
 
 Surgical audit of M4RKYU.SYS first-load performance. No redesign, no
 new dependencies, no removal of the cyber-pixel system. Findings and
@@ -32,7 +36,7 @@ what is and is not in the initial JS payload.
 | `/work`                 | Section heading + first project tile | Text + lazy `next/image` for tile thumbs.                                                                          |
 | `/work/[slug]`          | Cover image in case-study hero       | `priority` set on the cover `<Image>` ([work/[slug]/page.tsx:113](../src/app/[locale]/work/[slug]/page.tsx#L113)). |
 | `/archive`              | First gallery tile (above the fold)  | `<Image fill sizes=...>`, no `priority`. Acceptable: text heading paints first; tile fades in.                     |
-| `/archive/[collection]` | Collection hero image                | `<Image fill sizes=...>`. Add `priority` for first tile when collection has a hero — TODO follow-up.               |
+| `/archive/[collection]` | Collection hero image                | `<Image fill sizes=...>` with `priority` ([archive/[collection]/page.tsx:90](../src/app/[locale]/archive/[collection]/page.tsx#L90)) — it is the route LCP when a collection has a hero. ✅ |
 | `/logs`                 | Pinned post card hero                | `<Image>` with `sizes`. Adequate.                                                                                  |
 | `/logs/[slug]`          | Post hero / first inline image       | Markdown-driven; first image is lazy-loaded via `post-body.tsx`.                                                   |
 | `/games`                | First game tile                      | Lazy image.                                                                                                        |
@@ -129,18 +133,27 @@ Per-page hot spots:
 
 ## 9. Fonts
 
-- `Geist`, `Geist_Mono`, `Syne`, `VT323` — all via `next/font/google`.
-- All subsets restricted to `["latin"]`. CJK uses system fallback by
-  design (per [globals.css](../src/app/globals.css) `:lang(zh)` guard).
+- Self-hosted woff2 via `next/font/local`: **Clash Display**
+  (`--font-display`, `preload: true`), **Cabinet Grotesk**
+  (`--font-heading`), **Satoshi** (`--font-sans`, `preload: true`).
+- `next/font/google`: **JetBrains Mono** (`--font-mono`), **Noto Sans SC**
+  (`--font-cjk`, `preload: false` so EN-only visitors skip the CJK face),
+  **VT323** (`--font-pixel`, English-only; globals.css rewires
+  `--font-pixel` to `--font-cjk` under `:lang(zh)`).
+- All Google subsets restricted to `["latin"]`. Variables hang on `<html>`
+  so there is no shift on hydration.
 - Default `display: swap` is correct for portfolio use (no FOIT).
-- No new font additions planned.
 
 ## 10. Prioritized fixes (this PR)
 
 The fixes below are all surgical, behavior-preserving, and do not
-touch the visual direction.
+touch the visual direction. **All four are implemented** —
+F.1 in [smooth-scroll.tsx](../src/providers/smooth-scroll.tsx), F.2 in
+[command-palette-provider.tsx](../src/components/system/command-palette-provider.tsx),
+F.3 in [archive/_client.tsx](../src/app/[locale]/archive/_client.tsx), and
+F.4 in [next.config.ts](../next.config.ts).
 
-### F.1 — Defer Lenis until after first paint
+### F.1 — Defer Lenis until after first paint ✅
 
 `SmoothScroll` currently imports `lenis` statically at module load.
 With `next/dynamic` infrastructure-only changes inside the existing
@@ -150,7 +163,7 @@ effect so the ~13 KB Lenis chunk is requested by the browser only
 short-circuit when `prefers-reduced-motion: reduce` is set — no
 Lenis import at all, no RAF loop, native scroll restored.
 
-### F.2 — Lazy-load `CommandPalette` body
+### F.2 — Lazy-load `CommandPalette` body ✅
 
 `CommandPaletteProvider` keeps the event listener (the Cmd+K hotkey
 that runs cheaply on `keydown`) but the `<CommandPalette>` dialog
@@ -159,13 +172,13 @@ time `open` flips to `true`. This pulls cmdk, the 14 lucide icons,
 Radix Dialog, and the `galleryItems` payload out of the initial
 bundle on **every page**.
 
-### F.3 — Lazy-load `GalleryLightbox`
+### F.3 — Lazy-load `GalleryLightbox` ✅
 
 Same pattern. `archive/_client.tsx` (and `saved/page.tsx`) only need
 the lightbox when a user clicks a frame. Wrap in `next/dynamic` so
 the lightbox bundle is fetched on first interaction.
 
-### F.4 — `compiler.removeConsole` in production
+### F.4 — `compiler.removeConsole` in production ✅
 
 Add `compiler: { removeConsole: { exclude: ["error", "warn"] } }`
 to `next.config.ts`. Strips development logs from production
@@ -218,8 +231,9 @@ npm run build`) — useful but adds a devDependency, defer to a
   unused JS after F.1–F.5.
 - Confirm Vercel CDN is serving `image/avif` to Lighthouse — the
   `formats` array already prefers AVIF.
-- Add `priority` to the first `archive/[collection]` hero image if
-  user testing shows that tile is the LCP.
+- ~~Add `priority` to the collection cover `<Image>` in
+  `archive/[collection]/page.tsx` (the `cover ? …` block) — it is the
+  route LCP when a collection has a hero.~~ **Done** (2026-05-30).
 
 ## 14. Verification
 

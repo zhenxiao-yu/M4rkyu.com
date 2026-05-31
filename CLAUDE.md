@@ -33,7 +33,15 @@ npm run analyze             # ANALYZE=true next build (bundle analyzer)
 npm run storybook           # storybook dev -p 6006
 npm run build-storybook     # storybook build
 npm run test:e2e            # playwright test (route smoke matrix)
+npm run test:unit           # vitest run (pure unit tests under tests/unit/)
+npm run test:unit:watch     # vitest watch mode
 ```
+
+Unit tests (Vitest, `node` environment) live under `tests/unit/**/*.test.ts`
+and cover pure logic — content Zod schemas, auth redirect-safety helpers, etc.
+Playwright owns the browser-level route matrix and `testIgnore`s `tests/unit/**`,
+so the two runners never overlap. Vitest resolves the `@/` alias the same way
+the app does (see `vitest.config.ts`).
 
 Run a single Playwright test:
 

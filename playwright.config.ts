@@ -2,6 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  // Vitest owns tests/unit/** (pure unit tests). Keep Playwright out of it.
+  testIgnore: "**/unit/**",
   timeout: 30_000,
   fullyParallel: false,
   workers: 1,

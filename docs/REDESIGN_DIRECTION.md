@@ -14,6 +14,10 @@ last_updated: 2026-05-10
 > if a section conflicts with what shipped, the implementation wins
 > and this file should be edited in a follow-up. See
 > `AI_WORKFLOW.md` for cadence + conventions.
+>
+> **Route note:** the `/portal` route referenced below is historical — it
+> was never shipped and is not in the current app tree. Treat portal
+> mentions as design intent only, not a live route.
 
 This is the creative brief for the **2027 m4rkyu.com**. It is
 opinionated on purpose. Future agents should treat the calls in this file as
