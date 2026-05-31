@@ -15,43 +15,13 @@ import {
   writeStoredString,
 } from "@/lib/browser/safe-storage";
 import { musicTracks, type LoopMode, type MusicTrack } from "@/content/music";
-
-const STORAGE = {
-  featureEnabled: "m4rkyu.audio.featureEnabled",
-  bgmVolume: "m4rkyu.audio.bgmVolume",
-  sfxVolume: "m4rkyu.audio.sfxVolume",
-  loopMode: "m4rkyu.audio.loopMode",
-  shuffle: "m4rkyu.audio.shuffle",
-  trackIndex: "m4rkyu.audio.trackIndex",
-} as const;
-
-const DEFAULTS = {
-  bgmVolume: 0.5,
-  sfxVolume: 0.6,
-  loopMode: "playlist" as LoopMode,
-  shuffle: false,
-  trackIndex: 0,
-  crossfadeMs: 1000,
-};
-
-function clamp01(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.min(1, Math.max(0, value));
-}
-
-function readNumber(key: string, fallback: number): number {
-  const raw = readStoredString(key);
-  if (!raw) return fallback;
-  const parsed = Number(raw);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-function readLoopMode(): LoopMode {
-  const value = readStoredString(STORAGE.loopMode);
-  return value === "off" || value === "track" || value === "playlist"
-    ? value
-    : DEFAULTS.loopMode;
-}
+import {
+  DEFAULTS,
+  STORAGE,
+  clamp01,
+  readLoopMode,
+  readNumber,
+} from "./player-prefs";
 
 function isAudioElement(
   audio: HTMLAudioElement | null,
