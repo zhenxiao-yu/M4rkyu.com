@@ -10,6 +10,7 @@ import {
 import {
   AlertCircle,
   ArrowLeft,
+  ArrowRight,
   Eye,
   EyeOff,
   KeyRound,
@@ -162,10 +163,15 @@ export function AuthForm({ next }: AuthFormProps) {
 
   return (
     <div className="grid gap-3">
+      {/* Magazine-TOC mode nav — three mono-uppercase labels with a
+       * single hairline under the active mode that slides in via
+       * scale-x. Replaces the generic shadcn segmented control so the
+       * form opens with a typographic gesture rather than a boxed UI
+       * widget. */}
       <div
         role="tablist"
         aria-label={t("authModeLabel")}
-        className="grid grid-cols-3 rounded-md border border-border bg-muted p-1"
+        className="flex items-center gap-5 border-b border-border/70"
       >
         <ModeButton
           active={mode === "signin"}
@@ -287,6 +293,10 @@ export function AuthForm({ next }: AuthFormProps) {
           )}
         </div>
 
+        {/* Primary CTA — keeps the shadcn Button base but adopts the
+         * group/cta arrow-slide idiom used elsewhere on the site
+         * (numbered-capability, pixel-button). The leading icon swaps
+         * for a Loader2 spinner under aria-busy. */}
         <Button
           type="submit"
           disabled={pending}
@@ -297,14 +307,20 @@ export function AuthForm({ next }: AuthFormProps) {
                 ? magicPending
                 : signInPending) || undefined
           }
-          className="h-11 gap-2 sm:h-10"
+          className="group/cta relative h-11 justify-between gap-2 pr-3 sm:h-10"
         >
-          {pending ? (
-            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-          ) : (
-            <SubmitIcon className="size-4" aria-hidden="true" />
-          )}
-          <span>{submitLabel}</span>
+          <span className="inline-flex items-center gap-2">
+            {pending ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <SubmitIcon className="size-4" aria-hidden="true" />
+            )}
+            <span>{submitLabel}</span>
+          </span>
+          <ArrowRight
+            aria-hidden="true"
+            className="size-4 opacity-60 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover/cta:translate-x-0.5 group-hover/cta:opacity-100"
+          />
         </Button>
 
         {mode === "signin" ? (
@@ -360,14 +376,25 @@ function ModeButton({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 items-center justify-center rounded-sm px-2 text-xs font-medium transition-colors",
+        "group/mode relative inline-flex h-8 items-center justify-center pb-2 font-mono text-[0.65rem] uppercase tracking-[0.2em] transition-colors duration-(--motion-fast) ease-(--ease-premium)",
         FOCUS_RING_INSET,
         active
-          ? "bg-background text-foreground shadow-sm"
+          ? "text-foreground"
           : "text-muted-foreground hover:text-foreground",
       )}
     >
-      {children}
+      <span>{children}</span>
+      {/* Hairline underline reveal — origin-left scale-x so the rule
+       * sweeps in from the start of the label rather than blooming
+       * symmetrically. Echoes the title underline on
+       * numbered-capability links. */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute -bottom-px left-0 right-0 h-px origin-left transform-gpu bg-ring transition-transform duration-(--motion-fast) ease-(--ease-premium)",
+          active ? "scale-x-100" : "scale-x-0 group-hover/mode:scale-x-50",
+        )}
+      />
     </button>
   );
 }
@@ -400,10 +427,14 @@ function SentNotice({ title, body }: { title: string; body: string }) {
     <div
       role="status"
       aria-live="polite"
-      className="rounded-md border border-border bg-muted/40 p-3 text-sm"
+      className="relative rounded-[1rem] border border-border/70 bg-card/70 p-4 pl-5 text-sm shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur-sm"
     >
-      <p className="font-medium">{title}</p>
-      <p className="mt-1 text-muted-foreground">{body}</p>
+      <span
+        aria-hidden="true"
+        className="absolute left-2 top-4 bottom-4 w-px bg-linear-to-b from-ring/60 via-ring/25 to-transparent"
+      />
+      <p className="font-medium leading-snug">{title}</p>
+      <p className="mt-1 text-muted-foreground leading-5">{body}</p>
     </div>
   );
 }
