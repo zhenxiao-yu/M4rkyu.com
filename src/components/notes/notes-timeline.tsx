@@ -88,34 +88,54 @@ function NoteRow({
   note,
   labels,
   isLatest,
+  entryNumber,
 }: {
   note: Note;
   labels: NotesTimelineLabels;
   isLatest: boolean;
+  /** Descending dispatch number — latest entry has the highest. */
+  entryNumber: number;
 }) {
-  const { d } = parts(note.publishedAt);
+  const { y, m, d } = parts(note.publishedAt);
   const showLink =
     note.link && (note.kind === "repost" || note.kind === "review");
+  const entryLabel = `№ ${String(entryNumber).padStart(3, "0")}`;
 
   return (
     <li
       id={note.slug}
-      className="grid scroll-mt-24 grid-cols-[2.25rem_1.25rem_1fr] gap-x-2 sm:grid-cols-[2.75rem_1.5rem_1fr] sm:gap-x-3"
+      className="grid scroll-mt-24 grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[4.25rem_1.5rem_1fr] sm:gap-x-4"
     >
-      {/* date — also the permalink anchor */}
+      {/* Date stamp — the day reads as a pixel-font typographic anchor
+       * (the "engraved log entry" gesture), with a tiny mono YYYY·MM
+       * underneath for absolute context inside a long timeline. Also
+       * the permalink anchor — clickable, focusable. */}
       <a
         href={`#${note.slug}`}
         aria-label={labels.permalink}
         title={labels.permalink}
         className={cn(
-          "pt-0.5 text-right font-mono text-xs tabular-nums text-muted-foreground transition-colors hover:text-foreground",
+          "group/date flex flex-col items-end gap-1 pt-0.5 text-right",
           FOCUS_RING,
         )}
       >
-        {d}
+        <span
+          aria-hidden="true"
+          className="font-pixel text-2xl leading-none tabular-nums text-foreground/85 transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover/date:text-foreground sm:text-3xl"
+        >
+          {d}
+        </span>
+        <span
+          aria-hidden="true"
+          className="font-mono text-[0.55rem] uppercase leading-none tracking-[0.18em] text-muted-foreground/70 tabular-nums"
+        >
+          {y}·{m}
+        </span>
       </a>
 
-      {/* rail: continuous hairline with a node aligned to the kind label */}
+      {/* Rail — continuous hairline with a node aligned to the
+       * entry-number eyebrow. Latest entry earns the live "now" pulse;
+       * older entries get a neutral dot. */}
       <div className="relative flex justify-center">
         <span
           aria-hidden="true"
@@ -133,21 +153,31 @@ function NoteRow({
         </span>
       </div>
 
-      {/* content */}
-      <div className="min-w-0 pb-8">
-        <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-ring">
+      {/* Content column. */}
+      <div className="min-w-0 pb-10">
+        {/* Eyebrow row — entry numero, kind, "latest" flag. The numero
+         * sign is language-neutral typographic shorthand for "number"
+         * and pairs with the existing pixel-font idioms elsewhere on
+         * the site (PLATE in lightbox, channel in admin). */}
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span
+            aria-hidden="true"
+            className="font-pixel text-sm leading-none text-muted-foreground/65 tabular-nums"
+          >
+            {entryLabel}
+          </span>
+          <span className="font-mono text-[0.6rem] uppercase leading-none tracking-[0.22em] text-ring">
             {labels.kind[note.kind]}
           </span>
           {isLatest ? (
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/70">
+            <span className="font-mono text-[0.6rem] uppercase leading-none tracking-[0.22em] text-muted-foreground/70">
               {labels.latest}
             </span>
           ) : null}
         </div>
 
         {note.title ? (
-          <h3 className="mt-1.5 font-heading text-lg font-semibold leading-snug tracking-tight text-foreground">
+          <h3 className="mt-2 font-heading text-lg font-semibold leading-snug tracking-tight text-foreground">
             {note.title}
           </h3>
         ) : null}
@@ -169,20 +199,35 @@ function NoteRow({
           <TierRows tiers={note.tiers} />
         ) : null}
 
+        {/* Outbound link — reshaped as a wall-label with a vertical
+         * ring-tinted hairline rule on the left. Same idiom used in
+         * the lightbox sidebar / auth modal header / saved-items
+         * empty-state, so the timeline reads as part of the same
+         * visual grammar instead of a one-off chip. */}
         {showLink && note.link ? (
           <a
             href={note.link.url}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "mt-3 inline-flex max-w-full items-center gap-1.5 rounded-sm border border-border bg-background/60 px-3 py-1.5 text-sm text-foreground transition-colors hover:border-ring/50",
+              "group/cite relative mt-4 inline-flex max-w-full items-center gap-2 rounded-[0.85rem] border border-border/70 bg-card/55 py-2 pl-4 pr-3 text-sm text-foreground/90 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/55 hover:text-foreground",
               FOCUS_RING,
             )}
           >
-            <span className="truncate">
-              {note.link.label || hostnameOf(note.link.url)}
+            <span
+              aria-hidden="true"
+              className="absolute left-1.5 top-2 bottom-2 w-px bg-linear-to-b from-ring/60 via-ring/25 to-transparent"
+            />
+            <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-muted-foreground">
+              {hostnameOf(note.link.url)}
             </span>
-            <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0" />
+            {note.link.label ? (
+              <span className="truncate">{note.link.label}</span>
+            ) : null}
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-3.5 shrink-0 opacity-70 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover/cite:translate-x-0.5 group-hover/cite:translate-y-[-1px] group-hover/cite:opacity-100"
+            />
             <span className="sr-only">{labels.linkCta}</span>
           </a>
         ) : null}
@@ -236,15 +281,35 @@ export function NotesTimeline({
     }
   }
 
+  // Descending dispatch number — the latest entry holds the largest
+  // number (sorted[0]). Stable across re-renders because the slug+date
+  // sort is deterministic.
+  const total = sorted.length;
+  const numberBySlug = new Map<string, number>();
+  sorted.forEach((note, index) => {
+    numberBySlug.set(note.slug, total - index);
+  });
+
   return (
     <div className="mx-auto max-w-2xl">
       {groups.map((group) => (
         <section key={group.key} className="mb-2">
-          <div className="mb-4 flex items-center gap-3">
+          {/* Editorial month header — mono label on the left, pixel-font
+           * entry count on the right ("MAY 2026  ·  04"), hairline rule
+           * connecting them. Same beat as the admin "manage content"
+           * header so the typographic grammar stays consistent across
+           * surfaces. */}
+          <div className="mb-5 flex items-baseline gap-3">
             <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
               {group.label}
             </h2>
             <span aria-hidden="true" className="h-px flex-1 bg-border/50" />
+            <span
+              aria-hidden="true"
+              className="font-pixel text-sm leading-none text-muted-foreground/65 tabular-nums"
+            >
+              {String(group.items.length).padStart(2, "0")}
+            </span>
           </div>
           <ol>
             {group.items.map((note) => (
@@ -253,6 +318,7 @@ export function NotesTimeline({
                 note={note}
                 labels={labels}
                 isLatest={note.slug === latestSlug}
+                entryNumber={numberBySlug.get(note.slug) ?? 0}
               />
             ))}
           </ol>
