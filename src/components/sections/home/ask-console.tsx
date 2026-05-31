@@ -3,10 +3,19 @@
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Streamdown } from "streamdown";
-import { ArrowUpRight, CornerDownLeft, Square } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  CornerDownLeft,
+  Mic,
+  RefreshCw,
+  Square,
+} from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { useDictation } from "@/lib/browser/use-dictation";
 import { cn } from "@/lib/utils";
 
 const ENDPOINT = "/api/ask";
@@ -71,16 +80,27 @@ function messageText(parts: { type: string; text?: string }[]): string {
     .join("");
 }
 
+const actionButton =
+  "inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
 export function AskConsole() {
   const t = useTranslations("AskConsole");
-  const { messages, sendMessage, status, error, stop } = useChat({
+  const locale = useLocale();
+  const { messages, sendMessage, status, error, stop, regenerate } = useChat({
     transport: new DefaultChatTransport({ api: ENDPOINT }),
   });
   const [input, setInput] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const dictation = useDictation({
+    lang: locale === "zh" ? "zh-CN" : "en-US",
+    onTranscript: setInput,
+  });
 
   const busy = status === "submitted" || status === "streaming";
   const suggestions = t.raw("suggestions") as string[];
+  const lastId = messages.at(-1)?.id;
 
   // Keep the latest output in view as it streams.
   useEffect(() => {
@@ -91,8 +111,19 @@ export function AskConsole() {
   function submit(text: string) {
     const q = text.trim();
     if (!q || busy) return;
+    if (dictation.listening) dictation.stop();
     void sendMessage({ text: q });
     setInput("");
+  }
+
+  async function copy(id: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      window.setTimeout(() => setCopiedId((c) => (c === id ? null : c)), 1500);
+    } catch {
+      /* clipboard blocked — no-op */
+    }
   }
 
   return (
@@ -147,28 +178,60 @@ export function AskConsole() {
         )}
 
         <ul className="space-y-4">
-          {messages.map((m) => (
-            <li key={m.id}>
-              {m.role === "user" ? (
-                <p className="flex gap-2 text-foreground/70">
-                  <span aria-hidden="true" className="select-none text-ring">
-                    ›
-                  </span>
-                  <span className="min-w-0 break-words">{messageText(m.parts)}</span>
-                </p>
-              ) : (
-                <div className="text-foreground/90">
-                  <Streamdown
-                    parseIncompleteMarkdown
-                    components={markdownComponents}
-                    className="break-words"
-                  >
-                    {messageText(m.parts)}
-                  </Streamdown>
-                </div>
-              )}
-            </li>
-          ))}
+          {messages.map((m) => {
+            const text = messageText(m.parts);
+            const isLastAssistant = m.role === "assistant" && m.id === lastId;
+            return (
+              <li key={m.id}>
+                {m.role === "user" ? (
+                  <p className="flex gap-2 text-foreground/70">
+                    <span aria-hidden="true" className="select-none text-ring">
+                      ›
+                    </span>
+                    <span className="min-w-0 break-words">{text}</span>
+                  </p>
+                ) : (
+                  <div className="text-foreground/90">
+                    <Streamdown
+                      parseIncompleteMarkdown
+                      components={markdownComponents}
+                      className="break-words"
+                    >
+                      {text}
+                    </Streamdown>
+                    {/* Message actions — copy always, regenerate on the last
+                     * answer once the stream is idle. */}
+                    {text && !busy && (
+                      <div className="mt-2 flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => copy(m.id, text)}
+                          className={actionButton}
+                        >
+                          {copiedId === m.id ? (
+                            <Check className="size-3" aria-hidden="true" />
+                          ) : (
+                            <Copy className="size-3" aria-hidden="true" />
+                          )}
+                          {copiedId === m.id ? t("copied") : t("copy")}
+                        </button>
+                        {isLastAssistant && (
+                          <button
+                            type="button"
+                            onClick={() => void regenerate()}
+                            className={actionButton}
+                          >
+                            <RefreshCw className="size-3" aria-hidden="true" />
+                            {t("regenerate")}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         {status === "submitted" && (
@@ -179,8 +242,10 @@ export function AskConsole() {
         )}
 
         {status === "error" && (
-          <p className="mt-3 text-destructive-foreground/90 text-[color:var(--ring)]">
-            {error?.message === "unavailable" ? t("errorUnavailable") : t("errorGeneric")}
+          <p className="mt-3 text-[color:var(--ring)]">
+            {error?.message === "unavailable"
+              ? t("errorUnavailable")
+              : t("errorGeneric")}
           </p>
         )}
       </div>
@@ -202,9 +267,27 @@ export function AskConsole() {
           maxLength={500}
           enterKeyHint="send"
           aria-label={t("inputLabel")}
-          placeholder={t("placeholder")}
+          placeholder={dictation.listening ? t("listening") : t("placeholder")}
           className="min-w-0 flex-1 bg-transparent font-mono text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none"
         />
+
+        {dictation.supported && (
+          <button
+            type="button"
+            onClick={() => (dictation.listening ? dictation.stop() : dictation.start())}
+            aria-pressed={dictation.listening}
+            aria-label={dictation.listening ? t("micStop") : t("micStart")}
+            className={cn(
+              "flex items-center rounded-sm border px-2 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              dictation.listening
+                ? "border-ring text-ring animate-pulse motion-reduce:animate-none"
+                : "border-ring/40 text-foreground/70 hover:border-ring",
+            )}
+          >
+            <Mic className="size-3.5" aria-hidden="true" />
+          </button>
+        )}
+
         {busy ? (
           <button
             type="button"

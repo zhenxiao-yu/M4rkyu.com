@@ -1964,6 +1964,12 @@
     "placeholder": "问问关于 Mark 作品的任何事……",
     "send": "发送",
     "stop": "停止",
+    "regenerate": "重新生成",
+    "copy": "复制",
+    "copied": "已复制",
+    "micStart": "语音输入",
+    "micStop": "停止语音",
+    "listening": "聆听中…",
     "errorUnavailable": "// 系统离线 —— AI 端点尚未配置。可改用菜单浏览。",
     "errorGeneric": "// 错误 —— 出了点问题，请重试。"
   }

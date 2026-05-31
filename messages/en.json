@@ -1964,6 +1964,12 @@
     "placeholder": "ask anything about Mark’s work…",
     "send": "Send",
     "stop": "Stop",
+    "regenerate": "Regenerate",
+    "copy": "Copy",
+    "copied": "Copied",
+    "micStart": "Dictate",
+    "micStop": "Stop dictation",
+    "listening": "listening…",
     "errorUnavailable": "// SYSTEM OFFLINE — the AI endpoint isn’t configured yet. Try the menu instead.",
     "errorGeneric": "// ERROR — something glitched. Try again."
   }
