@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/sections/hero-section";
 import { IntroLoaderIsland } from "@/components/system/intro-loader-island";
 import { HomeSmoothScroll } from "@/providers/home-smooth-scroll";
+import { AskSection } from "@/components/sections/home/ask-section";
 import { CompassSection } from "@/components/sections/home/compass-section";
 import { SelectedWork } from "@/components/sections/home/selected-work";
 import { GamesPreview } from "@/components/sections/home/games-preview";
@@ -53,6 +54,7 @@ export default async function HomePage({
       <HomeSmoothScroll>
         <IntroLoaderIsland />
         <HeroSection locale={locale} />
+        <AskSection />
         <CompassSection locale={locale} />
         <SelectedWork locale={locale} projects={allProjects} />
         <GamesPreview locale={locale} />
