@@ -14,7 +14,10 @@ export default defineConfig({
     },
   },
   test: {
+    // Default env is `node` (pure logic). Files that need a DOM opt in with a
+    // `// @vitest-environment jsdom` docblock at the top (e.g. the audio
+    // provider state-machine test).
     environment: "node",
-    include: ["tests/unit/**/*.test.ts"],
+    include: ["tests/unit/**/*.test.{ts,tsx}"],
   },
 });
