@@ -15,7 +15,7 @@ where Low/Med/High/Critical = 1/2/3/4 and S/M/L/XL = 1/2/3/4. Sorted high→low.
 |----|----------|-------------|-------|--------|--------|----------|-------|--------|
 | TD-001 | Test | **Resolved 2026-05-30.** Vitest baseline established (`tests/unit/`, `node` default + per-file `jsdom` opt-in, isolated from Playwright via `testIgnore`). 86 unit tests across the highest-risk surfaces: all content Zod schemas; auth redirect-safety helpers (`sanitizeNextPath` open-redirect guard, `resolveSiteOrigin`); a Supabase/Resend mock harness covering all 7 `actions.ts` server actions; and the audio provider state machine (storage-restore, volume clamping, persistence, playlist navigation) in jsdom without touching the Web Audio path. Going forward, new logic on these surfaces ships with tests rather than against a blank slate. | `tests/unit/`, `src/content/schemas.ts`, `src/lib/auth/redirect-url.ts`, `src/lib/auth/actions.ts`, `src/lib/audio/audio-player-context.tsx` | L | High | 3.0 | 2026-05-30 | Resolved |
 | TD-002 | Code Quality | **Partially reduced (2026-05-30).** Pure branch-heavy logic extracted into tested sibling modules: auth error classifiers → `lib/auth/error-classify.ts` (`actions.ts` 788→731), audio prefs/clamp/readers → `lib/audio/player-prefs.ts` (provider 746→716). The remainder is cohesive single-concern code (server actions; the provider's effect/ref wiring) — consciously accepted. Untouched: `components/gallery/gallery-lightbox.tsx` (684). Data/token files (`content/resources.ts` 1238, `globals.css` 1077) intentionally large and excluded. | `lib/auth/actions.ts`, `lib/audio/audio-player-context.tsx`, `components/gallery/gallery-lightbox.tsx` | M | Med | 2.0 | 2026-05-30 | Backlog |
-| TD-003 | Dependency | Major versions held back behind current pins: `shiki`/`@shikijs/rehype` 3→4, `eslint` 9→10 (**blocked — see below**), `typescript` 5→6, `@types/node` at 20 (pinned for Node 22.x). ~12 minor bumps available within range. | `package.json` | M | Med | 1.0 | 2026-05-30 | Backlog |
+| TD-003 | Dependency | **Partially done (2026-05-31).** `shiki`/`@shikijs/rehype` 3→4 bumped — API-compatible (dual-theme `themes` + `defaultColor: false` in `post-body.tsx` unchanged); validate + production build green. Still held: `eslint` 9→10 (**blocked — see below**), `typescript` 5→6, `@types/node` at 20 (pinned for Node 22.x). ~12 minor bumps available within range. | `package.json` | M | Med | 1.0 | 2026-05-30 | Backlog |
 | TD-004 | Documentation | **Resolved 2026-05-30.** Archive-hero follow-up implemented: `priority` added to the `archive/[collection]/page.tsx` cover `<Image>` (route LCP) and `docs/PERFORMANCE_AUDIT.md` §2/§13 updated to mark it landed. `/portal` archival drift reconciled — no doc presents `/portal` as a current route. | `src/app/[locale]/archive/[collection]/page.tsx`, `docs/PERFORMANCE_AUDIT.md`, `docs/COMPONENT_MAP.md`, `docs/REDESIGN_DIRECTION.md`, `docs/UI_LIBRARY_STRATEGY.md`, `docs/SHADCN_V4_REFERENCE.md` | S | Low | — | 2026-05-30 | Resolved |
 
 ## Prioritization notes (2026-05-30)
@@ -42,9 +42,12 @@ Frequency-of-encounter is how often the debt is actually *hit* during work:
     function` on every file. Not safely patchable from this repo (it's a nested
     transitive dep). Revisit when `eslint-config-next` ships an eslint-10-ready
     `eslint-plugin-react`. Reverted cleanly to eslint `^9`.
-  - Remaining majors (`shiki`/`@shikijs/rehype` 3→4, `typescript` 5→6) not yet
-    attempted. shiki is isolated to `components/blog/post-body.tsx`; typescript
-    6 touches the whole typecheck surface.
+  - **shiki/@shikijs/rehype 3→4: DONE (2026-05-31).** Isolated to
+    `components/blog/post-body.tsx`; the dual-theme rehype options are
+    unchanged in v4, so no code edits. Verified with `validate` + a full
+    `next build`.
+  - **typescript 5→6: not attempted.** Whole-typecheck blast radius — higher
+    risk; do it as a dedicated pass with `validate` + `build`.
 - **TD-004 (resolved 2026-05-30)** — was a quick S win; closed in a docs-only
   pass. Archive-hero TODO is now an actionable §2/§13 note and no doc presents
   `/portal` as a current route.
