@@ -57,6 +57,11 @@ export const env = createEnv({
     // bundle. Mint keys at https://dashboard.stripe.com/apikeys.
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    // Vercel AI Gateway key for the /api/search semantic search. Optional:
+    // on Vercel, OIDC authenticates the gateway without it; the search route
+    // returns 503 (graceful) when neither is present. Mint at
+    // vercel.com → AI Gateway → API Keys.
+    AI_GATEWAY_API_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
@@ -95,6 +100,7 @@ export const env = createEnv({
     STEAM_ID: process.env.STEAM_ID,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,

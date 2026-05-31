@@ -1947,5 +1947,30 @@
     "sfxTest": "Test",
     "sfxTestAria": "Play test sound effect",
     "playlist": "Playlist"
+  },
+  "Search": {
+    "trigger": "Ask AI",
+    "title": "Ask this portfolio",
+    "description": "Semantic search across projects, games, writing, and more — powered by AI.",
+    "placeholder": "Try “3D web experiments” or “what does Mark use for games?”",
+    "idleHint": "Search by meaning, not just keywords. For example:",
+    "examples": ["3D web experiments", "game projects", "writing about design", "AI tools"],
+    "loading": "Searching…",
+    "emptyTitle": "No matches",
+    "emptyBody": "Nothing in the portfolio fits that yet. Try rephrasing or a broader idea.",
+    "errorTitle": "Search unavailable",
+    "errorRateLimited": "Too many searches just now — give it a minute and try again.",
+    "errorUnavailable": "AI search isn’t configured right now. Try the menu instead.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "poweredBy": "AI semantic search",
+    "types": {
+      "project": "Project",
+      "game": "Game",
+      "resource": "Resource",
+      "gallery": "Gallery",
+      "note": "Note",
+      "media": "Media",
+      "service": "Service"
+    }
   }
 }

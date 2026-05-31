@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { NavigationProgress } from "@/components/system/navigation-progress";
 import { CursorTrail } from "@/components/ui/magic/cursor-trail";
+import { AiSearch } from "@/components/search/ai-search";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { AudioPlayerDialogHost } from "@/components/system/audio-player-dialog-host";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -66,6 +67,8 @@ export default async function LocaleLayout({
                   {children}
                 </div>
                 <CursorTrail />
+                {/* AI semantic search — floating launcher, site-wide. */}
+                <AiSearch />
                 <CookieConsentBanner />
                 <ConsentAwareAnalytics />
                 <WebVitalsReporter />

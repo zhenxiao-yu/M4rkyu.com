@@ -1947,5 +1947,30 @@
     "sfxTest": "试听",
     "sfxTestAria": "试听音效",
     "playlist": "播放列表"
+  },
+  "Search": {
+    "trigger": "AI 搜索",
+    "title": "向作品集提问",
+    "description": "用 AI 对项目、游戏、文章等内容进行语义搜索。",
+    "placeholder": "试试「3D 网页实验」或「Mark 用什么做游戏？」",
+    "idleHint": "按含义搜索，而不只是关键词。例如：",
+    "examples": ["3D 网页实验", "游戏项目", "关于设计的文章", "AI 工具"],
+    "loading": "搜索中…",
+    "emptyTitle": "没有匹配结果",
+    "emptyBody": "作品集里暂时没有相关内容。换个说法或更宽泛的描述再试试。",
+    "errorTitle": "搜索暂不可用",
+    "errorRateLimited": "刚才搜索太频繁了——请稍等一分钟再试。",
+    "errorUnavailable": "AI 搜索当前尚未配置。可以改用菜单浏览。",
+    "errorGeneric": "出了点问题，请重试。",
+    "poweredBy": "AI 语义搜索",
+    "types": {
+      "project": "项目",
+      "game": "游戏",
+      "resource": "资源",
+      "gallery": "图库",
+      "note": "随记",
+      "media": "影像",
+      "service": "服务"
+    }
   }
 }
