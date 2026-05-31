@@ -114,8 +114,14 @@ function NoteRow({
         href={`#${note.slug}`}
         aria-label={labels.permalink}
         title={labels.permalink}
+        /* Hit target is intentionally larger than the visible content
+         * (44×44 Apple HIG minimum). A pseudo-element extends the
+         * clickable region without affecting the date stamp's visual
+         * position in the grid column — the day still sits right-
+         * aligned at the column edge. */
         className={cn(
-          "group/date flex flex-col items-end gap-1 pt-0.5 text-right",
+          "group/date relative flex flex-col items-end gap-1 pt-0.5 text-right",
+          "before:absolute before:-inset-2 before:content-['']",
           FOCUS_RING,
         )}
       >

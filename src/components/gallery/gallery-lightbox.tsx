@@ -207,7 +207,7 @@ export function GalleryLightbox({
                     size="icon"
                     variant="outline"
                     className={cn(
-                      "rounded-full border-0 bg-transparent",
+                      "size-11 rounded-full border-0 bg-transparent sm:size-9",
                       FAST_GLASS_BUTTON,
                     )}
                   >
@@ -235,7 +235,7 @@ export function GalleryLightbox({
                     size="icon"
                     variant="outline"
                     className={cn(
-                      "rounded-full border-0 bg-transparent",
+                      "size-11 rounded-full border-0 bg-transparent sm:size-9",
                       FAST_GLASS_BUTTON,
                     )}
                   >

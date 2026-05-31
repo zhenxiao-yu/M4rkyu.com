@@ -81,7 +81,7 @@ export function SignInSheet({
          * quietly asserts that this site has a design language. Pixel
          * font auto-swaps to the sans display stack on CJK contexts via
          * the :lang(zh) guard in globals.css. */}
-        <div className="pointer-events-none absolute right-14 top-5 z-10 inline-flex items-baseline gap-1.5">
+        <div className="pointer-events-none absolute right-16 top-5 z-10 inline-flex items-baseline gap-1.5">
           <span
             aria-hidden="true"
             className="font-pixel text-base leading-none uppercase tracking-wide text-muted-foreground/65"
@@ -101,11 +101,11 @@ export function SignInSheet({
         <DialogClose
           aria-label={t("signIn")}
           className={cn(
-            "absolute right-5 top-5 z-10 inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground",
+            "absolute right-4 top-4 z-10 inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground",
             FOCUS_RING_INSET,
           )}
         >
-          <X className="size-3.5" aria-hidden="true" />
+          <X className="size-4" aria-hidden="true" />
           <span className="sr-only">{t("signIn")}</span>
         </DialogClose>
 
