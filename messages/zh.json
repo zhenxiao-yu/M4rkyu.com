@@ -328,7 +328,8 @@
     "detailHint": "打开更大的查看视图，专心观察这一帧，不会再被档案网格打断。",
     "placeholderHint": "占位帧先维持画廊结构，等正式影像准备好后再替换。",
     "zoomIn": "放大",
-    "zoomOut": "缩小"
+    "zoomOut": "缩小",
+    "plate": "图版"
   },
   "Social": {
     "like": "喜欢",
@@ -1374,6 +1375,7 @@
     "manageHeading": "管理内容",
     "manageOpen": "打开",
     "manageNew": "新建",
+    "itemsCount": "{count, plural, other {# 项}}",
     "navLabel": "管理分区",
     "overview": "概览",
     "gallery": "影像",

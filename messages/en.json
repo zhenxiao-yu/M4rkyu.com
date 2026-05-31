@@ -328,7 +328,8 @@
     "detailHint": "Open a larger inspection view to study the frame without the archive grid getting in the way.",
     "placeholderHint": "Placeholder frame keeps the gallery structure in place until the final image is ready.",
     "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
+    "zoomOut": "Zoom out",
+    "plate": "Plate"
   },
   "Social": {
     "like": "Like",
@@ -1374,6 +1375,7 @@
     "manageHeading": "Manage content",
     "manageOpen": "Open",
     "manageNew": "New",
+    "itemsCount": "{count, plural, =0 {0 items} one {# item} other {# items}}",
     "navLabel": "Admin sections",
     "overview": "Overview",
     "gallery": "Gallery",

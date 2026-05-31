@@ -4,9 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
-  ChevronDown,
   ChevronRight,
-  Info,
   Maximize2,
   Minus,
   Plus,
@@ -18,21 +16,13 @@ import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AnimatedGridPattern } from "@/components/ui/magic/animated-grid-pattern";
-import { BorderBeam } from "@/components/ui/magic/border-beam";
 import { PointerSpotlight } from "@/components/ui/magic/pointer-spotlight";
-import { ShineBorder } from "@/components/ui/magic/shine-border";
 import type { GalleryItem } from "@/content/schemas";
 import { SITE_URL } from "@/lib/seo/site";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
@@ -113,20 +103,34 @@ export function GalleryLightbox({
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen, items.length, next, prev, setIndex]);
 
+  // Each related entry is paired with its original gallery index so we can
+  // render the curator "PLATE NN" overlay without re-scanning the items
+  // array per thumb in render.
   const related = useMemo(() => {
-    if (!current) return [] as GalleryItem[];
+    if (!current) return [] as { item: GalleryItem; index: number }[];
     const explicit = current.related
       .map((slug) => items.find((item) => item.slug === slug))
       .filter((item): item is GalleryItem => Boolean(item));
-    if (explicit.length >= 3) return explicit.slice(0, 3);
-    const fallback = items.filter(
-      (item) =>
-        item.collection === current.collection &&
-        item.slug !== current.slug &&
-        !explicit.some((entry) => entry.slug === item.slug),
-    );
-    return [...explicit, ...fallback].slice(0, 3);
+    const fallback =
+      explicit.length >= 3
+        ? []
+        : items.filter(
+            (item) =>
+              item.collection === current.collection &&
+              item.slug !== current.slug &&
+              !explicit.some((entry) => entry.slug === item.slug),
+          );
+    return [...explicit, ...fallback]
+      .slice(0, 3)
+      .map((item) => ({
+        item,
+        index: items.findIndex((entry) => entry.slug === item.slug),
+      }));
   }, [current, items]);
+
+  const plateLabel = tGallery("plate");
+  const plateIndex = String(openIndex + 1).padStart(2, "0");
+  const plateTotal = String(items.length).padStart(2, "0");
 
   return (
     <Dialog
@@ -179,17 +183,18 @@ export function GalleryLightbox({
             </DialogHeader>
 
             <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1.4fr)_24rem]">
-              <section className="relative min-h-[20rem] border-b border-border/70 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_44%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent)] lg:border-b-0 lg:border-r">
+              <section className="relative min-h-[20rem] border-b border-border/70 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_50%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent)] lg:border-b-0 lg:border-r">
                 <FrameMedia
                   key={current.slug}
                   item={current}
+                  plateLabel={plateLabel}
+                  plateIndex={plateIndex}
+                  plateTotal={plateTotal}
                   mediaTbdLabel={tGallery("lightboxMediaTbd")}
                   zoomInLabel={tGallery("zoomIn")}
                   zoomOutLabel={tGallery("zoomOut")}
                   viewDetailLabel={tGallery("viewDetail")}
                   closeDetailLabel={tGallery("closeDetail")}
-                  detailViewLabel={tGallery("detailView")}
-                  detailHint={tGallery("detailHint")}
                   placeholderHint={tGallery("placeholderHint")}
                 />
 
@@ -244,24 +249,47 @@ export function GalleryLightbox({
                 className="min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5 sm:py-5"
               >
                 <div className="grid gap-5">
-                  <div className="grid gap-3 rounded-[1.25rem] border border-border/70 bg-card/70 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.12)] backdrop-blur-sm">
-                    <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
-                      {tGallery("detailView")}
-                    </p>
-                    <p className="text-sm leading-6 text-muted-foreground">
-                      {tGallery("detailHint")}
-                    </p>
-
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      {current.location ? (
-                        <span className="rounded-full border border-border/70 px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
-                          {current.location}
+                  {/* Wall label — a curator's plate caption. Vertical ring-tinted
+                   * hairline rule on the left does the visual heavy lifting, the
+                   * pixel-font plate index ties this panel to the typographic
+                   * mark in the main viewing area. */}
+                  <div className="relative rounded-[1.25rem] border border-border/70 bg-card/70 p-5 pl-6 shadow-[0_18px_60px_rgba(0,0,0,0.12)] backdrop-blur-sm">
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-3 top-5 bottom-5 w-px bg-linear-to-b from-ring/60 via-ring/25 to-transparent"
+                    />
+                    <div className="grid gap-3">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <p className="font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted-foreground">
+                          {tGallery("detailView")}
+                        </p>
+                        <span
+                          aria-hidden="true"
+                          className="font-pixel text-base leading-none text-foreground/75 tabular-nums"
+                        >
+                          {plateIndex}
+                          <span className="mx-0.5 text-muted-foreground/50">
+                            /
+                          </span>
+                          {plateTotal}
                         </span>
-                      ) : null}
-                      {current.capturedAt ? (
-                        <span className="rounded-full border border-border/70 px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
-                          {current.capturedAt}
-                        </span>
+                      </div>
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        {tGallery("detailHint")}
+                      </p>
+                      {current.location || current.capturedAt ? (
+                        <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-muted-foreground">
+                          {current.location ? (
+                            <span className="rounded-full border border-border/70 px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
+                              {current.location}
+                            </span>
+                          ) : null}
+                          {current.capturedAt ? (
+                            <span className="rounded-full border border-border/70 px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
+                              {current.capturedAt}
+                            </span>
+                          ) : null}
+                        </div>
                       ) : null}
                     </div>
                   </div>
@@ -295,12 +323,15 @@ export function GalleryLightbox({
                         {tGallery("fromCollection")}
                       </p>
                       <div className="grid grid-cols-2 gap-3">
-                        {related.map((item, index) => (
+                        {related.map(({ item, index: relatedIndex }, position) => (
                           <button
                             key={item.slug}
                             type="button"
                             onClick={() => onChange(item.slug)}
-                            className={cn("group text-left", FOCUS_RING_INSET)}
+                            className={cn(
+                              "group text-left",
+                              FOCUS_RING_INSET,
+                            )}
                             aria-label={tGallery("openFrame", {
                               title: item.title,
                             })}
@@ -325,7 +356,7 @@ export function GalleryLightbox({
                                   alt={item.src.alt}
                                   fill
                                   sizes="(min-width: 1024px) 220px, 42vw"
-                                  loading={index < 3 ? "eager" : "lazy"}
+                                  loading={position < 3 ? "eager" : "lazy"}
                                   placeholder={
                                     item.src.blurDataURL ? "blur" : undefined
                                   }
@@ -339,6 +370,14 @@ export function GalleryLightbox({
                                   className="rounded-none border-0"
                                 />
                               )}
+                              {relatedIndex >= 0 ? (
+                                <span
+                                  aria-hidden="true"
+                                  className="absolute left-2 top-2 z-10 rounded bg-background/85 px-1.5 py-0.5 font-pixel text-xs leading-none text-foreground/85 tabular-nums backdrop-blur-sm"
+                                >
+                                  {String(relatedIndex + 1).padStart(2, "0")}
+                                </span>
+                              ) : null}
                             </div>
                             <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">
                               {item.title}
@@ -360,28 +399,29 @@ export function GalleryLightbox({
 
 function FrameMedia({
   item,
+  plateLabel,
+  plateIndex,
+  plateTotal,
   mediaTbdLabel,
   zoomInLabel,
   zoomOutLabel,
   viewDetailLabel,
   closeDetailLabel,
-  detailViewLabel,
-  detailHint,
   placeholderHint,
 }: {
   item: GalleryItem;
+  plateLabel: string;
+  plateIndex: string;
+  plateTotal: string;
   mediaTbdLabel: string;
   zoomInLabel: string;
   zoomOutLabel: string;
   viewDetailLabel: string;
   closeDetailLabel: string;
-  detailViewLabel: string;
-  detailHint: string;
   placeholderHint: string;
 }) {
   const reduceMotion = Boolean(useReducedMotion());
   const [detailOpen, setDetailOpen] = useState(false);
-  const [infoOpen, setInfoOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [origin, setOrigin] = useState("center");
 
@@ -401,17 +441,13 @@ function FrameMedia({
 
   return (
     <div className="relative flex h-full min-h-[20rem] items-stretch p-3 sm:p-4 lg:p-6">
+      {/* Viewing surface — image is the focal point. Previously stacked
+       * AnimatedGridPattern + ShineBorder + BorderBeam + spotlight all
+       * competing behind every photo; that read as decoration noise.
+       * Now: one calm glass plate with a quiet pointer spotlight, all
+       * voice carried by the typographic plate mark below. */}
       <div className="relative flex min-h-[18rem] flex-1 overflow-hidden rounded-[1.4rem] border border-border/70 bg-card/60 shadow-[0_24px_80px_rgba(0,0,0,0.2)] backdrop-blur-sm">
-        <AnimatedGridPattern
-          width={48}
-          height={48}
-          numSquares={22}
-          maxOpacity={0.16}
-          className="[mask-image:radial-gradient(circle_at_center,black,transparent_80%)]"
-        />
-        <PointerSpotlight radius={220} intensity={0.1} />
-        <ShineBorder borderRadius={22} duration={16} />
-        <BorderBeam borderRadius={22} size={160} duration={14} />
+        <PointerSpotlight radius={260} intensity={0.06} />
 
         <div className="relative flex flex-1 items-center justify-center overflow-hidden p-3 text-left sm:p-5 lg:p-6">
           {item.src ? (
@@ -445,51 +481,37 @@ function FrameMedia({
 
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-background via-background/55 to-transparent" />
 
-          <div className="absolute left-4 top-4 z-10 sm:left-5 sm:top-5 lg:left-6 lg:top-6">
-            <Collapsible open={infoOpen} onOpenChange={setInfoOpen}>
-              <CollapsibleTrigger
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[0.58rem] uppercase tracking-[0.2em]",
-                  FAST_GLASS_BUTTON,
-                  FOCUS_RING_INSET,
-                )}
-              >
-                <Info aria-hidden="true" className="size-3.5" />
-                <span>{detailViewLabel}</span>
-                <ChevronDown
-                  aria-hidden="true"
-                  className={cn(
-                    "size-3 transition-transform duration-(--motion-fast) ease-(--ease-premium)",
-                    infoOpen && "rotate-180",
-                  )}
-                />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pt-2">
-                <div className="glass-surface w-[min(20rem,calc(100vw-4rem))] rounded-2xl p-3">
-                  <div className="grid gap-3">
-                    <p className="text-xs leading-5 text-foreground/85">
-                      {detailHint}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      <MetaPill>{item.type}</MetaPill>
-                      <MetaPill>{item.collection}</MetaPill>
-                      {item.location ? <MetaPill>{item.location}</MetaPill> : null}
-                      {item.capturedAt ? (
-                        <MetaPill>{item.capturedAt}</MetaPill>
-                      ) : null}
-                    </div>
-                    {item.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5">
-                        {item.tags.map((tag) => (
-                          <MetaPill key={tag}>{tag}</MetaPill>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+          {/* Plate mark — the conceptual anchor. Letterpress-style pixel
+           * numerals quietly assert "this is a curated exhibition view,"
+           * replacing the noisier info collapsible that used to live here.
+           * Pixel font auto-swaps to the display stack on CJK contexts
+           * via globals.css's :lang(zh) guard, so this stays legible. */}
+          <div className="pointer-events-none absolute left-4 top-4 z-10 inline-flex items-baseline gap-2 sm:left-5 sm:top-5 lg:left-6 lg:top-6">
+            <span className="font-pixel text-xl leading-none uppercase tracking-wide text-foreground/75">
+              {plateLabel}
+            </span>
+            <span className="font-pixel text-xl leading-none text-foreground/75 tabular-nums">
+              {plateIndex}
+              <span className="mx-0.5 text-muted-foreground/50">/</span>
+              {plateTotal}
+            </span>
           </div>
+
+          {/* Placeholder-only hint. When a real image is mounted, the wall
+           * label in the sidebar carries the same intent — no need to
+           * duplicate it as a floating bottom strip over the artwork. */}
+          {!item.src ? (
+            <div className="pointer-events-none absolute inset-x-4 bottom-4 sm:inset-x-5 lg:inset-x-6">
+              <div className="glass-surface max-w-sm rounded-2xl px-3 py-2">
+                <p className="font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted-foreground">
+                  {mediaTbdLabel}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-foreground/85">
+                  {placeholderHint}
+                </p>
+              </div>
+            </div>
+          ) : null}
 
           <button
             type="button"
@@ -504,19 +526,6 @@ function FrameMedia({
             <Maximize2 aria-hidden="true" className="size-4" />
             <span>{viewDetailLabel}</span>
           </button>
-
-          <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 sm:inset-x-5 lg:inset-x-6">
-            <div className="glass-surface max-w-sm rounded-2xl px-3 py-2">
-              <p className="font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted-foreground">
-                {item.src ? viewDetailLabel : mediaTbdLabel}
-              </p>
-              <p className="mt-1 text-xs leading-5 text-foreground/85">
-                {item.src
-                  ? detailHint
-                  : placeholderHint}
-              </p>
-            </div>
-          </div>
         </div>
 
         <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
@@ -530,14 +539,27 @@ function FrameMedia({
             <div className="relative flex h-full flex-col">
               <DialogHeader className="sr-only">
                 <DialogTitle>{item.title}</DialogTitle>
-                <DialogDescription>{detailHint}</DialogDescription>
+                <DialogDescription>{item.caption}</DialogDescription>
               </DialogHeader>
               <div className="flex items-center justify-between gap-3 border-b border-border/70 px-4 py-3 sm:px-5">
-                <div>
-                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted-foreground">
-                    {detailViewLabel}
-                  </p>
-                  <p className="text-sm text-foreground">{item.title}</p>
+                <div className="flex items-baseline gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="font-pixel text-base leading-none uppercase tracking-wide text-foreground/65"
+                  >
+                    {plateLabel}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="font-pixel text-base leading-none text-foreground/65 tabular-nums"
+                  >
+                    {plateIndex}
+                    <span className="mx-0.5 text-muted-foreground/50">/</span>
+                    {plateTotal}
+                  </span>
+                  <span className="ml-2 truncate text-sm text-foreground">
+                    {item.title}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   {canZoom ? (
@@ -590,19 +612,24 @@ function FrameMedia({
 
               <div className="flex min-h-0 flex-1 flex-col px-3 pb-3 pt-3 sm:px-5 sm:pb-5 sm:pt-4">
                 <div
-                  className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.25rem] border border-border/70 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.92),rgba(24,24,24,0.78))]"
+                  className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.25rem] border border-border/70 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_46%),linear-gradient(180deg,rgba(10,10,10,0.94),rgba(20,20,20,0.82))]"
                   onMouseMove={updateOrigin}
                   onMouseLeave={() => setOrigin("center")}
                 >
-                  <AnimatedGridPattern
-                    width={52}
-                    height={52}
-                    numSquares={16}
-                    maxOpacity={0.1}
-                    className="[mask-image:radial-gradient(circle_at_center,black,transparent_82%)]"
-                  />
-                  <PointerSpotlight radius={260} intensity={0.12} />
-                  <ShineBorder borderRadius={20} duration={18} />
+                  <PointerSpotlight radius={320} intensity={0.08} />
+
+                  {/* Plate mark also rides the zoom dialog so the curator
+                   * framing stays consistent across both surfaces. */}
+                  <div className="pointer-events-none absolute left-4 top-4 z-10 inline-flex items-baseline gap-2 sm:left-5 sm:top-5">
+                    <span className="font-pixel text-xl leading-none uppercase tracking-wide text-foreground/70">
+                      {plateLabel}
+                    </span>
+                    <span className="font-pixel text-xl leading-none text-foreground/70 tabular-nums">
+                      {plateIndex}
+                      <span className="mx-0.5 text-muted-foreground/50">/</span>
+                      {plateTotal}
+                    </span>
+                  </div>
 
                   {item.src ? (
                     <div className="relative h-full w-full overflow-hidden">
@@ -640,14 +667,6 @@ function FrameMedia({
         </Dialog>
       </div>
     </div>
-  );
-}
-
-function MetaPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded-full border border-border/70 bg-background/55 px-2.5 py-1 font-mono text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground">
-      {children}
-    </span>
   );
 }
 
