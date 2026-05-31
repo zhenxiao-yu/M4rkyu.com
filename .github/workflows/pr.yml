@@ -27,6 +27,27 @@ jobs:
       - run: npm ci
       - run: npm run validate
 
+  budget:
+    name: Bundle budget
+    needs: [validate]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Bundle sizes depend on code, not secret values, so skip env
+      # validation — the email keys required in a production build aren't
+      # present in CI and aren't needed to measure the client bundle.
+      - name: Production build
+        run: npm run budget:build
+        env:
+          SKIP_ENV_VALIDATION: "true"
+      - name: Check bundle budget vs baseline
+        run: npm run budget
+
   e2e:
     name: Playwright smoke
     needs: [validate]

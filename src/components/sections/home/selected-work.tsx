@@ -101,8 +101,12 @@ async function DraftTile({
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
 
+  // Pending/placeholder work slot. opacity-75 (not 60) keeps the dimmed
+  // "coming soon" read while lifting the muted `cover · tbd` label above the
+  // 4.5:1 contrast floor — parent opacity caps all descendants, so the label
+  // can't be fixed in isolation (WCAG 1.4.3).
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground opacity-60 grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) hover:opacity-100 hover:grayscale-0">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground opacity-75 grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) hover:opacity-100 hover:grayscale-0">
       <div className="relative aspect-square w-full overflow-hidden bg-muted">
         {cover ? (
           <Image

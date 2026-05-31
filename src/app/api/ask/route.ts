@@ -1,14 +1,15 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
+import { deepseek } from "@ai-sdk/deepseek";
 import { clientIpFromHeaders } from "@/lib/auth/error-classify";
 import { buildSearchCatalog } from "@/lib/search/catalog";
 
 // Streaming can run a little long; give the function room.
 export const maxDuration = 30;
 
-// Newest DeepSeek on the gateway; "flash" is the fast/cheap tier — right for a
-// snappy, streaming portfolio Q&A. Swap to "deepseek/deepseek-v4-pro" for more
-// depth at higher latency/cost. Routed via the Vercel AI Gateway by the string.
-const MODEL = "deepseek/deepseek-v4-flash";
+// Direct DeepSeek provider (reads DEEPSEEK_API_KEY). "deepseek-chat" (V3) is the
+// fast conversational model — right for a snappy streaming Q&A; swap to
+// "deepseek-reasoner" (R1) to trade latency for visible chain-of-thought.
+const MODEL = deepseek("deepseek-chat");
 
 // Best-effort in-memory per-IP limiter (per Fluid instance). Paired with the
 // message/length caps + capped output tokens to bound per-conversation cost.
@@ -105,7 +106,7 @@ export async function POST(req: Request) {
         console.error("[ask] stream error", error);
       }
       // Surfaced to the client's useChat error state. Most likely cause:
-      // gateway auth missing (AI_GATEWAY_API_KEY unset and no Vercel OIDC).
+      // DEEPSEEK_API_KEY unset or invalid.
       return "unavailable";
     },
   });

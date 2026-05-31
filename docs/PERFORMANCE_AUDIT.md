@@ -185,11 +185,32 @@ to `next.config.ts`. Strips development logs from production
 client bundles. Negligible per file, but the codebase has scattered
 `console.log` calls in motion components and providers.
 
-## 11. Route budgets
+## 11. Bundle budgets
 
-These are the initial-JS budgets the project should hold against on
-the Vercel build output. They are _advisory_, not enforced in CI yet.
-A future PR can wire a CI guardrail.
+> **Next 16 / Turbopack note (2026-05-30):** the build no longer prints a
+> "First Load JS" table, and Turbopack does not emit a per-route webpack chunk
+> manifest — every route's `build-manifest.json` shares the same
+> `rootMainFiles`. So the per-route targets below are **no longer machine-
+> derivable** and are kept only as design intent. The enforced guardrail now
+> tracks the two metrics that _are_ stable: the shared baseline that loads on
+> every route, and total emitted client JS. See
+> [check-bundle-budget.mjs](../scripts/check-bundle-budget.mjs) and
+> [bundle-baseline.json](../scripts/bundle-baseline.json).
+>
+> ```bash
+> npm run budget:build   # production build into .next-budgets
+> npm run budget         # fail if shared baseline / total JS grew past tolerance
+> npm run budget:update  # rebase the baseline after an intentional change
+> ```
+>
+> Current baseline (gzipped): **shared ≈ 168.6 KB**, total client JS ≈ 1.15 MB
+> across 122 chunks, ±10% tolerance. The shared figure is higher than the old
+> ≤95 KB note below, which was a webpack metric and is not comparable to
+> Turbopack chunking — re-measure against field data (Speed Insights) and a
+> Vercel-preview Lighthouse run before treating it as bloat.
+
+These were the initial-JS budgets under the previous webpack build. They are
+_advisory design intent_, not enforced (see note above).
 
 | Route                   | First-load JS (target) | Notes                                                  |
 | ----------------------- | ---------------------- | ------------------------------------------------------ |
@@ -221,11 +242,14 @@ not in the shared chunk anymore.
 
 ## 13. Follow-ups (next PR, not this one)
 
-- Wire `@next/bundle-analyzer` as a dev-only opt-in (`ANALYZE=true
-npm run build`) — useful but adds a devDependency, defer to a
-  dedicated PR.
-- Enforce route budgets via CI (e.g. a small script that parses the
-  Next build output and fails on regression).
+- ~~Wire `@next/bundle-analyzer` as a dev-only opt-in.~~ **Done** —
+  `npm run analyze` (`ANALYZE=true next build`).
+- ~~Enforce route budgets via CI.~~ **Done** (2026-05-30, adapted for
+  Turbopack) — `npm run budget` runs
+  [check-bundle-budget.mjs](../scripts/check-bundle-budget.mjs), a regression
+  detector on the shared baseline + total client JS. Wire it into CI after a
+  `budget:build` step. Per-route enforcement is not possible under Turbopack
+  (see §11).
 - Audit `motion` usage and consider `LazyMotion` + feature loading
   for the home and `/portal` routes if Lighthouse still flags
   unused JS after F.1–F.5.

@@ -5,6 +5,7 @@ const root = process.cwd();
 const targets = [
   ".next",
   ".next-build",
+  ".next-budgets",
   ".next-dev-3000",
   ".next-node22",
   ".next-perf",

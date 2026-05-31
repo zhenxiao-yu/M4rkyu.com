@@ -136,11 +136,14 @@ export function Carousel({
       {count > 1 ? (
         <div className="mt-3 flex items-center justify-between gap-3">
           <div
-            className="flex gap-1.5"
+            className="flex gap-0.5"
             role="tablist"
             aria-label={`${ariaLabel} pagination`}
           >
             {slides.map((_, i) => (
+              // 24px hit target (WCAG 2.5.8) with the visual dot kept small
+              // inside. The row height is already bounded by the 28px
+              // prev/next controls, so the larger targets don't shift layout.
               <button
                 key={i}
                 type="button"
@@ -153,13 +156,20 @@ export function Carousel({
                 }
                 onClick={() => setIndex(i)}
                 className={cn(
-                  "size-1.5 rounded-full transition-colors duration-(--motion-fast) ease-(--ease-premium)",
-                  i === index
-                    ? "bg-ring"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/60",
+                  "group inline-flex size-6 items-center justify-center rounded-full",
                   FOCUS_RING_INSET,
                 )}
-              />
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "size-1.5 rounded-full transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+                    i === index
+                      ? "bg-ring"
+                      : "bg-muted-foreground/30 group-hover:bg-muted-foreground/60",
+                  )}
+                />
+              </button>
             ))}
           </div>
           <div className="flex items-center gap-1">

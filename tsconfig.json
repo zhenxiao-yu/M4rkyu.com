@@ -15,6 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "types": [
       "node",
       "react",
@@ -47,7 +48,15 @@
     ".next-verify-build/types/**/*.ts",
     ".next-verify-build/dev/types/**/*.ts",
     ".next-vcheck/types/**/*.ts",
-    ".next-vcheck/dev/types/**/*.ts"
+    ".next-vcheck/dev/types/**/*.ts",
+    ".next-budgets/types/**/*.ts",
+    ".next-budgets/dev/types/**/*.ts",
+    ".next-ts6-verify/types/**/*.ts",
+    ".next-ts6-verify/dev/types/**/*.ts",
+    ".next-aisearch-verify/types/**/*.ts",
+    ".next-aisearch-verify/dev/types/**/*.ts",
+    ".next-dev-3216/types/**/*.ts",
+    ".next-dev-3216/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

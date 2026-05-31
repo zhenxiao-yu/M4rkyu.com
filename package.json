@@ -27,6 +27,7 @@
     "test:unit:watch": "vitest"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^2.0.35",
     "@ai-sdk/react": "^3.0.195",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",

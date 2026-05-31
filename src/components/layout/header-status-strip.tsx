@@ -140,7 +140,6 @@ function Transport() {
         type="button"
         onClick={() => setDialogOpen(true)}
         aria-haspopup="dialog"
-        aria-label={ta("openLabel")}
         className={cn(
           "flex max-w-[18rem] items-center gap-1.5 rounded-sm px-1 normal-case tracking-normal transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
           FOCUS_RING,
@@ -162,6 +161,10 @@ function Transport() {
             {ta("noTrack")}
           </span>
         )}
+        {/* The visible track title forms the accessible name (WCAG 2.5.3);
+         * this sr-only suffix conveys the button's purpose without an
+         * aria-label that would override that visible text. */}
+        <span className="sr-only">{ta("openLabel")}</span>
       </button>
     </span>
   );
