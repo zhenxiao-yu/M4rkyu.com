@@ -67,13 +67,18 @@ export function HomeSection({
         "relative isolate flex flex-col",
         snap ? "min-h-dvh justify-center" : "justify-start",
         tone === "muted" && "bg-muted/8 dark:bg-muted/10",
-        "py-24 sm:py-28 lg:py-32",
+        // Mobile pays a real cost on tall snap sections: with min-h-dvh
+        // and justify-center, the empty bands either side of content
+        // compound the outer padding. Halve the mobile padding so the
+        // section reads as one breath instead of a long inhale; sm+
+        // keeps the original generous rhythm.
+        "py-16 sm:py-24 lg:py-32",
         className,
       )}
     >
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {(eyebrow || heading || lede || action) && (
-          <header className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+          <header className="grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
             <div className="max-w-2xl">
               {eyebrow ? (
                 <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -96,7 +101,11 @@ export function HomeSection({
             ) : null}
           </header>
         )}
-        <div className={cn((eyebrow || heading || lede) && "mt-14")}>
+        <div
+          className={cn(
+            (eyebrow || heading || lede) && "mt-10 sm:mt-12 lg:mt-14",
+          )}
+        >
           {children}
         </div>
       </div>

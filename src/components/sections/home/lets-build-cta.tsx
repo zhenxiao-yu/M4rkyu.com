@@ -40,7 +40,7 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
   return (
     <section
       data-snap="section"
-      className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden border-y bg-background py-28 sm:py-36"
+      className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden border-y bg-background py-20 sm:py-28 lg:py-36"
     >
       {/* Waves backdrop — ReactBits port. Perlin-noise field of
        * curved lines with mouse repulsion, theme-reactive line color
@@ -67,8 +67,10 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
       />
 
       <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
-        {/* Frosted slab floats the closing copy over the Waves field. */}
-        <div className="glass-surface rounded-2xl px-6 py-12 text-center sm:px-10 sm:py-16">
+        {/* Frosted slab floats the closing copy over the Waves field.
+         * Mobile padding eases so the slab doesn't dominate a short
+         * phone viewport when stacked with the section's outer py. */}
+        <div className="glass-surface rounded-2xl px-5 py-10 text-center sm:px-10 sm:py-16">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             {t("eyebrow")}
           </p>

@@ -117,7 +117,7 @@ function CollectionSlide({
       </div>
 
       {/* Meta. */}
-      <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
+      <div className="flex flex-col justify-center gap-3 p-5 sm:p-8">
         <span className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
           {labels.collection} · {position}/{total}
         </span>

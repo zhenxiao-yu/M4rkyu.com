@@ -34,7 +34,7 @@ export async function CompassSection({ locale }: CompassSectionProps) {
 
   return (
     <HomeSection tone="default" dataSection="compass">
-      <div className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16">
+      <div className="grid gap-8 lg:grid-cols-[5fr_7fr] lg:gap-16">
         {/* Left — editorial intro. */}
         <div className="max-w-md">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
