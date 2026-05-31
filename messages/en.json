@@ -1233,6 +1233,14 @@
     "savedDescription": "Everything you've bookmarked, newest first.",
     "savedEmpty": "Nothing saved yet. Save a frame, project, or game to see it here.",
     "tombstone": "Content no longer available",
+    "savedSection": {
+      "gallery": "Frames",
+      "project": "Projects",
+      "game": "Games",
+      "resource": "Resources",
+      "log": "Logs",
+      "note": "Notes"
+    },
     "commentsTitle": "Your comments",
     "commentsDescription": "Every comment you've posted, including ones still in moderation.",
     "commentsEmpty": "You haven't commented yet.",

@@ -1233,6 +1233,14 @@
     "savedDescription": "你收藏的全部条目，最新在前。",
     "savedEmpty": "还没有保存任何内容。试着收藏一张画面、一个项目或一款游戏。",
     "tombstone": "内容已不可用",
+    "savedSection": {
+      "gallery": "影像",
+      "project": "项目",
+      "game": "游戏",
+      "resource": "资源",
+      "log": "日志",
+      "note": "笔记"
+    },
     "commentsTitle": "你的评论",
     "commentsDescription": "你发布过的全部评论，包括仍在审核中的。",
     "commentsEmpty": "你还没有评论过任何内容。",
