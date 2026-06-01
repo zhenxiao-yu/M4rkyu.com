@@ -75,6 +75,7 @@ export async function Footer({ locale }: { locale: Locale }) {
     { label: t("linkTools"), href: "/resources/tools" },
     { label: t("linkLinks"), href: "/resources/links" },
     { label: t("linkNotes"), href: "/notes" },
+    { label: t("linkTopics"), href: "/topics" },
     { label: t("linkRss"), href: "/feed.xml", external: true },
     { label: t("linkJsonFeed"), href: "/feed.json", external: true },
     { label: t("linkShop"), href: "/shop" },

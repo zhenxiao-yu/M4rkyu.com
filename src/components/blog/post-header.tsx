@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { CopyCitationButton } from "@/components/system/copy-citation-button";
+import { Link } from "@/i18n/navigation";
+import { topicSlugForTag } from "@/lib/search/topics";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface PostHeaderProps {
   title: string;
@@ -113,15 +116,34 @@ export async function PostHeader({
 
         {tags.length > 0 ? (
           <div className="mt-5 flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="text-[0.6rem] lowercase tracking-[0.1em]"
-              >
-                {tag}
-              </Badge>
-            ))}
+            {tags.map((tag) => {
+              const badge = (
+                <Badge
+                  variant="outline"
+                  className="text-[0.6rem] lowercase tracking-[0.1em]"
+                >
+                  {tag}
+                </Badge>
+              );
+              // Linkify only tags that have a cross-domain topic hub;
+              // dev.to-only tags (no catalog overlap) stay plain so they
+              // never link to a 404.
+              const topicSlug = topicSlugForTag(tag);
+              return topicSlug ? (
+                <Link
+                  key={tag}
+                  href={`/topics/${topicSlug}`}
+                  className={cn(
+                    "rounded-full transition-opacity hover:opacity-80",
+                    FOCUS_RING,
+                  )}
+                >
+                  {badge}
+                </Link>
+              ) : (
+                <span key={tag}>{badge}</span>
+              );
+            })}
           </div>
         ) : null}
 

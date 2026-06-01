@@ -64,3 +64,14 @@ export function getAllTopics(): Topic[] {
 export function getTopic(slug: string): Topic | undefined {
   return getAllTopics().find((topic) => topic.slug === slug);
 }
+
+/**
+ * Resolve a free-text tag to its topic-hub slug, or null when no hub
+ * exists (the tag has < MIN_TOPIC_SIZE ready items, or only appears on
+ * content outside the catalog such as dev.to logs). Callers use this to
+ * linkify tag chips only where the link won't 404.
+ */
+export function topicSlugForTag(tag: string): string | null {
+  const slug = slugifyTag(tag);
+  return getAllTopics().some((topic) => topic.slug === slug) ? slug : null;
+}
