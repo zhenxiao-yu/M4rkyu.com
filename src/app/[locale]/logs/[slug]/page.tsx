@@ -53,7 +53,10 @@ export async function generateMetadata({
       description: meta.description,
       url: meta.canonical_url,
       type: "article",
-      images: meta.cover_image ? [meta.cover_image] : undefined,
+      // Prefer the post's real dev.to cover when it has one; otherwise omit
+      // the key so the branded opengraph-image.tsx card applies instead of
+      // a generic site default.
+      ...(meta.cover_image ? { images: [meta.cover_image] } : {}),
     },
   };
 }
