@@ -11,6 +11,7 @@ import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { SITE_URL } from "@/lib/seo/site";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   buildArticleJsonLd,
@@ -117,6 +118,7 @@ export default async function BlogPostPage({
           reactionsCount={meta.positive_reactions_count}
           commentsCount={meta.comments_count}
           username={DEVTO_USERNAME}
+          shareUrl={`${SITE_URL}/${locale}/logs/${meta.slug}`}
         />
 
         <section className="mx-auto w-full max-w-3xl bg-muted/10 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">

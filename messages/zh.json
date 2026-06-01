@@ -1033,6 +1033,13 @@
     "topicsTitle": "主题",
     "topicsDescription": "按共享主题浏览全站的项目、笔记与工具。"
   },
+  "Share": {
+    "copyLink": "复制链接",
+    "linkCopied": "链接已复制",
+    "linkCopyFailed": "无法复制链接",
+    "shareX": "分享到 X",
+    "shareLinkedin": "分享到 LinkedIn"
+  },
   "Topics": {
     "eyebrow": "主题",
     "indexEyebrow": "主题",

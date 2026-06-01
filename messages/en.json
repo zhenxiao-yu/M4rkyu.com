@@ -1033,6 +1033,13 @@
     "topicsTitle": "Topics",
     "topicsDescription": "Browse every project, note, and tool by shared topic."
   },
+  "Share": {
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "linkCopyFailed": "Couldn’t copy the link",
+    "shareX": "Share on X",
+    "shareLinkedin": "Share on LinkedIn"
+  },
   "Topics": {
     "eyebrow": "Topic",
     "indexEyebrow": "Topics",

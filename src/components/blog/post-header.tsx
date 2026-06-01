@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { CopyCitationButton } from "@/components/system/copy-citation-button";
+import { ShareActions } from "@/components/system/share-actions";
 import { Link } from "@/i18n/navigation";
 import { topicSlugForTag } from "@/lib/search/topics";
 import { cn, FOCUS_RING } from "@/lib/utils";
@@ -18,6 +19,8 @@ interface PostHeaderProps {
   reactionsCount: number;
   commentsCount: number;
   username: string;
+  /** In-site URL to share (drives readers to m4rkyu.com, not dev.to). */
+  shareUrl: string;
 }
 
 /**
@@ -37,6 +40,7 @@ export async function PostHeader({
   reactionsCount,
   commentsCount,
   username,
+  shareUrl,
 }: PostHeaderProps) {
   const t = await getTranslations("Blog");
   const citation = `${title} — M4rkyu.com. ${canonicalUrl}`;
@@ -159,6 +163,7 @@ export async function PostHeader({
             </a>
           </Button>
           <CopyCitationButton citation={citation} />
+          <ShareActions url={shareUrl} title={title} />
           {commentsCount > 0 ? (
             <Button asChild variant="ghost" size="sm">
               <a
