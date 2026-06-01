@@ -42,7 +42,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { useRouter } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
+import { LOCALE_LIST, stripLocale, type Locale } from "@/i18n/locales";
 import { galleryItems } from "@/content/gallery";
 import { notes } from "@/content/notes";
 import { resources } from "@/content/resources";
@@ -199,8 +199,7 @@ export function CommandPalette({
       return;
     }
     onOpenChange(false);
-    const rest = pathname.replace(/^\/(en|zh)/, "") || "/";
-    router.replace(rest, { locale: nextLocale });
+    router.replace(stripLocale(pathname), { locale: nextLocale });
   }
 
   return (
@@ -489,22 +488,29 @@ export function CommandPalette({
                   </CommandItem>
                 );
               })}
-              <CommandItem
-                value={`language ${locale === "en" ? "中文" : "English"}`}
-                onSelect={() => pickLocale(locale === "en" ? "zh" : "en")}
-              >
-                <Languages
-                  aria-hidden="true"
-                  className="size-4 shrink-0 opacity-70"
-                />
-                <span className="truncate">{tPalette("toggleLocale")}</span>
-                <span
-                  aria-hidden="true"
-                  className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+              {LOCALE_LIST.filter((l) => l.code !== locale).map((l) => (
+                <CommandItem
+                  key={l.code}
+                  value={`language ${l.native}`}
+                  onSelect={() => pickLocale(l.code)}
                 >
-                  {locale === "en" ? "中文" : "EN"}
-                </span>
-              </CommandItem>
+                  <Languages
+                    aria-hidden="true"
+                    className="size-4 shrink-0 opacity-70"
+                  />
+                  <span className="truncate">
+                    {LOCALE_LIST.length > 2
+                      ? l.native
+                      : tPalette("toggleLocale")}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70"
+                  >
+                    {l.short}
+                  </span>
+                </CommandItem>
+              ))}
             </CommandGroup>
           </CommandList>
 
