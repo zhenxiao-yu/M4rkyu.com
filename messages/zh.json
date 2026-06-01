@@ -1029,7 +1029,30 @@
     "changelogTitle": "更新日志",
     "changelogDescription": "m4rkyu.com 的公开发布记录与仓库变更。",
     "colophonTitle": "关于本站",
-    "colophonDescription": "这个 Next.js 作品集背后的技术栈、系统与设计取舍。"
+    "colophonDescription": "这个 Next.js 作品集背后的技术栈、系统与设计取舍。",
+    "topicsTitle": "主题",
+    "topicsDescription": "按共享主题浏览全站的项目、笔记与工具。"
+  },
+  "Topics": {
+    "eyebrow": "主题",
+    "indexEyebrow": "主题",
+    "indexTitle": "按主题浏览",
+    "indexDescription": "贯穿全站的线索——把共享同一标签的项目、笔记与工具集中在一处。",
+    "metaTitle": "{label}",
+    "metaDescription": "全站标记为「{label}」的内容——共 {count} 篇。",
+    "heading": "标记为「{label}」",
+    "count": "{count, plural, other {# 篇}}",
+    "allTopics": "全部主题",
+    "empty": "暂无主题。",
+    "types": {
+      "project": "项目",
+      "game": "游戏",
+      "resource": "资源",
+      "gallery": "影像",
+      "note": "笔记",
+      "media": "媒体",
+      "service": "服务"
+    }
   },
   "Common": {
     "comingSoon": "即将开放",

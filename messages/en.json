@@ -1029,7 +1029,30 @@
     "changelogTitle": "Changelog",
     "changelogDescription": "Public release notes and repository changes for m4rkyu.com.",
     "colophonTitle": "About this site",
-    "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio."
+    "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio.",
+    "topicsTitle": "Topics",
+    "topicsDescription": "Browse every project, note, and tool by shared topic."
+  },
+  "Topics": {
+    "eyebrow": "Topic",
+    "indexEyebrow": "Topics",
+    "indexTitle": "Browse by topic",
+    "indexDescription": "Cross-cutting threads — every project, note, and tool that shares a tag, gathered in one place.",
+    "metaTitle": "{label}",
+    "metaDescription": "Everything tagged “{label}” across the site — {count} pieces.",
+    "heading": "Tagged “{label}”",
+    "count": "{count, plural, one {# piece} other {# pieces}}",
+    "allTopics": "All topics",
+    "empty": "No topics yet.",
+    "types": {
+      "project": "Project",
+      "game": "Game",
+      "resource": "Resource",
+      "gallery": "Frame",
+      "note": "Note",
+      "media": "Media",
+      "service": "Service"
+    }
   },
   "Common": {
     "comingSoon": "Coming soon",

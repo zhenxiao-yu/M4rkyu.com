@@ -195,6 +195,39 @@ export function buildBreadcrumbJsonLd(
   };
 }
 
+// CollectionPage + ItemList for an aggregation page (e.g. a topic hub).
+// `items` are absolute URLs already resolved by the caller (internal
+// items get SITE_URL/locale-prefixed; external items pass through).
+export function buildCollectionPageJsonLd(
+  locale: Locale,
+  opts: {
+    name: string;
+    description: string;
+    path: string;
+    items: Array<{ name: string; url: string }>;
+  },
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: opts.name,
+    description: opts.description,
+    url: `${SITE_URL}/${locale}${opts.path}`,
+    inLanguage: locale,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: opts.items.length,
+      itemListElement: opts.items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: item.url,
+      })),
+    },
+  };
+}
+
 // ItemList of every ready, runnable tool. Emitted once on the
 // /resources index so search engines understand the page hosts a
 // curated tool collection.

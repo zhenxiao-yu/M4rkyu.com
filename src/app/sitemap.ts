@@ -7,6 +7,7 @@ import { resources } from "@/content/resources";
 import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
 import { getAllPostSlugs } from "@/lib/blog/get-post";
+import { getAllTopics } from "@/lib/search/topics";
 
 // Stable build-time timestamp — per-request `new Date()` would make crawlers de-weight the signal.
 const BUILT_AT = new Date();
@@ -20,6 +21,7 @@ const STATIC_PATHS = [
   { path: "/media", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/shop", changeFrequency: "monthly" as const, priority: 0.5 },
   { path: "/notes", changeFrequency: "weekly" as const, priority: 0.6 },
+  { path: "/topics", changeFrequency: "weekly" as const, priority: 0.5 },
   { path: "/resources", changeFrequency: "monthly" as const, priority: 0.6 },
   { path: "/resources/tools", changeFrequency: "monthly" as const, priority: 0.7 },
   { path: "/resources/links", changeFrequency: "monthly" as const, priority: 0.6 },
@@ -96,6 +98,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((product) => product.status === "ready")
     .flatMap((product) => entry(`/shop/${product.slug}`, "monthly", 0.5));
 
+  // Cross-domain topic hubs — one indexable URL per tag shared by >= 2
+  // ready items. Built from the same static catalog the page route uses.
+  const topicEntries = getAllTopics().flatMap((topic) =>
+    entry(`/topics/${topic.slug}`, "weekly", 0.4),
+  );
+
   return [
     ...staticEntries,
     ...projectEntries,
@@ -104,5 +112,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogEntries,
     ...toolEntries,
     ...shopEntries,
+    ...topicEntries,
   ];
 }
