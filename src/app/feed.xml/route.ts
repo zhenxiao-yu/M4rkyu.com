@@ -25,7 +25,7 @@ export async function GET() {
   const items = await getFeedItems();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>M4rkyu.com</title>
     <link>${SITE_URL}</link>
@@ -40,7 +40,11 @@ ${items
       <link>${escapeXml(item.url)}</link>
       <guid isPermaLink="false">${escapeXml(item.id)}</guid>
       <pubDate>${pubDate(item.date)}</pubDate>
-      <description>${escapeXml(item.summary)}</description>
+      <description>${escapeXml(item.summary)}</description>${
+        item.image
+          ? `\n      <media:content url="${escapeXml(item.image)}" medium="image" />`
+          : ""
+      }
     </item>`,
   )
   .join("\n")}

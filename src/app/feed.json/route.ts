@@ -22,6 +22,7 @@ export async function GET() {
         // JSON Feed 1.1 requires content_text or content_html per item.
         content_text: item.summary,
         summary: item.summary,
+        ...(item.image ? { image: item.image } : {}),
         ...(item.date ? { date_published: item.date } : {}),
         tags: item.tags,
       })),
