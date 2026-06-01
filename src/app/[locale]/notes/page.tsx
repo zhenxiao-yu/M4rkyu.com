@@ -13,6 +13,11 @@ import {
 import { getNotesSource } from "@/lib/notes/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  buildBlogJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/seo/structured-data";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 // Public content via the cookieless read source + setRequestLocale →
@@ -47,6 +52,7 @@ export default async function NotesPage({
   setRequestLocale(locale);
   const tNotes = await getTranslations({ locale, namespace: "Notes" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
+  const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const notes = await getNotesSource();
   const allTags = Array.from(new Set(notes.flatMap((note) => note.tags))).sort(
     (a, b) => a.localeCompare(b),
@@ -72,6 +78,19 @@ export default async function NotesPage({
 
   return (
     <PageShell locale={locale}>
+      <JsonLd
+        data={buildBlogJsonLd(locale, {
+          name: tMeta("notesTitle"),
+          description: tMeta("notesDescription"),
+          path: "/notes",
+        })}
+      />
+      <JsonLd
+        data={buildBreadcrumbJsonLd(locale, [
+          { name: tNav("home"), path: "/" },
+          { name: tNav("notes"), path: "/notes" },
+        ])}
+      />
       <ScrollProgress />
       <PageHero
         eyebrow={tNotes("eyebrow")}

@@ -17,6 +17,11 @@ import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  buildProjectJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/seo/structured-data";
 import {
   getProjectFromSource,
   getProjectsSource,
@@ -72,6 +77,7 @@ export default async function ProjectDetailPage({
     getTranslations({ locale, namespace: "Categories" }),
   ]);
   if (!project) notFound();
+  const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
   const processShots = project.screenshots.slice(1, 9);
@@ -107,6 +113,13 @@ export default async function ProjectDetailPage({
 
   return (
     <PageShell locale={locale}>
+      <JsonLd data={buildProjectJsonLd(project, locale)} />
+      <JsonLd
+        data={buildBreadcrumbJsonLd(locale, [
+          { name: tNav("work"), path: "/work" },
+          { name: project.title, path: `/work/${project.slug}` },
+        ])}
+      />
       <article>
         <ProjectCartridge
           project={project}

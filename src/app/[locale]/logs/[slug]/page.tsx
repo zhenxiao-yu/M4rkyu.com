@@ -11,6 +11,11 @@ import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/seo/structured-data";
 import { getPostBySlug, getAllPostSlugs } from "@/lib/blog/get-post";
 import {
   fetchDevtoArticles,
@@ -85,10 +90,18 @@ export default async function BlogPostPage({
   const next = adjacentEntry(idx > 0 ? articles[idx - 1] : undefined);
 
   const t = await getTranslations({ locale, namespace: "Blog" });
+  const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const { meta, full } = resolved;
 
   return (
     <PageShell locale={locale}>
+      <JsonLd data={buildArticleJsonLd(meta, locale)} />
+      <JsonLd
+        data={buildBreadcrumbJsonLd(locale, [
+          { name: tNav("logs"), path: "/logs" },
+          { name: meta.title, path: `/logs/${meta.slug}` },
+        ])}
+      />
       <ScrollProgress />
       <article>
         <PostHeader

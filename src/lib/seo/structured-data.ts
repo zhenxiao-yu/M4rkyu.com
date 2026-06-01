@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/routing";
-import type { Resource } from "@/content/schemas";
+import type { Resource, Project } from "@/content/schemas";
 import type { Product } from "@/content/shop";
+import type { DevtoArticleListItem } from "@/lib/blog/devto";
 import { SITE_URL } from "@/lib/seo/site";
 
 export function buildSiteJsonLd(locale: Locale) {
@@ -99,6 +100,79 @@ export function buildProductJsonLd(product: Product, locale: Locale) {
         : "https://schema.org/OutOfStock",
       seller: { "@id": `${SITE_URL}/#person` },
     },
+  };
+}
+
+// Blog graph for a feed index (e.g. /notes). Honest about structure:
+// describes the feed itself; we don't mint fake per-item URLs for the
+// microblog notes, which have no canonical detail page.
+export function buildBlogJsonLd(
+  locale: Locale,
+  opts: { name: string; description: string; path: string },
+) {
+  const url = `${SITE_URL}/${locale}${opts.path}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: opts.name,
+    description: opts.description,
+    url,
+    inLanguage: locale,
+    author: { "@id": `${SITE_URL}/#person` },
+    publisher: { "@id": `${SITE_URL}/#person` },
+  };
+}
+
+// BlogPosting graph for a single /logs/[slug] post. Logs are
+// syndicated from dev.to, so the canonical entity points at the dev.to
+// URL — matching the page's <link rel="canonical"> — to avoid claiming
+// duplicate authorship of the original. We are a republished copy.
+export function buildArticleJsonLd(
+  post: DevtoArticleListItem,
+  locale: Locale,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    url: post.canonical_url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": post.canonical_url },
+    datePublished: post.published_at,
+    inLanguage: locale,
+    ...(post.cover_image ? { image: post.cover_image } : {}),
+    ...(post.reading_time_minutes
+      ? { timeRequired: `PT${post.reading_time_minutes}M` }
+      : {}),
+    keywords: post.tag_list.join(", "),
+    author: { "@id": `${SITE_URL}/#person` },
+    publisher: { "@id": `${SITE_URL}/#person` },
+  };
+}
+
+// CreativeWork graph for a single /work/[slug] case study. First-party
+// content (canonical = our site), so the entity URL is the in-site page.
+export function buildProjectJsonLd(project: Project, locale: Locale) {
+  const url = `${SITE_URL}/${locale}/work/${project.slug}`;
+  const sameAs = [project.liveUrl, project.githubUrl].filter(
+    (href): href is string => Boolean(href),
+  );
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    headline: project.seo.title,
+    description: project.seo.description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    inLanguage: locale,
+    dateCreated: project.year,
+    about: project.category,
+    keywords: project.tags.join(", "),
+    creator: { "@id": `${SITE_URL}/#person` },
+    author: { "@id": `${SITE_URL}/#person` },
+    ...(project.screenshots[0] ? { image: project.screenshots[0].src } : {}),
+    ...(sameAs.length ? { sameAs } : {}),
   };
 }
 
