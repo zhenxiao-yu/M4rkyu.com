@@ -6,7 +6,8 @@ import { galleryCollections } from "@/content/gallery";
 import { resources } from "@/content/resources";
 import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo/site";
-import { getAllPostSlugs } from "@/lib/blog/get-post";
+import { fetchDevtoArticles } from "@/lib/blog/devto";
+import { DEVTO_USERNAME } from "@/lib/blog/get-posts";
 import { getAllTopics } from "@/lib/search/topics";
 
 // Stable build-time timestamp — per-request `new Date()` would make crawlers de-weight the signal.
@@ -40,12 +41,15 @@ function entry(
   path: string,
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
   priority: number,
+  // Real content date when known (e.g. a post's published_at); crawlers
+  // weight an accurate per-URL lastmod over a blanket build timestamp.
+  lastModified: Date = BUILT_AT,
 ) {
   const languages = languageAlternates(path);
   return routing.locales.map<MetadataRoute.Sitemap[number]>(
     (locale: Locale) => ({
       url: `${SITE_URL}/${locale}${path}`,
-      lastModified: BUILT_AT,
+      lastModified,
       changeFrequency,
       priority,
       alternates: { languages },
@@ -75,14 +79,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entry(`/archive/${collection.slug}`, "monthly", 0.6),
     );
 
-  // Phase 8.2 — dev.to-syndicated post slugs land in the sitemap
-  // so the in-site /logs/[slug] route is discoverable. The page
-  // itself sets `alternates.canonical` to the dev.to URL so search
-  // engines treat dev.to as the source of truth.
-  const blogSlugs = await getAllPostSlugs();
-  const blogEntries = blogSlugs.flatMap((slug) =>
-    entry(`/logs/${slug}`, "weekly", 0.6),
-  );
+  // Phase 8.2 — dev.to-syndicated posts land in the sitemap so the in-site
+  // /logs/[slug] route is discoverable. The page sets alternates.canonical
+  // to the dev.to URL so search engines treat dev.to as the source of truth.
+  // Each entry carries the post's real published_at as lastmod.
+  const articles = await fetchDevtoArticles(DEVTO_USERNAME);
+  const blogEntries = articles.flatMap((article) => {
+    const published = new Date(article.published_at);
+    const lastModified = Number.isNaN(published.getTime())
+      ? BUILT_AT
+      : published;
+    return entry(`/logs/${article.slug}`, "weekly", 0.6, lastModified);
+  });
 
   // Per-tool routes — every ready, runnable tool is its own URL and
   // earns a sitemap entry so SoftwareApplication snippets index. Stays
