@@ -125,7 +125,10 @@ export function SearchClient({ catalog }: { catalog: SearchDoc[] }) {
       {trimmed && results.length === 0 ? (
         <p className="mt-8 text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
-        <ul className="mt-4 grid list-none grid-cols-1 gap-3 p-0">
+        <ul
+          data-testid="search-results"
+          className="mt-4 grid list-none grid-cols-1 gap-3 p-0"
+        >
           {results.map((doc) => (
             <li key={doc.id}>
               <ResultRow doc={doc} typeLabel={typeLabels(doc.type)} />

@@ -19,6 +19,11 @@ const routes = [
   "/en/changelog",
   "/en/colophon",
   "/en/notes?tag=css",
+  "/en/topics",
+  "/en/topics/css",
+  "/zh/topics",
+  "/en/search",
+  "/en/newsletter/confirmed?state=ok",
   "/en/about",
   "/en/contact",
 ];
@@ -104,6 +109,20 @@ test("audio settings are directly reachable on mobile", async ({ page }) => {
   await expect(audioButton).toBeVisible();
   await audioButton.click();
   await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+test("search ranks a query and links to a result", async ({ page }) => {
+  await page.goto("/en/search");
+  const box = page.getByPlaceholder(/Search projects/i);
+  await expect(box).toBeVisible();
+  // "css" matches css-tagged notes (the catalog's ready content). Results
+  // render instantly client-side.
+  await box.fill("css");
+  // Results render instantly client-side; some are external links, so we
+  // assert ranked results appear rather than navigating.
+  const results = page.getByTestId("search-results").getByRole("link");
+  await expect(results.first()).toBeVisible();
+  expect(await results.count()).toBeGreaterThan(0);
 });
 
 test("public feeds expose latest notes and logs", async ({ request }) => {
