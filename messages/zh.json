@@ -7,6 +7,8 @@
   },
   "Navigation": {
     "home": "首页",
+    "search": "搜索",
+    "topics": "主题",
     "projects": "项目",
     "games": "游戏",
     "gallery": "影像",

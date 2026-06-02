@@ -8,6 +8,7 @@ import {
   Clock3,
   FileText,
   Gamepad2,
+  Hash,
   Heart,
   HelpCircle,
   Image as ImageIcon,
@@ -17,6 +18,7 @@ import {
   Mail,
   Moon,
   NotebookPen,
+  Search,
   SearchX,
   ShoppingBag,
   Sun,
@@ -70,12 +72,14 @@ interface CommandPaletteProps {
 }
 
 const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
+  { key: "search", href: "/search", icon: Search },
   { key: "projects", href: "/work", icon: Briefcase },
   { key: "games", href: "/games", icon: Gamepad2 },
   { key: "gallery", href: "/archive", icon: Camera },
   { key: "shop", href: "/shop", icon: ShoppingBag },
   { key: "blog", href: "/logs", icon: FileText },
   { key: "notes", href: "/notes", icon: NotebookPen },
+  { key: "topics", href: "/topics", icon: Hash },
   { key: "media", href: "/media", icon: ImageIcon },
   { key: "resources", href: "/resources", icon: Wrench },
   { key: "latest", href: "/latest", icon: Clock3 },
