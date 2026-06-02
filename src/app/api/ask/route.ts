@@ -2,6 +2,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { deepseek } from "@ai-sdk/deepseek";
 import { clientIpFromHeaders } from "@/lib/auth/error-classify";
 import { buildSearchCatalog } from "@/lib/search/catalog";
+import { createRateLimiter } from "@/lib/server/rate-limit";
 
 // Streaming can run a little long; give the function room.
 export const maxDuration = 30;
@@ -13,19 +14,7 @@ const MODEL = deepseek("deepseek-chat");
 
 // Best-effort in-memory per-IP limiter (per Fluid instance). Paired with the
 // message/length caps + capped output tokens to bound per-conversation cost.
-// Durable cross-instance limiting would need Vercel KV / Upstash.
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 12;
-const requestLog = new Map<string, number[]>();
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (requestLog.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  requestLog.set(ip, recent);
-  if (requestLog.size > 5_000) requestLog.clear();
-  return recent.length > MAX_PER_WINDOW;
-}
+const limiter = createRateLimiter({ windowMs: 60_000, max: 12 });
 
 // Grounding: the model is told exactly what exists and the precise locale-less
 // href for each item, so every link it emits resolves to a real page.
@@ -67,7 +56,7 @@ function isLikelyUiMessages(value: unknown): value is UIMessage[] {
 
 export async function POST(req: Request) {
   const ip = clientIpFromHeaders(req.headers) ?? "anon";
-  if (rateLimited(ip)) {
+  if (limiter.check(ip, Date.now())) {
     return Response.json(
       { error: "rateLimited" },
       { status: 429, headers: { "Retry-After": "60" } },
