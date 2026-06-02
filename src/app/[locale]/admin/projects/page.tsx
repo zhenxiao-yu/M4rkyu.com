@@ -1,7 +1,10 @@
+import { GitBranch } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getDbProjects } from "@/lib/projects/db";
 import {
@@ -55,6 +58,14 @@ export default async function AdminProjectsPage({
       />
       <PageSection>
         <AdminNav locale={locale} />
+        <div className="mb-6">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/admin/projects/sync" locale={locale}>
+              <GitBranch aria-hidden="true" className="size-4" />
+              {t("syncCta")}
+            </Link>
+          </Button>
+        </div>
         <AdminList
           items={items}
           locale={locale}

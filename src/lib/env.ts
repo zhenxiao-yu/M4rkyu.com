@@ -49,6 +49,10 @@ export const env = createEnv({
       .string()
       .email("NEWSLETTER_FROM_EMAIL must be a valid sender")
       .optional(),
+    // Optional GitHub PAT for the admin projects→GitHub sync. Lifts the
+    // tokenless 60/hr rate limit and reaches private repos. The sync works
+    // without it for public repos.
+    GITHUB_TOKEN: z.string().optional(),
     // Supabase service-role key. Optional. Bypasses RLS — only set
     // when a specific server-only admin job justifies it. Current
     // code paths do NOT require it; admin actions run via RLS as the
@@ -109,6 +113,7 @@ export const env = createEnv({
     RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
     NEWSLETTER_TOKEN_SECRET: process.env.NEWSLETTER_TOKEN_SECRET,
     NEWSLETTER_FROM_EMAIL: process.env.NEWSLETTER_FROM_EMAIL,
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,
