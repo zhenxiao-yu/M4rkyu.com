@@ -1031,7 +1031,18 @@
     "colophonTitle": "About this site",
     "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio.",
     "topicsTitle": "Topics",
-    "topicsDescription": "Browse every project, note, and tool by shared topic."
+    "topicsDescription": "Browse every project, note, and tool by shared topic.",
+    "searchTitle": "Search",
+    "searchDescription": "Search every project, note, tool, and frame across m4rkyu.com."
+  },
+  "Search": {
+    "eyebrow": "Search",
+    "heading": "Search the archive",
+    "subheading": "Projects, notes, tools, and frames — one box across the whole site.",
+    "placeholder": "Search projects, notes, tools…",
+    "typePrompt": "Start typing to search.",
+    "resultsCount": "{count, plural, one {# result} other {# results}}",
+    "empty": "No matches. Try a different term."
   },
   "Share": {
     "copyLink": "Copy link",

@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/command";
 import { useRouter } from "@/i18n/navigation";
 import { LOCALE_LIST, stripLocale, type Locale } from "@/i18n/locales";
+import { rankCommand } from "@/lib/search/rank";
 import { galleryItems } from "@/content/gallery";
 import { notes } from "@/content/notes";
 import { resources } from "@/content/resources";
@@ -98,30 +99,6 @@ const THEMES = [
   { value: "light", icon: Sun, key: "themeLight" },
   { value: "dark", icon: Moon, key: "themeDark" },
 ] as const;
-
-/**
- * Tiered scoring filter. Beats cmdk's default substring match by
- * promoting exact prefix and word-boundary hits ahead of mid-string
- * substrings, then falls back to in-order fuzzy as a last resort.
- * Returning 0 hides the row — cmdk re-runs this for every keystroke
- * across the full item set, so it stays a pure function.
- */
-function rankCommand(value: string, search: string): number {
-  const needle = search.trim().toLowerCase();
-  if (!needle) return 1;
-  const haystack = value.toLowerCase();
-  if (haystack.startsWith(needle)) return 1;
-  for (const word of haystack.split(/\s+/)) {
-    if (word.startsWith(needle)) return 0.85;
-  }
-  if (haystack.includes(needle)) return 0.6;
-  // Fuzzy: every needle char appears in order somewhere in haystack.
-  let i = 0;
-  for (let j = 0; j < haystack.length && i < needle.length; j++) {
-    if (haystack[j] === needle[i]) i++;
-  }
-  return i === needle.length ? 0.3 : 0;
-}
 
 function HighlightedText({ text, query }: { text: string; query: string }) {
   const needle = query.trim();

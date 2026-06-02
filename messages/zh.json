@@ -1031,7 +1031,18 @@
     "colophonTitle": "关于本站",
     "colophonDescription": "这个 Next.js 作品集背后的技术栈、系统与设计取舍。",
     "topicsTitle": "主题",
-    "topicsDescription": "按共享主题浏览全站的项目、笔记与工具。"
+    "topicsDescription": "按共享主题浏览全站的项目、笔记与工具。",
+    "searchTitle": "搜索",
+    "searchDescription": "搜索 m4rkyu.com 上的所有项目、笔记、工具与影像。"
+  },
+  "Search": {
+    "eyebrow": "搜索",
+    "heading": "搜索档案",
+    "subheading": "项目、笔记、工具与影像——一个搜索框贯穿全站。",
+    "placeholder": "搜索项目、笔记、工具……",
+    "typePrompt": "开始输入以搜索。",
+    "resultsCount": "{count, plural, other {# 个结果}}",
+    "empty": "没有匹配项，换个关键词试试。"
   },
   "Share": {
     "copyLink": "复制链接",

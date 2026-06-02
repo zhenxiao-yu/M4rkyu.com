@@ -38,6 +38,16 @@ export function buildSiteJsonLd(locale: Locale) {
         publisher: {
           "@id": personId,
         },
+        // Sitelinks Searchbox — lets Google surface an in-SERP search box
+        // that deep-links into /search?q=.
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${localePath}/search?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
       },
       {
         "@type": "CreativeWork",
