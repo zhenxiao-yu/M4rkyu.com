@@ -37,6 +37,18 @@ export const env = createEnv({
     // (server actions, build steps) don't fail when the webhook
     // isn't configured. The route itself returns 503 if missing.
     RESEND_WEBHOOK_SECRET: z.string().optional(),
+    // Newsletter (Resend Audiences). All optional so the feature ships
+    // dark — the subscribe UI + action no-op gracefully until every key
+    // is set (see isNewsletterConfigured). RESEND_AUDIENCE_ID is the
+    // Resend Audience to add confirmed contacts to; NEWSLETTER_TOKEN_SECRET
+    // signs the stateless double-opt-in confirmation links; the from-email
+    // falls back to INQUIRY_FROM_EMAIL when unset.
+    RESEND_AUDIENCE_ID: z.string().optional(),
+    NEWSLETTER_TOKEN_SECRET: z.string().optional(),
+    NEWSLETTER_FROM_EMAIL: z
+      .string()
+      .email("NEWSLETTER_FROM_EMAIL must be a valid sender")
+      .optional(),
     // Supabase service-role key. Optional. Bypasses RLS — only set
     // when a specific server-only admin job justifies it. Current
     // code paths do NOT require it; admin actions run via RLS as the
@@ -94,6 +106,9 @@ export const env = createEnv({
     INQUIRY_FROM_EMAIL: process.env.INQUIRY_FROM_EMAIL,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     RESEND_WEBHOOK_SECRET: process.env.RESEND_WEBHOOK_SECRET,
+    RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
+    NEWSLETTER_TOKEN_SECRET: process.env.NEWSLETTER_TOKEN_SECRET,
+    NEWSLETTER_FROM_EMAIL: process.env.NEWSLETTER_FROM_EMAIL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,
