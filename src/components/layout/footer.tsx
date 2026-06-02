@@ -14,6 +14,8 @@ import {
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { profile } from "@/content/profile";
+import { isNewsletterConfigured } from "@/lib/newsletter/config";
+import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { Badge } from "@/components/ui/badge";
 import { DotGrid } from "@/components/ui/magic/dot-grid";
 import { GhostedWord } from "@/components/ui/magic/ghosted-word";
@@ -57,7 +59,9 @@ function isPublishedResume(href?: string) {
 
 export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Footer" });
+  const tNewsletter = await getTranslations({ locale, namespace: "Newsletter" });
   const year = new Date().getFullYear();
+  const newsletterOpen = isNewsletterConfigured();
 
   const socials = profile.socials ?? {};
   const resumeHref = profile.resumeUrl;
@@ -258,6 +262,26 @@ export async function Footer({ locale }: { locale: Locale }) {
             </div>
           </div>
         </section>
+
+        {/* 2b. Newsletter — only when configured (isNewsletterConfigured). */}
+        {newsletterOpen ? (
+          <section className="border-t py-10">
+            <div className="mx-auto max-w-xl text-center">
+              <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                {tNewsletter("eyebrow")}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-foreground">
+                {tNewsletter("formHeading")}
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+                {tNewsletter("formBlurb")}
+              </p>
+              <div className="mx-auto mt-5 max-w-md text-left">
+                <SubscribeForm />
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         {/* 3. Sitemap — four editorial columns with a one-line blurb each */}
         <div className="grid gap-10 border-t py-12 sm:grid-cols-2 lg:grid-cols-4">
