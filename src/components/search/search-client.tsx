@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { SearchDoc } from "@/lib/search/catalog";
 import { searchDocs } from "@/lib/search/rank";
+import { trackSearch } from "@/lib/analytics/events";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 const eyebrowMono =
@@ -82,6 +83,17 @@ export function SearchClient({ catalog }: { catalog: SearchDoc[] }) {
     [catalog, query],
   );
   const trimmed = query.trim();
+
+  // Coarse search analytics — length + result count only, never the text.
+  // Debounced longer than the URL sync so we log settled queries, not noise.
+  useEffect(() => {
+    if (!trimmed) return;
+    const id = window.setTimeout(
+      () => trackSearch(trimmed, results.length),
+      600,
+    );
+    return () => window.clearTimeout(id);
+  }, [trimmed, results.length]);
 
   return (
     <div className="mx-auto w-full max-w-3xl">

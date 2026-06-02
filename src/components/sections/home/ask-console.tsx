@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useDictation } from "@/lib/browser/use-dictation";
+import { trackAsk } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
 const ENDPOINT = "/api/ask";
@@ -113,6 +114,7 @@ export function AskConsole() {
     if (!q || busy) return;
     if (dictation.listening) dictation.stop();
     void sendMessage({ text: q });
+    trackAsk();
     setInput("");
   }
 
