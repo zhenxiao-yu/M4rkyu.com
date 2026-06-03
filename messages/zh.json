@@ -452,6 +452,13 @@
     "experiment": "实验",
     "maintenance": "维护"
   },
+  "ProjectStatus": {
+    "ready": "已上线",
+    "development": "开发中",
+    "maintenance": "维护中",
+    "archived": "已归档",
+    "draft": "草稿"
+  },
   "CaseStudy": {
     "projectsIndex": "项目档案",
     "links": "链接",
@@ -1692,7 +1699,9 @@
       "browse": "选择文件",
       "clear": "移除所选图片",
       "tooLarge": "图片超过 10 MB——请选择更小的文件。",
-      "wrongType": "格式不支持。请使用 JPG、PNG、WebP、AVIF 或 GIF。"
+      "wrongType": "格式不支持。请使用 JPG、PNG、WebP、AVIF 或 GIF。",
+      "optimizing": "正在优化…",
+      "savedLabel": "更小"
     },
     "editItem": "编辑",
     "editItemTitle": "编辑条目",

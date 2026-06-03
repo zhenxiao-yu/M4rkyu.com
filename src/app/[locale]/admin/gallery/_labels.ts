@@ -54,6 +54,8 @@ export async function buildItemFormLabels(locale: Locale) {
       clear: t("dropzone.clear"),
       tooLarge: t("dropzone.tooLarge"),
       wrongType: t("dropzone.wrongType"),
+      optimizing: t("dropzone.optimizing"),
+      savedLabel: t("dropzone.savedLabel"),
     },
     captionLabel: t("captionLabel"),
     altLabel: t("altLabel"),

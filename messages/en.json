@@ -452,6 +452,13 @@
     "experiment": "Experiment",
     "maintenance": "Maintenance"
   },
+  "ProjectStatus": {
+    "ready": "Shipped",
+    "development": "In dev",
+    "maintenance": "Maintained",
+    "archived": "Archived",
+    "draft": "Draft"
+  },
   "CaseStudy": {
     "projectsIndex": "projects",
     "links": "Links",
@@ -1692,7 +1699,9 @@
       "browse": "Choose file",
       "clear": "Remove selected image",
       "tooLarge": "Image is over 10 MB — pick a smaller file.",
-      "wrongType": "Unsupported format. Use JPG, PNG, WebP, AVIF or GIF."
+      "wrongType": "Unsupported format. Use JPG, PNG, WebP, AVIF or GIF.",
+      "optimizing": "Optimizing…",
+      "savedLabel": "smaller"
     },
     "editItem": "Edit",
     "editItemTitle": "Edit item",

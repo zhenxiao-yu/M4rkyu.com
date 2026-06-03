@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ImageUp, X } from "lucide-react";
+import { ArrowDown, ImageUp, Loader2, X } from "lucide-react";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 // Robust image picker for the admin CMS. Wraps a real <input type="file">
@@ -20,6 +20,10 @@ export interface DropzoneLabels {
   clear: string;
   tooLarge: string;
   wrongType: string;
+  /** Shown while the picked photo is being downscaled + re-encoded. */
+  optimizing?: string;
+  /** Suffix after the savings percent, e.g. "smaller" → "97% smaller". */
+  savedLabel?: string;
 }
 
 const DEFAULT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB — matches bucket policy.
@@ -145,6 +149,11 @@ export function ImageDropzone({
     size: number;
   } | null>(null);
   const [guardError, setGuardError] = useState<string | null>(null);
+  // Optimize-mode feedback: the input byte size before re-encode, and a
+  // flag while the canvas encodes — so the user sees the work and the
+  // before→after payoff instead of a silent swap.
+  const [optimizing, setOptimizing] = useState(false);
+  const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [blurDataUrl, setBlurDataUrl] = useState("");
@@ -164,6 +173,8 @@ export function ImageDropzone({
       return null;
     });
     setMeta(null);
+    setOptimizing(false);
+    setOriginalSize(null);
     setWidth("");
     setHeight("");
     setBlurDataUrl("");
@@ -188,6 +199,7 @@ export function ImageDropzone({
         reset();
         return;
       }
+      setOriginalSize(file.size);
       const url = URL.createObjectURL(file);
       setPreviewUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);
@@ -204,19 +216,24 @@ export function ImageDropzone({
       probe.onload = async () => {
         setBlurDataUrl(makeBlurDataUrl(probe));
         if (optimize) {
-          const result = await resizeToWebp(probe, file.name);
-          if (result && inputRef.current) {
-            const transfer = new DataTransfer();
-            transfer.items.add(result.file);
-            inputRef.current.files = transfer.files;
-            setWidth(String(result.width));
-            setHeight(String(result.height));
-            setMeta({
-              width: result.width,
-              height: result.height,
-              size: result.file.size,
-            });
-            return;
+          setOptimizing(true);
+          try {
+            const result = await resizeToWebp(probe, file.name);
+            if (result && inputRef.current) {
+              const transfer = new DataTransfer();
+              transfer.items.add(result.file);
+              inputRef.current.files = transfer.files;
+              setWidth(String(result.width));
+              setHeight(String(result.height));
+              setMeta({
+                width: result.width,
+                height: result.height,
+                size: result.file.size,
+              });
+              return;
+            }
+          } finally {
+            setOptimizing(false);
           }
         }
         setWidth(String(probe.naturalWidth));
@@ -259,6 +276,11 @@ export function ImageDropzone({
 
   const shownImage = previewUrl ?? currentImageUrl ?? null;
   const showReplacePrompt = Boolean(currentImageUrl) && !previewUrl;
+  // The shrink ratio, only when optimize actually made the file smaller.
+  const savedPct =
+    optimize && originalSize && meta && meta.size < originalSize
+      ? Math.round((1 - meta.size / originalSize) * 100)
+      : null;
 
   return (
     <div className="grid gap-1.5 text-sm">
@@ -293,7 +315,15 @@ export function ImageDropzone({
               unoptimized={Boolean(previewUrl)}
               className="object-cover"
             />
-            {previewUrl ? (
+            {optimizing ? (
+              <div className="absolute inset-0 grid place-items-center bg-background/45 backdrop-blur-[1px]">
+                <Loader2
+                  aria-hidden="true"
+                  className="size-5 animate-spin text-ring"
+                />
+              </div>
+            ) : null}
+            {previewUrl && !optimizing ? (
               <button
                 type="button"
                 onClick={(e) => {
@@ -314,7 +344,7 @@ export function ImageDropzone({
           />
         )}
 
-        <div className="grid gap-0.5">
+        <div className="grid justify-items-center gap-1" aria-live="polite">
           <span className="text-xs font-medium text-foreground">
             {showReplacePrompt ? labels.replacePrompt : labels.prompt}
           </span>
@@ -323,11 +353,28 @@ export function ImageDropzone({
               {labels.current}
             </span>
           ) : null}
-          {meta ? (
-            <span className="font-mono text-[0.6rem] text-muted-foreground/80">
-              {meta.width}×{meta.height}px · {formatBytes(meta.size)}
+          {optimizing ? (
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-ring">
+              {labels.optimizing ?? "Optimizing…"}
             </span>
-          ) : null}
+          ) : (
+            <>
+              {savedPct !== null ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-ring/30 bg-ring/10 px-2 py-0.5 font-mono text-[0.6rem] font-medium uppercase tracking-[0.14em] text-ring">
+                  <ArrowDown aria-hidden="true" className="size-3" />
+                  {savedPct}% {labels.savedLabel ?? "smaller"}
+                </span>
+              ) : null}
+              {meta ? (
+                <span className="font-mono text-[0.6rem] text-muted-foreground/80">
+                  {optimize && originalSize && savedPct !== null
+                    ? `${formatBytes(originalSize)} → ${formatBytes(meta.size)} · WebP · `
+                    : `${formatBytes(meta.size)} · `}
+                  {meta.width}×{meta.height}
+                </span>
+              ) : null}
+            </>
+          )}
         </div>
 
         {/* Real focusable control so the picker is keyboard/AT-reachable;
