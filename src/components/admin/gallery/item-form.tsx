@@ -148,6 +148,16 @@ export function ItemForm({
           labels={labels.dropzone}
           currentImageUrl={currentImageUrl}
           required={showImage}
+          optimize
+          allowedTypes={[
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/avif",
+            "image/gif",
+            "image/heic",
+            "image/heif",
+          ]}
         />
         <Field
           label={labels.captionLabel}

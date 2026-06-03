@@ -31,6 +31,54 @@ const DEFAULT_TYPES = [
   "image/gif",
 ];
 
+// When `optimize` is on, a picked image is downscaled to this longest edge
+// and re-encoded to WebP in the browser before upload — so a 10 MB phone
+// photo (incl. HEIC, which Safari decodes natively) becomes a few-hundred-KB
+// WebP. next/image still re-optimizes at serve time; this just keeps the
+// stored original lean and the format web-safe, and sidesteps the 1 MB
+// server-action body limit.
+const OPTIMIZE_MAX_EDGE = 2400;
+const OPTIMIZE_QUALITY = 0.85;
+// A picked file can be larger than the bucket cap when optimize is on, since
+// we shrink it before upload. Cap the *input* generously to avoid OOM.
+const OPTIMIZE_MAX_INPUT_BYTES = 40 * 1024 * 1024;
+
+function resizeToWebp(
+  img: HTMLImageElement,
+  fileName: string,
+): Promise<{ file: File; width: number; height: number } | null> {
+  const nw = img.naturalWidth;
+  const nh = img.naturalHeight;
+  if (!nw || !nh) return Promise.resolve(null);
+  const scale = Math.min(1, OPTIMIZE_MAX_EDGE / Math.max(nw, nh));
+  const w = Math.max(1, Math.round(nw * scale));
+  const h = Math.max(1, Math.round(nh * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return Promise.resolve(null);
+  ctx.drawImage(img, 0, 0, w, h);
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          resolve(null);
+          return;
+        }
+        const base = fileName.replace(/\.[^.]+$/, "").trim() || "image";
+        resolve({
+          file: new File([blob], `${base}.webp`, { type: "image/webp" }),
+          width: w,
+          height: h,
+        });
+      },
+      "image/webp",
+      OPTIMIZE_QUALITY,
+    );
+  });
+}
+
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
@@ -69,6 +117,7 @@ export function ImageDropzone({
   error,
   maxBytes = DEFAULT_MAX_BYTES,
   allowedTypes = DEFAULT_TYPES,
+  optimize = false,
 }: {
   name: string;
   label: string;
@@ -79,6 +128,13 @@ export function ImageDropzone({
   error?: string;
   maxBytes?: number;
   allowedTypes?: string[];
+  /**
+   * Client-side downscale + WebP re-encode before upload. Use for photo
+   * galleries: accepts any image (incl. HEIC on Safari), submits a lean
+   * WebP, and records the *output* dimensions. The target bucket must
+   * allow image/webp.
+   */
+  optimize?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -116,12 +172,18 @@ export function ImageDropzone({
   const accept = useCallback(
     (file: File) => {
       setGuardError(null);
-      if (!allowedTypes.includes(file.type)) {
+      // In optimize mode we re-encode to WebP, so accept any image the
+      // browser can decode (incl. HEIC with an empty type on Safari);
+      // decode failure is caught below. Otherwise enforce the strict list.
+      const typeOk = optimize
+        ? file.type === "" || file.type.startsWith("image/")
+        : allowedTypes.includes(file.type);
+      if (!typeOk) {
         setGuardError(labels.wrongType);
         reset();
         return;
       }
-      if (file.size > maxBytes) {
+      if (file.size > (optimize ? OPTIMIZE_MAX_INPUT_BYTES : maxBytes)) {
         setGuardError(labels.tooLarge);
         reset();
         return;
@@ -131,10 +193,32 @@ export function ImageDropzone({
         if (prev) URL.revokeObjectURL(prev);
         return url;
       });
-      // Read natural dimensions + a tiny blur placeholder so the server
-      // can persist width/height and an LQIP (no server-side sharp).
+      // Probe for dimensions + a tiny LQIP. In optimize mode we also
+      // downscale to a WebP and swap it into the input so the form posts
+      // the lean version with its real (output) dimensions.
       const probe = new window.Image();
-      probe.onload = () => {
+      probe.onerror = () => {
+        setGuardError(labels.wrongType);
+        reset();
+      };
+      probe.onload = async () => {
+        setBlurDataUrl(makeBlurDataUrl(probe));
+        if (optimize) {
+          const result = await resizeToWebp(probe, file.name);
+          if (result && inputRef.current) {
+            const transfer = new DataTransfer();
+            transfer.items.add(result.file);
+            inputRef.current.files = transfer.files;
+            setWidth(String(result.width));
+            setHeight(String(result.height));
+            setMeta({
+              width: result.width,
+              height: result.height,
+              size: result.file.size,
+            });
+            return;
+          }
+        }
         setWidth(String(probe.naturalWidth));
         setHeight(String(probe.naturalHeight));
         setMeta({
@@ -142,11 +226,10 @@ export function ImageDropzone({
           height: probe.naturalHeight,
           size: file.size,
         });
-        setBlurDataUrl(makeBlurDataUrl(probe));
       };
       probe.src = url;
     },
-    [allowedTypes, maxBytes, labels.wrongType, labels.tooLarge, reset],
+    [allowedTypes, maxBytes, labels.wrongType, labels.tooLarge, reset, optimize],
   );
 
   const onInputChange = useCallback(
