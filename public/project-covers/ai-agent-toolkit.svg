@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">AI Agent Toolkit monochrome cover</title>
+  <desc id="desc">A terminal running local agents beside a graph of connected agent nodes, one active.</desc>
+  <rect width="1200" height="750" fill="#050505"/>
+
+  <!-- terminal window -->
+  <rect x="90" y="135" width="560" height="480" rx="14" fill="none" stroke="#f2f0ea" stroke-width="2" opacity=".5"/>
+  <line x1="90" y1="195" x2="650" y2="195" stroke="#f2f0ea" stroke-width="2" opacity=".5"/>
+  <g fill="#f2f0ea" opacity=".55">
+    <circle cx="128" cy="165" r="9"/>
+    <circle cx="158" cy="165" r="9"/>
+    <circle cx="188" cy="165" r="9"/>
+  </g>
+  <g font-family="'Courier New', ui-monospace, monospace" font-size="30" fill="#f2f0ea">
+    <text x="128" y="270" opacity=".85">&gt; ollama run</text>
+    <text x="128" y="320" opacity=".6">  spawning agents…</text>
+    <text x="128" y="370" opacity=".85">&gt; orchestrate x4</text>
+    <text x="128" y="420" opacity=".6">  [ok] local llm</text>
+    <text x="128" y="486" fill="#67e8f9">&gt; _</text>
+  </g>
+
+  <!-- agent graph -->
+  <g stroke="#f2f0ea" stroke-width="2.5" opacity=".55">
+    <line x1="900" y1="240" x2="780" y2="400"/>
+    <line x1="900" y1="240" x2="1030" y2="380"/>
+    <line x1="780" y1="400" x2="900" y2="540"/>
+    <line x1="1030" y1="380" x2="900" y2="540"/>
+    <line x1="900" y1="240" x2="900" y2="540"/>
+  </g>
+  <g fill="#050505" stroke="#f2f0ea" stroke-width="3">
+    <circle cx="780" cy="400" r="34"/>
+    <circle cx="1030" cy="380" r="34"/>
+    <circle cx="900" cy="540" r="34"/>
+  </g>
+  <!-- orchestrator (active) -->
+  <circle cx="900" cy="240" r="40" fill="#67e8f9" stroke="#050505" stroke-width="3"/>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Descent Into Madness monochrome cover</title>
+  <desc id="desc">Pixel-art platforms descending into a dungeon, a pixel hero, and a cyan projectile.</desc>
+  <rect width="1200" height="750" fill="#050505"/>
+
+  <!-- faint pixel grid -->
+  <defs>
+    <pattern id="dim-px" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#f2f0ea" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="url(#dim-px)" opacity=".10"/>
+
+  <!-- descending platforms (rooms) -->
+  <g fill="#f2f0ea">
+    <rect x="120" y="200" width="280" height="40" opacity=".85"/>
+    <rect x="360" y="360" width="300" height="40" opacity=".7"/>
+    <rect x="620" y="520" width="320" height="40" opacity=".55"/>
+    <rect x="860" y="640" width="220" height="40" opacity=".4"/>
+  </g>
+
+  <!-- pixel hero on the top platform -->
+  <g fill="#f2f0ea">
+    <rect x="180" y="120" width="80" height="80"/>
+    <rect x="180" y="120" width="20" height="20" fill="#050505"/>
+    <rect x="240" y="120" width="20" height="20" fill="#050505"/>
+    <rect x="200" y="160" width="40" height="14" fill="#050505"/>
+  </g>
+
+  <!-- cyan projectile + fading trail -->
+  <g fill="#67e8f9">
+    <rect x="300" y="150" width="26" height="26"/>
+  </g>
+  <g fill="#67e8f9" opacity=".5"><rect x="262" y="153" width="20" height="20"/></g>
+  <g fill="#67e8f9" opacity=".22"><rect x="232" y="156" width="14" height="14"/></g>
+
+  <!-- a lurking enemy block down the descent -->
+  <g fill="#f2f0ea" opacity=".5">
+    <rect x="700" y="448" width="60" height="60"/>
+    <rect x="712" y="466" width="14" height="14" fill="#050505"/>
+    <rect x="734" y="466" width="14" height="14" fill="#050505"/>
+  </g>
+</svg>

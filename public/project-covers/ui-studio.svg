@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">UI Studio monochrome cover</title>
+  <desc id="desc">Two collaborators' cursors and dashed selections over shapes on a shared design canvas.</desc>
+  <defs>
+    <pattern id="us-dots" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#f2f0ea"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="#050505"/>
+  <rect width="1200" height="750" fill="url(#us-dots)" opacity=".15"/>
+
+  <!-- designed shapes on the canvas -->
+  <g fill="none" stroke="#f2f0ea" stroke-width="3" opacity=".85">
+    <rect x="250" y="205" width="300" height="205" rx="20"/>
+    <circle cx="835" cy="430" r="112"/>
+  </g>
+  <rect x="298" y="465" width="232" height="42" rx="8" fill="#f2f0ea" opacity=".45"/>
+
+  <!-- selection A: white dashed -->
+  <rect x="232" y="187" width="336" height="241" fill="none" stroke="#f2f0ea" stroke-width="2.5" stroke-dasharray="11 9" opacity=".75"/>
+  <!-- selection B: cyan dashed (the live collaborator) -->
+  <rect x="712" y="308" width="246" height="246" fill="none" stroke="#67e8f9" stroke-width="3" stroke-dasharray="11 9"/>
+
+  <!-- cursor: collaborator one -->
+  <g transform="translate(560 244)">
+    <path d="M0 0 L0 36 L10 27 L16 42 L24 39 L17 24 L30 24 Z" fill="#f2f0ea" stroke="#050505" stroke-width="2"/>
+    <rect x="26" y="31" width="92" height="27" rx="7" fill="#f2f0ea"/>
+  </g>
+  <!-- cursor: live collaborator (cyan) -->
+  <g transform="translate(916 524)">
+    <path d="M0 0 L0 36 L10 27 L16 42 L24 39 L17 24 L30 24 Z" fill="#67e8f9" stroke="#050505" stroke-width="2"/>
+    <rect x="26" y="31" width="92" height="27" rx="7" fill="#67e8f9"/>
+  </g>
+</svg>

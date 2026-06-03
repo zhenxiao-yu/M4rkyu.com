@@ -139,6 +139,10 @@ export default async function ProjectDetailPage({
                   fill
                   priority
                   sizes="(min-width: 1280px) 1100px, 100vw"
+                  // Vector SVG covers bypass the raster optimizer (which
+                  // rejects SVG without dangerouslyAllowSVG); raster covers
+                  // still optimize.
+                  unoptimized={cover.src.endsWith(".svg")}
                   className="object-cover"
                 />
               ) : (

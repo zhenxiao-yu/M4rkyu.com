@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Bloomprint monochrome cover</title>
+  <desc id="desc">A blueprint of a yard plan: plot outline, planting beds, a path, plant markers, and dimension lines.</desc>
+  <defs>
+    <pattern id="bp-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30 0H0V30" fill="none" stroke="#f2f0ea" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="#050505"/>
+  <rect width="1200" height="750" fill="url(#bp-grid)" opacity=".08"/>
+
+  <!-- plot outline -->
+  <rect x="130" y="120" width="940" height="510" fill="none" stroke="#f2f0ea" stroke-width="3" opacity=".85"/>
+
+  <!-- top dimension line -->
+  <g stroke="#f2f0ea" stroke-width="2" opacity=".4">
+    <line x1="130" y1="86" x2="1070" y2="86"/>
+    <line x1="130" y1="76" x2="130" y2="96"/>
+    <line x1="1070" y1="76" x2="1070" y2="96"/>
+  </g>
+
+  <!-- winding path -->
+  <path d="M130 520 C 360 470, 420 360, 660 360 S 940 300, 1070 250" fill="none" stroke="#f2f0ea" stroke-width="14" opacity=".18" stroke-linecap="round"/>
+  <path d="M130 520 C 360 470, 420 360, 660 360 S 940 300, 1070 250" fill="none" stroke="#f2f0ea" stroke-width="2" stroke-dasharray="2 12" stroke-linecap="round" opacity=".55"/>
+
+  <!-- planting beds -->
+  <g fill="none" stroke="#f2f0ea" stroke-width="2.5" opacity=".7">
+    <rect x="200" y="190" width="240" height="120" rx="14"/>
+    <rect x="760" y="430" width="220" height="130" rx="14"/>
+  </g>
+
+  <!-- the highlighted bed (in bloom) -->
+  <rect x="500" y="430" width="190" height="130" rx="14" fill="#67e8f9" opacity=".10"/>
+  <rect x="500" y="430" width="190" height="130" rx="14" fill="none" stroke="#67e8f9" stroke-width="3.5"/>
+
+  <!-- tree / plant markers -->
+  <g stroke="#f2f0ea" stroke-width="2.5" opacity=".75" fill="none">
+    <circle cx="300" cy="250" r="26"/><path d="M300 224v52M274 250h52"/>
+    <circle cx="380" cy="250" r="26"/><path d="M380 224v52M354 250h52"/>
+    <circle cx="870" cy="495" r="26"/><path d="M870 469v52M844 495h52"/>
+  </g>
+  <!-- the bloom marker (cyan) -->
+  <g stroke="#67e8f9" stroke-width="3" fill="none">
+    <circle cx="595" cy="495" r="30"/><path d="M595 465v60M565 495h60"/>
+  </g>
+</svg>

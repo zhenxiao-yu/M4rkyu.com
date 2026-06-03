@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Purecreate monochrome cover</title>
+  <desc id="desc">A 3D garment on an orbit ring with an AI-generated decal and a text prompt.</desc>
+  <rect width="1200" height="750" fill="#050505"/>
+
+  <!-- orbit ring (perspective ellipse) -->
+  <ellipse cx="600" cy="420" rx="330" ry="120" fill="none" stroke="#f2f0ea" stroke-width="2" stroke-dasharray="10 10" opacity=".35"/>
+  <path d="M922 405 l18 12 -20 10" fill="none" stroke="#f2f0ea" stroke-width="2" opacity=".5"/>
+
+  <!-- garment (stylised tee, front) -->
+  <path d="M520 175 L466 212 L392 292 L452 352 L506 308 L506 580 L694 580 L694 308 L748 352 L808 292 L734 212 L680 175 Q600 232 520 175 Z"
+        fill="none" stroke="#f2f0ea" stroke-width="3" opacity=".9"/>
+
+  <!-- AI-generated decal on the chest -->
+  <rect x="540" y="350" width="120" height="120" rx="10" fill="#67e8f9" opacity=".10"/>
+  <rect x="540" y="350" width="120" height="120" rx="10" fill="none" stroke="#67e8f9" stroke-width="3"/>
+  <g stroke="#67e8f9" stroke-width="3" fill="none" opacity=".9">
+    <path d="M560 440 L588 392 L612 426 L634 400 L644 440"/>
+    <circle cx="600" cy="384" r="6" fill="#67e8f9"/>
+  </g>
+
+  <!-- color swatches -->
+  <g>
+    <rect x="150" y="250" width="46" height="46" rx="8" fill="#f2f0ea" opacity=".85"/>
+    <rect x="150" y="312" width="46" height="46" rx="8" fill="none" stroke="#f2f0ea" stroke-width="2" opacity=".5"/>
+    <rect x="150" y="374" width="46" height="46" rx="8" fill="#67e8f9"/>
+  </g>
+
+  <!-- prompt -->
+  <g font-family="'Courier New', ui-monospace, monospace" font-size="30" fill="#f2f0ea">
+    <text x="392" y="660" opacity=".85">&gt; generate "neon tiger"</text>
+  </g>
+  <rect x="772" y="636" width="6" height="30" fill="#67e8f9"/>
+</svg>
