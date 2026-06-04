@@ -2,7 +2,7 @@
 
 // Adapted from Magic UI · AnimatedGridPattern · sprint-2 phase 2.1
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -52,6 +52,12 @@ export function AnimatedGridPattern({
   const dimensionsRef = useRef({ width: 0, height: 0 });
   const reduceMotion = useReducedMotion();
   const [squares, setSquares] = useState<Square[]>([]);
+  // Pause the per-cell tweens (and their onAnimationComplete state churn)
+  // whenever the grid is scrolled off screen — on the snap-scroll home
+  // every section is mounted at once, so an ungated grid animates ~30
+  // cells forever for a layer no one is looking at.
+  const [inView, setInView] = useState(true);
+  const animate = !reduceMotion && inView;
 
   function generateSquares(count: number, w: number, h: number): Square[] {
     if (w === 0 || h === 0) return [];
@@ -85,12 +91,17 @@ export function AnimatedGridPattern({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numSquares, width, height]);
 
-  // Static cells used in reduced-motion mode — first N positions, no
-  // animation, low fixed opacity so the texture is still readable.
-  const staticSquares = useMemo<Square[]>(
-    () => squares.slice(0, Math.min(squares.length, 12)),
-    [squares],
-  );
+  // Toggle animation on/off as the grid enters / leaves the viewport.
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    const io = new IntersectionObserver(
+      (entries) => setInView(entries[0]?.isIntersecting ?? true),
+      { rootMargin: "200px" },
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <svg
@@ -119,8 +130,8 @@ export function AnimatedGridPattern({
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />
       <svg x={x} y={y} className="overflow-visible">
-        {(reduceMotion ? staticSquares : squares).map(({ pos: [px, py], id: squareId }, index) => {
-          if (reduceMotion) {
+        {squares.map(({ pos: [px, py], id: squareId }, index) => {
+          if (!animate) {
             return (
               <rect
                 key={`${squareId}-${index}`}

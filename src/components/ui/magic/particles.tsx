@@ -71,11 +71,18 @@ export function Particles({
       document.body.removeChild(probe);
     }
 
+    // Cache the CSS-pixel box so the per-frame tick never forces a
+    // synchronous layout via getBoundingClientRect().
+    const box = { w: 0, h: 0 };
+    let running = false;
+
     function fitCanvas() {
       if (!canvas) return;
-      const { width, height } = canvas.getBoundingClientRect();
-      canvas.width = Math.max(1, Math.floor(width * dpr));
-      canvas.height = Math.max(1, Math.floor(height * dpr));
+      const rect = canvas.getBoundingClientRect();
+      box.w = rect.width;
+      box.h = rect.height;
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       // Reset the transform before scaling — canvas 2D transforms are
       // cumulative, and ResizeObserver can fire repeatedly.
       if (ctx) {
@@ -85,11 +92,9 @@ export function Particles({
     }
 
     function seed() {
-      if (!canvas) return;
-      const { width, height } = canvas.getBoundingClientRect();
       particlesRef.current = Array.from({ length: quantity }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: Math.random() * box.w,
+        y: Math.random() * box.h,
         vx: (Math.random() - 0.5) * speed,
         vy: (Math.random() - 0.5) * speed,
         r: Math.random() * size + 0.4,
@@ -98,16 +103,15 @@ export function Particles({
     }
 
     function tick() {
-      if (!canvas || !ctx) return;
-      const { width, height } = canvas.getBoundingClientRect();
-      ctx.clearRect(0, 0, width, height);
+      if (!canvas || !ctx || !running) return;
+      ctx.clearRect(0, 0, box.w, box.h);
       for (const p of particlesRef.current) {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < -2) p.x = width + 2;
-        if (p.x > width + 2) p.x = -2;
-        if (p.y < -2) p.y = height + 2;
-        if (p.y > height + 2) p.y = -2;
+        if (p.x < -2) p.x = box.w + 2;
+        if (p.x > box.w + 2) p.x = -2;
+        if (p.y < -2) p.y = box.h + 2;
+        if (p.y > box.h + 2) p.y = -2;
         ctx.beginPath();
         ctx.fillStyle = resolvedColor;
         ctx.globalAlpha = p.a;
@@ -118,9 +122,33 @@ export function Particles({
       rafRef.current = requestAnimationFrame(tick);
     }
 
+    function start() {
+      if (running) return;
+      running = true;
+      rafRef.current = requestAnimationFrame(tick);
+    }
+    function stop() {
+      running = false;
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    }
+
     fitCanvas();
     seed();
-    rafRef.current = requestAnimationFrame(tick);
+
+    // Only run the RAF loop while the canvas is actually on screen. The
+    // home mounts ~10 full-viewport sections at once, so an ungated loop
+    // would redraw a field the user can't see for 9/10 of the page.
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) start();
+        else stop();
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(canvas);
 
     const observer = new ResizeObserver(() => {
       fitCanvas();
@@ -129,11 +157,9 @@ export function Particles({
     observer.observe(canvas);
 
     return () => {
+      io.disconnect();
       observer.disconnect();
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
+      stop();
     };
   }, [reduceMotion, quantity, size, speed, color, maxOpacity]);
 
@@ -143,7 +169,10 @@ export function Particles({
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className={cn("pointer-events-none absolute inset-0", className)}
+      // size-full is load-bearing: <canvas> is a replaced element, so
+      // `absolute inset-0` alone leaves it at its intrinsic 300×150 instead
+      // of filling the container.
+      className={cn("pointer-events-none absolute inset-0 size-full", className)}
     />
   );
 }
