@@ -48,6 +48,13 @@ export const TOOL_SLUGS = [
   "ascii-art",
   "roman",
   "random-number",
+  "blob",
+  // newer additions
+  "fluid-type",
+  "color-mix",
+  "specificity",
+  "keycode",
+  "image-to-data-uri",
 ] as const;
 
 export type ToolSlug = (typeof TOOL_SLUGS)[number];

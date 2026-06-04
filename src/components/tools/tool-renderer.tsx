@@ -157,6 +157,28 @@ const RENDERERS: Record<ToolSlug, ComponentType> = {
     () => import("./random-number/Tool").then((m) => m.RandomNumber),
     { ssr: false },
   ),
+  blob: dynamic(() => import("./blob/Tool").then((m) => m.BlobGenerator), {
+    ssr: false,
+  }),
+  "fluid-type": dynamic(
+    () => import("./fluid-type/Tool").then((m) => m.FluidType),
+    { ssr: false },
+  ),
+  "color-mix": dynamic(
+    () => import("./color-mix/Tool").then((m) => m.ColorMix),
+    { ssr: false },
+  ),
+  specificity: dynamic(
+    () => import("./specificity/Tool").then((m) => m.Specificity),
+    { ssr: false },
+  ),
+  keycode: dynamic(() => import("./keycode/Tool").then((m) => m.Keycode), {
+    ssr: false,
+  }),
+  "image-to-data-uri": dynamic(
+    () => import("./image-to-data-uri/Tool").then((m) => m.ImageToDataUri),
+    { ssr: false },
+  ),
 };
 
 export function ToolRenderer({ slug }: { slug: string }) {
