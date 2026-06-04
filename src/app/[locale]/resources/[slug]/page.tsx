@@ -63,6 +63,36 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const t = await getTranslations({ locale, namespace: "Resources" });
   const citation = `${resource.name} — M4rkyu.com. ${resource.link}`;
 
+  // Workbench catalog — every shipped tool, in content order, so a tool
+  // page can number itself and walk to its neighbours (wrapping at the
+  // ends) without bouncing back to the index.
+  const catalog = resources.filter(
+    (r) => r.type === "tool" && r.status === "ready",
+  );
+  const catalogIndex = catalog.findIndex((r) => r.slug === slug);
+  const total = catalog.length;
+  const hasNeighbors = catalogIndex >= 0 && total > 1;
+  const prevTool = hasNeighbors
+    ? catalog[(catalogIndex - 1 + total) % total]
+    : null;
+  const nextTool = hasNeighbors ? catalog[(catalogIndex + 1) % total] : null;
+  const workbenchTools = catalog.map((r) => ({
+    slug: r.slug,
+    name: r.name,
+    tag: r.tags[0] ?? r.category,
+  }));
+  const workbenchLabels = {
+    runsLocal: t("workbench.runsLocal"),
+    prev: t("workbench.prev"),
+    next: t("workbench.next"),
+    allTools: t("workbench.allTools"),
+    jump: t("workbench.jump"),
+    jumpTitle: t("workbench.jumpTitle"),
+    jumpPlaceholder: t("workbench.jumpPlaceholder"),
+    jumpEmpty: t("workbench.jumpEmpty"),
+    keysHint: t("workbench.keysHint"),
+  };
+
   return (
     <PageShell locale={locale}>
       <JsonLd data={buildToolJsonLd(resource, locale)} />
@@ -85,6 +115,14 @@ export default async function ToolPage({ params }: ToolPageProps) {
           description={resource.description}
           category={resource.category}
           tags={resource.tags}
+          slug={slug}
+          index={catalogIndex >= 0 ? catalogIndex + 1 : undefined}
+          total={total}
+          prev={prevTool ? { slug: prevTool.slug, name: prevTool.name } : null}
+          next={nextTool ? { slug: nextTool.slug, name: nextTool.name } : null}
+          locale={locale}
+          tools={workbenchTools}
+          labels={workbenchLabels}
           actions={
             <>
               <Button asChild variant="outline" size="sm">

@@ -86,7 +86,9 @@
     ".next-dev-3005/types/**/*.ts",
     ".next-dev-3005/dev/types/**/*.ts",
     ".next-dev-3006/types/**/*.ts",
-    ".next-dev-3006/dev/types/**/*.ts"
+    ".next-dev-3006/dev/types/**/*.ts",
+    ".next-dev-3007/types/**/*.ts",
+    ".next-dev-3007/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

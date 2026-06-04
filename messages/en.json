@@ -887,6 +887,17 @@
     "landingPreviewToolsLabel": "Sample tools",
     "landingPreviewLinksLabel": "Sample links",
     "breadcrumbResources": "Resources",
+    "workbench": {
+      "runsLocal": "runs locally",
+      "prev": "Previous tool",
+      "next": "Next tool",
+      "allTools": "All tools",
+      "jump": "Jump",
+      "jumpTitle": "Jump to a tool",
+      "jumpPlaceholder": "Search tools by name or tag…",
+      "jumpEmpty": "No tool matches.",
+      "keysHint": "browse"
+    },
     "ToolsPage": {
       "eyebrow": "interactive tools",
       "title": "Tools",
