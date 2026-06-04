@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BlurImage } from "@/components/ui/blur-image";
 import { PlaceholderVideo } from "@/components/placeholders/placeholder-video";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { MediaFrame } from "@/components/placeholders/media-frame";
@@ -72,7 +72,7 @@ export default async function MediaPage({
               >
                 {item.poster ? (
                   <div className="relative aspect-video border-b">
-                    <Image
+                    <BlurImage
                       src={item.poster.src}
                       alt={item.poster.alt}
                       fill

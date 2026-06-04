@@ -1,11 +1,13 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { BentoGrid } from "@/components/about/bento-fx";
 import { MissionModuleCard } from "@/components/ui/pixel/mission-module-card";
 import { SystemBadge } from "@/components/ui/pixel/system-badge";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
+import { SelectedWorkRail } from "./selected-work-rail";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
 import type { Project } from "@/content/schemas";
@@ -17,30 +19,33 @@ interface SelectedWorkProps {
 }
 
 /**
- * Selected-work showcase. Uses the canonical MissionModuleCard (same
- * card the /work page renders) so the home matches the rest of the
- * site: cartridge notch, status badge, grayscale→color cover. The hero
- * project wears the section's single BorderBeam.
+ * Selected-work slide — a horizontal "production line" you scrub through.
+ * Ready projects ride up front as numbered mission-file frames; a vertical
+ * divider, then the drafts trailing behind, dimmed + desaturated until you
+ * hover. The single-row rail keeps the whole slide inside one viewport
+ * (the old bento + draft strip overflowed the snap stage on tall content).
+ *
+ * Cards stay the canonical `MissionModuleCard` so /home matches /work.
+ * Scroll mechanics + nav live in the `SelectedWorkRail` client shell; the
+ * cards arrive as server-rendered children.
  *
  * Scales with content:
- *   - 0 ready: only the draft strip renders.
- *   - 1 ready: the hero card spans wide on its own.
- *   - 2+ ready: hero (wide) + the rest in uniform cells.
- *   - Drafts cap at 5 dimmed, non-linked tiles (no /work/[slug] yet).
+ *   - 0 ready: only the dimmed draft frames render.
+ *   - N ready: numbered 01…N, the first wearing the section's lone beam.
+ *   - Drafts cap at 6 dimmed, non-linked frames behind the divider.
  */
 export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
   const t = await getTranslations({ locale, namespace: "Home.selectedWork" });
 
   const ready = projects.filter((p) => p.contentStatus === "ready");
-  const hero = ready[0];
-  const rest = ready.slice(1);
   const drafts = projects
     .filter((p) => p.contentStatus !== "ready")
-    .slice(0, 5);
+    .slice(0, 6);
 
   return (
     <HomeSection
-      tone="muted"
+      tone="default"
+      background={<SectionBackground variant="blueprint" />}
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}
@@ -59,38 +64,112 @@ export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
       }
       dataSection="selected-work"
     >
-      {/* BentoGrid drives the staggered fade-up reveal. */}
-      <BentoGrid className="grid grid-cols-1 gap-5 md:grid-cols-6">
-        {hero ? (
-          <div className="md:col-span-4">
-            <MissionModuleCard project={hero} locale={locale} highlighted />
-          </div>
-        ) : null}
-        {rest.map((project) => (
-          <div key={project.slug} className="md:col-span-2">
-            <MissionModuleCard project={project} locale={locale} />
-          </div>
-        ))}
-      </BentoGrid>
+      {ready.length > 0 || drafts.length > 0 ? (
+        <SelectedWorkRail
+          prevLabel={t("prev")}
+          nextLabel={t("next")}
+          railLabel={t("railLabel")}
+        >
+          {ready.map((project, index) => (
+            <RailFrame key={project.slug} index={index + 1}>
+              <MissionModuleCard
+                project={project}
+                locale={locale}
+                highlighted={index === 0}
+              />
+            </RailFrame>
+          ))}
 
-      {/* Drafts strip — dimmed, non-linked (slug pages may not exist). */}
-      {drafts.length > 0 ? (
-        <div className="mt-12">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-            {t("draftsLabel")}
-          </p>
-          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-            {drafts.map((project) => (
-              <DraftTile key={project.slug} project={project} locale={locale} />
-            ))}
-          </div>
-        </div>
+          {drafts.length > 0 ? (
+            <DraftDivider label={t("draftsLabel")} />
+          ) : null}
+
+          {drafts.map((project) => (
+            <RailFrame key={project.slug} draft draftLabel={t("draftsLabel")}>
+              <DraftRailCard project={project} locale={locale} />
+            </RailFrame>
+          ))}
+        </SelectedWorkRail>
       ) : null}
     </HomeSection>
   );
 }
 
-async function DraftTile({
+/**
+ * One numbered frame in the rail. Ready frames show a catalog index +
+ * accent tick; draft frames swap the index for a muted label and dim the
+ * card until hover (the "behind the line" read).
+ */
+function RailFrame({
+  index,
+  draft = false,
+  draftLabel,
+  children,
+}: {
+  index?: number;
+  draft?: boolean;
+  draftLabel?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      data-rail-slide
+      className="group/frame flex w-[80vw] max-w-[20rem] shrink-0 snap-start flex-col gap-2.5 sm:w-[19rem]"
+    >
+      <div className="flex items-center gap-2 px-0.5">
+        {draft ? (
+          <span className="font-mono text-[0.56rem] uppercase tracking-[0.22em] text-muted-foreground/70">
+            {draftLabel}
+          </span>
+        ) : (
+          <span className="font-mono text-[0.66rem] tabular-nums text-muted-foreground">
+            {String(index).padStart(2, "0")}
+          </span>
+        )}
+        <span aria-hidden="true" className="h-px flex-1 bg-border/70" />
+        <span
+          aria-hidden="true"
+          className={cn(
+            "size-1 rounded-full",
+            draft ? "bg-muted-foreground/40" : "bg-ring/70",
+          )}
+        />
+      </div>
+      <div
+        className={cn(
+          "min-h-0 flex-1",
+          draft &&
+            "opacity-75 grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) group-hover/frame:opacity-100 group-hover/frame:grayscale-0",
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/** Vertical divider that separates shipped frames from the draft tail. */
+function DraftDivider({ label }: { label: string }) {
+  return (
+    <div className="flex shrink-0 items-stretch px-1 sm:px-2" aria-hidden="true">
+      <div className="flex flex-col items-center justify-center gap-3 self-stretch">
+        <span className="w-px flex-1 bg-linear-to-b from-transparent via-border to-border" />
+        <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground [writing-mode:vertical-rl]">
+          {label}
+        </span>
+        <span className="w-px flex-1 bg-linear-to-b from-border via-border to-transparent" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Draft frame card — mirrors MissionModuleCard's anatomy (16:10 cover,
+ * status badge, year, title) but stays non-linked: draft slugs aren't
+ * promoted from the home. The dim/desaturate lives on the RailFrame so
+ * the whole frame lifts together on hover.
+ */
+async function DraftRailCard({
   project,
   locale,
 }: {
@@ -98,38 +177,40 @@ async function DraftTile({
   locale: Locale;
 }) {
   const tStatus = await getTranslations({ locale, namespace: "Status" });
+  const tProjects = await getTranslations({ locale, namespace: "Projects" });
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
 
-  // Pending/placeholder work slot. opacity-75 (not 60) keeps the dimmed
-  // "coming soon" read while lifting the muted `cover · tbd` label above the
-  // 4.5:1 contrast floor — parent opacity caps all descendants, so the label
-  // can't be fixed in isolation (WCAG 1.4.3).
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground opacity-75 grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) hover:opacity-100 hover:grayscale-0">
-      <div className="relative aspect-square w-full overflow-hidden bg-muted">
+    <div className="flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground">
+      <div className="relative aspect-16/10 w-full overflow-hidden border-b bg-muted">
         {cover ? (
           <Image
             src={cover.src}
             alt={cover.alt}
             fill
-            sizes="(max-width: 768px) 50vw, 20vw"
+            sizes="(max-width: 640px) 80vw, 19rem"
             className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 grid place-items-center">
             <span className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
-              cover · tbd
+              {tProjects("mediaTbd")}
             </span>
           </div>
         )}
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-3">
-        <SystemBadge
-          status={project.contentStatus}
-          label={tStatus(project.contentStatus)}
-        />
-        <h3 className="text-sm font-semibold leading-tight">
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <SystemBadge
+            status={project.contentStatus}
+            label={tStatus(project.contentStatus)}
+          />
+          <span className="font-mono text-xs text-muted-foreground">
+            {project.year}
+          </span>
+        </div>
+        <h3 className="text-sm font-semibold leading-snug text-foreground">
           {localized.title as string}
         </h3>
       </div>

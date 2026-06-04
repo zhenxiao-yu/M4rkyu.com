@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { BlurImage } from "@/components/ui/blur-image";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
@@ -100,11 +100,13 @@ function FrameThumb({
   if (item.src) {
     return (
       <div className="relative aspect-4/5 overflow-hidden border-b bg-muted">
-        <Image
+        <BlurImage
           src={item.src.src}
           alt={item.src.alt}
           fill
           sizes="(min-width: 1024px) 25vw, 50vw"
+          placeholder={item.src.blurDataURL ? "blur" : undefined}
+          blurDataURL={item.src.blurDataURL}
           className="object-cover grayscale transition duration-300 group-hover:scale-[1.02] group-hover:grayscale-0"
         />
       </div>

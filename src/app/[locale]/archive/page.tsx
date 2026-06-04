@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
@@ -8,6 +7,7 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Carousel } from "@/components/ui/magic/carousel";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Link } from "@/i18n/navigation";
@@ -196,7 +196,7 @@ function CollectionBanner({
       )}
     >
       {cover ? (
-        <Image
+        <BlurImage
           src={cover.src}
           alt={cover.alt}
           fill
@@ -254,7 +254,7 @@ function CollectionCoverCard({
       )}
     >
       {cover ? (
-        <Image
+        <BlurImage
           src={cover.src}
           alt={cover.alt}
           fill

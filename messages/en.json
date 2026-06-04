@@ -175,6 +175,9 @@
       "lede": "A short loop of the projects worth showing — ready ones in front, drafts dimmed behind them.",
       "titleWord": "WORK",
       "openWork": "All projects",
+      "prev": "Previous projects",
+      "next": "More projects",
+      "railLabel": "Selected work — scroll horizontally",
       "draftsLabel": "in draft"
     },
     "frames": {
@@ -419,6 +422,18 @@
       "oldest": "Oldest",
       "alpha": "A → Z"
     },
+    "filtersLabel": "Project filters",
+    "filtersEyebrow": "Filter",
+    "viewLabel": "View",
+    "viewGrid": "Grid",
+    "viewIndex": "Index",
+    "ledger": {
+      "colProject": "Project",
+      "colType": "Type",
+      "colYear": "Year",
+      "colStack": "Stack",
+      "colOpen": "Open case study"
+    },
     "activeFiltersLabel": "Active",
     "removeFilter": "Remove filter",
     "draftsHeading": "Drafts in development",
@@ -547,6 +562,12 @@
     "refined": {
       "heroTitle": "Mark Yu",
       "heroBody": "Ontario, by way of China. I make small digital things: interfaces, game-feel experiments, tools, images, notes. The rest is intentionally left quiet.",
+      "heroRoles": ["interfaces", "game feel", "tools", "images", "quiet systems"],
+      "indexEyebrow": "index",
+      "indexCaption": "A small life, roughly mapped.",
+      "statCities": "cities",
+      "statCountries": "countries",
+      "statTools": "tools",
       "seeWork": "See work",
       "sayHello": "Say hello",
       "portraitEyebrow": "portrait stack",
@@ -577,7 +598,8 @@
       },
       "closingEyebrow": "exit",
       "closingTitle": "Enough about me.",
-      "closingBody": "The useful proof is in the work. The human part is in the message."
+      "closingBody": "The useful proof is in the work. The human part is in the message.",
+      "closingSignoff": "// the rest is offline"
     },
     "signals": {
       "eyebrow": "signals",

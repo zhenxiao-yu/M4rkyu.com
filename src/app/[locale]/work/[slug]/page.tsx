@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
+import { BlurImage } from "@/components/ui/blur-image";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { ProjectCartridge } from "@/components/ui/pixel/project-cartridge";
 import {
@@ -133,7 +133,7 @@ export default async function ProjectDetailPage({
           <BlurFade>
             <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
               {cover ? (
-                <Image
+                <BlurImage
                   src={cover.src}
                   alt={cover.alt}
                   fill
@@ -221,7 +221,7 @@ export default async function ProjectDetailPage({
               {processShots.map((shot, index) => (
                 <BlurFade key={`${index}-${shot.src}`} delay={0.05 * index}>
                   <figure className="relative aspect-4/3 overflow-hidden rounded-md border bg-muted">
-                    <Image
+                    <BlurImage
                       src={shot.src}
                       alt={shot.alt}
                       fill

@@ -2,9 +2,11 @@ import { getTranslations } from "next-intl/server";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { BentoFx, BentoGrid } from "@/components/about/bento-fx";
+import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { ToolIcon } from "@/components/resources/tool-icon";
 import { getResourcesSource } from "@/lib/resources/source";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
@@ -26,8 +28,9 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
 
   return (
     <HomeSection
-      tone="muted"
+      tone="default"
       dataSection="resources"
+      background={<SectionBackground variant="circuit" />}
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}
@@ -46,19 +49,19 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
       }
     >
       {/* Count signal. */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <Stagger className="mb-6 flex flex-wrap gap-2">
         {[t("toolsCount", { count: toolCount }), t("linksCount", { count: linkCount })].map(
           (label) => (
-            <span
+            <StaggerItem
               key={label}
               className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground"
             >
               <span aria-hidden="true" className="size-1.5 rounded-full bg-ring/70" />
               {label}
-            </span>
+            </StaggerItem>
           ),
         )}
-      </div>
+      </Stagger>
 
       <BentoGrid className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {picks.map((resource) => (

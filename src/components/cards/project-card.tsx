@@ -1,9 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import { ArrowUpRight, Code, ExternalLink } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { DraftBadge } from "@/components/placeholders/draft-badge"
+import { BlurImage } from "@/components/ui/blur-image"
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image"
 import { BorderBeam } from "@/components/ui/magic/border-beam"
 import { Link } from "@/i18n/navigation"
@@ -80,7 +80,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
         <div className="relative aspect-16/10 overflow-hidden border-b border-border bg-[#0b0b0b]">
           {cover ? (
             <>
-              <Image
+              <BlurImage
                 src={cover.src}
                 alt={cover.alt}
                 fill

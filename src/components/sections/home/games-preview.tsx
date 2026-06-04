@@ -6,6 +6,7 @@ import { SystemBadge } from "@/components/ui/pixel/system-badge";
 import { getGamesSource } from "@/lib/games/source";
 import { localize } from "@/lib/content/localize";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
@@ -24,6 +25,7 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
     <HomeSection
       tone="default"
       dataSection="games"
+      background={<SectionBackground variant="arcade" />}
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}

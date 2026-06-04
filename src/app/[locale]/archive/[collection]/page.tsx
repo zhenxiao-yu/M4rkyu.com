@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -83,7 +83,7 @@ export default async function GalleryCollectionPage({
       >
         {cover ? (
           <div className="relative aspect-4/5 w-full overflow-hidden rounded-lg border border-border bg-muted shadow-sm">
-            <Image
+            <BlurImage
               src={cover.src}
               alt={cover.alt}
               fill

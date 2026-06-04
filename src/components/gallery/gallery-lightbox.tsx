@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
@@ -14,6 +13,7 @@ import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -351,7 +351,7 @@ export function GalleryLightbox({
                               }
                             >
                               {item.src ? (
-                                <Image
+                                <BlurImage
                                   src={item.src.src}
                                   alt={item.src.alt}
                                   fill
@@ -452,11 +452,12 @@ function FrameMedia({
         <div className="relative flex flex-1 items-center justify-center overflow-hidden p-3 text-left sm:p-5 lg:p-6">
           {item.src ? (
             <div className="relative h-full w-full">
-              <Image
+              <BlurImage
                 src={item.src.src}
                 alt={item.src.alt}
                 fill
                 priority
+                fadeOnly
                 sizes="(min-width: 1024px) 900px, 100vw"
                 placeholder={item.src.blurDataURL ? "blur" : undefined}
                 blurDataURL={item.src.blurDataURL}
@@ -633,11 +634,12 @@ function FrameMedia({
 
                   {item.src ? (
                     <div className="relative h-full w-full overflow-hidden">
-                      <Image
+                      <BlurImage
                         src={item.src.src}
                         alt={item.src.alt}
                         fill
                         priority
+                        fadeOnly
                         sizes="100vw"
                         placeholder={item.src.blurDataURL ? "blur" : undefined}
                         blurDataURL={item.src.blurDataURL}

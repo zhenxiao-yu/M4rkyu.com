@@ -175,6 +175,9 @@
       "lede": "一组值得展示的项目 —— 完成的在前，草稿淡淡地排在后面。",
       "titleWord": "WORK",
       "openWork": "全部项目",
+      "prev": "上一批项目",
+      "next": "更多项目",
+      "railLabel": "精选作品 —— 横向滚动",
       "draftsLabel": "草稿"
     },
     "frames": {
@@ -419,6 +422,18 @@
       "oldest": "最早优先",
       "alpha": "A → Z"
     },
+    "filtersLabel": "项目筛选",
+    "filtersEyebrow": "筛选",
+    "viewLabel": "视图",
+    "viewGrid": "网格",
+    "viewIndex": "索引",
+    "ledger": {
+      "colProject": "项目",
+      "colType": "类型",
+      "colYear": "年份",
+      "colStack": "技术栈",
+      "colOpen": "查看案例研究"
+    },
     "activeFiltersLabel": "已应用",
     "removeFilter": "移除筛选",
     "draftsHeading": "开发中的草稿",
@@ -547,6 +562,12 @@
     "refined": {
       "heroTitle": "Mark Yu",
       "heroBody": "安大略，来自中国。做一些小的数字东西：界面、手感实验、工具、图像、笔记。剩下的部分故意保持安静。",
+      "heroRoles": ["界面", "游戏手感", "工具", "影像", "安静的系统"],
+      "indexEyebrow": "索引",
+      "indexCaption": "一段小小的人生，大致标在地图上。",
+      "statCities": "城市",
+      "statCountries": "国家",
+      "statTools": "工具",
       "seeWork": "看作品",
       "sayHello": "打个招呼",
       "portraitEyebrow": "肖像堆叠",
@@ -577,7 +598,8 @@
       },
       "closingEyebrow": "出口",
       "closingTitle": "关于我，说这些就够了。",
-      "closingBody": "有用的证明在作品里。人的部分，可以写信聊。"
+      "closingBody": "有用的证明在作品里。人的部分，可以写信聊。",
+      "closingSignoff": "// 其余部分已离线"
     },
     "signals": {
       "eyebrow": "信号",

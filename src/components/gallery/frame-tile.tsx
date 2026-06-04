@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import type { GalleryItem } from "@/content/schemas";
 import { cn, FOCUS_RING } from "@/lib/utils";
@@ -71,7 +71,7 @@ export function FrameTile({
         style={ratio ? { aspectRatio: ratio } : undefined}
       >
         {hasImage && item.src ? (
-          <Image
+          <BlurImage
             src={item.src.src}
             alt={item.src.alt}
             fill

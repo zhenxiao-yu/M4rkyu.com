@@ -25,7 +25,28 @@
       "Bash(curl -sS -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000)",
       "Bash(NEXT_DIST_DIR=.next-dev-3000 timeout 20 npm run dev -- --hostname 127.0.0.1 --port 3000)",
       "Bash(echo \"exit=$?\")",
-      "Bash(NEXT_DIST_DIR=.next-dev-3000 npm run dev -- --hostname 127.0.0.1 --port 3000)"
+      "Bash(NEXT_DIST_DIR=.next-dev-3000 npm run dev -- --hostname 127.0.0.1 --port 3000)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run typecheck *)",
+      "Bash(npm run lint *)",
+      "Bash(npm run validate)",
+      "Bash(npm run validate *)",
+      "Bash(npm run test:unit)",
+      "Bash(npm run test:unit *)",
+      "Bash(npm run test)",
+      "Bash(git fetch)",
+      "Bash(git fetch *)",
+      "Bash(vercel ls)",
+      "Bash(vercel ls *)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__wait_for",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
+      "mcp__claude_ai_Vercel__list_deployments",
+      "mcp__claude_ai_Vercel__get_deployment",
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "Bash(git push origin main)"
     ]
   }
 }

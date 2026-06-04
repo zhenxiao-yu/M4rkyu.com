@@ -2,8 +2,10 @@ import { ArrowUpRight, Briefcase, Gamepad2, BookOpen, Wrench, User, Image as Ima
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BentoFx, BentoGrid, type BentoPattern } from "@/components/about/bento-fx";
+import { FadeIn } from "@/components/motion/fade-in";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import type { Locale } from "@/i18n/routing";
 
 interface CompassSectionProps {
@@ -33,10 +35,14 @@ export async function CompassSection({ locale }: CompassSectionProps) {
   const t = await getTranslations({ locale, namespace: "Home.compass" });
 
   return (
-    <HomeSection tone="default" dataSection="compass">
+    <HomeSection
+      tone="default"
+      dataSection="compass"
+      background={<SectionBackground variant="radar" />}
+    >
       <div className="grid gap-8 lg:grid-cols-[5fr_7fr] lg:gap-16">
         {/* Left — editorial intro. */}
-        <div className="max-w-md">
+        <FadeIn className="max-w-md">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             {t("eyebrow")}
           </p>
@@ -52,7 +58,7 @@ export async function CompassSection({ locale }: CompassSectionProps) {
               {t("cta")}
             </span>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Right — tile rail. BentoGrid drives the staggered reveal;
           * each tile wears a BentoFx pattern + cursor spotlight + glow. */}

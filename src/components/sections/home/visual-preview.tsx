@@ -4,10 +4,10 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/magic/carousel";
-import { DotGrid } from "@/components/ui/magic/dot-grid";
 import type { GalleryCollection } from "@/content/schemas";
 import { getGallerySource } from "@/lib/gallery/source";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
@@ -31,6 +31,7 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
       tone="default"
       dataSection="visual"
       className="overflow-hidden"
+      background={<SectionBackground variant="aperture" />}
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}
@@ -47,16 +48,6 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
         </div>
       }
     >
-      {/* Interactive dot field behind the rotator. */}
-      <DotGrid
-        className="-z-10"
-        spacing={34}
-        baseDotSize={1}
-        hoverDotSize={3.4}
-        influenceRadius={150}
-        baseOpacity={0.16}
-      />
-
       {covers.length > 0 ? (
         <Carousel
           ariaLabel={t("galleryAria")}

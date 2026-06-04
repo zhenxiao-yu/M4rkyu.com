@@ -1025,6 +1025,73 @@ html {
   }
 }
 
+/* Drifting scanline scroll for the home section backdrops (terminal /
+ * arcade variants). Travels 12px — a common multiple of both scanline
+ * periods (3px + 4px) so either pattern loops seamlessly. Motion-safe
+ * gated at the call site. */
+@keyframes section-scan {
+  to {
+    background-position-y: 12px;
+  }
+}
+
+/* Image blur-up / fade-in load treatment for <BlurImage>.
+ *
+ * Driven by data attributes set in src/components/ui/blur-image.tsx, never a
+ * Tailwind `transition` utility — callers layer their own hover transition
+ * (grayscale/scale) on the same element, and tailwind-merge collapses
+ * `transition-property`, so a transition-based fade would fight the hover.
+ * Animations and transitions are independent channels, so the two coexist.
+ *
+ *  - `rise`  (no real LQIP): start blurred + slightly scaled + transparent,
+ *            settle to sharp + visible. The box's `bg-muted`/`bg-card`
+ *            substrate shows through while loading.
+ *  - `fade`  (native blurDataURL present): the real low-res preview is the
+ *            placeholder, so only opacity fades — no extra CSS blur/scale.
+ *
+ * Initial hidden state lives on `:not([data-loaded])` so the image is calm
+ * before decode. The keyframe runs WITHOUT a forwards/both fill: its final
+ * frame (opacity 1 / blur 0 / scale 1) matches the element's natural loaded
+ * state, so after the animation releases, `transform` reverts to the
+ * element's own value — leaving the caller's hover scale free to take over.
+ * A lingering filled `transform` would otherwise trap hover-zoom. Reduced
+ * motion is handled twice: the component drops `data-blur-image` entirely,
+ * and the global prefers-reduced-motion guard clamps animation-duration. */
+@keyframes blur-image-rise {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes blur-image-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+[data-blur-image="rise"]:not([data-loaded]) {
+  opacity: 0;
+  filter: blur(12px);
+  transform: scale(1.04);
+}
+[data-blur-image="fade"]:not([data-loaded]) {
+  opacity: 0;
+}
+[data-blur-image="rise"][data-loaded] {
+  animation: blur-image-rise var(--motion-slow) var(--ease-premium);
+}
+[data-blur-image="fade"][data-loaded] {
+  animation: blur-image-fade var(--motion-medium) var(--ease-premium);
+}
+
 /* Home-page full-page slide snapping.
  *
  *  - Desktop (pointer: fine): owned by Lenis' `Snap` plugin in

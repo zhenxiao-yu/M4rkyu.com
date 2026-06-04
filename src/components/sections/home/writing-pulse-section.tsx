@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { getPosts } from "@/lib/blog/get-posts";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import type { Locale } from "@/i18n/routing";
 
 interface WritingPulseSectionProps {
@@ -35,7 +36,8 @@ export async function WritingPulseSection({ locale }: WritingPulseSectionProps) 
 
   return (
     <HomeSection
-      tone="muted"
+      tone="default"
+      background={<SectionBackground variant="manuscript" />}
       eyebrow={t("writingEyebrow")}
       heading={t("latest")}
       lede={t("latestDescription")}

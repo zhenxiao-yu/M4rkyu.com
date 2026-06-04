@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import { AskConsole } from "./ask-console";
 
 /**
@@ -15,6 +16,7 @@ export async function AskSection() {
       heading={t("heading")}
       lede={t("lede")}
       dataSection="ask"
+      background={<SectionBackground variant="terminal" />}
     >
       <AskConsole />
     </HomeSection>

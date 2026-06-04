@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { BentoCard } from "@/components/ui/magic/bento-grid";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { Link } from "@/i18n/navigation";
@@ -31,11 +31,13 @@ export function GalleryBentoTile({ item, span }: GalleryBentoTileProps) {
       >
         <div className="relative flex-1 overflow-hidden bg-muted">
           {item.src ? (
-            <Image
+            <BlurImage
               src={item.src.src}
               alt={item.src.alt}
               fill
               sizes="(min-width: 1024px) 33vw, 50vw"
+              placeholder={item.src.blurDataURL ? "blur" : undefined}
+              blurDataURL={item.src.blurDataURL}
               className={cn(
                 "object-cover grayscale transition duration-300",
                 "group-hover:scale-[1.02] group-hover:grayscale-0",

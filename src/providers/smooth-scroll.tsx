@@ -2,6 +2,10 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import {
+  registerLenis,
+  useScrollRestoration,
+} from "@/hooks/use-scroll-restoration";
 
 // Home routes mount their own Lenis + GSAP ScrollTrigger via
 // HomeSmoothScroll. Skip the site-wide instance there to avoid two
@@ -11,6 +15,11 @@ const HOME_PATHS = new Set(["/", "/en", "/zh"]);
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Back/forward scroll restoration. Lives outside the Lenis effect so it
+  // installs once and stays mounted across route changes; it reads the active
+  // Lenis instance (published below) when one exists, native scroll otherwise.
+  useScrollRestoration(pathname);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -31,6 +40,10 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
         duration: 1.2,
         easing: (t: number) => 1 - Math.pow(1 - t, 4),
       });
+
+      // Publish this instance so the scroll-restoration hook can adopt
+      // positions via lenis.scrollTo (immediate) instead of fighting the loop.
+      registerLenis(lenis);
 
       function raf(time: number) {
         lenis.raf(time);
@@ -68,6 +81,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       syncDialog();
 
       cleanup = () => {
+        registerLenis(null);
         lenis.destroy();
         cancelAnimationFrame(rafId);
         resizeObserver.disconnect();

@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { BentoFx, BentoGrid, type BentoPattern } from "@/components/about/bento-fx";
 import { profile } from "@/content/profile";
 import { HomeSection } from "./home-section";
+import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
@@ -46,6 +47,7 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
     <HomeSection
       tone="default"
       dataSection="about-preview"
+      background={<SectionBackground variant="contour" />}
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}

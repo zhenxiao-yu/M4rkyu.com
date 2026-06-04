@@ -25,6 +25,13 @@ interface HomeSectionProps {
   snap?: boolean;
   /** Section content. */
   children: ReactNode;
+  /**
+   * Full-bleed atmospheric backdrop (typically `<SectionBackground />`).
+   * Rendered as the section's first child so it fills the whole snap
+   * stage behind the content; the component itself owns its
+   * `absolute inset-0 -z-10` positioning.
+   */
+  background?: ReactNode;
   /** Forwarded for special cases (the SelectedWork backdrop). */
   className?: string;
   /** Optional data attribute used by tests / debugging. */
@@ -56,6 +63,7 @@ export function HomeSection({
   tone = "default",
   snap = true,
   children,
+  background,
   className,
   dataSection,
 }: HomeSectionProps) {
@@ -76,7 +84,8 @@ export function HomeSection({
         className,
       )}
     >
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      {background}
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {(eyebrow || heading || lede || action) && (
           <header className="grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
             <div className="max-w-2xl">
