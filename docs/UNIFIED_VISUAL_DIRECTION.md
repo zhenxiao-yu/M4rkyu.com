@@ -988,3 +988,39 @@ redesign isn't done:
 
 Validation: `npm run validate && npm run build-storybook && npm run test:e2e`.
 All must be silent / green. PR scope: ~4 files touched, ~60 lines net added.
+
+## 15. Warm-hand layer (2026 direction)
+
+An evolution of the 70/20/10 split, **not** a replacement: the cyber
+machine stays, but a **human hand** now inhabits it. Target feel: indie
+creative hacker magazine / personal archive / digital sketchbook — "a
+creative guy with taste," not a SaaS founder dashboard. Roughly 70%
+machine / 30% human hand.
+
+Foundation (built first; applied per-surface after):
+
+- **Type** — `--font-hand` (Shantell Sans → `font-hand`), an English-only
+  marker/handwritten face wired through `next/font` in
+  [src/app/layout.tsx](../src/app/layout.tsx) and the `:lang(zh)` CJK
+  guard in [src/app/globals.css](../src/app/globals.css). Marginalia,
+  captions, and asides only — never body or headings.
+- **Primitives** — `src/components/ui/sketch/`:
+  - `Scribble` — hand-drawn marker marks (underline / circle / strike /
+    arrow / box / scratch); CSS draw-on (`.scribble-draw`), reduced-motion
+    safe; default `--ring` accent.
+  - `HandNote` / `HandCaption` — tilted handwritten asides + photo
+    captions in `font-hand`.
+  - `Polaroid` — taped, tilted print (fixed cream paper so it reads as a
+    physical print on both themes), grayscale → color on hover,
+    handwritten caption, honest "photo soon" placeholder.
+- **Texture** — reuse `.noise-layer` (paper grain); tape + torn edges via
+  `clip-path`.
+- **Voice** — see [docs/COPY_VOICE.md §11](./COPY_VOICE.md). Warm the
+  system-y microcopy to first-person; keep the HUD *styling*.
+
+Usage discipline: the hand is the **10–30% warm interruption** layered
+over the cold grid — a Polaroid taped to a corner, a margin scribble next
+to a HUD readout, a circled number. Screenshot test: it should read as
+*one person's sketchbook running on a precise machine*, not as pure
+terminal nor pure scrapbook. Keep the single `--ring` accent; the warmth
+comes from type, texture, photos, and voice, not new colors.

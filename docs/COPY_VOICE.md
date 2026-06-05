@@ -226,3 +226,31 @@ This doc is consulted whenever copy is added or edited in:
 - Page-level metadata (`<title>`, OG description)
 
 Reviewers should reject copy changes that fail the tone test in §6.
+
+## 11. Cold machine, warm hand (2026 direction)
+
+The site keeps its black-and-white cyber skin — galaxy, binary, grids,
+command palette, HUD, motion — but stops letting the _machine_ be the
+only voice. Target feel: **indie creative hacker magazine / personal
+archive / digital sketchbook / a cool friend's weird website**, not a
+"genius founder dashboard." The most attractive, believable read is
+_"a creative guy who builds cool internet things and has taste,"_ not
+_"I am a visionary."_ Roughly **70% machine / 30% human hand.**
+
+Copy rules that follow:
+
+- **First person, always.** One person built all of this; the copy should
+  sound like them, not an institution. Prefer "stuff I shipped," "still
+  cooking," "the live ones" over "production entries," "in development or
+  planned," "archive status."
+- **Warm the words, keep the styling.** Eyebrows, status readouts, and
+  section titles should read like a person curating, not a database
+  querying. Keep the mono/HUD _look_; soften the _language_.
+- **Leave the jokes in.** A real aside, a self-aware footnote, a changelog
+  line that's funny — anything that passes tone-test line 5 (§6).
+- **The hand annotates; it never replaces.** Handwritten marginalia
+  (`--font-hand`, the `src/components/ui/sketch/*` primitives) and taped
+  photos are _warm interruptions_ over the cold grid — decoration and
+  voice, never the primary navigation.
+
+Visual side: `docs/UNIFIED_VISUAL_DIRECTION.md §15`.
