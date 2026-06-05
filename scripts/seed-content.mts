@@ -50,6 +50,13 @@ import {
 import { profile as staticProfile } from "../src/content/profile.ts";
 
 const APPLY = process.argv.includes("--apply");
+// Optional single-table scope so re-seeding one source (e.g. projects)
+// can't clobber admin edits in the others. Matches the `name` passed to
+// seed() below. Usage: `--only=projects`.
+const ONLY = (() => {
+  const arg = process.argv.find((a) => a.startsWith("--only="));
+  return arg ? arg.slice("--only=".length) : null;
+})();
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
 // Accept either the legacy service_role JWT or the new sb_secret_*
 // secret key — both bypass RLS for the corresponding key system.
@@ -93,6 +100,11 @@ function mapProject(p: (typeof allProjects)[number], i: number) {
     next_steps: p.nextSteps,
     live_url: p.liveUrl ?? null,
     github_url: p.githubUrl ?? null,
+    // Cover from the static screenshots[0] — a public /project-covers/*
+    // path. Without this the seeded rows render the "media TBD"
+    // placeholder, which is why the DB-backed home looked cover-less.
+    cover_image_src: p.screenshots[0]?.src ?? null,
+    cover_image_alt: p.screenshots[0]?.alt ?? "",
     seo_title: p.seo.title,
     seo_description: p.seo.description,
     sort_order: i,
@@ -236,6 +248,7 @@ async function seed(
   rows: unknown[],
   conflict: string,
 ) {
+  if (ONLY && name !== ONLY) return;
   console.log(
     `[${name}] ${APPLY ? "Upserting" : "Would upsert"} ${rows.length} row(s) → ${table} (onConflict=${conflict})`,
   );
@@ -278,7 +291,7 @@ await seed(
   galleryCollections.map(mapCollection),
   "slug",
 );
-if (APPLY) {
+if (APPLY && (!ONLY || ONLY === "gallery_items")) {
   const { data, error } = await sb
     .from("gallery_collections")
     .select("id, slug");
@@ -301,7 +314,7 @@ if (APPLY) {
       "collection_id,slug",
     );
   }
-} else {
+} else if (!ONLY || ONLY === "gallery_items") {
   console.log(
     `[gallery_items] Would upsert ${galleryItems.length} row(s) → gallery_items (onConflict=collection_id,slug)`,
   );
