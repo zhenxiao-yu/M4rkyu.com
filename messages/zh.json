@@ -454,8 +454,8 @@
     "notesEyebrow": "设计笔记",
     "notesTitle": "工作记录",
     "archiveStatus": "档案状态",
-    "production": "已上线条目",
-    "draft": "开发中或计划中",
+    "production": "已上线",
+    "draft": "还在做",
     "noClaims": "不包含虚构的平台、奖项或构建声明。",
     "coverTbd": "游戏封面待定",
     "decorative": "玩",
@@ -495,7 +495,18 @@
     "moreFromCategory": "更多同类案例即将上线。",
     "previous": "上一篇",
     "next": "下一篇",
-    "backToArchive": "返回档案"
+    "backToArchive": "返回档案",
+    "overview": "这是什么",
+    "screenshots": "界面一览",
+    "builtWith": "技术栈",
+    "highlights": "亮点功能",
+    "underTheHood": "实现细节",
+    "roadmap": "规划与心得",
+    "onThisPage": "本页导航",
+    "timeline": "周期",
+    "platforms": "平台",
+    "viewLarger": "查看",
+    "closeGallery": "关闭"
   },
   "Blog": {
     "eyebrow": "随笔",
@@ -1078,6 +1089,10 @@
     "changelogDescription": "m4rkyu.com 的公开发布记录与仓库变更。",
     "colophonTitle": "关于本站",
     "colophonDescription": "这个 Next.js 作品集背后的技术栈、系统与设计取舍。",
+    "privacyTitle": "隐私政策",
+    "privacyDescription": "m4rkyu.com 如何收集、使用和保护你的信息，以及你拥有的选择。",
+    "termsTitle": "使用条款",
+    "termsDescription": "使用 m4rkyu.com 的条款：内容权利、可接受的使用方式及法律基础。",
     "topicsTitle": "主题",
     "topicsDescription": "按共享主题浏览全站的项目、笔记与工具。",
     "searchTitle": "搜索",
@@ -1189,6 +1204,8 @@
     "linkContact": "联系",
     "linkChangelog": "更新日志",
     "linkColophon": "技术说明",
+    "linkPrivacy": "隐私",
+    "linkTerms": "条款",
     "linkResume": "简历",
     "resumePending": "筹备中",
     "wordmarkSince": "始于 2024",
@@ -1216,7 +1233,116 @@
     "analyticsDescription": "匿名页面与性能信号，用于改进网站。",
     "personalizationTitle": "个性化",
     "personalizationDescription": "在此设备上记住可选界面偏好。",
+    "policyLink": "阅读隐私政策",
     "save": "保存偏好"
+  },
+  "PrivacyPolicy": {
+    "eyebrow": "隐私",
+    "updated": "最后更新",
+    "updatedDate": "2026 年 6 月",
+    "intro": "本站是个人作品集。这份隐私政策说明本站会收集哪些信息、为何收集，以及你拥有的选择。简而言之：只在你使用某项功能时收集该功能所必需的信息，分析统计在你主动同意前不会启用，且绝不出售任何数据。",
+    "s": {
+      "controller": {
+        "h": "由谁负责",
+        "p": "本站由于震潇（ZhenXiao Mark Yu）以个人身份运营，常驻加拿大安大略省，背后没有公司。如对隐私有任何疑问，可通过本页底部的邮箱与我联系。"
+      },
+      "collect": {
+        "h": "收集哪些信息",
+        "p": "本站大部分内容无需提供任何信息即可浏览——你可以匿名访问所有页面。只有在某项具体功能需要时才会收集信息，例如：发送留言、订阅邮件、同意分析统计、使用助手，或登录后发表评论。"
+      },
+      "forms": {
+        "h": "联系表单与邮件订阅",
+        "p": "联系表单会通过 Resend 以电子邮件形式发送你的姓名、邮箱和留言，以便我回复，不会存入数据库。邮件订阅采用双重确认（你需点击确认链接），你的邮箱会保存在 Resend，直到你退订；你可以在任意一封邮件中退订。"
+      },
+      "analytics": {
+        "h": "分析统计与 Cookie",
+        "p": "分析统计（Vercel Analytics 与 Speed Insights）用于匿名衡量页面访问与性能，且只有在你于 Cookie 提示中接受后才会加载——默认是关闭的。你的同意选择会保存在一个小型 Cookie 和本地存储中，连同主题等可选偏好一并保留在你的设备上。"
+      },
+      "ai": {
+        "h": "AI 助手",
+        "p": "当你使用站内助手时，你的消息会发送至 DeepSeek 以生成回复。本站不会保存你的提问，并对每位访客设有频率限制。请不要在其中输入敏感的个人信息。"
+      },
+      "accounts": {
+        "h": "可选账户",
+        "p": "登录是可选的，由 Supabase 提供支持。若你创建账户以发表评论或收藏内容，系统会保存你的用户名、基本资料、评论和收藏项，直到你删除它们。"
+      },
+      "processors": {
+        "h": "服务提供方",
+        "p": "若干受信任的服务商代我处理数据：Vercel（托管与注重隐私的分析）、Resend（联系表单与邮件订阅的邮件发送）、DeepSeek（生成助手回复）、Supabase（可选账户与评论）、以及 Cloudflare（表单的反垃圾保护）。其中部分服务商会在加拿大境外处理数据，包括美国与欧盟。"
+      },
+      "retention": {
+        "h": "数据保留多久",
+        "p": "联系留言仅在处理你的咨询所需的时间内保留于我的邮箱。邮件订阅在你退订前一直保留。账户数据在你删除账户前一直保留。分析统计的保留遵循 Vercel 自身的政策。"
+      },
+      "rights": {
+        "h": "你的选择与权利",
+        "p": "你可以要求访问、更正或删除你的信息，随时在 Cookie 提示中撤回分析统计的同意，并通过任意邮件中的链接退订。给我发邮件，我会在合理时间内、依据加拿大隐私法（PIPEDA）作出回应。"
+      },
+      "children": {
+        "h": "儿童",
+        "p": "本站并非面向 13 岁以下儿童，我也不会有意收集他们的信息。"
+      },
+      "changes": {
+        "h": "政策的变更",
+        "p": "我可能会随着本站的变化更新本政策；上方日期始终对应最新版本，重大变更会在此说明。"
+      },
+      "contact": {
+        "h": "联系方式",
+        "p": "对隐私有疑问，或希望行使上述任一选择？给我发邮件："
+      }
+    }
+  },
+  "Terms": {
+    "eyebrow": "条款",
+    "updated": "最后更新",
+    "updatedDate": "2026 年 6 月",
+    "intro": "本条款适用于你对 m4rkyu.com 的使用。本站是由于震潇（ZhenXiao Mark Yu）以个人身份运营的个人作品集，常驻加拿大安大略省。使用本站即表示你同意这些条款。",
+    "s": {
+      "use": {
+        "h": "使用本站",
+        "p": "欢迎你出于个人、合法的目的浏览、阅读和分享本站。请勿滥用本站，包括滥用表单、过度抓取，或试图干扰或破坏其安全。"
+      },
+      "ip": {
+        "h": "内容与知识产权",
+        "p": "本站的文字、艺术作品、设计、照片和案例研究版权归于震潇（ZhenXiao Mark Yu）所有，保留一切权利；未经许可请勿转用。本站的源代码则另当别论——它以 MIT 许可证开源："
+      },
+      "comments": {
+        "h": "评论与提交",
+        "p": "若你发表评论或提交内容，请保持合法与文明。评论需经审核，可能被编辑或删除，我也可自行决定拒绝或移除任何内容。"
+      },
+      "ai": {
+        "h": "AI 助手",
+        "p": "站内助手生成的是自动回答，可能不完整或有误。请将其视为便利工具，而非专业建议，重要内容请自行核实。"
+      },
+      "links": {
+        "h": "第三方链接",
+        "p": "本站链接到我无法控制的外部网站和服务。我不对其内容、政策或可用性负责。"
+      },
+      "warranty": {
+        "h": "不提供担保",
+        "p": "本站按「现状」与「现有」提供，不附带任何形式的担保。我不保证其不中断、无差错或适用于特定用途。"
+      },
+      "liability": {
+        "h": "责任限制",
+        "p": "在法律允许的最大范围内，对于因使用或无法使用本站而产生的任何损害，我概不负责。"
+      },
+      "privacy": {
+        "h": "隐私",
+        "p": "本站如何处理你的信息，另见隐私政策："
+      },
+      "law": {
+        "h": "适用法律",
+        "p": "本条款受加拿大安大略省法律及其适用的加拿大联邦法律管辖，不考虑法律冲突规则。"
+      },
+      "changes": {
+        "h": "条款的变更",
+        "p": "我可能会不时更新这些条款；上方日期对应最新版本，继续使用本站即表示你接受当前条款。"
+      },
+      "contact": {
+        "h": "联系方式",
+        "p": "对这些条款有疑问？给我发邮件："
+      }
+    }
   },
   "Notifications": {
     "label": "通知",
@@ -1797,10 +1923,34 @@
     "section": {
       "basics": "基础信息",
       "caseStudy": "案例细节",
+      "product": "产品信息",
       "links": "链接",
       "cover": "封面图",
+      "screenshots": "截图",
       "seo": "SEO"
     },
+    "taglineLabel": "一句话标语",
+    "taglineHint": "显示在标题下方的一句话简介。留空时回退到短简介。",
+    "timelineLabel": "周期",
+    "timelineHint": "例如 “3 周 · 2024”。显示在侧栏规格表中。",
+    "platformsLabel": "平台",
+    "platformsHint": "例如 Web、iOS。每行一条。显示在侧栏规格表中。",
+    "stackGroupsLabel": "分组技术栈",
+    "stackGroupsHint": "每行一组：“前端: Next.js, TypeScript, Tailwind”。留空时回退到普通技术栈。",
+    "screenshotAddTitle": "添加截图",
+    "screenshotAdd": "添加截图",
+    "screenshotLabelLabel": "标签",
+    "screenshotLabelHint": "截图下方的简短标签，例如 “仪表盘”。",
+    "screenshotCaptionLabel": "说明",
+    "screenshotAltLabel": "替代文本",
+    "screenshotSave": "保存",
+    "screenshotDelete": "删除",
+    "screenshotDeleteConfirm": "删除这张截图？会从存储中移除文件，且不可撤销。",
+    "screenshotMoveUp": "上移",
+    "screenshotMoveDown": "下移",
+    "screenshotsEmpty": "还没有截图。在下方上传——文件存入 Supabase 存储，不进仓库。",
+    "screenshotImageLabel": "上传截图",
+    "screenshotImageHint": "任意图片。上传前会压缩为 WebP，存入 content-images 存储桶。",
     "titleLabel": "标题",
     "slugLabel": "Slug",
     "slugHint": "仅限小写字母、数字、连字符。用于 URL。",

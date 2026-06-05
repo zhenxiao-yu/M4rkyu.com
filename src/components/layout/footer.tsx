@@ -364,6 +364,31 @@ export async function Footer({ locale }: { locale: Locale }) {
                 <MapPin className="size-3 opacity-70" aria-hidden="true" />
                 {t("locationLine")}
               </span>
+              <span aria-hidden="true" className="hidden sm:inline">
+                ·
+              </span>
+              <span className="flex items-center gap-3">
+                <Link
+                  href="/privacy"
+                  locale={locale}
+                  className={cn(
+                    "rounded-sm transition-colors hover:text-foreground",
+                    FOCUS_RING,
+                  )}
+                >
+                  {t("linkPrivacy")}
+                </Link>
+                <Link
+                  href="/terms"
+                  locale={locale}
+                  className={cn(
+                    "rounded-sm transition-colors hover:text-foreground",
+                    FOCUS_RING,
+                  )}
+                >
+                  {t("linkTerms")}
+                </Link>
+              </span>
             </div>
 
             <ul

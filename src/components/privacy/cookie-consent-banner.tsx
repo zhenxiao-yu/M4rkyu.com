@@ -3,6 +3,7 @@
 import { useSyncExternalStore, useState } from "react";
 import { Check, Cookie, Settings2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
   DEFAULT_CONSENT,
@@ -56,6 +57,15 @@ export function CookieConsentBanner() {
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             {t("description")}
           </p>
+          <Link
+            href="/privacy"
+            className={cn(
+              "mt-2 inline-flex w-fit items-center text-xs font-medium text-foreground underline-offset-4 transition-colors hover:text-ring hover:underline",
+              FOCUS_RING_INSET,
+            )}
+          >
+            {t("policyLink")}
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">

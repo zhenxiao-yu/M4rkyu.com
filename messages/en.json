@@ -454,8 +454,8 @@
     "notesEyebrow": "Design notes",
     "notesTitle": "Working notes",
     "archiveStatus": "Archive status",
-    "production": "production entries",
-    "draft": "in development or planned",
+    "production": "shipped",
+    "draft": "still cooking",
     "noClaims": "No fabricated platforms, awards, or build claims included.",
     "coverTbd": "GAME COVER TBD",
     "decorative": "PLAY",
@@ -495,7 +495,18 @@
     "moreFromCategory": "More case studies from this category coming soon.",
     "previous": "Previous",
     "next": "Next",
-    "backToArchive": "Back to archive"
+    "backToArchive": "Back to archive",
+    "overview": "What it is",
+    "screenshots": "What it looks like",
+    "builtWith": "Built with",
+    "highlights": "Highlights",
+    "underTheHood": "Under the hood",
+    "roadmap": "Roadmap & lessons",
+    "onThisPage": "On this page",
+    "timeline": "Timeline",
+    "platforms": "Platforms",
+    "viewLarger": "View",
+    "closeGallery": "Close"
   },
   "Blog": {
     "eyebrow": "field notes",
@@ -1078,6 +1089,10 @@
     "changelogDescription": "Public release notes and repository changes for m4rkyu.com.",
     "colophonTitle": "About this site",
     "colophonDescription": "The stack, systems, and craft decisions behind this Next.js portfolio.",
+    "privacyTitle": "Privacy Policy",
+    "privacyDescription": "How m4rkyu.com collects, uses, and protects your information — and the choices you have.",
+    "termsTitle": "Terms of Use",
+    "termsDescription": "The terms for using m4rkyu.com: content rights, acceptable use, and the legal basics.",
     "topicsTitle": "Topics",
     "topicsDescription": "Browse every project, note, and tool by shared topic.",
     "searchTitle": "Search",
@@ -1189,6 +1204,8 @@
     "linkContact": "Contact",
     "linkChangelog": "Changelog",
     "linkColophon": "Colophon",
+    "linkPrivacy": "Privacy",
+    "linkTerms": "Terms",
     "linkResume": "Resume",
     "resumePending": "pending",
     "wordmarkSince": "Crafted since 2024",
@@ -1216,7 +1233,116 @@
     "analyticsDescription": "Anonymous page and performance signals that help improve the site.",
     "personalizationTitle": "Personalization",
     "personalizationDescription": "Remember optional interface preferences on this device.",
+    "policyLink": "Read the privacy policy",
     "save": "Save preferences"
+  },
+  "PrivacyPolicy": {
+    "eyebrow": "Privacy",
+    "updated": "Last updated",
+    "updatedDate": "June 2026",
+    "intro": "This site is a personal portfolio. This policy explains what information it collects, why, and the choices you have. The short version: it collects only what a feature you use needs, analytics stay off until you opt in, and nothing is ever sold.",
+    "s": {
+      "controller": {
+        "h": "Who's responsible",
+        "p": "The site is run by ZhenXiao Mark Yu, an individual based in Ontario, Canada — there's no company behind it. For any privacy question you can reach me at the email at the bottom of this page."
+      },
+      "collect": {
+        "h": "What I collect",
+        "p": "Most of the site works without giving up anything — you can browse every page anonymously. Information is only collected when a specific feature needs it: sending a message, subscribing to the newsletter, opting into analytics, asking the assistant, or signing in to comment."
+      },
+      "forms": {
+        "h": "Contact form & newsletter",
+        "p": "The contact form sends your name, email, and message by email through Resend so I can reply; it isn't stored in a database. The newsletter uses double opt-in — you confirm by clicking a link — and your email is kept by Resend until you unsubscribe, which you can do from any email."
+      },
+      "analytics": {
+        "h": "Analytics & cookies",
+        "p": "Analytics (Vercel Analytics and Speed Insights) measure anonymous page views and performance, and they load only after you accept them in the cookie banner — they're off by default. Your consent choice is remembered in a small cookie and in local storage, along with optional preferences like theme; these stay on your device."
+      },
+      "ai": {
+        "h": "The AI assistant",
+        "p": "When you use the on-site assistant, your message is sent to DeepSeek to generate a reply. This site doesn't store your prompts, and a rate limit applies per visitor. Please don't enter sensitive personal information into it."
+      },
+      "accounts": {
+        "h": "Optional accounts",
+        "p": "Signing in is optional and powered by Supabase. If you create an account to comment or save items, it stores your username, basic profile, comments, and saved items until you delete them."
+      },
+      "processors": {
+        "h": "Service providers",
+        "p": "A few trusted providers process data on my behalf: Vercel (hosting and privacy-friendly analytics), Resend (email for the contact form and newsletter), DeepSeek (generates the assistant's replies), Supabase (optional accounts and comments), and Cloudflare (spam protection on forms). Some of them process data outside Canada, including in the United States and the EU."
+      },
+      "retention": {
+        "h": "How long data is kept",
+        "p": "Contact messages live in my email only as long as needed to handle your enquiry. Newsletter subscriptions are kept until you unsubscribe. Account data is kept until you delete your account. Analytics are retained according to Vercel's own policy."
+      },
+      "rights": {
+        "h": "Your choices and rights",
+        "p": "You can ask to access, correct, or delete your information, withdraw analytics consent at any time from the cookie banner, and unsubscribe from the newsletter using the link in any email. Email me and I'll respond within a reasonable time, consistent with Canadian privacy law (PIPEDA)."
+      },
+      "children": {
+        "h": "Children",
+        "p": "This site isn't directed at children under 13, and I don't knowingly collect their information."
+      },
+      "changes": {
+        "h": "Changes to this policy",
+        "p": "I may update this policy as the site changes; the date above always reflects the latest version, and significant changes will be noted here."
+      },
+      "contact": {
+        "h": "Contact",
+        "p": "Questions about privacy, or want to exercise any of the choices above? Email me:"
+      }
+    }
+  },
+  "Terms": {
+    "eyebrow": "Terms",
+    "updated": "Last updated",
+    "updatedDate": "June 2026",
+    "intro": "These terms cover your use of m4rkyu.com, a personal portfolio run by ZhenXiao Mark Yu, an individual based in Ontario, Canada. By using the site you agree to them.",
+    "s": {
+      "use": {
+        "h": "Using this site",
+        "p": "You're welcome to browse, read, and share the site for personal, lawful purposes. Please don't misuse it — that includes abusing the forms, scraping it aggressively, or attempting to disrupt or break its security."
+      },
+      "ip": {
+        "h": "Content & intellectual property",
+        "p": "The writing, artwork, designs, photographs, and case studies on this site are © ZhenXiao Mark Yu, all rights reserved; please don't reuse them without permission. The site's source code is a separate matter — it's open source under the MIT License:"
+      },
+      "comments": {
+        "h": "Comments & submissions",
+        "p": "If you post a comment or submit content, keep it lawful and civil. Comments are moderated and may be edited or removed, and I may decline or remove anything at my discretion."
+      },
+      "ai": {
+        "h": "The AI assistant",
+        "p": "The on-site assistant generates automated answers that can be incomplete or wrong. Treat them as a convenience, not professional advice, and verify anything important."
+      },
+      "links": {
+        "h": "Third-party links",
+        "p": "The site links to external sites and services I don't control. I'm not responsible for their content, policies, or availability."
+      },
+      "warranty": {
+        "h": "No warranty",
+        "p": "The site is provided \"as is\" and \"as available,\" without warranties of any kind. I don't guarantee it will be uninterrupted, error-free, or fit for a particular purpose."
+      },
+      "liability": {
+        "h": "Limitation of liability",
+        "p": "To the fullest extent permitted by law, I'm not liable for any damages arising from your use of — or inability to use — the site."
+      },
+      "privacy": {
+        "h": "Privacy",
+        "p": "How the site handles your information is described separately in the Privacy Policy:"
+      },
+      "law": {
+        "h": "Governing law",
+        "p": "These terms are governed by the laws of the Province of Ontario and the federal laws of Canada that apply there, without regard to conflict-of-laws rules."
+      },
+      "changes": {
+        "h": "Changes to these terms",
+        "p": "I may update these terms from time to time; the date above reflects the latest version, and continued use of the site means you accept the current terms."
+      },
+      "contact": {
+        "h": "Contact",
+        "p": "Questions about these terms? Email me:"
+      }
+    }
   },
   "Notifications": {
     "label": "Notifications",
@@ -1797,10 +1923,34 @@
     "section": {
       "basics": "Basics",
       "caseStudy": "Case study",
+      "product": "Product",
       "links": "Links",
       "cover": "Cover image",
+      "screenshots": "Screenshots",
       "seo": "SEO"
     },
+    "taglineLabel": "Tagline",
+    "taglineHint": "App-store one-liner shown under the title. Falls back to the short pitch.",
+    "timelineLabel": "Timeline",
+    "timelineHint": "e.g. \"3 weeks · 2024\". Shown in the spec rail.",
+    "platformsLabel": "Platforms",
+    "platformsHint": "e.g. Web, iOS. One per line. Shown in the spec rail.",
+    "stackGroupsLabel": "Grouped stack",
+    "stackGroupsHint": "One group per line: \"Frontend: Next.js, TypeScript, Tailwind\". Falls back to the flat stack.",
+    "screenshotAddTitle": "Add a screenshot",
+    "screenshotAdd": "Add screenshot",
+    "screenshotLabelLabel": "Label",
+    "screenshotLabelHint": "Short chip under the shot, e.g. \"Dashboard\".",
+    "screenshotCaptionLabel": "Caption",
+    "screenshotAltLabel": "Alt text",
+    "screenshotSave": "Save",
+    "screenshotDelete": "Delete",
+    "screenshotDeleteConfirm": "Delete this screenshot? Removes the file from storage. Cannot be undone.",
+    "screenshotMoveUp": "Move up",
+    "screenshotMoveDown": "Move down",
+    "screenshotsEmpty": "No screenshots yet. Upload one below — it lands in Supabase Storage, not the repo.",
+    "screenshotImageLabel": "Upload screenshot",
+    "screenshotImageHint": "Any image. Downscaled to WebP before upload. Stored in the content-images bucket.",
     "titleLabel": "Title",
     "slugLabel": "Slug",
     "slugHint": "Lowercase letters, numbers, hyphens. Used in the URL.",
