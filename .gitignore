@@ -54,6 +54,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 runtime-errors.log
+# local UI debug screenshots (e.g. language-selector hover/rest captures)
+/.lang-*.png
+/*.debug.png
 
 # editor / IDE
 .vscode/
