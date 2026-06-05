@@ -9,7 +9,7 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 const tileBase =
-  "relative flex h-full flex-col gap-3 rounded-lg glass-surface p-5";
+  "relative flex h-full flex-col gap-3 rounded-lg glass-surface p-4 sm:p-5";
 const tileLabel =
   "font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground";
 
@@ -65,9 +65,9 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
         </Link>
       }
     >
-      <BentoGrid className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <BentoGrid className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
         {/* Currently feed. */}
-        <Tile pattern="dots" span="md:col-span-2">
+        <Tile pattern="dots" span="col-span-2">
           <span className={tileLabel}>{t("currentlyLabel")}</span>
           <ul className="grid gap-2.5">
             {profile.currently.map((entry) => (
@@ -113,7 +113,7 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
         </Tile>
 
         {/* Core stack. */}
-        <Tile pattern="scanline" span="md:col-span-2">
+        <Tile pattern="scanline" span="col-span-2">
           <span className={tileLabel}>{t("stackLabel")}</span>
           <ul className="flex flex-wrap gap-1.5">
             {stack.map((skill) => (

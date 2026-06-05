@@ -49,7 +49,7 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
       }
     >
       {/* Count signal. */}
-      <Stagger className="mb-6 flex flex-wrap gap-2">
+      <Stagger className="mb-5 flex flex-wrap gap-2 sm:mb-6">
         {[t("toolsCount", { count: toolCount }), t("linksCount", { count: linkCount })].map(
           (label) => (
             <StaggerItem
@@ -63,7 +63,7 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
         )}
       </Stagger>
 
-      <BentoGrid className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <BentoGrid className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-3">
         {picks.map((resource) => (
           <BentoFx key={resource.slug} pattern="cyber-grid" className="h-full">
             <a
@@ -71,13 +71,13 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "group flex h-full items-start gap-3 rounded-lg glass-surface glass-interactive p-4",
+                "group flex h-full items-start gap-2.5 rounded-lg glass-surface glass-interactive p-3 sm:gap-3 sm:p-4",
                 FOCUS_RING,
               )}
             >
               <span
                 aria-hidden="true"
-                className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-md border border-border/60 bg-background/80 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:border-ring/50 group-hover:text-foreground"
+                className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md border border-border/60 bg-background/80 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:border-ring/50 group-hover:text-foreground sm:size-9"
               >
                 <ToolIcon iconKey={resource.iconKey} tags={resource.tags} className="size-4" />
               </span>

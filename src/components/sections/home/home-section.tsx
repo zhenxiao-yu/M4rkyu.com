@@ -95,7 +95,7 @@ export function HomeSection({
                 </p>
               ) : null}
               {heading ? (
-                <h2 className="mt-4 font-heading text-balance text-4xl font-semibold leading-[1.02] tracking-normal sm:text-5xl lg:text-6xl">
+                <h2 className="mt-3 font-heading text-balance text-[2rem] font-semibold leading-[1.04] tracking-normal sm:mt-4 sm:text-5xl sm:leading-[1.02] lg:text-6xl">
                   {heading}
                 </h2>
               ) : null}
@@ -112,7 +112,7 @@ export function HomeSection({
         )}
         <div
           className={cn(
-            (eyebrow || heading || lede) && "mt-10 sm:mt-12 lg:mt-14",
+            (eyebrow || heading || lede) && "mt-8 sm:mt-12 lg:mt-14",
           )}
         >
           {children}
