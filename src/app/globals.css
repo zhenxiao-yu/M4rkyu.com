@@ -309,6 +309,12 @@
   --font-cjk:
     "Noto Sans SC", "Noto Sans SC Fallback", "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", sans-serif;
+  /* The warm hand — see src/app/layout.tsx (Shantell Sans). Used for
+   * marginalia, photo captions, and casual asides over the cyber machine.
+   * Chained through CJK so /zh degrades to the deliberate CJK face. */
+  --font-hand:
+    "Shantell Sans", "Shantell Sans Fallback", "Bradley Hand", "Comic Sans MS",
+    var(--font-cjk), cursive;
 }
 
 [data-theme="dark"] {
@@ -359,6 +365,7 @@
   --font-heading: var(--font-cjk);
   --font-sans: var(--font-cjk);
   --font-pixel: var(--font-cjk);
+  --font-hand: var(--font-cjk);
 }
 
 * {
@@ -562,6 +569,28 @@ body {
 ::selection {
   background: var(--foreground);
   color: var(--background);
+}
+
+/* ── Touch ergonomics ─────────────────────────────────────────────────
+ * Site-wide tap hygiene. Removes the native grey/blue tap-flash box (the
+ * cheapest-looking mobile tell), drops the legacy 300ms click delay +
+ * double-tap-zoom on controls, and suppresses the iOS long-press callout
+ * on app-like buttons. Scroll containers (horizontal rails, snap panes)
+ * are intentionally not listed, so native panning is untouched. */
+a,
+button,
+[role="button"],
+label,
+summary,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button,
+[role="button"] {
+  -webkit-touch-callout: none;
 }
 
 .bg-cyber-grid {
@@ -853,6 +882,36 @@ html {
   }
 }
 
+/* Touch press feedback. Pointer-fine devices get the hover lift above;
+ * pointers with no hover get an equivalent *press* instead — a quick
+ * scale-in + ring brighten on :active, so tapping a card highlights under
+ * the finger the way a native list cell does. Split so the colour
+ * affordance still reaches reduced-motion users while only the scale is
+ * gated behind motion preference. */
+@media (hover: none) {
+  .glass-interactive:active {
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      inset 0 0 0 1px color-mix(in srgb, var(--ring) 55%, transparent),
+      var(--glass-shadow);
+  }
+}
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .glass-interactive:active {
+    transform: scale(0.97);
+    transition-duration: var(--motion-fast);
+  }
+
+  /* App-like depress for every other native control (carousel arrows,
+   * console keys, nav toggles, icon buttons) without touching each
+   * component. Disabled controls stay put. */
+  button:not(:disabled):active,
+  [role="button"]:not([aria-disabled="true"]):active {
+    transform: scale(0.96);
+    transition: transform var(--motion-fast) var(--ease-premium);
+  }
+}
+
 /* No backdrop-filter support → opaque card so text never floats on a
  * transparent panel. */
 @supports not (
@@ -1032,6 +1091,26 @@ html {
 @keyframes section-scan {
   to {
     background-position-y: 12px;
+  }
+}
+
+/* Hand-drawn "marker" draw-on for <Scribble>. Each path declares
+ * pathLength="1" so a single dash setup works for any shape: hide the
+ * stroke, then sweep it on. Motion-safe only — reduced-motion leaves the
+ * full stroke painted, no setup, no animation. */
+@media (prefers-reduced-motion: no-preference) {
+  .scribble-draw path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: scribble-draw 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s both;
+  }
+  .scribble-draw path:nth-child(2) {
+    animation-delay: 0.32s;
+  }
+}
+@keyframes scribble-draw {
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

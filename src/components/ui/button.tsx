@@ -5,7 +5,7 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 disabled:pointer-events-none disabled:opacity-50 disabled:motion-safe:hover:translate-y-0",
+    "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 disabled:motion-safe:hover:translate-y-0 disabled:motion-safe:active:scale-100",
     FOCUS_RING,
   ),
   {
