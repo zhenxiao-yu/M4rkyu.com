@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 // Perlin-noise line field with cursor repulsion (2D canvas, no WebGL). Theme-aware via MutationObserver on data-theme; reduced-motion paints one static frame; IntersectionObserver pauses off-screen. Port of ReactBits Waves (MIT).
@@ -118,6 +119,11 @@ export function Waves({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduce = useReducedMotion();
+  // Touch devices render one static wave frame, no canvas physics loop:
+  // the Perlin field redrawn every frame at devicePixelRatio is the
+  // costly part on high-DPI phones, and there's no cursor to repel.
+  const finePointer = useMediaQuery("(pointer: fine)");
+  const lite = reduce || !finePointer;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -302,7 +308,7 @@ export function Waves({
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
 
-    if (reduce) {
+    if (lite) {
       // One static frame, no ticker.
       movePoints(0);
       drawLines();
@@ -348,7 +354,7 @@ export function Waves({
     friction,
     tension,
     maxCursorMove,
-    reduce,
+    lite,
   ]);
 
   return (

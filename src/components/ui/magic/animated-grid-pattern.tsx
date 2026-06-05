@@ -97,7 +97,10 @@ export function AnimatedGridPattern({
     if (!node) return;
     const io = new IntersectionObserver(
       (entries) => setInView(entries[0]?.isIntersecting ?? true),
-      { rootMargin: "200px" },
+      // No rootMargin: in the full-page snap home the Ask section's grid
+      // would otherwise keep its per-cell state churn running while the
+      // user is several slides away. Pause it the moment it's offscreen.
+      { threshold: 0 },
     );
     io.observe(node);
     return () => io.disconnect();

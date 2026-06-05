@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "motion/react";
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 // WebGL starfield (OGL, ~12 kB) — single triangle + fragment shader. IntersectionObserver pauses RAF off-screen; reduced-motion / disableAnimation = one static frame. Port of ReactBits Galaxy (MIT).
@@ -221,7 +222,15 @@ export function Galaxy({
   const targetActive = useRef(0);
   const smoothActive = useRef(0);
   const reduce = useReducedMotion();
-  const staticFrame = disableAnimation || reduce;
+  // Coarse-pointer (touch) devices fall back to a single static frame.
+  // The WebGL rAF loop + multi-layer shader are the heaviest thing on
+  // the page, mobile GPUs feel it, and the parallax has no cursor to
+  // track — so the starfield still paints, it just stops animating
+  // (same treatment as reduced-motion). `serverFallback` is the hook
+  // default (false → static until hydration confirms a fine pointer),
+  // so SSR markup is stable and desktop upgrades after mount.
+  const finePointer = useMediaQuery("(pointer: fine)");
+  const staticFrame = disableAnimation || reduce || !finePointer;
 
   useEffect(() => {
     const ctn = ctnRef.current;

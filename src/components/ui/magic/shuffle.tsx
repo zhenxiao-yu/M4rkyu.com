@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 interface ShuffleProps {
@@ -44,11 +45,16 @@ export function Shuffle({
   className,
 }: ShuffleProps) {
   const reduce = useReducedMotion();
+  // On touch, "hover" is simulated on every tap (so the reel fires on
+  // each tap) and the loop runs regardless — render plain static text
+  // there instead, same as reduced-motion.
+  const finePointer = useMediaQuery("(pointer: fine)");
+  const inert = reduce || !finePointer;
   const chars = text.split("");
   const [pulses, setPulses] = useState<number[]>(() => chars.map(() => 0));
 
   const firePulse = useCallback(() => {
-    if (reduce) return;
+    if (inert) return;
     setPulses((prev) => {
       const eligible: number[] = [];
       for (let i = 0; i < chars.length; i += 1) {
@@ -65,15 +71,15 @@ export function Shuffle({
       }
       return prev.map((v, i) => (picks.has(i) ? v + 1 : v));
     });
-  }, [chars, density, reduce]);
+  }, [chars, density, inert]);
 
   useEffect(() => {
-    if (!loop || reduce) return;
+    if (!loop || inert) return;
     const id = setInterval(firePulse, loopDelay * 1000);
     return () => clearInterval(id);
-  }, [loop, loopDelay, firePulse, reduce]);
+  }, [loop, loopDelay, firePulse, inert]);
 
-  if (reduce) {
+  if (inert) {
     return (
       <span aria-label={text} className={cn("inline-block", className)}>
         <span aria-hidden="true">{text}</span>
