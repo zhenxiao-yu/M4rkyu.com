@@ -19,6 +19,11 @@ const projects = [
       "The product combines a Next.js interface, Appwrite-backed storage, OTP authentication, and compact analytics so the main file workflows stay fast and readable.",
     role: "Full-stack product engineer: interface architecture, authentication flow, storage workflows, responsive UI, and deployment.",
     stack: ["Next.js", "TypeScript", "Appwrite", "Tailwind CSS", "shadcn/ui", "Chart.js"],
+    stackGroups: [
+      { group: "Frontend", items: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"] },
+      { group: "Backend", items: ["Appwrite"] },
+      { group: "Data viz", items: ["Chart.js"] },
+    ],
     features: [
       "Secure file upload and organization",
       "OTP-based access flow",
@@ -69,6 +74,10 @@ const projects = [
       "BioLoom pairs a guided prompt structure with streaming generation and multi-model fallbacks (Gemini, Groq via the Vercel AI SDK), so users shape sharper, platform-specific bios — and can share the result.",
     role: "Frontend and AI product engineer: interaction flow, prompt surface, visual design, and deployment.",
     stack: ["Next.js", "TypeScript", "Vercel AI SDK", "Gemini", "Groq", "Tailwind CSS", "shadcn/ui"],
+    stackGroups: [
+      { group: "Frontend", items: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"] },
+      { group: "AI", items: ["Vercel AI SDK", "Gemini", "Groq"] },
+    ],
     features: [
       "Streaming generated bios",
       "Multi-model fallback (Gemini, Groq)",
@@ -118,6 +127,11 @@ const projects = [
       "The interface prioritizes live prices over WebSocket, DeFi analytics, portfolio tracking, and a searchable, comparison-first market table over decorative chart noise.",
     role: "Frontend engineer: data UI, table experience, responsive behavior, and API integration.",
     stack: ["React", "TypeScript", "TanStack Query", "WebSocket", "Vite", "Vercel"],
+    stackGroups: [
+      { group: "Frontend", items: ["React", "TypeScript", "Vite"] },
+      { group: "Data", items: ["TanStack Query", "WebSocket"] },
+      { group: "Infra", items: ["Vercel"] },
+    ],
     features: [
       "Live prices over WebSocket",
       "DeFi analytics and portfolio tracking",
@@ -168,6 +182,11 @@ const projects = [
       "A structured planning app, not a chatbot: a deterministic engine is the source of truth and works fully offline with no AI key and no photo — AI only rephrases the finished plan. Every plan is grounded in a region-aware catalog (Ontario-first), price bands instead of fake exact prices, material calculators that widen when you haven't measured, and per-phase how-to guides.",
     role: "Solo developer: planning engine, product UI, local-first storage, and optional cloud sync.",
     stack: ["Next.js", "React 19", "TypeScript", "Supabase", "TensorFlow.js", "Konva", "Tailwind CSS", "Zod"],
+    stackGroups: [
+      { group: "Frontend", items: ["Next.js", "React 19", "TypeScript", "Tailwind CSS", "Konva"] },
+      { group: "Backend", items: ["Supabase", "Zod"] },
+      { group: "ML", items: ["TensorFlow.js"] },
+    ],
     tags: ["planning", "local-first", "gardening", "deterministic"],
     features: [
       "Deterministic planning engine as the source of truth",
@@ -223,6 +242,11 @@ const projects = [
       "A single Next.js app pairing a real-time react-three-fiber 3D garment canvas with DALL·E 3 decal generation: pick colors, type a prompt, and watch the design appear on a rotating shirt. It consolidates an older Vite + Express monorepo into one deployable app, with the OpenAI calls living in Route Handlers instead of a separate server.",
     role: "Solo developer: 3D canvas, AI image route, reactive state, and the Next.js port.",
     stack: ["Next.js", "React", "react-three-fiber", "three.js", "Valtio", "OpenAI (DALL·E 3)", "Tailwind CSS"],
+    stackGroups: [
+      { group: "Frontend", items: ["Next.js", "React", "Tailwind CSS"] },
+      { group: "3D", items: ["react-three-fiber", "three.js", "Valtio"] },
+      { group: "AI", items: ["OpenAI (DALL·E 3)"] },
+    ],
     tags: ["3d", "ai", "image-generation", "customizer"],
     features: [
       "Real-time 3D garment customizer (react-three-fiber)",
@@ -275,6 +299,10 @@ const projects = [
       "Implemented in Unreal Engine 4 with Blueprint visual scripting and some C++, the prototype assembles inventory management, weapon handling, and the moment-to-moment systems a battle-royale loop needs.",
     role: "Solo developer: gameplay systems, Blueprint scripting, and integration.",
     stack: ["Unreal Engine 4", "Blueprints", "C++"],
+    stackGroups: [
+      { group: "Engine", items: ["Unreal Engine 4"] },
+      { group: "Scripting", items: ["Blueprints", "C++"] },
+    ],
     tags: ["battle-royale", "unreal-engine", "gamedev"],
     features: [
       "Inventory and pickup system",
@@ -326,6 +354,11 @@ const projects = [
       "Built in Unity 2022.3 with C#, the game pairs pixel-art combat with a roguelike structure of escalating encounters, published as a playable build on itch.io.",
     role: "Solo developer: gameplay systems, C# scripting, pixel-art integration, and build/publish.",
     stack: ["Unity", "C#", "Pixel art", "itch.io"],
+    stackGroups: [
+      { group: "Engine", items: ["Unity", "C#"] },
+      { group: "Art", items: ["Pixel art"] },
+      { group: "Release", items: ["itch.io"] },
+    ],
     tags: ["roguelike", "2d", "pixel", "gamedev"],
     features: [
       "Run-based roguelike progression",
@@ -378,6 +411,11 @@ const projects = [
       "A Next.js canvas built on Fabric.js for vector editing and Liveblocks for multiplayer state, so cursors, selections, and shape changes sync between collaborators in real time.",
     role: "Solo developer: canvas architecture, multiplayer state, interface, and deployment.",
     stack: ["Next.js", "TypeScript", "Fabric.js", "Liveblocks", "Tailwind CSS"],
+    stackGroups: [
+      { group: "Frontend", items: ["Next.js", "TypeScript", "Tailwind CSS"] },
+      { group: "Canvas", items: ["Fabric.js"] },
+      { group: "Realtime", items: ["Liveblocks"] },
+    ],
     tags: ["realtime", "collaboration", "design-tool"],
     features: [
       "Live multiplayer canvas with presence",
@@ -429,6 +467,11 @@ const projects = [
       "A PowerShell-based toolkit that automates Ollama, coordinates multiple agents, and ships small dashboard utilities — keeping the loop local, scriptable, and Windows-friendly.",
     role: "Solo developer: tooling design, PowerShell automation, and agent orchestration.",
     stack: ["PowerShell", "Ollama", "Local LLMs", "Windows"],
+    stackGroups: [
+      { group: "Automation", items: ["PowerShell"] },
+      { group: "Runtime", items: ["Ollama", "Local LLMs"] },
+      { group: "Platform", items: ["Windows"] },
+    ],
     tags: ["ai", "developer-tools", "local-llm", "automation"],
     features: [
       "Multi-agent workflow orchestration",
@@ -479,6 +522,12 @@ const projects = [
       "A CodeMirror editing surface wrapped in a Preact + Vite PWA, with PartyKit powering realtime collaboration and a playful multiplayer typing mode layered on the same sync engine.",
     role: "Solo developer: editor UX, offline/PWA layer, realtime sync, and deployment.",
     stack: ["Preact", "TypeScript", "Vite", "CodeMirror", "PartyKit", "PWA"],
+    stackGroups: [
+      { group: "Frontend", items: ["Preact", "TypeScript", "Vite"] },
+      { group: "Editor", items: ["CodeMirror"] },
+      { group: "Realtime", items: ["PartyKit"] },
+      { group: "Platform", items: ["PWA"] },
+    ],
     tags: ["markdown", "editor", "realtime", "offline-first"],
     features: [
       "Offline-first writing that syncs on reconnect",

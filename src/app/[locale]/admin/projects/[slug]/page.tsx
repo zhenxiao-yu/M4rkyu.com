@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { AdminNav } from "../../_components/admin-nav";
 import { ProjectForm } from "@/components/admin/projects/project-form";
+import { ScreenshotManager } from "@/components/admin/projects/screenshot-manager";
 import {
   deleteProjectAction,
   updateProjectAction,
@@ -17,6 +18,7 @@ import {
 import {
   dbProjectRowToProject,
   getDbProjectBySlug,
+  getProjectScreenshotsAdmin,
 } from "@/lib/projects/db";
 import { contentImageUrlFor } from "@/lib/content-images/storage";
 import { DeleteButton } from "@/components/admin/delete-button";
@@ -36,8 +38,16 @@ export default async function EditProjectPage({ params }: PageProps) {
   const row = await getDbProjectBySlug(slug);
   if (!row) notFound();
 
-  const project = dbProjectRowToProject(row);
+  const shots = await getProjectScreenshotsAdmin(row.id);
+  const project = dbProjectRowToProject(row, shots);
   const labels = await buildProjectFormLabels(locale);
+  const managedShots = shots.map((shot) => ({
+    id: shot.id,
+    url: contentImageUrlFor(shot.path),
+    label: shot.label,
+    caption: shot.caption,
+    alt: shot.alt,
+  }));
 
   return (
     <PageShell locale={locale}>
@@ -74,6 +84,16 @@ export default async function EditProjectPage({ params }: PageProps) {
           hiddenFields={<input type="hidden" name="id" value={row.id} />}
           cancelHref={`/${locale}/admin/projects`}
         />
+
+        <div className="mt-8">
+          <ScreenshotManager
+            projectId={row.id}
+            slug={row.slug}
+            screenshots={managedShots}
+            labels={labels.screenshots}
+            dropzone={labels.dropzone}
+          />
+        </div>
 
         <Card className="mt-8 max-w-2xl border-destructive/30 bg-card/80">
           <CardHeader>

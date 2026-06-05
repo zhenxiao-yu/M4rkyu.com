@@ -35,6 +35,15 @@ interface Labels {
   outcomeLabel: string;
   stackLabel: string;
   stackHint: string;
+  product: string;
+  taglineLabel: string;
+  taglineHint: string;
+  timelineLabel: string;
+  timelineHint: string;
+  platformsLabel: string;
+  platformsHint: string;
+  stackGroupsLabel: string;
+  stackGroupsHint: string;
   tagsLabel: string;
   tagsHint: string;
   featuresLabel: string;
@@ -136,6 +145,13 @@ export function ProjectForm({
     role: project?.role ?? "",
     outcome: project?.outcome ?? "",
     stack: project?.stack?.join("\n") ?? "",
+    tagline: project?.tagline ?? "",
+    timeline: project?.timeline ?? "",
+    platforms: project?.platforms?.join("\n") ?? "",
+    stackGroups:
+      project?.stackGroups
+        ?.map((g) => `${g.group}: ${g.items.join(", ")}`)
+        .join("\n") ?? "",
     tags: project?.tags?.join("\n") ?? "",
     features: project?.features?.join("\n") ?? "",
     architectureNotes: project?.architectureNotes?.join("\n") ?? "",
@@ -270,6 +286,39 @@ export function ProjectForm({
             rows={4}
           />
         </Row>
+      </Section>
+
+      <Section title={labels.product}>
+        <Field
+          label={labels.taglineLabel}
+          name="tagline"
+          defaultValue={d.tagline}
+          hint={labels.taglineHint}
+        />
+        <Row cols={2}>
+          <Field
+            label={labels.timelineLabel}
+            name="timeline"
+            defaultValue={d.timeline}
+            hint={labels.timelineHint}
+          />
+          <Field
+            label={labels.platformsLabel}
+            name="platforms"
+            defaultValue={d.platforms}
+            hint={labels.platformsHint}
+            multiline
+            rows={3}
+          />
+        </Row>
+        <Field
+          label={labels.stackGroupsLabel}
+          name="stackGroups"
+          defaultValue={d.stackGroups}
+          hint={labels.stackGroupsHint}
+          multiline
+          rows={5}
+        />
       </Section>
 
       <Section title={labels.links}>

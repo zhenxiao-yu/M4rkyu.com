@@ -38,13 +38,33 @@ export interface DbProjectRow {
   cover_image_src: string | null;
   cover_image_alt: string;
   cover_path: string | null;
+  tagline: string;
+  timeline: string;
+  platforms: string[];
+  stack_groups: { group: string; items: string[] }[];
   seo_title: string;
   seo_description: string;
   sort_order: number;
 }
 
+// One labeled screenshot row (content-images bucket path + captions).
+export interface DbProjectScreenshotRow {
+  id: string;
+  project_id: string;
+  path: string;
+  alt: string;
+  label: string;
+  caption: string;
+  width: number | null;
+  height: number | null;
+  sort_order: number;
+}
+
 const SELECT_COLUMNS =
-  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, cover_path, seo_title, seo_description, sort_order";
+  "id, slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, cover_path, tagline, timeline, platforms, stack_groups, seo_title, seo_description, sort_order";
+
+const SCREENSHOT_COLUMNS =
+  "id, project_id, path, alt, label, caption, width, height, sort_order";
 
 // `createSupabaseServerClient` reads request cookies, which throws
 // when Next is enumerating `generateStaticParams` /
@@ -120,11 +140,73 @@ export const getPublicDbProjectBySlug = cache(
   },
 );
 
+// Public (anon) batch read of screenshots for a set of project ids,
+// grouped by project_id and ordered. One query for the whole /work
+// surface so the list render never N+1s. RLS exposes only screenshots
+// whose parent project is `content_status = 'ready'`.
+export const getPublicScreenshotsByProject = cache(
+  async (projectIds: string[]): Promise<Map<string, DbProjectScreenshotRow[]>> => {
+    const grouped = new Map<string, DbProjectScreenshotRow[]>();
+    if (projectIds.length === 0) return grouped;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return grouped;
+    const { data, error } = await supabase
+      .from("project_screenshots")
+      .select(SCREENSHOT_COLUMNS)
+      .in("project_id", projectIds)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error || !data) return grouped;
+    for (const row of data as DbProjectScreenshotRow[]) {
+      const list = grouped.get(row.project_id) ?? [];
+      list.push(row);
+      grouped.set(row.project_id, list);
+    }
+    return grouped;
+  },
+);
+
+// Admin (cookie-bound) read of one project's screenshots, ids included
+// so the manager can reorder / relabel / delete.
+export const getProjectScreenshotsAdmin = cache(
+  async (projectId: string): Promise<DbProjectScreenshotRow[]> => {
+    if (!isSupabaseConfigured()) return [];
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data, error } = await supabase
+        .from("project_screenshots")
+        .select(SCREENSHOT_COLUMNS)
+        .eq("project_id", projectId)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true });
+      if (error || !data) return [];
+      return data as DbProjectScreenshotRow[];
+    } catch {
+      return [];
+    }
+  },
+);
+
+// Map a screenshot row to the schema's image shape (resolves the
+// content-images public URL from the stored path).
+export function dbScreenshotRowToImage(row: DbProjectScreenshotRow) {
+  return {
+    src: contentImageUrlFor(row.path) ?? "",
+    alt: row.alt || row.label || "",
+    label: row.label || undefined,
+    caption: row.caption || undefined,
+    width: row.width ?? undefined,
+    height: row.height ?? undefined,
+  };
+}
+
 // Map a DB row to the Project shape consumed by /work and /work/[slug].
-// Some fields in the schema don't live in the DB yet (translations,
-// screenshots[] beyond cover image) — we surface empty defaults so
-// the existing components don't need to learn about the new source.
-export function dbProjectRowToProject(row: DbProjectRow): Project {
+// `screenshots` are the uploaded gallery rows (cover image is prepended
+// here); translations don't live in the DB yet so default empty.
+export function dbProjectRowToProject(
+  row: DbProjectRow,
+  screenshots: DbProjectScreenshotRow[] = [],
+): Project {
   return {
     title: row.title,
     slug: row.slug,
@@ -142,12 +224,20 @@ export function dbProjectRowToProject(row: DbProjectRow): Project {
     features: row.features,
     architectureNotes: row.architecture_notes,
     challenges: row.challenges,
-    // Uploaded cover (content-images bucket) wins over an external URL.
+    // screenshots[0] is the hero cover (uploaded wins over external URL);
+    // the remaining entries are the labeled gallery rows. /work reads only
+    // the cover; /work/[slug] uses the cover as hero + the rest as gallery.
     screenshots: (() => {
-      const uploaded = contentImageUrlFor(row.cover_path);
-      const src = uploaded ?? row.cover_image_src;
-      return src ? [{ src, alt: row.cover_image_alt || row.title }] : [];
+      const coverSrc = contentImageUrlFor(row.cover_path) ?? row.cover_image_src;
+      const cover = coverSrc
+        ? [{ src: coverSrc, alt: row.cover_image_alt || row.title }]
+        : [];
+      return [...cover, ...screenshots.map(dbScreenshotRowToImage)];
     })(),
+    tagline: row.tagline || undefined,
+    timeline: row.timeline || undefined,
+    platforms: row.platforms ?? [],
+    stackGroups: row.stack_groups ?? [],
     liveUrl: row.live_url ?? undefined,
     githubUrl: row.github_url ?? undefined,
     outcome: row.outcome,

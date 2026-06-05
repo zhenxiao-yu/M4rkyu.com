@@ -1,7 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { BorderBeam } from "@/components/ui/magic/border-beam";
 import { PixelPanel } from "./pixel-panel";
@@ -15,22 +12,24 @@ interface ProjectCartridgeProps {
   locale: Locale;
   /** Localized project title — comes from `localize(project, locale).title`. */
   title: string;
-  /** Localized short pitch — single line below the title. */
-  shortPitch: string;
-  /** Localized role description for the metadata `<dl>`. */
-  role: string;
+  /** Localized tagline / short pitch — single line below the title. */
+  tagline: string;
 }
 
-/** Detail-page header card for /projects/[slug]. Featured projects get one BorderBeam per docs/UI_LIBRARY_STRATEGY.md §5. */
+/**
+ * Detail-page hero band for /work/[slug]. Holds the back link, the
+ * category/year/status cartridge label, the title, and the tagline. The spec
+ * sheet (role, stack, links) now lives in the sticky <SpecRail> beside the
+ * content, so the hero stays a clean product banner. Featured projects get one
+ * BorderBeam per docs/UI_LIBRARY_STRATEGY.md §5.
+ */
 export async function ProjectCartridge({
   project,
   locale,
   title,
-  shortPitch,
-  role,
+  tagline,
 }: ProjectCartridgeProps) {
   const t = await getTranslations({ locale, namespace: "CaseStudy" });
-  const tProjects = await getTranslations({ locale, namespace: "Projects" });
   const tCategories = await getTranslations({
     locale,
     namespace: "Categories",
@@ -67,10 +66,6 @@ export async function ProjectCartridge({
                 <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
                   {tCategories(project.category)} · {project.year}
                 </span>
-                {/* SystemBadge already shows the contentStatus with a
-                  * friendly localized-ish label (Ready / Draft / Pending /
-                  * Soon); a second DraftBadge would duplicate the chip
-                  * and leak the raw enum value into the UI. */}
                 <SystemBadge
                   status={project.contentStatus}
                   label={tStatus(project.contentStatus)}
@@ -84,65 +79,8 @@ export async function ProjectCartridge({
           </h1>
 
           <p className="max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl">
-            {shortPitch}
+            {tagline}
           </p>
-
-          {/* Metadata dl — role / stack / links. On mobile, actions scroll
-            * horizontally per §4.11. The `dl` rows are auto-stacking. */}
-          <dl className="mt-6 grid gap-6 border-t pt-6 sm:grid-cols-[auto_1fr] sm:gap-x-10">
-            <dt className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-              {tProjects("role")}
-            </dt>
-            <dd className="text-sm leading-7 text-foreground">{role}</dd>
-
-            <dt className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-              {tProjects("stack")}
-            </dt>
-            <dd className="flex flex-wrap gap-1.5">
-              {project.stack.map((item) => (
-                <Badge
-                  key={item}
-                  variant="outline"
-                  className="text-[0.65rem]"
-                >
-                  {item}
-                </Badge>
-              ))}
-            </dd>
-
-            {project.liveUrl || project.githubUrl ? (
-              <>
-                <dt className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-                  {t("links")}
-                </dt>
-                <dd className="-mx-1 flex flex-nowrap gap-2 overflow-x-auto px-1 sm:flex-wrap sm:overflow-visible">
-                  {project.liveUrl ? (
-                    <Button asChild size="sm">
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {tProjects("live")}
-                        <ArrowUpRight aria-hidden="true" className="size-3.5" />
-                      </a>
-                    </Button>
-                  ) : null}
-                  {project.githubUrl ? (
-                    <Button asChild size="sm" variant="outline">
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {tProjects("source")}
-                      </a>
-                    </Button>
-                  ) : null}
-                </dd>
-              </>
-            ) : null}
-          </dl>
         </BlurFade>
       </div>
     </header>

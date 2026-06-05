@@ -13,8 +13,8 @@ const meta = {
     project: sample,
     locale: "en",
     title: localized.title as string,
-    shortPitch: localized.shortPitch as string,
-    role: localized.role as string,
+    tagline:
+      (localized.tagline as string) || (localized.shortPitch as string),
   },
 } satisfies Meta<typeof ProjectCartridge>;
 
@@ -41,8 +41,8 @@ export const ZhLocale: Story = {
     return {
       locale: "zh",
       title: zhLocalized.title as string,
-      shortPitch: zhLocalized.shortPitch as string,
-      role: zhLocalized.role as string,
+      tagline:
+        (zhLocalized.tagline as string) || (zhLocalized.shortPitch as string),
     };
   })(),
 };

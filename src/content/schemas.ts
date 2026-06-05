@@ -20,6 +20,12 @@ export const imageSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   blurDataURL: z.string().optional(),
+  // Optional caption metadata for the /work/[slug] screenshot gallery.
+  // `label` is the short chip under each shot ("Dashboard", "Mobile");
+  // `caption` is the longer line shown in the lightbox. Both optional so
+  // the cover image and legacy content validate untouched.
+  label: z.string().optional(),
+  caption: z.string().optional(),
 });
 
 export const contentStatusSchema = z.enum(["ready", "draft", "placeholder", "coming-soon"]);
@@ -56,6 +62,22 @@ export const projectSchema = z.object({
   // forgot to author this field.
   challenges: z.array(z.string()).default([]),
   screenshots: z.array(imageSchema).default([]),
+  // Product-page framing for the redesigned /work/[slug] surface. All
+  // optional / defaulted so existing static entries validate untouched.
+  // `tagline` is the App-Store one-liner (falls back to shortPitch);
+  // `timeline` + `platforms` feed the spec rail; `stackGroups` powers the
+  // grouped "Built with" panel and falls back to the flat `stack` array.
+  tagline: z.string().optional(),
+  timeline: z.string().optional(),
+  platforms: z.array(z.string()).default([]),
+  stackGroups: z
+    .array(
+      z.object({
+        group: z.string().min(1),
+        items: z.array(z.string()).default([]),
+      }),
+    )
+    .default([]),
   liveUrl: z.string().url().optional(),
   githubUrl: z.string().url().optional(),
   outcome: z.string().min(1),

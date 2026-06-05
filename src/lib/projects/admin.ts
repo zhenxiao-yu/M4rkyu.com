@@ -51,6 +51,12 @@ const projectFormSchema = z.object({
   role: z.string().default(""),
   outcome: z.string().default(""),
   stack: z.array(z.string()).default([]),
+  tagline: z.string().max(280).default(""),
+  timeline: z.string().max(120).default(""),
+  platforms: z.array(z.string()).default([]),
+  stackGroups: z
+    .array(z.object({ group: z.string().min(1), items: z.array(z.string()).default([]) }))
+    .default([]),
   tags: z.array(z.string()).default([]),
   features: z.array(z.string()).default([]),
   architectureNotes: z.array(z.string()).default([]),
@@ -83,13 +89,39 @@ function arrayField(formData: FormData, key: string): string[] {
     .filter((line) => line.length > 0);
 }
 
+// Grouped stack textarea: one group per line, `Group: item, item, item`.
+// Lines without a colon become a group with no name's-worth content are
+// dropped; empty item lists are dropped.
+function stackGroupsField(
+  formData: FormData,
+  key: string,
+): { group: string; items: string[] }[] {
+  return pickField(formData, key)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const colon = line.indexOf(":");
+      if (colon < 0) return null;
+      const group = line.slice(0, colon).trim();
+      const items = line
+        .slice(colon + 1)
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+      if (!group || items.length === 0) return null;
+      return { group, items };
+    })
+    .filter((g): g is { group: string; items: string[] } => g !== null);
+}
+
 function nullishUrl(value: string): string | null {
   const trimmed = value.trim();
   return trimmed ? trimmed : null;
 }
 
 const DATA_COLUMNS =
-  "slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
+  "slug, title, short_pitch, category, year, status, content_status, featured, problem, solution, role, outcome, stack, tagline, timeline, platforms, stack_groups, tags, features, architecture_notes, challenges, lessons_learned, next_steps, live_url, github_url, cover_image_src, cover_image_alt, seo_title, seo_description, sort_order";
 
 function parseForm(formData: FormData) {
   return projectFormSchema.parse({
@@ -106,6 +138,10 @@ function parseForm(formData: FormData) {
     role: pickField(formData, "role"),
     outcome: pickField(formData, "outcome"),
     stack: arrayField(formData, "stack"),
+    tagline: pickField(formData, "tagline"),
+    timeline: pickField(formData, "timeline"),
+    platforms: arrayField(formData, "platforms"),
+    stackGroups: stackGroupsField(formData, "stackGroups"),
     tags: arrayField(formData, "tags"),
     features: arrayField(formData, "features"),
     architectureNotes: arrayField(formData, "architectureNotes"),
@@ -137,6 +173,10 @@ function toRow(parsed: z.infer<typeof projectFormSchema>) {
     role: parsed.role,
     outcome: parsed.outcome,
     stack: parsed.stack,
+    tagline: parsed.tagline,
+    timeline: parsed.timeline,
+    platforms: parsed.platforms,
+    stack_groups: parsed.stackGroups,
     tags: parsed.tags,
     features: parsed.features,
     architecture_notes: parsed.architectureNotes,
@@ -326,6 +366,126 @@ export async function bulkDeleteProjectsAction(ids: string[]) {
   const supabase = await createSupabaseServerClient();
   await supabase.from("projects").delete().in("id", ids);
   revalidateProjects();
+}
+
+// ── Screenshots (project_screenshots + content-images bucket) ──────
+// The manager on the edit page posts these as plain form actions; each
+// revalidates so the server-rendered list refreshes. Files land in the
+// same content-images bucket as covers, slug-prefixed.
+
+function intOrNull(value: string): number | null {
+  const n = Number.parseInt(value, 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+export async function addProjectScreenshotAction(formData: FormData) {
+  await requireAdmin();
+  const projectId = pickField(formData, "projectId");
+  const slug = pickField(formData, "slug") || "project";
+  if (!projectId) return;
+  const file = formData.get("image");
+  if (!(file instanceof File) || file.size === 0) return;
+
+  const upload = await uploadContentImage(file, `projects/${slug}/shot`);
+  if (!upload) return;
+
+  const supabase = await createSupabaseServerClient();
+  // Append at the end of the current order.
+  const { count } = await supabase
+    .from("project_screenshots")
+    .select("id", { count: "exact", head: true })
+    .eq("project_id", projectId);
+
+  const { error } = await supabase.from("project_screenshots").insert({
+    project_id: projectId,
+    path: upload.path,
+    alt: pickField(formData, "alt"),
+    label: pickField(formData, "label"),
+    caption: pickField(formData, "caption"),
+    width: intOrNull(pickField(formData, "width")),
+    height: intOrNull(pickField(formData, "height")),
+    sort_order: count ?? 0,
+  });
+  if (error) {
+    await deleteContentImage(upload.path);
+    return;
+  }
+  revalidateProjects(slug);
+}
+
+export async function updateProjectScreenshotAction(formData: FormData) {
+  await requireAdmin();
+  const id = pickField(formData, "id");
+  const slug = pickField(formData, "slug");
+  if (!id) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("project_screenshots")
+    .update({
+      alt: pickField(formData, "alt"),
+      label: pickField(formData, "label"),
+      caption: pickField(formData, "caption"),
+    })
+    .eq("id", id);
+  revalidateProjects(slug || undefined);
+}
+
+export async function deleteProjectScreenshotAction(formData: FormData) {
+  await requireAdmin();
+  const id = pickField(formData, "id");
+  const slug = pickField(formData, "slug");
+  if (!id) return;
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("project_screenshots")
+    .select("path")
+    .eq("id", id)
+    .maybeSingle();
+  const path = (data?.path as string | null | undefined) ?? null;
+  const { error } = await supabase.from("project_screenshots").delete().eq("id", id);
+  if (error) return;
+  if (path) await deleteContentImage(path);
+  revalidateProjects(slug || undefined);
+}
+
+export async function reorderProjectScreenshotAction(formData: FormData) {
+  await requireAdmin();
+  const id = pickField(formData, "id");
+  const slug = pickField(formData, "slug");
+  const direction = pickField(formData, "direction") === "up" ? "up" : "down";
+  if (!id) return;
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("project_screenshots")
+    .select("id, project_id, sort_order")
+    .eq("id", id)
+    .maybeSingle();
+  if (!data) return;
+  const row = data as { id: string; project_id: string; sort_order: number };
+  const { data: siblings } = await supabase
+    .from("project_screenshots")
+    .select("id, sort_order")
+    .eq("project_id", row.project_id)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  const rows = (siblings ?? []) as { id: string; sort_order: number }[];
+  const index = rows.findIndex((r) => r.id === id);
+  if (index === -1) return;
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (target < 0 || target >= rows.length) return;
+  [rows[index], rows[target]] = [rows[target], rows[index]];
+  await Promise.all(
+    rows
+      .map((r, position) => ({ r, position }))
+      .filter(({ r, position }) => r.sort_order !== position)
+      .map(({ r, position }) =>
+        supabase
+          .from("project_screenshots")
+          .update({ sort_order: position })
+          .eq("id", r.id),
+      ),
+  );
+  revalidateProjects(slug || undefined);
 }
 
 export async function duplicateProjectAction(id: string) {

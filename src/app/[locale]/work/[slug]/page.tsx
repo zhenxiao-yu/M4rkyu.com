@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Check } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { BlurImage } from "@/components/ui/blur-image";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { ProjectCartridge } from "@/components/ui/pixel/project-cartridge";
 import {
   CaseStudyList,
-  CaseStudySection,
 } from "@/components/case-study/case-study-section";
 import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
+import { SpecRail, type SpecRailSection } from "@/components/case-study/spec-rail";
+import {
+  ScreenshotGallery,
+  type GalleryShot,
+} from "@/components/case-study/screenshot-gallery";
+import { TechStackPanel } from "@/components/case-study/tech-stack-panel";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
@@ -60,6 +65,46 @@ export async function generateMetadata({
 const eyebrowMono =
   "font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground";
 
+/** Anchored, numbered section shell — shared rhythm + permalink affordance. */
+function Section({
+  id,
+  index,
+  title,
+  children,
+}: {
+  id: string;
+  index: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      className="group scroll-mt-24 border-t border-border/60 pt-10 first:border-t-0 first:pt-0"
+    >
+      <BlurFade>
+        <div className="flex items-baseline gap-3">
+          <span className="font-mono text-xs text-muted-foreground tabular-nums">
+            {index}
+          </span>
+          <h2 className="text-2xl font-semibold leading-snug text-balance sm:text-3xl">
+            {title}
+          </h2>
+          <a
+            href={`#${id}`}
+            aria-hidden="true"
+            tabIndex={-1}
+            className="font-mono text-sm text-muted-foreground opacity-0 transition-opacity duration-(--motion-fast) [@media(pointer:fine)]:group-hover:opacity-50"
+          >
+            #
+          </a>
+        </div>
+      </BlurFade>
+      <div className="mt-5">{children}</div>
+    </section>
+  );
+}
+
 export default async function ProjectDetailPage({
   params,
 }: {
@@ -67,20 +112,60 @@ export default async function ProjectDetailPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  // Fan out: project lookup + three translation namespaces in parallel.
-  // getProjectFromSource is React-cached so the duplicate read for
-  // adjacent-nav below is free.
-  const [project, tProjects, tCase, tCategories] = await Promise.all([
+  const [project, tProjects, tCase] = await Promise.all([
     getProjectFromSource(slug),
     getTranslations({ locale, namespace: "Projects" }),
     getTranslations({ locale, namespace: "CaseStudy" }),
-    getTranslations({ locale, namespace: "Categories" }),
   ]);
   if (!project) notFound();
-  const tNav = await getTranslations({ locale, namespace: "Navigation" });
+  const [tNav, tCategories] = await Promise.all([
+    getTranslations({ locale, namespace: "Navigation" }),
+    getTranslations({ locale, namespace: "Categories" }),
+  ]);
   const localized = localize(project, locale);
   const cover = project.screenshots[0];
-  const processShots = project.screenshots.slice(1, 9);
+  const galleryShots: GalleryShot[] = project.screenshots
+    .slice(1)
+    .map((shot) => ({
+      src: shot.src,
+      alt: shot.alt,
+      label: shot.label,
+      caption: shot.caption,
+      width: shot.width,
+      height: shot.height,
+    }));
+
+  const tagline = (localized.tagline as string) || (localized.shortPitch as string);
+  const hasFeatures = project.features.length > 0;
+  const hasBuild =
+    project.architectureNotes.length > 0 || project.challenges.length > 0;
+  const hasRoadmap =
+    project.lessonsLearned.length > 0 || project.nextSteps.length > 0;
+  const hasGallery = galleryShots.length > 0;
+
+  // TOC + numbering are derived from which sections actually render.
+  const toc: SpecRailSection[] = [
+    { id: "overview", label: tCase("overview") },
+    ...(hasGallery ? [{ id: "screens", label: tCase("screenshots") }] : []),
+    { id: "stack", label: tCase("builtWith") },
+    ...(hasFeatures ? [{ id: "highlights", label: tCase("highlights") }] : []),
+    ...(hasBuild ? [{ id: "build", label: tCase("underTheHood") }] : []),
+    ...(project.outcome ? [{ id: "outcome", label: tCase("outcomeEyebrow") }] : []),
+    ...(hasRoadmap ? [{ id: "roadmap", label: tCase("roadmap") }] : []),
+  ];
+  const indexOf = (id: string) =>
+    String(toc.findIndex((s) => s.id === id) + 1).padStart(2, "0");
+
+  // Spec-sheet facts — role always; timeline/platforms only when present.
+  const facts = [
+    { label: tProjects("role"), value: localized.role as string },
+    ...(project.timeline
+      ? [{ label: tCase("timeline"), value: project.timeline }]
+      : []),
+    ...(project.platforms.length > 0
+      ? [{ label: tCase("platforms"), value: project.platforms.join(" · ") }]
+      : []),
+  ];
 
   // Adjacent navigation in archive order — predictable, no clever sort.
   const allProjects = await getProjectsSource();
@@ -124,152 +209,168 @@ export default async function ProjectDetailPage({
         <ProjectCartridge
           project={project}
           locale={locale}
-          title={localized.title}
-          shortPitch={localized.shortPitch as string}
-          role={localized.role as string}
+          title={localized.title as string}
+          tagline={tagline}
         />
 
-        <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <BlurFade>
-            <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
-              {cover ? (
-                <BlurImage
-                  src={cover.src}
-                  alt={cover.alt}
-                  fill
-                  priority
-                  sizes="(min-width: 1280px) 1100px, 100vw"
-                  // Vector SVG covers bypass the raster optimizer (which
-                  // rejects SVG without dangerouslyAllowSVG); raster covers
-                  // still optimize.
-                  unoptimized={cover.src.endsWith(".svg")}
-                  className="object-cover"
+        <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[260px_1fr] lg:gap-16 lg:px-8">
+          <SpecRail
+            sections={toc}
+            facts={facts}
+            liveUrl={project.liveUrl}
+            githubUrl={project.githubUrl}
+            labels={{
+              onThisPage: tCase("onThisPage"),
+              spec: tProjects("quickFacts"),
+              live: tProjects("live"),
+              source: tProjects("source"),
+            }}
+          />
+
+          <div className="min-w-0 space-y-12 lg:space-y-16">
+            {/* Hero cover */}
+            <BlurFade>
+              <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
+                {cover ? (
+                  <BlurImage
+                    src={cover.src}
+                    alt={cover.alt}
+                    fill
+                    priority
+                    sizes="(min-width: 1280px) 880px, 100vw"
+                    unoptimized={cover.src.endsWith(".svg")}
+                    className="object-cover"
+                  />
+                ) : (
+                  <PlaceholderImage
+                    label={tProjects("mediaTbd")}
+                    aspect="h-full"
+                    className="rounded-none border-0"
+                  />
+                )}
+              </figure>
+            </BlurFade>
+
+            {/* Overview — product framing of problem + solution */}
+            <Section id="overview" index={indexOf("overview")} title={tCase("overview")}>
+              <div className="grid gap-8 sm:grid-cols-2">
+                <div>
+                  <p className={eyebrowMono}>{tProjects("problem")}</p>
+                  <p className="mt-3 text-base leading-8 text-muted-foreground">
+                    {localized.problem as string}
+                  </p>
+                </div>
+                <div>
+                  <p className={eyebrowMono}>{tProjects("solution")}</p>
+                  <p className="mt-3 text-base leading-8 text-muted-foreground">
+                    {localized.solution as string}
+                  </p>
+                </div>
+              </div>
+            </Section>
+
+            {/* Screenshots */}
+            {hasGallery ? (
+              <Section id="screens" index={indexOf("screens")} title={tCase("screenshots")}>
+                <ScreenshotGallery
+                  shots={galleryShots}
+                  labels={{
+                    viewLarger: tCase("viewLarger"),
+                    close: tCase("closeGallery"),
+                    previous: tCase("previous"),
+                    next: tCase("next"),
+                  }}
                 />
-              ) : (
-                <PlaceholderImage
-                  label="PROJECT HERO MEDIA TBD"
-                  aspect="h-full"
-                  className="rounded-none border-0"
-                />
-              )}
-            </figure>
-          </BlurFade>
-        </section>
-
-        <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            <BlurFade>
-              <CaseStudySection
-                eyebrow={tCase("context")}
-                title={tProjects("problem")}
-              >
-                <p>{localized.problem as string}</p>
-              </CaseStudySection>
-            </BlurFade>
-            <BlurFade delay={0.1}>
-              <CaseStudySection
-                eyebrow={tCase("approach")}
-                title={tProjects("solution")}
-              >
-                <p>{localized.solution as string}</p>
-              </CaseStudySection>
-            </BlurFade>
-          </div>
-        </section>
-
-        <section className="border-y bg-muted/20">
-          <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-3 lg:px-8">
-            <BlurFade>
-              <Card className="h-full bg-card/80">
-                <CardHeader>
-                  <CardTitle>{tProjects("features")}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CaseStudyList items={project.features} />
-                </CardContent>
-              </Card>
-            </BlurFade>
-            <BlurFade delay={0.08}>
-              <Card className="h-full bg-card/80">
-                <CardHeader>
-                  <CardTitle>{tProjects("architecture")}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CaseStudyList items={project.architectureNotes} />
-                </CardContent>
-              </Card>
-            </BlurFade>
-            <BlurFade delay={0.16}>
-              <Card className="h-full bg-card/80">
-                <CardHeader>
-                  <CardTitle>{tCase("challenges")}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CaseStudyList items={project.challenges} />
-                </CardContent>
-              </Card>
-            </BlurFade>
-          </div>
-        </section>
-
-        {processShots.length > 0 ? (
-          <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <BlurFade>
-              <h2 className={eyebrowMono}>{tCase("process")}</h2>
-            </BlurFade>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {processShots.map((shot, index) => (
-                <BlurFade key={`${index}-${shot.src}`} delay={0.05 * index}>
-                  <figure className="relative aspect-4/3 overflow-hidden rounded-md border bg-muted">
-                    <BlurImage
-                      src={shot.src}
-                      alt={shot.alt}
-                      fill
-                      sizes="(min-width: 768px) 540px, 100vw"
-                      className="object-cover"
-                    />
-                  </figure>
-                </BlurFade>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {project.outcome ? (
-          <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <BlurFade>
-              <PullQuoteBlock
-                eyebrow={tCase("outcomeEyebrow")}
-                quote={localized.outcome as string}
-              />
-            </BlurFade>
-          </section>
-        ) : null}
-
-        <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            {project.lessonsLearned.length > 0 ? (
-              <BlurFade>
-                <CaseStudySection
-                  eyebrow={tCase("lessonsEyebrow")}
-                  title={tProjects("lessons")}
-                >
-                  <CaseStudyList items={project.lessonsLearned} numbered />
-                </CaseStudySection>
-              </BlurFade>
+              </Section>
             ) : null}
-            {project.nextSteps.length > 0 ? (
-              <BlurFade delay={0.1}>
-                <CaseStudySection
-                  eyebrow={tCase("nextEyebrow")}
-                  title={tProjects("next")}
-                >
-                  <CaseStudyList items={project.nextSteps} numbered />
-                </CaseStudySection>
-              </BlurFade>
+
+            {/* Built with */}
+            <Section id="stack" index={indexOf("stack")} title={tCase("builtWith")}>
+              <TechStackPanel groups={project.stackGroups} stack={project.stack} />
+            </Section>
+
+            {/* Highlights */}
+            {hasFeatures ? (
+              <Section
+                id="highlights"
+                index={indexOf("highlights")}
+                title={tCase("highlights")}
+              >
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {project.features.map((feature, i) => (
+                    <li
+                      key={`${i}-${feature}`}
+                      className="flex gap-3 rounded-md border border-border bg-card/50 p-4"
+                    >
+                      <Check
+                        aria-hidden="true"
+                        className="mt-0.5 size-4 shrink-0 text-ring"
+                      />
+                      <span className="text-sm leading-6 text-foreground">
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ) : null}
+
+            {/* Under the hood */}
+            {hasBuild ? (
+              <Section id="build" index={indexOf("build")} title={tCase("underTheHood")}>
+                <div className="grid gap-10 sm:grid-cols-2">
+                  {project.architectureNotes.length > 0 ? (
+                    <div>
+                      <p className={eyebrowMono}>{tProjects("architecture")}</p>
+                      <div className="mt-3">
+                        <CaseStudyList items={project.architectureNotes} />
+                      </div>
+                    </div>
+                  ) : null}
+                  {project.challenges.length > 0 ? (
+                    <div>
+                      <p className={eyebrowMono}>{tCase("challenges")}</p>
+                      <div className="mt-3">
+                        <CaseStudyList items={project.challenges} />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </Section>
+            ) : null}
+
+            {/* Outcome */}
+            {project.outcome ? (
+              <Section id="outcome" index={indexOf("outcome")} title={tCase("outcomeEyebrow")}>
+                <PullQuoteBlock quote={localized.outcome as string} />
+              </Section>
+            ) : null}
+
+            {/* Roadmap & lessons */}
+            {hasRoadmap ? (
+              <Section id="roadmap" index={indexOf("roadmap")} title={tCase("roadmap")}>
+                <div className="grid gap-10 sm:grid-cols-2">
+                  {project.lessonsLearned.length > 0 ? (
+                    <div>
+                      <p className={eyebrowMono}>{tProjects("lessons")}</p>
+                      <div className="mt-3">
+                        <CaseStudyList items={project.lessonsLearned} numbered />
+                      </div>
+                    </div>
+                  ) : null}
+                  {project.nextSteps.length > 0 ? (
+                    <div>
+                      <p className={eyebrowMono}>{tProjects("next")}</p>
+                      <div className="mt-3">
+                        <CaseStudyList items={project.nextSteps} numbered />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </Section>
             ) : null}
           </div>
-        </section>
+        </div>
 
         {related.length > 0 ? (
           <section className="border-t bg-muted/20">
