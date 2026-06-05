@@ -1,6 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { JetBrains_Mono, Noto_Sans_SC, VT323 } from "next/font/google";
+import {
+  JetBrains_Mono,
+  Noto_Sans_SC,
+  Shantell_Sans,
+  VT323,
+} from "next/font/google";
 import { SmoothScroll } from "@/providers/smooth-scroll";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { SITE_URL } from "@/lib/seo/site";
@@ -59,6 +64,16 @@ const vt323 = VT323({
   subsets: ["latin"],
   weight: "400",
   display: "swap",
+});
+
+// The "warm hand" — handwritten/marker voice for marginalia, captions,
+// and asides (the human layer over the cyber machine). English-only;
+// globals.css rewires --font-hand to --font-cjk under :lang(zh).
+const shantellSans = Shantell_Sans({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -133,6 +148,20 @@ export const metadata: Metadata = {
   },
 };
 
+// Next 16 takes viewport + theme-color via a dedicated `viewport`
+// export (not `metadata`). theme-color paints the mobile browser
+// chrome to match the active surface; values mirror `--background` in
+// globals.css (dark #050505 / light #f5f3ee).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f3ee" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -142,7 +171,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${clashDisplay.variable} ${cabinetGrotesk.variable} ${satoshi.variable} ${jetbrainsMono.variable} ${notoSansSC.variable} ${vt323.variable} h-full antialiased`}
+      className={`${clashDisplay.variable} ${cabinetGrotesk.variable} ${satoshi.variable} ${jetbrainsMono.variable} ${notoSansSC.variable} ${vt323.variable} ${shantellSans.variable} h-full antialiased`}
     >
       <body
         suppressHydrationWarning

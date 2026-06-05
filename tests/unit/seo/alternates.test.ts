@@ -10,9 +10,14 @@ describe("buildAlternates", () => {
     expect(buildAlternates("zh", "").canonical).toBe("/zh");
   });
 
-  it("emits a self-referential hreflang for every locale", () => {
+  it("emits a self-referential hreflang for every locale plus x-default", () => {
     const { languages } = buildAlternates("en", "/notes");
-    expect(languages).toEqual({ en: "/en/notes", zh: "/zh/notes" });
+    expect(languages).toEqual({
+      en: "/en/notes",
+      zh: "/zh/notes",
+      // x-default points crawlers at the default locale (en) as the catch-all.
+      "x-default": "/en/notes",
+    });
   });
 
   it("includes the RSS + JSON feed alternates", () => {

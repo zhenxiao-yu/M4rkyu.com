@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export const dynamic = "force-dynamic";
+
+// Personal area — never index, never follow. Inherited by the whole
+// /account subtree (defense-in-depth alongside robots.ts + auth gate).
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 // `params.locale` is typed as `string` (not the `Locale` union) to
 // match Next 16's generated LayoutConfig contract — the same shape

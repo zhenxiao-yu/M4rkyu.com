@@ -19,9 +19,14 @@ export function buildAlternates(
 ) {
   return {
     canonical: `/${locale}${path}`,
-    languages: Object.fromEntries(
-      routing.locales.map((entry) => [entry, `/${entry}${path}`]),
-    ) as Record<string, string>,
+    languages: {
+      ...Object.fromEntries(
+        routing.locales.map((entry) => [entry, `/${entry}${path}`]),
+      ),
+      // x-default points crawlers at the default locale for any language
+      // we don't explicitly target (Google's recommended catch-all).
+      "x-default": `/${routing.defaultLocale}${path}`,
+    } as Record<string, string>,
     types: {
       "application/rss+xml": "/feed.xml",
       "application/feed+json": "/feed.json",
