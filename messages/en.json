@@ -457,7 +457,13 @@
     "production": "production entries",
     "draft": "in development or planned",
     "noClaims": "No fabricated platforms, awards, or build claims included.",
-    "coverTbd": "GAME COVER TBD"
+    "coverTbd": "GAME COVER TBD",
+    "decorative": "PLAY",
+    "insertCoin": "Insert coin",
+    "freePlay": "Free play",
+    "credits": "Credits",
+    "pressStart": "Press start",
+    "view": "View"
   },
   "Categories": {
     "web-app": "Web app",
