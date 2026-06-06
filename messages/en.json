@@ -1699,6 +1699,7 @@
       "noMatches": "Nothing matches your search.",
       "results": "shown",
       "actionFailed": "That didn't go through. Try again.",
+      "dragHandle": "Drag to reorder",
       "bulk": {
         "selectAria": "Select {title}",
         "selectAllAria": "Select all shown",

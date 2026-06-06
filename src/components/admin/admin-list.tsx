@@ -1,14 +1,32 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   ArrowUp,
   ArrowDown,
   Copy,
   ExternalLink,
+  GripVertical,
   Pencil,
   Plus,
   Search,
@@ -104,14 +122,38 @@ export function AdminList({
   >({});
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
+  // While a drag is being persisted, this holds the optimistic id order so
+  // the list stays in its dropped arrangement across the (single-step)
+  // server round-trips before props catch up.
+  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
+  const [reorderBusy, setReorderBusy] = useState(false);
   const [, startTransition] = useTransition();
+
+  const sensors = useSensors(
+    // A small activation distance keeps clicks on the row's buttons from
+    // being swallowed as drags.
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const bulkEnabled = Boolean(bulkStatusAction && bulkDeleteAction);
   const filtering = query.trim().length > 0 || statusFilter !== "all";
 
+  // Apply any optimistic drag order on top of the server-provided items.
+  const ordered = useMemo(() => {
+    if (!orderOverride) return items;
+    const byId = new Map(items.map((item) => [item.id, item]));
+    const next = orderOverride
+      .map((id) => byId.get(id))
+      .filter((item): item is AdminListItem => Boolean(item));
+    return next.length === items.length ? next : items;
+  }, [items, orderOverride]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((item) => {
+    return ordered.filter((item) => {
       if (statusFilter !== "all" && item.status !== statusFilter) return false;
       if (!q) return true;
       return (
@@ -120,7 +162,12 @@ export function AdminList({
         (item.subtitle?.toLowerCase().includes(q) ?? false)
       );
     });
-  }, [items, query, statusFilter]);
+  }, [ordered, query, statusFilter]);
+
+  // Drag reordering only makes sense against the full, unfiltered list —
+  // indices must map to real DB positions. Disabled while searching/filtering
+  // (the up/down arrows are also hidden then) and during an in-flight persist.
+  const dragEnabled = !filtering && !reorderBusy && items.length > 1;
 
   // Selection only ever references rows currently visible; prune anything
   // that filtering or a refresh removed so counts never lie.
@@ -189,6 +236,36 @@ export function AdminList({
         setOptimisticStatus((map) => ({ ...map, [id]: prev }));
       } finally {
         setPendingId(null);
+      }
+    });
+  }
+
+  // Persist a drag move by replaying the existing single-step reorder action
+  // |delta| times. A handful of round-trips for a hand-curated portfolio; a
+  // batch "set order" action could replace this if a list ever grew large.
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const ids = filtered.map((item) => item.id);
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    setOrderOverride(arrayMove(ids, oldIndex, newIndex));
+    setReorderBusy(true);
+    const id = String(active.id);
+    const direction = newIndex > oldIndex ? "down" : "up";
+    const steps = Math.abs(newIndex - oldIndex);
+    startTransition(async () => {
+      try {
+        for (let i = 0; i < steps; i++) {
+          await reorderAction(id, direction);
+        }
+      } catch {
+        toast.error(tBulk("list.actionFailed"));
+      } finally {
+        setReorderBusy(false);
+        setOrderOverride(null);
       }
     });
   }
@@ -341,21 +418,51 @@ export function AdminList({
           {labels.noMatches}
         </Card>
       ) : (
-        <ul className="grid gap-2">
-          {filtered.map((item) => {
-            const index = items.indexOf(item);
-            const isFirst = index === 0;
-            const isLast = index === items.length - 1;
-            const busy = pendingId === item.id;
-            return (
-              <li key={item.id}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={filtered.map((listItem) => listItem.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <ul className="grid gap-2">
+              {filtered.map((item) => {
+                const index = ordered.indexOf(item);
+                const isFirst = index === 0;
+                const isLast = index === ordered.length - 1;
+                const busy = pendingId === item.id;
+                return (
+                  <SortableRow
+                    key={item.id}
+                    id={item.id}
+                    disabled={!dragEnabled}
+                  >
+                    {({ setNodeRef, style, handleProps, isDragging }) => (
+                      <li ref={setNodeRef} style={style}>
                 <Card
                   className={cn(
                     "flex min-h-19 flex-col gap-3 bg-card/80 p-4 transition-opacity sm:flex-row sm:items-center",
                     busy && "pointer-events-none opacity-60",
                     bulkEnabled && selected.has(item.id) && "border-ring/50",
+                    isDragging && "opacity-80 shadow-lg ring-1 ring-ring/40",
                   )}
                 >
+                  {dragEnabled ? (
+                    <button
+                      type="button"
+                      {...(handleProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+                      aria-label={tBulk("list.dragHandle")}
+                      title={tBulk("list.dragHandle")}
+                      className={cn(
+                        "hidden shrink-0 cursor-grab touch-none items-center self-center text-muted-foreground/60 transition-colors hover:text-foreground active:cursor-grabbing sm:inline-flex",
+                        FOCUS_RING,
+                      )}
+                    >
+                      <GripVertical className="size-4" aria-hidden="true" />
+                    </button>
+                  ) : null}
                   {bulkEnabled ? (
                     <label
                       className="inline-flex items-center self-start sm:self-center"
@@ -481,13 +588,49 @@ export function AdminList({
                     </Button>
                   </div>
                 </Card>
-              </li>
-            );
-          })}
-        </ul>
+                      </li>
+                    )}
+                  </SortableRow>
+                );
+              })}
+            </ul>
+          </SortableContext>
+        </DndContext>
       )}
     </div>
   );
+}
+
+// Wraps one row in dnd-kit's sortable wiring and hands the drag bindings to
+// its render-prop child, keeping the (large) row markup inline in the map
+// rather than threading every handler through props.
+function SortableRow({
+  id,
+  disabled,
+  children,
+}: {
+  id: string;
+  disabled: boolean;
+  children: (props: {
+    setNodeRef: (node: HTMLElement | null) => void;
+    style: React.CSSProperties;
+    handleProps: Record<string, unknown>;
+    isDragging: boolean;
+  }) => ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id, disabled });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 1 : undefined,
+  };
+  return children({
+    setNodeRef,
+    style,
+    handleProps: { ...attributes, ...listeners },
+    isDragging,
+  });
 }
 
 function IconButton({
