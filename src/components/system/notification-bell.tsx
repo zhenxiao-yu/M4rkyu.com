@@ -22,6 +22,12 @@ interface NotificationBellProps {
 
 const LAST_SEEN_KEY = "m4rkyu.notifications.lastSeen";
 
+// Module-level guard shared across both header bell instances (the desktop
+// and mobile rails each mount one). Keyed by the newest notification's
+// timestamp so a genuine alert toasts exactly once — never doubled by the
+// two mounts, never replayed across re-renders.
+let lastNotifiedStamp = 0;
+
 export function NotificationBell({ items, locale }: NotificationBellProps) {
   const t = useTranslations("Notifications");
   const reduceMotion = useReducedMotion();
@@ -95,20 +101,38 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
     }, 0);
   }, [ordered, lastSeen]);
 
+  // `storedLastSeen` is +Infinity until localStorage hydrates, so the
+  // unread count transitions 0 → N on the first post-hydration render.
+  // Gate the alert on a finite value so the baseline is seeded from the
+  // REAL count — otherwise every page load spuriously toasts "new
+  // notifications" (and, with a bell in each header rail, does it twice).
+  const lastSeenReady = Number.isFinite(storedLastSeen);
   useEffect(() => {
+    if (!lastSeenReady) return;
     if (previousUnreadRef.current === null) {
       previousUnreadRef.current = unreadCount;
       return;
     }
     if (unreadCount > previousUnreadRef.current) {
-      playNotificationCue({ highValue: unreadCount > 1 });
-      toast(t("toastTitle"), {
-        description: t("toastDescription", { count: unreadCount }),
-      });
-      maybeShowBrowserNotification(t("toastTitle"), t("toastDescription", { count: unreadCount }), state);
+      const newestStamp = ordered.length ? Date.parse(ordered[0]!.occurredAt) : 0;
+      // Cross-instance + cross-render dedupe: only the first bell to see a
+      // newer item fires, and only once per item.
+      if (Number.isFinite(newestStamp) && newestStamp > lastNotifiedStamp) {
+        lastNotifiedStamp = newestStamp;
+        playNotificationCue({ highValue: unreadCount > 1 });
+        toast(t("toastTitle"), {
+          id: "m4rkyu-notification",
+          description: t("toastDescription", { count: unreadCount }),
+        });
+        maybeShowBrowserNotification(
+          t("toastTitle"),
+          t("toastDescription", { count: unreadCount }),
+          state,
+        );
+      }
     }
     previousUnreadRef.current = unreadCount;
-  }, [state, t, unreadCount]);
+  }, [lastSeenReady, ordered, state, t, unreadCount]);
 
   const markAllRead = useCallback(() => {
     // Writes Date.now() to localStorage and broadcasts to this + other
@@ -197,7 +221,12 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
             animate={panelAnimate}
             exit={panelInitial}
             transition={panelTransition}
-            className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-[min(24rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-xl border border-border/80 bg-background/95 shadow-xl shadow-black/10 backdrop-blur-xl"
+            // Below lg the bell lives mid-rail (theme / sound / menu sit to
+            // its right), so an `absolute right-0` panel anchored to the bell
+            // overflows off the left edge. Pin it to the viewport as a sheet
+            // under the header instead; restore the anchored dropdown at lg+
+            // where the bell ends the desktop rail.
+            className="fixed inset-x-3 top-16 z-50 mx-auto max-w-sm origin-top overflow-hidden rounded-xl border border-border/80 bg-background/95 shadow-xl shadow-black/10 backdrop-blur-xl sm:top-24 lg:absolute lg:inset-x-auto lg:right-0 lg:top-[calc(100%+0.5rem)] lg:mx-0 lg:w-96 lg:max-w-none lg:origin-top-right"
           >
             <header className="flex items-start justify-between gap-3 border-b border-border/60 px-4 py-3">
               <div>
