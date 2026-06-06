@@ -69,6 +69,7 @@ export function Field({
   hint,
   pattern,
   error,
+  assist,
 }: {
   label: string;
   name: string;
@@ -80,10 +81,19 @@ export function Field({
   hint?: string;
   pattern?: string;
   error?: string;
+  /** Optional trailing control on the label row (e.g. an AI ✨ button). */
+  assist?: ReactNode;
 }) {
   return (
     <label className="grid gap-1.5 text-sm">
-      <FieldLabel label={label} />
+      {assist ? (
+        <span className="flex items-center justify-between gap-2">
+          <FieldLabel label={label} />
+          {assist}
+        </span>
+      ) : (
+        <FieldLabel label={label} />
+      )}
       {multiline ? (
         <textarea
           name={name}

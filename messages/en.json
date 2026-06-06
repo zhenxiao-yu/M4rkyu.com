@@ -1637,6 +1637,18 @@
     "manageNew": "New",
     "itemsCount": "{count, plural, =0 {0 items} one {# item} other {# items}}",
     "navLabel": "Admin sections",
+    "palette": {
+      "open": "Search",
+      "jump": "Jump to",
+      "create": "Create"
+    },
+    "assist": {
+      "generate": "Draft with AI",
+      "success": "Drafted — review before saving.",
+      "error": "Couldn't draft that. Try again.",
+      "empty": "Add a title or some content first.",
+      "rateLimited": "Slow down a moment, then try again."
+    },
     "overview": "Overview",
     "gallery": "Gallery",
     "projects": "Projects",

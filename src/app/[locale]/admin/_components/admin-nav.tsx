@@ -14,6 +14,7 @@ import {
   UserCog,
   MessageSquare,
   Users,
+  Search,
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -70,7 +71,7 @@ export function AdminNav({ locale }: { locale: Locale }) {
   return (
     <nav
       aria-label={t("navLabel")}
-      className="mb-8 border-b border-border"
+      className="mb-8 flex items-center gap-2 border-b border-border"
     >
       {/* Single non-wrapping row: overflow scrolls horizontally on narrow
         * viewports instead of stacking into three ragged rows. Scrollbar
@@ -78,7 +79,7 @@ export function AdminNav({ locale }: { locale: Locale }) {
         * and swipe-scrollable. */}
       <ul
         className={cn(
-          "flex items-center gap-1 overflow-x-auto pb-px",
+          "flex min-w-0 flex-1 items-center gap-1 overflow-x-auto pb-px",
           "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
         )}
       >
@@ -124,6 +125,27 @@ export function AdminNav({ locale }: { locale: Locale }) {
           );
         })}
       </ul>
+
+      {/* Search / command trigger — keyboard users get ⌘K (handled by the
+        * AdminCommandPalette); this pill is the discoverable, touch-friendly
+        * way to raise the same palette. */}
+      <button
+        type="button"
+        onClick={() => window.dispatchEvent(new CustomEvent("admin:command"))}
+        aria-label={t("palette.open")}
+        className={cn(
+          "mb-px inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border px-2.5 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground",
+          FOCUS_RING_INSET,
+        )}
+      >
+        <Search aria-hidden="true" className="size-4 shrink-0" />
+        <span className="hidden text-sm font-medium sm:inline">
+          {t("palette.open")}
+        </span>
+        <kbd className="hidden rounded border border-border bg-muted px-1 py-0.5 font-mono text-[0.6rem] tracking-tight text-muted-foreground md:inline">
+          ⌘K
+        </kbd>
+      </button>
     </nav>
   );
 }

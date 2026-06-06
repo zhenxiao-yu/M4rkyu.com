@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import type { PalettePost } from "./command-palette";
 
 // The palette (cmdk + its icon set, ~127 KB) is a ⌘K modal — defer the
@@ -57,6 +58,10 @@ export function CommandPaletteProvider({
   );
   const postsRequestedRef = useRef(Boolean(posts));
   const [hasOpened, setHasOpened] = useState(false);
+  const pathname = usePathname();
+  // The admin subtree mounts its own ⌘K palette (admin sections + "new …").
+  // Yield the shortcut there so the two never both fire on the same keypress.
+  const isAdminRoute = /\/admin(\/|$)/.test(pathname ?? "");
 
   const toggle = useCallback(() => {
     setOpen((value) => !value);
@@ -72,6 +77,7 @@ export function CommandPaletteProvider({
     const handler = (event: KeyboardEvent) => {
       if (event.repeat || event.defaultPrevented) return;
       if (typeof event.key !== "string") return;
+      if (isAdminRoute) return;
       if (
         event.key.toLowerCase() === "k" &&
         (event.metaKey || event.ctrlKey)
@@ -82,7 +88,7 @@ export function CommandPaletteProvider({
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [toggle]);
+  }, [toggle, isAdminRoute]);
 
   useEffect(() => {
     if (!hasOpened || postsRequestedRef.current) return;

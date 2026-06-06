@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { notFound } from "next/navigation";
+import { AdminCommandPalette } from "./_components/admin-command-palette";
 
 export const dynamic = "force-dynamic";
 
@@ -22,5 +23,10 @@ export default async function AdminLayout({
   // for any data reads inside the subtree.
   if (!isSupabaseConfigured()) notFound();
   await requireAdmin();
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <AdminCommandPalette />
+    </>
+  );
 }

@@ -1637,6 +1637,18 @@
     "manageNew": "新建",
     "itemsCount": "{count, plural, other {# 项}}",
     "navLabel": "管理分区",
+    "palette": {
+      "open": "搜索",
+      "jump": "前往",
+      "create": "新建"
+    },
+    "assist": {
+      "generate": "AI 起草",
+      "success": "已生成草稿——保存前请核对。",
+      "error": "生成失败，请重试。",
+      "empty": "请先填写标题或部分内容。",
+      "rateLimited": "操作过于频繁，请稍候再试。"
+    },
     "overview": "概览",
     "gallery": "影像",
     "projects": "项目",

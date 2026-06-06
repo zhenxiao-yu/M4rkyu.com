@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import {
   ImageDropzone,
   type DropzoneLabels,
@@ -225,6 +226,13 @@ export function ProjectForm({
           multiline
           rows={3}
           required
+          assist={
+            <AiAssistButton
+              task="shortPitch"
+              target="shortPitch"
+              sources={["title", "problem", "solution", "outcome"]}
+            />
+          }
         />
       </Section>
 
@@ -251,6 +259,13 @@ export function ProjectForm({
             hint={labels.tagsHint}
             multiline
             rows={4}
+            assist={
+              <AiAssistButton
+                task="tags"
+                target="tags"
+                sources={["title", "shortPitch", "stack", "features"]}
+              />
+            }
           />
         </Row>
         <Row cols={2}>
@@ -343,13 +358,31 @@ export function ProjectForm({
       </Section>
 
       <Section title={labels.seo}>
-        <Field label={labels.seoTitleLabel} name="seoTitle" defaultValue={d.seoTitle} />
+        <Field
+          label={labels.seoTitleLabel}
+          name="seoTitle"
+          defaultValue={d.seoTitle}
+          assist={
+            <AiAssistButton
+              task="seoTitle"
+              target="seoTitle"
+              sources={["title", "shortPitch", "tagline"]}
+            />
+          }
+        />
         <Field
           label={labels.seoDescriptionLabel}
           name="seoDescription"
           defaultValue={d.seoDescription}
           multiline
           rows={2}
+          assist={
+            <AiAssistButton
+              task="seoDescription"
+              target="seoDescription"
+              sources={["title", "shortPitch", "problem", "solution"]}
+            />
+          }
         />
       </Section>
     </AdminForm>
