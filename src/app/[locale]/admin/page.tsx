@@ -96,7 +96,7 @@ export default async function AdminOverviewPage({
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className="glass-surface rounded-xl p-4"
+              className="glass-surface flex h-full flex-col justify-between gap-3 rounded-xl p-4"
             >
               <div className="flex items-baseline justify-between gap-2">
                 <span className="font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted-foreground">
@@ -111,7 +111,7 @@ export default async function AdminOverviewPage({
               </div>
               <span
                 className={cn(
-                  "mt-3 block font-pixel text-4xl leading-none tabular-nums",
+                  "block font-pixel text-4xl leading-none tabular-nums",
                   stat.highlight && stat.value > 0
                     ? "text-ring"
                     : "text-foreground",
@@ -183,7 +183,7 @@ function ManageCard({
   newLabel: string;
 }) {
   return (
-    <div className="group glass-surface glass-interactive relative overflow-hidden rounded-xl">
+    <div className="group glass-surface glass-interactive relative h-full overflow-hidden rounded-xl">
       <span
         aria-hidden="true"
         className={cn(

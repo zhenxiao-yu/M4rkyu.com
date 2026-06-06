@@ -312,7 +312,7 @@ export function AdminList({
               <li key={item.id}>
                 <Card
                   className={cn(
-                    "flex flex-col gap-3 bg-card/80 p-4 transition-opacity sm:flex-row sm:items-center",
+                    "flex min-h-19 flex-col gap-3 bg-card/80 p-4 transition-opacity sm:flex-row sm:items-center",
                     busy && "pointer-events-none opacity-60",
                     bulkEnabled && selected.has(item.id) && "border-ring/50",
                   )}

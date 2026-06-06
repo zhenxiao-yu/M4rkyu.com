@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, type ReactNode } from "react";
+import { useActionState, useCallback, useEffect, useRef, type ReactNode } from "react";
 import { AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ export function AdminForm({
 }) {
   const [state, formAction] = useActionState(action, ADMIN_ACTION_IDLE);
   const lastHandled = useRef<AdminActionState | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state === lastHandled.current) return;
@@ -49,8 +50,22 @@ export function AdminForm({
     }
   }, [state, successMessage]);
 
+  // ⌘/Ctrl+S submits — long editors shouldn't force a scroll-to-the-button.
+  const onKeyDown = useCallback((event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+      event.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
+
   return (
     <form
+      ref={formRef}
       action={formAction}
       encType="multipart/form-data"
       className="grid gap-8"
@@ -69,7 +84,10 @@ export function AdminForm({
 
       {children}
 
-      <div className="flex justify-end gap-2 border-t border-border/60 pt-6">
+      {/* Sticky action bar — on a long editor the Save button can sit far
+        * below the fold. Pinning it to the bottom of the viewport keeps
+        * Save / Cancel reachable on any screen without scrolling. */}
+      <div className="sticky bottom-3 z-20 flex items-center justify-end gap-2 rounded-lg border border-border/60 bg-background/85 px-3 py-2.5 shadow-sm backdrop-blur supports-backdrop-filter:bg-background/70">
         <Button asChild variant="ghost" size="sm">
           <a href={cancelHref}>{cancelLabel}</a>
         </Button>
