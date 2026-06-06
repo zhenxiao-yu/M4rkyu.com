@@ -3,13 +3,10 @@ import { getTranslations } from "next-intl/server";
 import {
   ArrowUpRight,
   AtSign,
-  Briefcase,
-  Camera,
   Code2,
   FileText,
   Mail,
   MapPin,
-  MessageCircle,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -96,24 +93,28 @@ export async function Footer({ locale }: { locale: Locale }) {
       : { label: t("linkResume"), href: "/about", pending: true },
   ];
 
-  // Socials column — externally-linked. Rows render as `pending` until
-  // a URL lands in `src/content/profile.ts` under `socials.{key}`; the
-  // pending row falls back to the Studio /about route so the link
-  // never 404s while the placeholder badge is shown.
-  function socialRow(
-    label: string,
-    href: string | undefined,
-  ): FooterLink {
-    if (href) return { label, href, external: true };
-    return { label, href: "/about", pending: true };
-  }
+  // "Elsewhere" column — only channels that actually resolve, rendered
+  // as real external links. The platforms still to come collapse into a
+  // single honest "soon" line (`socialSoon`) instead of a column of dead
+  // placeholder rows, which read as unfinished.
+  const githubHref = socials.github ?? "https://github.com/zhenxiao-yu";
   const socialColumnLinks: FooterLink[] = [
-    socialRow(t("socialFacebook"), socials.facebook),
-    socialRow(t("socialInstagram"), socials.instagram),
-    socialRow(t("socialYoutube"), socials.youtube),
-    socialRow(t("socialLinkedin"), socials.linkedin),
+    { label: t("socialGithub"), href: githubHref, external: true },
+    ...(socials.devto
+      ? [{ label: t("socialDevto"), href: socials.devto, external: true } as FooterLink]
+      : []),
+    { label: t("socialEmail"), href: `mailto:${profile.email}`, external: true },
   ];
+  const socialSoon = [
+    { label: t("socialLinkedin"), href: socials.linkedin },
+    { label: t("socialInstagram"), href: socials.instagram },
+    { label: t("socialYoutube"), href: socials.youtube },
+  ]
+    .filter((s) => !s.href)
+    .map((s) => s.label);
 
+  // Micro-rail icons — the live channels only, so the row never wraps
+  // into an orphaned second line of disabled placeholders.
   const socialEntries: FooterSocial[] = [
     {
       key: "email",
@@ -121,29 +122,8 @@ export async function Footer({ locale }: { locale: Locale }) {
       href: `mailto:${profile.email}`,
       icon: Mail,
     },
-    { key: "github", label: t("socialGithub"), href: socials.github, icon: Code2 },
+    { key: "github", label: t("socialGithub"), href: githubHref, icon: Code2 },
     { key: "devto", label: t("socialDevto"), href: socials.devto, icon: AtSign },
-    {
-      key: "linkedin",
-      label: t("socialLinkedin"),
-      href: socials.linkedin,
-      icon: Briefcase,
-      pending: !socials.linkedin,
-    },
-    {
-      key: "twitter",
-      label: t("socialTwitter"),
-      href: socials.twitter,
-      icon: MessageCircle,
-      pending: !socials.twitter,
-    },
-    {
-      key: "instagram",
-      label: t("socialInstagram"),
-      href: socials.instagram,
-      icon: Camera,
-      pending: !socials.instagram,
-    },
   ];
 
   return (
@@ -312,6 +292,11 @@ export async function Footer({ locale }: { locale: Locale }) {
             links={socialColumnLinks}
             locale={locale}
             pendingLabel={t("socialPending")}
+            note={
+              socialSoon.length
+                ? `${socialSoon.join(" · ")} · ${t("socialPending")}`
+                : undefined
+            }
           />
         </div>
 
@@ -424,12 +409,15 @@ function SitemapColumn({
   links,
   locale,
   pendingLabel,
+  note,
 }: {
   title: string;
   blurb: string;
   links: FooterLink[];
   locale: Locale;
   pendingLabel: string;
+  /** Optional muted line under the list — e.g. a "more soon" roadmap. */
+  note?: ReactNode;
 }) {
   return (
     <nav aria-label={title}>
@@ -446,6 +434,12 @@ function SitemapColumn({
           </li>
         ))}
       </ul>
+      {note ? (
+        <p className="mt-4 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground/55">
+          <span aria-hidden="true" className="size-1 rounded-full bg-muted-foreground/40" />
+          {note}
+        </p>
+      ) : null}
     </nav>
   );
 }
