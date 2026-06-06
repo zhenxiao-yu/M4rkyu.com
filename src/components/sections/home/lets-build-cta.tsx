@@ -50,9 +50,13 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
         aria-hidden="true"
         className="absolute inset-0 -z-20 opacity-60 dark:opacity-45"
       >
+        {/* xGap/yGap widened from 16/42 → ~2× fewer grid points per frame.
+          * Waves runs a Perlin eval + physics + path segment per point every
+          * frame, so density is the dominant cost; at this faint opacity the
+          * wider spacing reads the same. (Static on touch via the lite gate.) */}
         <Waves
-          xGap={16}
-          yGap={42}
+          xGap={26}
+          yGap={52}
           waveAmpX={26}
           waveAmpY={12}
           friction={0.93}

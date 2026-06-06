@@ -184,7 +184,10 @@ export function Waves({
       bounds.height = rect.height;
       bounds.left = rect.left;
       bounds.top = rect.top;
-      const dpr = window.devicePixelRatio || 1;
+      // Cap DPR: this is a faint 1px ambient line field, so rasterizing it
+      // at native 2–3× on Retina/4K is wasted pixel work (it was the bulk
+      // of the per-frame cost on high-DPI displays). 1.5 stays crisp enough.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas!.width = rect.width * dpr;
       canvas!.height = rect.height * dpr;
       canvas!.style.width = rect.width + "px";
@@ -195,16 +198,26 @@ export function Waves({
       lines = [];
       const oWidth = bounds.width + 200;
       const oHeight = bounds.height + 30;
-      const totalLines = Math.ceil(oWidth / xGap);
-      const totalPoints = Math.ceil(oHeight / yGap);
-      const xStart = (bounds.width - xGap * totalLines) / 2;
-      const yStart = (bounds.height - yGap * totalPoints) / 2;
+      // Hard-cap the grid so the per-frame cost (one Perlin eval + physics +
+      // path segment per point) stays bounded on wide / 4K displays, where
+      // the raw `oWidth / xGap` would otherwise scale into thousands of
+      // points and stall the frame. The effective gap widens to fill the
+      // space; on normal viewports the cap never binds and `xGap`/`yGap`
+      // apply as authored.
+      const MAX_LINES = 60;
+      const MAX_POINTS = 28;
+      const totalLines = Math.min(MAX_LINES, Math.ceil(oWidth / xGap));
+      const totalPoints = Math.min(MAX_POINTS, Math.ceil(oHeight / yGap));
+      const effXGap = oWidth / totalLines;
+      const effYGap = oHeight / totalPoints;
+      const xStart = (bounds.width - effXGap * totalLines) / 2;
+      const yStart = (bounds.height - effYGap * totalPoints) / 2;
       for (let i = 0; i <= totalLines; i++) {
         const pts: Point[] = [];
         for (let j = 0; j <= totalPoints; j++) {
           pts.push({
-            x: xStart + xGap * i,
-            y: yStart + yGap * j,
+            x: xStart + effXGap * i,
+            y: yStart + effYGap * j,
             wave: { x: 0, y: 0 },
             cursor: { x: 0, y: 0, vx: 0, vy: 0 },
           });
