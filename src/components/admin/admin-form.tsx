@@ -5,10 +5,13 @@ import { AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "./submit-button";
+import { AdminFormErrorsContext } from "./form-errors";
 import {
   ADMIN_ACTION_IDLE,
   type AdminActionState,
 } from "@/lib/admin/action-state";
+
+const NO_FIELD_ERRORS: Record<string, string> = {};
 
 type AdminAction = (
   state: AdminActionState,
@@ -47,6 +50,18 @@ export function AdminForm({
       toast.success(state.message ?? successMessage);
     } else if (state.status === "error") {
       toast.error(state.message ?? "Something went wrong.");
+      // Move the user to the first field the server flagged — on a long
+      // editor the offending input is often far off-screen. rAF lets the
+      // inputs render their aria-invalid first.
+      if (state.fieldErrors) {
+        requestAnimationFrame(() => {
+          const el = formRef.current?.querySelector<HTMLElement>(
+            '[aria-invalid="true"]',
+          );
+          el?.focus({ preventScroll: true });
+          el?.scrollIntoView({ block: "center", behavior: "smooth" });
+        });
+      }
     }
   }, [state, successMessage]);
 
@@ -82,7 +97,11 @@ export function AdminForm({
         </div>
       ) : null}
 
-      {children}
+      <AdminFormErrorsContext.Provider
+        value={state.status === "error" ? (state.fieldErrors ?? NO_FIELD_ERRORS) : NO_FIELD_ERRORS}
+      >
+        {children}
+      </AdminFormErrorsContext.Provider>
 
       {/* Sticky action bar — on a long editor the Save button can sit far
         * below the fold. Pinning it to the bottom of the viewport keeps

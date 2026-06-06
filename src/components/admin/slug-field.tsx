@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { adminInputClass } from "./form-kit";
+import { useFieldError } from "./form-errors";
+import { cn } from "@/lib/utils";
 
 export function slugify(value: string): string {
   return value
@@ -36,6 +38,9 @@ export function SlugField({
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const touchedRef = useRef<boolean>(Boolean(defaultValue));
+  const resolved = useFieldError(name) ?? error;
+  const invalid = Boolean(resolved);
+  const errorText = resolved?.trim() ? resolved : undefined;
 
   useEffect(() => {
     const input = ref.current;
@@ -64,13 +69,14 @@ export function SlugField({
         pattern="[a-z0-9-]+"
         required
         autoComplete="off"
-        aria-invalid={error ? true : undefined}
+        aria-invalid={invalid ? true : undefined}
+        className={cn(invalid && "border-destructive")}
         onChange={() => {
           touchedRef.current = true;
         }}
       />
-      {error ? (
-        <span className="text-[0.7rem] text-destructive">{error}</span>
+      {errorText ? (
+        <span className="text-[0.7rem] text-destructive">{errorText}</span>
       ) : hint ? (
         <span className="text-[0.7rem] text-muted-foreground/70">{hint}</span>
       ) : null}

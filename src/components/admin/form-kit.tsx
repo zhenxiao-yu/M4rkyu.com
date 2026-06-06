@@ -1,10 +1,14 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
+import { useFieldError } from "./form-errors";
 import { cn } from "@/lib/utils";
 
-// Shared presentational form primitives for every admin editor. No
-// hooks here, so these stay usable inside server components; the only
-// interactive piece (SlugField) lives in its own client module.
+// Shared presentational form primitives for every admin editor. Client
+// components so each input can pull its per-field error from the
+// AdminForm errors context by `name`; still rendered from the server
+// form bodies (the normal RSC pattern). SlugField lives in its own module.
 
 export const adminInputClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
@@ -84,6 +88,9 @@ export function Field({
   /** Optional trailing control on the label row (e.g. an AI ✨ button). */
   assist?: ReactNode;
 }) {
+  const resolved = useFieldError(name) ?? error;
+  const invalid = Boolean(resolved);
+  const errorText = resolved?.trim() ? resolved : undefined;
   return (
     <label className="grid gap-1.5 text-sm">
       {assist ? (
@@ -100,8 +107,8 @@ export function Field({
           defaultValue={defaultValue}
           rows={rows ?? 4}
           required={required}
-          aria-invalid={error ? true : undefined}
-          className={adminInputClass}
+          aria-invalid={invalid ? true : undefined}
+          className={cn(adminInputClass, invalid && "border-destructive")}
         />
       ) : (
         <Input
@@ -110,11 +117,11 @@ export function Field({
           defaultValue={defaultValue}
           required={required}
           pattern={pattern}
-          aria-invalid={error ? true : undefined}
+          aria-invalid={invalid ? true : undefined}
           autoComplete="off"
         />
       )}
-      <FieldHint hint={hint} error={error} />
+      <FieldHint hint={hint} error={errorText} />
     </label>
   );
 }
@@ -132,14 +139,16 @@ export function Select({
   defaultValue?: string;
   error?: string;
 }) {
+  const resolved = useFieldError(name) ?? error;
+  const invalid = Boolean(resolved);
   return (
     <label className="grid gap-1.5 text-sm">
       <FieldLabel label={label} />
       <select
         name={name}
         defaultValue={defaultValue}
-        aria-invalid={error ? true : undefined}
-        className={adminInputClass}
+        aria-invalid={invalid ? true : undefined}
+        className={cn(adminInputClass, invalid && "border-destructive")}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -147,7 +156,7 @@ export function Select({
           </option>
         ))}
       </select>
-      <FieldHint error={error} />
+      <FieldHint error={resolved?.trim() ? resolved : undefined} />
     </label>
   );
 }
@@ -167,6 +176,8 @@ export function FileField({
   required?: boolean;
   error?: string;
 }) {
+  const resolved = useFieldError(name) ?? error;
+  const invalid = Boolean(resolved);
   return (
     <label className="grid gap-1.5 text-sm">
       <FieldLabel label={label} />
@@ -175,13 +186,14 @@ export function FileField({
         name={name}
         accept={accept}
         required={required}
-        aria-invalid={error ? true : undefined}
+        aria-invalid={invalid ? true : undefined}
         className={cn(
           adminInputClass,
+          invalid && "border-destructive",
           "file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1 file:text-xs file:font-medium file:text-foreground hover:file:bg-muted/70",
         )}
       />
-      <FieldHint hint={hint} error={error} />
+      <FieldHint hint={hint} error={resolved?.trim() ? resolved : undefined} />
     </label>
   );
 }
