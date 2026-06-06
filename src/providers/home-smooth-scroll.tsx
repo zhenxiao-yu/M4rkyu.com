@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useReducedMotion } from "motion/react";
 import { gsap, registerScrollTrigger } from "@/lib/gsap";
+import { registerSpineLenis, scrollSpine } from "@/lib/home-spine";
 
 interface HomeSmoothScrollProps {
   children: ReactNode;
@@ -95,6 +96,9 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
         touchMultiplier: 1.5,
       });
       lenisInstance = lenis;
+      // Hand the instance to the spine helper so the hero cue + keyboard
+      // paging scroll through Lenis instead of fighting its loop.
+      registerSpineLenis(lenis);
 
       function rafBridge(time: number) {
         lenisInstance?.raf(time * 1000);
@@ -163,6 +167,7 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
     return () => {
       cancelled = true;
       root.removeAttribute("data-home-snap");
+      registerSpineLenis(null);
       dialogObserver?.disconnect();
       resizeObserver?.disconnect();
       snapInstance?.destroy();
@@ -170,6 +175,32 @@ export function HomeSmoothScroll({ children }: HomeSmoothScrollProps) {
       scrollTriggerRef?.killAll();
     };
   }, [reduce]);
+
+  // Keyboard section paging — PageDown / PageUp jump to the next /
+  // previous snap slide across the whole spine (the "next or previous
+  // page" controls). Works on every path: the helper routes through
+  // Lenis when present and native scroll otherwise. Ignored while typing
+  // or with a dialog open so it never hijacks form / modal navigation.
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.key !== "PageDown" && event.key !== "PageUp") return;
+      const el = event.target as HTMLElement | null;
+      if (
+        el &&
+        (el.isContentEditable ||
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT")
+      ) {
+        return;
+      }
+      if (document.querySelector('.m4-dialog-overlay[data-state="open"]')) return;
+      event.preventDefault();
+      scrollSpine(event.key === "PageDown" ? 1 : -1);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return <>{children}</>;
 }

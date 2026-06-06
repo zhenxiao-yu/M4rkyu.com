@@ -4,6 +4,7 @@ import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
 import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
+import { HeroScrollCue } from "./hero-scroll-cue";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -70,6 +71,10 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           data-boot="hud"
           className="absolute inset-x-0 bottom-0 z-10 bg-background"
         >
+          {/* Scroll-on cue — floats just above the headline band over the
+            * galaxy and jumps straight to the next section. */}
+          <HeroScrollCue className="absolute bottom-[calc(100%+0.85rem)] left-1/2 z-20 -translate-x-1/2" />
+
           {/* Top marquee (above headline) */}
           <BinaryMarquee feed={BINARY_FEED} />
 
