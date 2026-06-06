@@ -12,6 +12,11 @@ interface PageHeroProps {
   meta?: ReactNode;
   actions?: ReactNode;
   decorativeWord?: string;
+  /** Extra full-bleed backdrop layers (e.g. arcade scanlines + accent
+   * glow) — sit above the base grid, below the content + frame. Lets a
+   * page juice the shared hero with its own effects without changing its
+   * height / size / layout. */
+  effects?: ReactNode;
   disableGlitch?: boolean;
   className?: string;
   contentClassName?: string;
@@ -27,6 +32,7 @@ export function PageHero({
   meta,
   actions,
   decorativeWord,
+  effects,
   disableGlitch,
   className,
   contentClassName,
@@ -54,6 +60,29 @@ export function PageHero({
         influenceRadius={150}
         baseOpacity={0.12}
       />
+
+      {effects}
+
+      {/* Instrument frame — corner registration ticks that bracket the
+        * header as a HUD panel (echoing the status strip's CornerTick),
+        * sm+ only so phones stay uncluttered. `top-24` clears the sticky
+        * dock + status strip. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden sm:block"
+      >
+        <span className="absolute left-4 top-24 size-3 border-l border-t border-foreground/25 lg:left-6" />
+        <span className="absolute right-4 top-24 size-3 border-r border-t border-foreground/25 lg:right-6" />
+        <span className="absolute bottom-4 left-4 size-3 border-b border-l border-foreground/25 lg:left-6" />
+        <span className="absolute bottom-4 right-4 size-3 border-b border-r border-foreground/25 lg:right-6" />
+      </div>
+      {/* Accent baseline — the single ring accent signs the bottom edge,
+        * doubling as the ruled line the ghosted wordmark sits on. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-ring/45 to-transparent"
+      />
+
       {decorativeWord ? (
         <div
           aria-hidden="true"
