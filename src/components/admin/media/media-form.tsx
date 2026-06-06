@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import {
   ImageDropzone,
   type DropzoneLabels,
@@ -145,6 +146,13 @@ export function MediaForm({
           multiline
           rows={4}
           required
+          assist={
+            <AiAssistButton
+              task="shortPitch"
+              target="description"
+              sources={["title", "format"]}
+            />
+          }
         />
         <Field
           label={labels.durationLabel}

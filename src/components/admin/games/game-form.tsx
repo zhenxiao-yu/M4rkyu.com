@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import { SlugField } from "@/components/admin/slug-field";
 import type { Game } from "@/content/schemas";
 
@@ -129,7 +130,21 @@ export function GameForm({
             defaultValue={d.sortOrder}
           />
         </Row>
-        <Field label={labels.pitchLabel} name="pitch" defaultValue={d.pitch} multiline rows={3} required />
+        <Field
+          label={labels.pitchLabel}
+          name="pitch"
+          defaultValue={d.pitch}
+          multiline
+          rows={3}
+          required
+          assist={
+            <AiAssistButton
+              task="shortPitch"
+              target="pitch"
+              sources={["title", "role", "outcome", "pillars"]}
+            />
+          }
+        />
       </Section>
 
       <Section title={labels.detail}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   ArrowUp,
@@ -81,8 +82,18 @@ export function AdminList({
   bulkDeleteAction,
 }: AdminListProps) {
   const tBulk = useTranslations("Admin");
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  // Seed the search + status filter from the URL so deep links like
+  // /admin/projects?status=draft (e.g. from the dashboard's "needs
+  // attention" panel) land pre-filtered. Unknown status values fall back
+  // to "all" rather than showing an empty list with no explanation.
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
+  const [statusFilter, setStatusFilter] = useState(() => {
+    const requested = searchParams.get("status");
+    return requested && statusOptions.some((o) => o.value === requested)
+      ? requested
+      : "all";
+  });
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);

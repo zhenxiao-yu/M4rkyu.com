@@ -1642,6 +1642,10 @@
       "jump": "Jump to",
       "create": "Create"
     },
+    "attentionHeading": "Needs attention",
+    "attentionAllClear": "All clear — nothing needs attention right now.",
+    "attentionPending": "{count, plural, one {# comment awaiting review} other {# comments awaiting review}}",
+    "attentionDrafts": "{section} — {count, plural, one {# draft} other {# drafts}}",
     "assist": {
       "generate": "Draft with AI",
       "success": "Drafted — review before saving.",

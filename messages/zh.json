@@ -1642,6 +1642,10 @@
       "jump": "前往",
       "create": "新建"
     },
+    "attentionHeading": "待处理",
+    "attentionAllClear": "一切就绪——暂无待处理事项。",
+    "attentionPending": "{count} 条评论待审核",
+    "attentionDrafts": "{section} —— {count} 篇草稿",
     "assist": {
       "generate": "AI 起草",
       "success": "已生成草稿——保存前请核对。",

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import {
   ImageDropzone,
   type DropzoneLabels,
@@ -127,6 +128,13 @@ export function ProductForm({
           defaultValue={d.summary}
           hint={labels.summaryHint}
           required
+          assist={
+            <AiAssistButton
+              task="shortPitch"
+              target="summary"
+              sources={["title", "category", "description"]}
+            />
+          }
         />
         <Field
           label={labels.descriptionLabel}
@@ -205,6 +213,13 @@ export function ProductForm({
           multiline
           rows={3}
           hint={labels.tagsHint}
+          assist={
+            <AiAssistButton
+              task="tags"
+              target="tags"
+              sources={["title", "summary", "description", "category"]}
+            />
+          }
         />
         <Field
           label={labels.digitalNoteLabel}

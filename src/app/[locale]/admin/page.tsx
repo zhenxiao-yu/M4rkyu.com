@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Plus } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle2, FilePen, Plus } from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
@@ -40,14 +40,20 @@ export default async function AdminOverviewPage({
       ? supabase.from(s.table).select("slug", { count: "exact", head: true })
       : Promise.resolve({ count: null as number | null }),
   );
+  // Draft counts per section power the "needs attention" panel. A table
+  // without a `status` column simply returns count: null → treated as 0,
+  // so this never throws even if a section isn't draftable.
+  const draftCountQueries = MANAGE_SECTIONS.map((s) =>
+    s.table
+      ? supabase
+          .from(s.table)
+          .select("id", { count: "exact", head: true })
+          .eq("status", "draft")
+      : Promise.resolve({ count: null as number | null }),
+  );
 
-  const [
-    usersResult,
-    pendingResult,
-    approvedResult,
-    savesResult,
-    ...sectionCounts
-  ] = await Promise.all([
+  const sectionLen = MANAGE_SECTIONS.length;
+  const results = await Promise.all([
     supabase.from("profiles").select("id", { count: "exact", head: true }),
     supabase
       .from("comments")
@@ -61,7 +67,12 @@ export default async function AdminOverviewPage({
       .from("user_saved_items")
       .select("user_id", { count: "exact", head: true }),
     ...sectionCountQueries,
+    ...draftCountQueries,
   ]);
+
+  const [usersResult, pendingResult, approvedResult, savesResult] = results;
+  const sectionCounts = results.slice(4, 4 + sectionLen);
+  const draftCounts = results.slice(4 + sectionLen, 4 + sectionLen * 2);
 
   const stats = [
     { label: t("statUsers"), value: usersResult.count ?? 0 },
@@ -77,6 +88,17 @@ export default async function AdminOverviewPage({
   }));
 
   const channelRange = `01 — ${String(MANAGE_SECTIONS.length).padStart(2, "0")}`;
+
+  // "Needs attention" — turn the static counts into a to-do list. Pending
+  // moderation first, then any section that still holds unpublished drafts,
+  // each deep-linking into the pre-filtered list view.
+  const pendingCount = pendingResult.count ?? 0;
+  const draftItems = MANAGE_SECTIONS.map((section, index) => ({
+    key: section.key,
+    href: section.href,
+    count: draftCounts[index]?.count ?? 0,
+  })).filter((item) => item.count > 0);
+  const hasAttention = pendingCount > 0 || draftItems.length > 0;
 
   return (
     <PageShell locale={locale}>
@@ -122,6 +144,67 @@ export default async function AdminOverviewPage({
             </div>
           ))}
         </div>
+
+        {/* Needs attention — actionable queue. Hidden entirely when the
+         * desk is clear; otherwise each row links to the exact filtered
+         * view that resolves it. */}
+        <section className="mt-10 grid gap-4">
+          <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+            {t("attentionHeading")}
+          </h2>
+          {hasAttention ? (
+            <ul className="grid gap-2">
+              {pendingCount > 0 ? (
+                <li>
+                  <Link
+                    href="/admin/comments"
+                    locale={locale}
+                    className="group glass-surface glass-interactive flex items-center gap-3 rounded-xl p-4"
+                  >
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-ring/10 text-ring">
+                      <AlertCircle aria-hidden="true" className="size-4" />
+                    </span>
+                    <span className="min-w-0 flex-1 text-sm text-foreground">
+                      {t("attentionPending", { count: pendingCount })}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
+                    />
+                  </Link>
+                </li>
+              ) : null}
+              {draftItems.map((item) => (
+                <li key={item.key}>
+                  <Link
+                    href={`${item.href}?status=draft`}
+                    locale={locale}
+                    className="group glass-surface glass-interactive flex items-center gap-3 rounded-xl p-4"
+                  >
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">
+                      <FilePen aria-hidden="true" className="size-4" />
+                    </span>
+                    <span className="min-w-0 flex-1 text-sm text-foreground">
+                      {t("attentionDrafts", {
+                        section: t(item.key),
+                        count: item.count,
+                      })}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="glass-surface flex items-center gap-3 rounded-xl p-4 text-sm text-muted-foreground">
+              <CheckCircle2 aria-hidden="true" className="size-4 shrink-0 text-ring" />
+              {t("attentionAllClear")}
+            </div>
+          )}
+        </section>
 
         {/* Manage — operator console. Each section is a numbered "channel"
          * with a live item count from the DB; vertical accent rule on the

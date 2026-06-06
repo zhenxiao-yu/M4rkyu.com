@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import { SlugField } from "@/components/admin/slug-field";
 import type { Resource } from "@/content/schemas";
 
@@ -147,6 +148,13 @@ export function ResourceForm({
           multiline
           rows={3}
           required
+          assist={
+            <AiAssistButton
+              task="shortPitch"
+              target="description"
+              sources={["name", "category", "why"]}
+            />
+          }
         />
         <Field
           label={labels.whyLabel}
@@ -163,6 +171,13 @@ export function ResourceForm({
           hint={labels.tagsHint}
           multiline
           rows={4}
+          assist={
+            <AiAssistButton
+              task="tags"
+              target="tags"
+              sources={["name", "category", "description", "why"]}
+            />
+          }
         />
         <Field
           label={labels.iconKeyLabel}
