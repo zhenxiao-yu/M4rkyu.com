@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import {
   ArrowUp,
   ArrowDown,
@@ -95,6 +96,12 @@ export function AdminList({
       : "all";
   });
   const [pendingId, setPendingId] = useState<string | null>(null);
+  // Optimistic status overrides: a row's select reflects the new value the
+  // instant it's chosen, then reconciles with revalidated props on success
+  // or rolls back on failure.
+  const [optimisticStatus, setOptimisticStatus] = useState<
+    Record<string, string>
+  >({});
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
   const [, startTransition] = useTransition();
@@ -148,6 +155,8 @@ export function AdminList({
       try {
         await fn();
         clearSelection();
+      } catch {
+        toast.error(tBulk("list.actionFailed"));
       } finally {
         setBulkBusy(false);
       }
@@ -159,6 +168,25 @@ export function AdminList({
     startTransition(async () => {
       try {
         await fn();
+      } catch {
+        toast.error(tBulk("list.actionFailed"));
+      } finally {
+        setPendingId(null);
+      }
+    });
+  }
+
+  // Status changes are optimistic: paint the new value immediately, keep it
+  // on success (revalidated props will match), roll back + toast on failure.
+  function changeStatus(id: string, prev: string, next: string) {
+    setOptimisticStatus((map) => ({ ...map, [id]: next }));
+    setPendingId(id);
+    startTransition(async () => {
+      try {
+        await setStatusAction(id, next);
+      } catch {
+        toast.error(tBulk("list.actionFailed"));
+        setOptimisticStatus((map) => ({ ...map, [id]: prev }));
       } finally {
         setPendingId(null);
       }
@@ -376,11 +404,13 @@ export function AdminList({
                     </label>
                     <select
                       id={`status-${item.id}`}
-                      value={item.status}
+                      value={optimisticStatus[item.id] ?? item.status}
                       disabled={busy}
                       onChange={(event) =>
-                        run(item.id, () =>
-                          setStatusAction(item.id, event.target.value),
+                        changeStatus(
+                          item.id,
+                          optimisticStatus[item.id] ?? item.status,
+                          event.target.value,
                         )
                       }
                       className={cn(adminInputClass, "h-8 w-auto py-1 text-xs")}
