@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
+import { usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
 import { useAudioToggle } from "@/lib/audio/use-audio-toggle";
@@ -221,6 +222,39 @@ function SystemDot() {
   );
 }
 
+/**
+ * Live site coordinate — the HUD's "you are here". Reads the locale-
+ * stripped pathname and renders the current section (and detail slug, if
+ * any) as an instrument readout: `▸ WORK · NIMBUS`. The container is
+ * uppercase + mono, so this inherits the HUD voice; the accent caret is
+ * the only colour. Animates a quick rise on route change (motion-safe),
+ * so navigating feels like the instrument re-locking onto a position.
+ */
+function NavCoordinate() {
+  const reduceMotion = useReducedMotion();
+  const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean).slice(0, 2);
+  const label = segments.length
+    ? segments.map((s) => s.replace(/-/g, " ")).join(" · ")
+    : "home";
+  return (
+    <span className="inline-flex max-w-[15rem] items-center gap-1.5 overflow-hidden">
+      <span aria-hidden="true" className="text-ring">
+        ▸
+      </span>
+      <motion.span
+        key={label}
+        initial={reduceMotion ? false : { opacity: 0, y: 3 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}
+        className="truncate text-foreground/70"
+      >
+        {label}
+      </motion.span>
+    </span>
+  );
+}
+
 export function HeaderStatusStrip({ locale }: { locale: Locale }) {
   const t = useTranslations("Hud");
   const { isPlaying, currentTrack } = useAudioPlayer();
@@ -241,6 +275,11 @@ export function HeaderStatusStrip({ locale }: { locale: Locale }) {
         <span className="hidden lg:flex lg:items-center lg:gap-2.5">
           {SEP}
           <span className="text-hud-muted">{t("region")}</span>
+        </span>
+        {/* Live site coordinate — md+ has room beside the centre transport. */}
+        <span className="hidden md:flex md:items-center md:gap-2.5">
+          {SEP}
+          <NavCoordinate />
         </span>
       </span>
 
