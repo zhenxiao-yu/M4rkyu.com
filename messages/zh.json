@@ -73,6 +73,8 @@
   },
   "Home": {
     "eyebrow": "M4RKYU.SYS · 2027",
+    "scrollNext": "向下",
+    "scrollNextAria": "跳到下一节",
     "title": "创作 + 开发。",
     "subtitle": "软件、游戏、视觉系统。在安大略，慢慢地、认真地搭建——一份贯通工程、艺术与写作的档案。",
     "heroTagline": "自 2014 起",
@@ -144,13 +146,19 @@
       "lede": "一套在用的工具 —— 我自己写的浏览器小工具，加上我真的常开的链接。每个都附一句为什么。",
       "open": "打开资源",
       "toolsCount": "{count} 款工具",
-      "linksCount": "{count} 条链接"
+      "linksCount": "{count} 条链接",
+      "toolsRack": "工具",
+      "toolsHint": "自建 · 浏览器内运行",
+      "linksRack": "链接",
+      "linksHint": "常开",
+      "runTool": "运行"
     },
     "aboutPreview": {
       "eyebrow": "06 / 关于",
       "heading": "做这些的人。",
       "lede": "跨文化的路径，定居安大略。软件、游戏与影像 —— 一种实践，多个面向。",
       "open": "完整故事",
+      "portraitLabel": "肖像",
       "currentlyLabel": "正在",
       "valuesLabel": "我在意的",
       "placesLabel": "{cities} 座城市 · {countries} 个国家",

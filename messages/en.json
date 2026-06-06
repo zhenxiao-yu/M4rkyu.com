@@ -73,6 +73,8 @@
   },
   "Home": {
     "eyebrow": "M4RKYU.SYS · 2027",
+    "scrollNext": "Scroll",
+    "scrollNextAria": "Skip to the next section",
     "title": "Creative + Developer.",
     "subtitle": "Software, games, visual systems. Built deliberately from Ontario — one archive across engineering, art, and writing.",
     "heroTagline": "since 2014",
@@ -144,13 +146,19 @@
       "lede": "A working stack — in-browser dev utilities I built, plus the links I actually keep open. Each with a note on why.",
       "open": "Open resources",
       "toolsCount": "{count} tools",
-      "linksCount": "{count} links"
+      "linksCount": "{count} links",
+      "toolsRack": "Tools",
+      "toolsHint": "built · run in-browser",
+      "linksRack": "Links",
+      "linksHint": "kept open",
+      "runTool": "Run"
     },
     "aboutPreview": {
       "eyebrow": "06 / about",
       "heading": "The person behind it.",
       "lede": "A cross-cultural path, Ontario-based. Software, games, and images — one practice across many surfaces.",
       "open": "The full story",
+      "portraitLabel": "Portrait",
       "currentlyLabel": "currently",
       "valuesLabel": "what I optimize for",
       "placesLabel": "{cities} cities · {countries} countries",
