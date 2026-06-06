@@ -177,6 +177,11 @@ export function Waves({
     const bounds = { width: 0, height: 0, left: 0, top: 0 };
     let raf = 0;
     let running = false;
+    // Throttle the redraw to ~30fps. The drift is ambient and time-based
+    // (driven by the rAF timestamp), so halving the redraw rate is
+    // imperceptible yet cuts the per-second Perlin + canvas cost in half.
+    let lastRender = 0;
+    const FRAME_MS = 1000 / 30;
 
     function setSize() {
       const rect = container!.getBoundingClientRect();
@@ -277,6 +282,12 @@ export function Waves({
     }
     function tick(t: number) {
       if (!running) return;
+      raf = requestAnimationFrame(tick);
+      // 30fps gate — drop the mouse smoothing + Perlin move + redraw on
+      // frames that arrive sooner than the interval; the loop itself
+      // keeps ticking at display rate.
+      if (t - lastRender < FRAME_MS) return;
+      lastRender = t;
       mouse.sx += (mouse.x - mouse.sx) * 0.1;
       mouse.sy += (mouse.y - mouse.sy) * 0.1;
       const dx = mouse.x - mouse.lx;
@@ -290,7 +301,6 @@ export function Waves({
       mouse.a = Math.atan2(dy, dx);
       movePoints(t);
       drawLines();
-      raf = requestAnimationFrame(tick);
     }
     function onResize() {
       setSize();
