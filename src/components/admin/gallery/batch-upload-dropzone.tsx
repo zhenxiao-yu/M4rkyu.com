@@ -263,6 +263,10 @@ export function BatchUploadDropzone({
           accept="image/*"
           multiple
           className="sr-only"
+          // Browser extensions (password managers, clippers) decorate file
+          // inputs with their own attributes before hydration — harmless, but
+          // it trips React's attribute-match check. Suppress for this node.
+          suppressHydrationWarning
           onChange={(e) => {
             addFiles(Array.from(e.target.files ?? []));
             e.target.value = "";

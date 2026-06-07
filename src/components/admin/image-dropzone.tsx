@@ -401,6 +401,9 @@ export function ImageDropzone({
           required={required && !currentImageUrl}
           onChange={onInputChange}
           className="sr-only"
+          // Browser extensions decorate file inputs with their own attributes
+          // before hydration — harmless, but it trips React's attribute check.
+          suppressHydrationWarning
         />
       </div>
 
