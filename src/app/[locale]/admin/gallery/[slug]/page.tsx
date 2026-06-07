@@ -1,8 +1,19 @@
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ExternalLink,
+  ImageUp,
+  SlidersHorizontal,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -32,6 +43,14 @@ import {
 import { BatchUploadDropzone } from "@/components/admin/gallery/batch-upload-dropzone";
 import { AdminPageHeader } from "../../_components/admin-page-header";
 import { buildCollectionFormLabels, buildItemFormLabels } from "../_labels";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
+
+const panelTriggerClass = cn(
+  "group flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-muted/40",
+  FOCUS_RING_INSET,
+);
+const chevronClass =
+  "size-4 shrink-0 text-muted-foreground transition-transform duration-(--motion-fast) ease-(--ease-premium) group-data-[state=open]:rotate-180";
 
 export const dynamic = "force-dynamic";
 
@@ -114,43 +133,68 @@ export default async function CollectionDetailPage({ params }: PageProps) {
         }
       />
 
-      <div className="grid gap-8 xl:grid-cols-[1fr_24rem]">
-          {/* Photo manager — multi-select grid: move between collections,
-            * bulk status/delete, featured toggle, drag-reorder. */}
-          <section className="grid gap-4">
-            <Card className="bg-card/80">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">{t("batch.heading")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <BatchUploadDropzone
-                  collectionId={collection.id}
-                  collectionSlug={collection.slug}
+      <div className="grid gap-5">
+        {/* Meta strip */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <Badge
+            variant="outline"
+            className="font-mono text-[0.6rem] uppercase tracking-[0.14em]"
+          >
+            {collection.status}
+          </Badge>
+          {collection.featured ? (
+            <Badge variant="success" className="font-mono text-[0.6rem] uppercase">
+              {t("featured")}
+            </Badge>
+          ) : null}
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
+            {t("itemsHeading", { count: items.length })}
+          </span>
+        </div>
+
+        {/* Tools — collapsible so the photo grid stays the focus */}
+        <Collapsible
+          defaultOpen
+          className="overflow-hidden rounded-lg border border-border/60 bg-card/50"
+        >
+          <CollapsibleTrigger asChild>
+            <button type="button" className={panelTriggerClass}>
+              <span className="inline-flex items-center gap-2">
+                <ImageUp aria-hidden="true" className="size-4 text-muted-foreground" />
+                {t("batch.heading")}
+              </span>
+              <ChevronDown aria-hidden="true" className={chevronClass} />
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="border-t border-border/60 p-4">
+              <BatchUploadDropzone
+                collectionId={collection.id}
+                collectionSlug={collection.slug}
+              />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
+        <Collapsible className="overflow-hidden rounded-lg border border-border/60 bg-card/50">
+          <CollapsibleTrigger asChild>
+            <button type="button" className={panelTriggerClass}>
+              <span className="inline-flex items-center gap-2">
+                <SlidersHorizontal
+                  aria-hidden="true"
+                  className="size-4 text-muted-foreground"
                 />
-              </CardContent>
-            </Card>
-
-            <CollectionItemsManager
-              items={managerItems}
-              collections={otherCollections}
-              locale={locale}
-              statusOptions={statusOptions}
-              setStatusAction={setItemStatusAction}
-              setFeaturedAction={setItemFeaturedAction}
-              reorderAction={reorderItemAction}
-              bulkStatusAction={bulkSetItemStatusAction}
-              bulkDeleteAction={bulkDeleteItemsAction}
-              moveAction={moveItemsAction}
-            />
-          </section>
-
-          {/* Right rail: collection edit + add-item form + danger zone */}
-          <aside className="grid gap-4">
-            <Card className="bg-card/80">
-              <CardHeader>
-                <CardTitle className="text-base">{t("collectionForm")}</CardTitle>
-              </CardHeader>
-              <CardContent>
+                {t("settingsHeading")}
+              </span>
+              <ChevronDown aria-hidden="true" className={chevronClass} />
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="grid gap-8 border-t border-border/60 p-4 lg:grid-cols-2">
+              <div className="grid content-start gap-3">
+                <h3 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                  {t("collectionForm")}
+                </h3>
                 <CollectionForm
                   action={updateCollectionAction}
                   collection={collection}
@@ -161,14 +205,11 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                   }
                   cancelHref={`/${locale}/admin/gallery`}
                 />
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card/80">
-              <CardHeader>
-                <CardTitle className="text-base">{t("newItem")}</CardTitle>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div className="grid content-start gap-3">
+                <h3 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+                  {t("newItem")}
+                </h3>
                 <ItemForm
                   action={createItemAction}
                   collectionId={collection.id}
@@ -177,35 +218,47 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                   successMessage={tAdmin("saved")}
                   cancelHref={`/${locale}/admin/gallery/${collection.slug}`}
                 />
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card/80 border-destructive/30">
-              <CardHeader>
-                <CardTitle className="text-base text-destructive">
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-destructive/20 bg-destructive/5 p-4">
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-destructive">
                   {t("dangerZone")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form action={deleteCollectionAction}>
-                  <input type="hidden" name="id" value={collection.id} />
-                  <DeleteButton
-                    variant="outline"
-                    size="sm"
-                    className="w-full border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                    confirmMessage={t("deleteCollectionConfirm", {
-                      title: collection.title,
-                    })}
-                  >
-                    {t("deleteCollection")}
-                  </DeleteButton>
-                  <p className="mt-2 text-[0.7rem] text-muted-foreground">
-                    {t("deleteWarning")}
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
-          </aside>
+                </p>
+                <p className="text-[0.7rem] text-muted-foreground">
+                  {t("deleteWarning")}
+                </p>
+              </div>
+              <form action={deleteCollectionAction} className="shrink-0">
+                <input type="hidden" name="id" value={collection.id} />
+                <DeleteButton
+                  variant="outline"
+                  size="sm"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  confirmMessage={t("deleteCollectionConfirm", {
+                    title: collection.title,
+                  })}
+                >
+                  {t("deleteCollection")}
+                </DeleteButton>
+              </form>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Photo grid — the hero, full width */}
+        <CollectionItemsManager
+          items={managerItems}
+          collections={otherCollections}
+          locale={locale}
+          statusOptions={statusOptions}
+          setStatusAction={setItemStatusAction}
+          setFeaturedAction={setItemFeaturedAction}
+          reorderAction={reorderItemAction}
+          bulkStatusAction={bulkSetItemStatusAction}
+          bulkDeleteAction={bulkDeleteItemsAction}
+          moveAction={moveItemsAction}
+        />
       </div>
     </>
   );

@@ -1876,6 +1876,7 @@
     "backToCollections": "All collections",
     "newItem": "Add item",
     "addItem": "Upload",
+    "settingsHeading": "Collection settings",
     "emptyTitle": "No collections yet",
     "emptyDescription": "Create your first collection to start uploading frames.",
     "manage": "Manage",

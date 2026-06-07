@@ -1876,6 +1876,7 @@
     "backToCollections": "全部集合",
     "newItem": "添加条目",
     "addItem": "上传",
+    "settingsHeading": "集合设置",
     "emptyTitle": "还没有集合",
     "emptyDescription": "创建第一个集合，开始上传图片。",
     "manage": "管理",
