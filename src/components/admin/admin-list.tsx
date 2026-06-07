@@ -481,9 +481,9 @@ export function AdminList({
                   ) : null}
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                      {item.badges.map((badge) => (
+                      {item.badges.map((badge, badgeIndex) => (
                         <Badge
-                          key={badge}
+                          key={`${badge}-${badgeIndex}`}
                           variant="outline"
                           className="font-mono text-[0.6rem]"
                         >
