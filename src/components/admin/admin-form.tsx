@@ -82,7 +82,9 @@ export function AdminForm({
     <form
       ref={formRef}
       action={formAction}
-      encType="multipart/form-data"
+      // No encType/method here: with a function action React sets the
+      // encoding itself (and serializes File inputs to the server action),
+      // so specifying it both warns and gets overridden.
       className="grid gap-8"
     >
       {hiddenFields}
