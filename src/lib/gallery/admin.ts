@@ -547,6 +547,104 @@ export async function bulkDeleteItemsAction(ids: string[]) {
   revalidateGallery();
 }
 
+// Batch insert for the drag-a-folder uploader. The browser uploads the
+// (optimized) files straight to storage — bypassing the server-action body
+// limit — then hands us the resulting paths + metadata to row-insert in one
+// shot. Slugs are de-collided against the collection's existing items.
+const batchItemSchema = z.object({
+  path: z.string().min(1).max(300),
+  slug: z.string().regex(SLUG_RE).min(1).max(100),
+  title: z.string().min(1).max(160),
+  width: z.coerce.number().int().positive().max(60000).optional(),
+  height: z.coerce.number().int().positive().max(60000).optional(),
+  blurDataUrl: z.string().max(20000).optional(),
+  aspect: ASPECT_ENUM.optional(),
+});
+
+export async function createGalleryItemsBatchAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  const collectionId = pickField(formData, "collectionId");
+  if (!z.string().uuid().safeParse(collectionId).success) {
+    return adminError("Missing collection.");
+  }
+
+  let payload: z.infer<typeof batchItemSchema>[];
+  try {
+    payload = z
+      .array(batchItemSchema)
+      .min(1)
+      .max(100)
+      .parse(JSON.parse(pickField(formData, "items") || "[]"));
+  } catch {
+    return adminError("Nothing to upload.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: col } = await supabase
+    .from("gallery_collections")
+    .select("slug")
+    .eq("id", collectionId)
+    .maybeSingle();
+  const collectionSlug = (col as { slug: string } | null)?.slug;
+  if (!collectionSlug) return adminError("Collection not found.");
+
+  const { data: existing } = await supabase
+    .from("gallery_items")
+    .select("slug, sort_order")
+    .eq("collection_id", collectionId);
+  const existingRows = (existing ?? []) as {
+    slug: string;
+    sort_order: number;
+  }[];
+  const taken = new Set(existingRows.map((r) => r.slug));
+  let nextSort =
+    existingRows.reduce((max, r) => Math.max(max, r.sort_order), -1) + 1;
+
+  const uniqueSlug = (base: string): string => {
+    let slug = base;
+    for (let n = 2; taken.has(slug) && n < 500; n += 1) {
+      slug = `${base}-${n}`.slice(0, 100);
+    }
+    taken.add(slug);
+    return slug;
+  };
+
+  const rows = payload.map((it) => ({
+    collection_id: collectionId,
+    slug: uniqueSlug(it.slug),
+    title: it.title,
+    caption: "",
+    type: "image",
+    status: "draft",
+    storage_path: it.path,
+    alt: "",
+    width: it.width ?? null,
+    height: it.height ?? null,
+    blur_data_url: it.blurDataUrl ?? null,
+    aspect: it.aspect ?? "4/5",
+    captured_at: null,
+    location: null,
+    featured: false,
+    pinned: false,
+    sort_order: nextSort++,
+  }));
+
+  const { error } = await supabase.from("gallery_items").insert(rows);
+  if (error) {
+    // A failed insert would orphan the just-uploaded objects — clean them up.
+    await supabase.storage
+      .from("gallery-images")
+      .remove(payload.map((p) => p.path));
+    return adminError(dbErrorToMessage(error.message));
+  }
+
+  revalidateGallery(collectionSlug);
+  return adminSuccess();
+}
+
 // The organize core — reassign items to another collection. The storage
 // object keeps its original path (just a key; the public URL still
 // resolves), so this is a pure metadata move.

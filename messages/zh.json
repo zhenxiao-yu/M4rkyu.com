@@ -1849,6 +1849,18 @@
       "toggleFeatured": "切换精选",
       "dragHandle": "拖动以重新排序"
     },
+    "batch": {
+      "heading": "批量上传",
+      "prompt": "将照片拖到此处，或点击浏览",
+      "hint": "上传前在浏览器中优化为 WebP",
+      "remove": "移除",
+      "add": "上传 {count} 张照片",
+      "clear": "清除",
+      "preparing": "准备中……",
+      "uploading": "上传中……",
+      "failed": "部分照片上传失败。",
+      "done": "已添加 {count} 张照片为草稿"
+    },
     "newCollection": "新建集合",
     "newCollectionTitle": "新建集合",
     "newCollectionDescription": "创建集合来归类相关画面。只有状态为 ready 时才会公开显示。",

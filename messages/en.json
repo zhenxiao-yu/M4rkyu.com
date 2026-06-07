@@ -1849,6 +1849,18 @@
       "toggleFeatured": "Toggle featured",
       "dragHandle": "Drag to reorder"
     },
+    "batch": {
+      "heading": "Batch upload",
+      "prompt": "Drag photos here, or click to browse",
+      "hint": "Optimized to WebP in your browser before upload",
+      "remove": "Remove",
+      "add": "{count, plural, one {Upload # photo} other {Upload # photos}}",
+      "clear": "Clear",
+      "preparing": "Preparing…",
+      "uploading": "Uploading…",
+      "failed": "Some photos couldn't be uploaded.",
+      "done": "{count, plural, one {# photo added as draft} other {# photos added as drafts}}"
+    },
     "newCollection": "New collection",
     "newCollectionTitle": "New collection",
     "newCollectionDescription": "Create a collection to group related frames. Public visibility is gated on status = ready.",

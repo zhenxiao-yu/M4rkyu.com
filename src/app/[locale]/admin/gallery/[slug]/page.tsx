@@ -29,6 +29,7 @@ import {
   CollectionItemsManager,
   type GalleryManagerItem,
 } from "@/components/admin/gallery/collection-items-manager";
+import { BatchUploadDropzone } from "@/components/admin/gallery/batch-upload-dropzone";
 import { AdminPageHeader } from "../../_components/admin-page-header";
 import { buildCollectionFormLabels, buildItemFormLabels } from "../_labels";
 
@@ -115,6 +116,18 @@ export default async function CollectionDetailPage({ params }: PageProps) {
           {/* Photo manager — multi-select grid: move between collections,
             * bulk status/delete, featured toggle, drag-reorder. */}
           <section className="grid gap-4">
+            <Card className="bg-card/80">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">{t("batch.heading")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BatchUploadDropzone
+                  collectionId={collection.id}
+                  collectionSlug={collection.slug}
+                />
+              </CardContent>
+            </Card>
+
             <CollectionItemsManager
               items={managerItems}
               collections={otherCollections}
