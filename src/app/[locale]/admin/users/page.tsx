@@ -1,13 +1,10 @@
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { ProfileRow } from "@/lib/supabase/types";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../_components/admin-nav";
+import { AdminPageHeader } from "../_components/admin-page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -28,16 +25,13 @@ export default async function AdminUsersPage({
   const profiles = (data ?? []) as ProfileRow[];
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={t("eyebrow")}
         title={t("usersTitle")}
         description={t("usersDescription")}
-        decorativeWord="USERS"
       />
-      <PageSection>
-        <AdminNav locale={locale} />
-        {profiles.length === 0 ? (
+      {profiles.length === 0 ? (
           <Card className="bg-card/80">
             <CardContent className="py-6 text-center text-sm text-muted-foreground">
               {t("usersEmpty")}
@@ -67,10 +61,9 @@ export default async function AdminUsersPage({
             ))}
           </ul>
         )}
-        <p className="mt-6 text-[0.7rem] text-muted-foreground">
-          {t("usersPromoteHint")}
-        </p>
-      </PageSection>
-    </PageShell>
+      <p className="mt-6 text-[0.7rem] text-muted-foreground">
+        {t("usersPromoteHint")}
+      </p>
+    </>
   );
 }

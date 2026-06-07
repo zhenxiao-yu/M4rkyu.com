@@ -1,7 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbGalleryCollections, getDbGalleryItems } from "@/lib/gallery/db";
 import {
@@ -9,7 +6,7 @@ import {
   reorderCollectionAction,
   setCollectionStatusAction,
 } from "@/lib/gallery/admin";
-import { AdminNav } from "../_components/admin-nav";
+import { AdminPageHeader } from "../_components/admin-page-header";
 import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
@@ -56,16 +53,13 @@ export default async function AdminGalleryPage({
   ];
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={t("title")}
         description={t("description")}
-        decorativeWord="GALLERY"
       />
-      <PageSection>
-        <AdminNav locale={locale} />
-        <AdminList
+      <AdminList
           items={items}
           locale={locale}
           editBase="/admin/gallery"
@@ -91,7 +85,6 @@ export default async function AdminGalleryPage({
             emptyDescription: t("emptyDescription"),
           }}
         />
-      </PageSection>
-    </PageShell>
+    </>
   );
 }

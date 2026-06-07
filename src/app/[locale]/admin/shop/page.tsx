@@ -1,7 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import type { Locale } from "@/i18n/routing";
 import { getDbProducts } from "@/lib/shop/db";
 import { formatPrice } from "@/lib/shop/format";
@@ -12,7 +9,7 @@ import {
   reorderProductAction,
   setProductStatusAction,
 } from "@/lib/shop/admin";
-import { AdminNav } from "../_components/admin-nav";
+import { AdminPageHeader } from "../_components/admin-page-header";
 import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
@@ -54,16 +51,13 @@ export default async function AdminShopPage({
   ];
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={t("title")}
         description={t("description")}
-        decorativeWord="SHOP"
       />
-      <PageSection>
-        <AdminNav locale={locale} />
-        <AdminList
+      <AdminList
           items={items}
           locale={locale}
           editBase="/admin/shop"
@@ -91,7 +85,6 @@ export default async function AdminShopPage({
             emptyDescription: t("emptyDescription"),
           }}
         />
-      </PageSection>
-    </PageShell>
+    </>
   );
 }

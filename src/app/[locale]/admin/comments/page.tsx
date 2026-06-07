@@ -1,14 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { listPendingComments } from "@/lib/comments/comments";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CommentRow } from "@/lib/supabase/types";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../_components/admin-nav";
+import { AdminPageHeader } from "../_components/admin-page-header";
 import { ModerationControls } from "./_controls";
 
 export const dynamic = "force-dynamic";
@@ -34,17 +31,14 @@ export default async function AdminCommentsPage({
   const recentRows = (recent ?? []) as CommentRow[];
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={t("eyebrow")}
         title={t("commentsTitle")}
         description={t("commentsDescription")}
-        decorativeWord="MOD"
       />
-      <PageSection>
-        <AdminNav locale={locale} />
 
-        <section className="grid gap-4">
+      <section className="grid gap-4">
           <h2 className="text-lg font-semibold">
             {t("pendingHeading", { count: pending.length })}
           </h2>
@@ -112,8 +106,7 @@ export default async function AdminCommentsPage({
               ))}
             </ul>
           )}
-        </section>
-      </PageSection>
-    </PageShell>
+      </section>
+    </>
   );
 }

@@ -1,8 +1,5 @@
 import { GitBranch } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -14,7 +11,7 @@ import {
   reorderProjectAction,
   setProjectStatusAction,
 } from "@/lib/projects/admin";
-import { AdminNav } from "../_components/admin-nav";
+import { AdminPageHeader } from "../_components/admin-page-header";
 import { AdminList, type AdminListItem } from "@/components/admin/admin-list";
 
 export const dynamic = "force-dynamic";
@@ -49,24 +46,21 @@ export default async function AdminProjectsPage({
   ];
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={t("title")}
         description={t("description")}
-        decorativeWord="WORK"
-      />
-      <PageSection>
-        <AdminNav locale={locale} />
-        <div className="mb-6">
+        actions={
           <Button asChild variant="outline" size="sm">
             <Link href="/admin/projects/sync" locale={locale}>
               <GitBranch aria-hidden="true" className="size-4" />
               {t("syncCta")}
             </Link>
           </Button>
-        </div>
-        <AdminList
+        }
+      />
+      <AdminList
           items={items}
           locale={locale}
           editBase="/admin/projects"
@@ -94,7 +88,6 @@ export default async function AdminProjectsPage({
             emptyDescription: t("emptyDescription"),
           }}
         />
-      </PageSection>
-    </PageShell>
+    </>
   );
 }

@@ -2,9 +2,6 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +21,7 @@ import {
 import { DeleteButton } from "@/components/admin/delete-button";
 import { CollectionForm } from "@/components/admin/gallery/collection-form";
 import { ItemForm } from "@/components/admin/gallery/item-form";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { buildCollectionFormLabels, buildItemFormLabels } from "../_labels";
 
 export const dynamic = "force-dynamic";
@@ -51,35 +48,34 @@ export default async function CollectionDetailPage({ params }: PageProps) {
   const items = allItems.filter((item) => item.collectionId === collection.id);
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={collection.title}
         description={collection.description || t("noDescription")}
+        actions={
+          <>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/admin/gallery" locale={locale}>
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                {t("backToCollections")}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a
+                href={`/${locale}/archive/${collection.slug}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink aria-hidden="true" className="size-3.5" />
+                {tAdmin("list.view")}
+              </a>
+            </Button>
+          </>
+        }
       />
-      <PageSection>
-        <AdminNav locale={locale} />
 
-        <div className="mb-6 flex items-center justify-between gap-2">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
-            <Link href="/admin/gallery" locale={locale}>
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              {t("backToCollections")}
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <a
-              href={`/${locale}/archive/${collection.slug}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <ExternalLink aria-hidden="true" className="size-3.5" />
-              {tAdmin("list.view")}
-            </a>
-          </Button>
-        </div>
-
-        <div className="grid gap-8 xl:grid-cols-[1fr_24rem]">
+      <div className="grid gap-8 xl:grid-cols-[1fr_24rem]">
           {/* Items grid */}
           <section className="grid gap-4">
             <div className="flex items-center justify-between gap-3">
@@ -240,8 +236,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
               </CardContent>
             </Card>
           </aside>
-        </div>
-      </PageSection>
-    </PageShell>
+      </div>
+    </>
   );
 }

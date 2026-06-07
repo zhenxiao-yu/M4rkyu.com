@@ -1637,6 +1637,7 @@
     "manageNew": "New",
     "itemsCount": "{count, plural, =0 {0 items} one {# item} other {# items}}",
     "navLabel": "Admin sections",
+    "backToSite": "View site",
     "palette": {
       "open": "Search",
       "jump": "Jump to",

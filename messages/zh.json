@@ -1637,6 +1637,7 @@
     "manageNew": "新建",
     "itemsCount": "{count, plural, other {# 项}}",
     "navLabel": "管理分区",
+    "backToSite": "查看网站",
     "palette": {
       "open": "搜索",
       "jump": "前往",

@@ -1,14 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { AlertCircle, ArrowUpRight, CheckCircle2, FilePen, Plus } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { AdminNav } from "./_components/admin-nav";
+import { AdminPageHeader } from "./_components/admin-page-header";
 
 // Content types an admin creates + manages. `newHref` is omitted for the
 // singleton profile editor. `table` is the Supabase table queried for the
@@ -101,15 +98,12 @@ export default async function AdminOverviewPage({
   const hasAttention = pendingCount > 0 || draftItems.length > 0;
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={t("eyebrow")}
         title={t("overviewTitle")}
         description={t("overviewDescription")}
-        decorativeWord="OPS"
       />
-      <PageSection>
-        <AdminNav locale={locale} />
 
         {/* Stats — vital signs. Large pixel-font numerals make the values
          * the focal point; the highlight stat (pending) ignites in `--ring`
@@ -243,8 +237,7 @@ export default async function AdminOverviewPage({
             ))}
           </div>
         </section>
-      </PageSection>
-    </PageShell>
+    </>
   );
 }
 

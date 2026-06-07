@@ -1,14 +1,11 @@
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { ProjectForm } from "@/components/admin/projects/project-form";
 import { ScreenshotManager } from "@/components/admin/projects/screenshot-manager";
 import {
@@ -50,31 +47,30 @@ export default async function EditProjectPage({ params }: PageProps) {
   }));
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={project.title}
         description={project.shortPitch || t("editProjectDescription")}
+        actions={
+          <>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/admin/projects" locale={locale}>
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                {t("backToProjects")}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href={`/${locale}/work/${row.slug}`} target="_blank" rel="noreferrer">
+                <ExternalLink aria-hidden="true" className="size-3.5" />
+                {tAdmin("list.view")}
+              </a>
+            </Button>
+          </>
+        }
       />
-      <PageSection>
-        <AdminNav locale={locale} />
 
-        <div className="mb-6 flex items-center justify-between gap-2">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
-            <Link href="/admin/projects" locale={locale}>
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              {t("backToProjects")}
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <a href={`/${locale}/work/${row.slug}`} target="_blank" rel="noreferrer">
-              <ExternalLink aria-hidden="true" className="size-3.5" />
-              {tAdmin("list.view")}
-            </a>
-          </Button>
-        </div>
-
-        <ProjectForm
+      <ProjectForm
           action={updateProjectAction}
           project={{ ...project, id: row.id, sortOrder: row.sort_order }}
           coverImageSrc={row.cover_image_src ?? ""}
@@ -120,7 +116,6 @@ export default async function EditProjectPage({ params }: PageProps) {
             </form>
           </CardContent>
         </Card>
-      </PageSection>
-    </PageShell>
+    </>
   );
 }

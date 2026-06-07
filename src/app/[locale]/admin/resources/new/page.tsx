@@ -1,12 +1,9 @@
 import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { ResourceForm } from "@/components/admin/resources/resource-form";
 import { createResourceAction } from "@/lib/resources/admin";
 import { buildResourceFormLabels } from "../_labels";
@@ -24,32 +21,27 @@ export default async function NewResourcePage({
   const labels = await buildResourceFormLabels(locale);
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={t("newResourceTitle")}
         description={t("newResourceDescription")}
-        decorativeWord="NEW"
-      />
-      <PageSection>
-        <AdminNav locale={locale} />
-
-        <div className="mb-6">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
+        actions={
+          <Button asChild variant="ghost" size="sm">
             <Link href="/admin/resources" locale={locale}>
               <ArrowLeft aria-hidden="true" className="size-4" />
               {t("backToResources")}
             </Link>
           </Button>
-        </div>
+        }
+      />
 
-        <ResourceForm
-          action={createResourceAction}
-          labels={{ ...labels, submit: t("create") }}
-          successMessage={tAdmin("saved")}
-          cancelHref={`/${locale}/admin/resources`}
-        />
-      </PageSection>
-    </PageShell>
+      <ResourceForm
+        action={createResourceAction}
+        labels={{ ...labels, submit: t("create") }}
+        successMessage={tAdmin("saved")}
+        cancelHref={`/${locale}/admin/resources`}
+      />
+    </>
   );
 }

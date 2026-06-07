@@ -1,14 +1,11 @@
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { NoteForm } from "@/components/admin/notes/note-form";
 import { deleteNoteAction, updateNoteAction } from "@/lib/notes/admin";
 import { dbNoteRowToNote, getDbNoteBySlug } from "@/lib/notes/db";
@@ -35,25 +32,22 @@ export default async function EditNotePage({ params }: PageProps) {
     note.title || note.body.replace(/\s+/g, " ").trim().slice(0, 60) || note.slug;
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={headingTitle}
         description={t("editNoteDescription")}
-      />
-      <PageSection>
-        <AdminNav locale={locale} />
-
-        <div className="mb-6">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
+        actions={
+          <Button asChild variant="ghost" size="sm">
             <Link href="/admin/notes" locale={locale}>
               <ArrowLeft aria-hidden="true" className="size-4" />
               {t("backToNotes")}
             </Link>
           </Button>
-        </div>
+        }
+      />
 
-        <NoteForm
+      <NoteForm
           action={updateNoteAction}
           note={{ ...note, id: row.id, sortOrder: row.sort_order }}
           labels={{ ...labels, submit: t("save") }}
@@ -85,7 +79,6 @@ export default async function EditNotePage({ params }: PageProps) {
             </form>
           </CardContent>
         </Card>
-      </PageSection>
-    </PageShell>
+    </>
   );
 }

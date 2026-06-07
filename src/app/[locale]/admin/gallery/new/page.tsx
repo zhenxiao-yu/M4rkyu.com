@@ -1,12 +1,9 @@
 import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { CollectionForm } from "@/components/admin/gallery/collection-form";
 import { createCollectionAction } from "@/lib/gallery/admin";
 import { buildCollectionFormLabels } from "../_labels";
@@ -24,32 +21,27 @@ export default async function NewCollectionPage({
   const labels = await buildCollectionFormLabels(locale);
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={t("newCollectionTitle")}
         description={t("newCollectionDescription")}
-        decorativeWord="NEW"
-      />
-      <PageSection>
-        <AdminNav locale={locale} />
-
-        <div className="mb-6">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
+        actions={
+          <Button asChild variant="ghost" size="sm">
             <Link href="/admin/gallery" locale={locale}>
               <ArrowLeft aria-hidden="true" className="size-4" />
               {t("backToCollections")}
             </Link>
           </Button>
-        </div>
+        }
+      />
 
-        <CollectionForm
-          action={createCollectionAction}
-          labels={{ ...labels, submit: t("create") }}
-          successMessage={tAdmin("saved")}
-          cancelHref={`/${locale}/admin/gallery`}
-        />
-      </PageSection>
-    </PageShell>
+      <CollectionForm
+        action={createCollectionAction}
+        labels={{ ...labels, submit: t("create") }}
+        successMessage={tAdmin("saved")}
+        cancelHref={`/${locale}/admin/gallery`}
+      />
+    </>
   );
 }

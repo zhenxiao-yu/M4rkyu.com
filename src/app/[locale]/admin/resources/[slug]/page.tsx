@@ -1,14 +1,11 @@
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AdminNav } from "../../_components/admin-nav";
+import { AdminPageHeader } from "../../_components/admin-page-header";
 import { ResourceForm } from "@/components/admin/resources/resource-form";
 import {
   deleteResourceAction,
@@ -39,39 +36,38 @@ export default async function EditResourcePage({ params }: PageProps) {
   const labels = await buildResourceFormLabels(locale);
 
   return (
-    <PageShell locale={locale}>
-      <PageHero
+    <>
+      <AdminPageHeader
         eyebrow={tAdmin("eyebrow")}
         title={resource.name}
         description={resource.description || t("editResourceDescription")}
+        actions={
+          <>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/admin/resources" locale={locale}>
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                {t("backToResources")}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a
+                href={
+                  row.type === "tool"
+                    ? `/${locale}/resources/${row.slug}`
+                    : row.link
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink aria-hidden="true" className="size-3.5" />
+                {tAdmin("list.view")}
+              </a>
+            </Button>
+          </>
+        }
       />
-      <PageSection>
-        <AdminNav locale={locale} />
 
-        <div className="mb-6 flex items-center justify-between gap-2">
-          <Button asChild variant="ghost" size="sm" className="-ml-3 h-auto px-3">
-            <Link href="/admin/resources" locale={locale}>
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              {t("backToResources")}
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <a
-              href={
-                row.type === "tool"
-                  ? `/${locale}/resources/${row.slug}`
-                  : row.link
-              }
-              target="_blank"
-              rel="noreferrer"
-            >
-              <ExternalLink aria-hidden="true" className="size-3.5" />
-              {tAdmin("list.view")}
-            </a>
-          </Button>
-        </div>
-
-        <ResourceForm
+      <ResourceForm
           action={updateResourceAction}
           resource={{ ...resource, id: row.id, sortOrder: row.sort_order }}
           labels={{ ...labels, submit: t("save") }}
@@ -105,7 +101,6 @@ export default async function EditResourcePage({ params }: PageProps) {
             </form>
           </CardContent>
         </Card>
-      </PageSection>
-    </PageShell>
+    </>
   );
 }
