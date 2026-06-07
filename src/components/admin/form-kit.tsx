@@ -33,10 +33,15 @@ export function Section({
 export function Row({ cols, children }: { cols: 2 | 3; children: ReactNode }) {
   // 3-col rows wait until md so labels + textareas don't crush at 360px;
   // 2-col rows kick in at sm, roomy enough for two short fields.
+  // `items-start` top-aligns the cells: without it, a field with a hint
+  // (e.g. the slug) makes the grid stretch its hint-less neighbour (the
+  // title), pushing that input out of line with the slug's input.
   return (
     <div
       className={
-        cols === 2 ? "grid gap-3 sm:grid-cols-2" : "grid gap-3 md:grid-cols-3"
+        cols === 2
+          ? "grid items-start gap-3 sm:grid-cols-2"
+          : "grid items-start gap-3 md:grid-cols-3"
       }
     >
       {children}
