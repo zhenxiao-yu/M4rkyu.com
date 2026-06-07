@@ -463,3 +463,107 @@ export async function setItemStatusAction(id: string, status: string) {
     .eq("id", id);
   revalidateGallery();
 }
+
+export async function setItemFeaturedAction(id: string, featured: boolean) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("gallery_items")
+    .update({ featured: Boolean(featured) })
+    .eq("id", id);
+  revalidateGallery();
+}
+
+// Single-step reorder scoped to the item's own collection (mirrors
+// reorderCollectionAction). The grid replays this |delta| times for a drag.
+export async function reorderItemAction(id: string, direction: "up" | "down") {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const { data: itemRow } = await supabase
+    .from("gallery_items")
+    .select("collection_id")
+    .eq("id", id)
+    .maybeSingle();
+  const collectionId = (itemRow as { collection_id: string } | null)
+    ?.collection_id;
+  if (!collectionId) return;
+
+  const { data } = await supabase
+    .from("gallery_items")
+    .select("id, sort_order")
+    .eq("collection_id", collectionId)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []) as { id: string; sort_order: number }[];
+  const index = rows.findIndex((r) => r.id === id);
+  if (index === -1) return;
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (target < 0 || target >= rows.length) return;
+  [rows[index], rows[target]] = [rows[target], rows[index]];
+  await Promise.all(
+    rows
+      .map((row, position) => ({ row, position }))
+      .filter(({ row, position }) => row.sort_order !== position)
+      .map(({ row, position }) =>
+        supabase
+          .from("gallery_items")
+          .update({ sort_order: position })
+          .eq("id", row.id),
+      ),
+  );
+  revalidateGallery();
+}
+
+export async function bulkSetItemStatusAction(ids: string[], status: string) {
+  await requireAdmin();
+  const parsed = STATUS_ENUM.safeParse(status);
+  if (!parsed.success || ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("gallery_items")
+    .update({ status: parsed.data })
+    .in("id", ids);
+  revalidateGallery();
+}
+
+export async function bulkDeleteItemsAction(ids: string[]) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  const supabase = await createSupabaseServerClient();
+  // Collect storage paths before the cascade so the bucket doesn't orphan.
+  const { data } = await supabase
+    .from("gallery_items")
+    .select("storage_path")
+    .in("id", ids);
+  const paths = (data ?? [])
+    .map((row) => (row as { storage_path: string | null }).storage_path)
+    .filter((p): p is string => Boolean(p));
+
+  const { error } = await supabase.from("gallery_items").delete().in("id", ids);
+  if (error) throw new Error(error.message);
+  if (paths.length > 0) {
+    await supabase.storage.from("gallery-images").remove(paths);
+  }
+  revalidateGallery();
+}
+
+// The organize core — reassign items to another collection. The storage
+// object keeps its original path (just a key; the public URL still
+// resolves), so this is a pure metadata move.
+export async function moveItemsAction(ids: string[], targetCollectionId: string) {
+  await requireAdmin();
+  if (ids.length === 0) return;
+  if (!z.string().uuid().safeParse(targetCollectionId).success) return;
+  const supabase = await createSupabaseServerClient();
+  const { data: target } = await supabase
+    .from("gallery_collections")
+    .select("id")
+    .eq("id", targetCollectionId)
+    .maybeSingle();
+  if (!target) return;
+  await supabase
+    .from("gallery_items")
+    .update({ collection_id: targetCollectionId })
+    .in("id", ids);
+  revalidateGallery();
+}

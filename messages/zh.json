@@ -1842,6 +1842,13 @@
     "collectionsCount": "{count, plural, =0 {暂无集合} other {# 个集合}}",
     "itemCount": "{count, plural, =0 {暂无条目} other {# 个条目}}",
     "itemsHeading": "{count, plural, =0 {暂无条目} other {# 个条目}}",
+    "manager": {
+      "selectAll": "全选",
+      "moveTo": "移动到……",
+      "moveDone": "已移动。",
+      "toggleFeatured": "切换精选",
+      "dragHandle": "拖动以重新排序"
+    },
     "newCollection": "新建集合",
     "newCollectionTitle": "新建集合",
     "newCollectionDescription": "创建集合来归类相关画面。只有状态为 ready 时才会公开显示。",

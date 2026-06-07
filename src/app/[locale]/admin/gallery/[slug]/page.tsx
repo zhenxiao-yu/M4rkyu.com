@@ -1,26 +1,34 @@
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
   getDbCollectionBySlug,
+  getDbGalleryCollections,
   getDbGalleryItems,
   storageUrlFor,
 } from "@/lib/gallery/db";
 import {
+  bulkDeleteItemsAction,
+  bulkSetItemStatusAction,
   createItemAction,
   deleteCollectionAction,
-  deleteItemAction,
+  moveItemsAction,
+  reorderItemAction,
+  setItemFeaturedAction,
+  setItemStatusAction,
   updateCollectionAction,
 } from "@/lib/gallery/admin";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { CollectionForm } from "@/components/admin/gallery/collection-form";
 import { ItemForm } from "@/components/admin/gallery/item-form";
+import {
+  CollectionItemsManager,
+  type GalleryManagerItem,
+} from "@/components/admin/gallery/collection-items-manager";
 import { AdminPageHeader } from "../../_components/admin-page-header";
 import { buildCollectionFormLabels, buildItemFormLabels } from "../_labels";
 
@@ -34,18 +42,46 @@ export default async function CollectionDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   // Fan out: both translation namespaces, the collection row, the items
   // list, and the form label bags can all be requested in parallel.
-  const [t, tAdmin, collection, allItems, collectionLabels, itemLabels] =
-    await Promise.all([
-      getTranslations({ locale, namespace: "AdminGallery" }),
-      getTranslations({ locale, namespace: "Admin" }),
-      getDbCollectionBySlug(slug),
-      getDbGalleryItems(),
-      buildCollectionFormLabels(locale),
-      buildItemFormLabels(locale),
-    ]);
+  const [
+    t,
+    tAdmin,
+    collection,
+    allItems,
+    allCollections,
+    collectionLabels,
+    itemLabels,
+  ] = await Promise.all([
+    getTranslations({ locale, namespace: "AdminGallery" }),
+    getTranslations({ locale, namespace: "Admin" }),
+    getDbCollectionBySlug(slug),
+    getDbGalleryItems(),
+    getDbGalleryCollections(),
+    buildCollectionFormLabels(locale),
+    buildItemFormLabels(locale),
+  ]);
   if (!collection) notFound();
 
   const items = allItems.filter((item) => item.collectionId === collection.id);
+  const managerItems: GalleryManagerItem[] = items.map((item) => ({
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    status: item.status,
+    type: item.type,
+    featured: item.featured,
+    alt: item.alt,
+    caption: item.caption,
+    imageUrl: storageUrlFor(item.storagePath),
+  }));
+  const otherCollections = allCollections
+    .filter((c) => c.id !== collection.id)
+    .map((c) => ({ id: c.id, title: c.title }));
+  const statusOptions = [
+    { value: "ready", label: t("status.ready") },
+    { value: "draft", label: t("status.draft") },
+    { value: "placeholder", label: t("status.placeholder") },
+    { value: "coming-soon", label: t("status.comingSoon") },
+  ];
 
   return (
     <>
@@ -76,102 +112,22 @@ export default async function CollectionDetailPage({ params }: PageProps) {
       />
 
       <div className="grid gap-8 xl:grid-cols-[1fr_24rem]">
-          {/* Items grid */}
+          {/* Photo manager — multi-select grid: move between collections,
+            * bulk status/delete, featured toggle, drag-reorder. */}
           <section className="grid gap-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold">
-                {t("itemsHeading", { count: items.length })}
-              </h2>
-            </div>
-
-            {items.length === 0 ? (
-              <Card className="bg-card/80">
-                <CardContent className="py-8 text-center text-sm text-muted-foreground">
-                  {t("noItems")}
-                </CardContent>
-              </Card>
-            ) : (
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {items.map((item) => {
-                  const src = storageUrlFor(item.storagePath);
-                  return (
-                    <li key={item.id}>
-                      <Card className="bg-card/80">
-                        <CardHeader className="pb-3">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline" className="font-mono text-[0.6rem]">
-                              {item.status}
-                            </Badge>
-                            <Badge variant="outline" className="font-mono text-[0.6rem]">
-                              {item.type}
-                            </Badge>
-                            {item.featured ? (
-                              <Badge variant="success" className="font-mono text-[0.6rem]">
-                                {t("featured")}
-                              </Badge>
-                            ) : null}
-                          </div>
-                          <CardTitle className="mt-1 text-sm">
-                            {item.title}
-                          </CardTitle>
-                          <p className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/80">
-                            /{item.slug}
-                          </p>
-                        </CardHeader>
-                        <CardContent className="grid gap-3">
-                          {src ? (
-                            <div className="relative aspect-4/5 overflow-hidden rounded-md border border-border/60">
-                              <Image
-                                src={src}
-                                alt={item.alt || item.title}
-                                fill
-                                sizes="(min-width: 640px) 280px, 100vw"
-                                className="object-cover"
-                              />
-                            </div>
-                          ) : (
-                            <div className="grid aspect-4/5 place-items-center rounded-md border border-dashed border-border/60 bg-muted/30 text-center text-xs text-muted-foreground">
-                              {t("noImage")}
-                            </div>
-                          )}
-                          <p className="line-clamp-3 text-xs leading-5 text-muted-foreground">
-                            {item.caption || t("noCaption")}
-                          </p>
-                          <div className="flex gap-2">
-                            <Button
-                              asChild
-                              variant="outline"
-                              size="sm"
-                              className="flex-1"
-                            >
-                              <Link
-                                href={`/admin/gallery/${collection.slug}/${item.slug}`}
-                                locale={locale}
-                              >
-                                {t("editItem")}
-                              </Link>
-                            </Button>
-                            <form action={deleteItemAction} className="flex-1">
-                              <input type="hidden" name="id" value={item.id} />
-                              <DeleteButton
-                                variant="outline"
-                                size="sm"
-                                className="w-full text-destructive hover:text-destructive"
-                                confirmMessage={t("deleteItemConfirm", {
-                                  title: item.title,
-                                })}
-                              >
-                                {t("deleteItem")}
-                              </DeleteButton>
-                            </form>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            <CollectionItemsManager
+              items={managerItems}
+              collections={otherCollections}
+              collectionSlug={collection.slug}
+              locale={locale}
+              statusOptions={statusOptions}
+              setStatusAction={setItemStatusAction}
+              setFeaturedAction={setItemFeaturedAction}
+              reorderAction={reorderItemAction}
+              bulkStatusAction={bulkSetItemStatusAction}
+              bulkDeleteAction={bulkDeleteItemsAction}
+              moveAction={moveItemsAction}
+            />
           </section>
 
           {/* Right rail: collection edit + add-item form + danger zone */}

@@ -1842,6 +1842,13 @@
     "collectionsCount": "{count, plural, =0 {No collections} one {# collection} other {# collections}}",
     "itemCount": "{count, plural, =0 {no items} one {# item} other {# items}}",
     "itemsHeading": "{count, plural, =0 {No items yet} one {# item} other {# items}}",
+    "manager": {
+      "selectAll": "Select all",
+      "moveTo": "Move to…",
+      "moveDone": "Moved.",
+      "toggleFeatured": "Toggle featured",
+      "dragHandle": "Drag to reorder"
+    },
     "newCollection": "New collection",
     "newCollectionTitle": "New collection",
     "newCollectionDescription": "Create a collection to group related frames. Public visibility is gated on status = ready.",
