@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { optimizeImageFile } from "@/lib/gallery/client-image";
+import { optimizeImageFile, readCapturedAt } from "@/lib/gallery/client-image";
 import { slugify } from "@/components/admin/slug-field";
 import { createGalleryItemsBatchAction } from "@/lib/gallery/admin";
 import { ADMIN_ACTION_IDLE } from "@/lib/admin/action-state";
@@ -23,6 +23,7 @@ interface Staged {
   width?: number;
   height?: number;
   blurDataUrl?: string;
+  capturedAt?: string;
 }
 
 const ASPECTS: [string, number][] = [
@@ -93,8 +94,12 @@ export function BatchUploadDropzone({
           const base = slugify(file.name.replace(/\.[^.]+$/, "")) || "photo";
           const slug = dedupe(base, used);
           const id = rid();
-          // Kick off optimization; patch the entry when it resolves.
-          void optimizeImageFile(file).then((opt) => {
+          // Kick off optimization + EXIF read in parallel (EXIF must come
+          // from the original, pre-WebP file); patch the entry when ready.
+          void Promise.all([
+            optimizeImageFile(file),
+            readCapturedAt(file),
+          ]).then(([opt, capturedAt]) => {
             setStaged((cur) =>
               cur.map((s) =>
                 s.id === id
@@ -106,6 +111,7 @@ export function BatchUploadDropzone({
                         width: opt.width,
                         height: opt.height,
                         blurDataUrl: opt.blurDataUrl,
+                        capturedAt: capturedAt ?? undefined,
                       }
                     : { ...s, status: "error" }
                   : s,
@@ -192,6 +198,7 @@ export function BatchUploadDropzone({
             height: item.height,
             blurDataUrl: item.blurDataUrl,
             aspect: nearestAspect(item.width, item.height),
+            capturedAt: item.capturedAt,
           };
         }),
       );

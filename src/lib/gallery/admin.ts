@@ -559,6 +559,10 @@ const batchItemSchema = z.object({
   height: z.coerce.number().int().positive().max(60000).optional(),
   blurDataUrl: z.string().max(20000).optional(),
   aspect: ASPECT_ENUM.optional(),
+  capturedAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
 });
 
 export async function createGalleryItemsBatchAction(
@@ -625,7 +629,7 @@ export async function createGalleryItemsBatchAction(
     height: it.height ?? null,
     blur_data_url: it.blurDataUrl ?? null,
     aspect: it.aspect ?? "4/5",
-    captured_at: null,
+    captured_at: it.capturedAt ?? null,
     location: null,
     featured: false,
     pinned: false,

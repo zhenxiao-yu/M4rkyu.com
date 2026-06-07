@@ -4,6 +4,30 @@
 // batch uploads store consistent, web-safe originals and the public gallery
 // can reserve space (no layout shift). Import only from client components.
 
+import exifr from "exifr";
+
+/**
+ * Read the photo's capture date from EXIF (DateTimeOriginal, falling back to
+ * CreateDate), returned as `YYYY-MM-DD`. Must run on the ORIGINAL file before
+ * the WebP re-encode strips metadata. Returns null when there's no usable
+ * EXIF (screenshots, edited exports, non-JPEG) — the field then stays manual.
+ */
+export async function readCapturedAt(file: File): Promise<string | null> {
+  try {
+    const data = (await exifr.parse(file, [
+      "DateTimeOriginal",
+      "CreateDate",
+    ])) as { DateTimeOriginal?: unknown; CreateDate?: unknown } | undefined;
+    const value = data?.DateTimeOriginal ?? data?.CreateDate;
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+      return value.toISOString().slice(0, 10);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 const OPTIMIZE_MAX_EDGE = 2400;
 const OPTIMIZE_QUALITY = 0.85;
 
