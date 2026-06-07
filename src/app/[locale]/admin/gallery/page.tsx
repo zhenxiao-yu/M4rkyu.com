@@ -1,4 +1,7 @@
 import { getTranslations } from "next-intl/server";
+import { Images } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getDbGalleryCollections, getDbGalleryItems } from "@/lib/gallery/db";
 import {
@@ -58,6 +61,14 @@ export default async function AdminGalleryPage({
         eyebrow={tAdmin("eyebrow")}
         title={t("title")}
         description={t("description")}
+        actions={
+          <Button asChild variant="outline" size="sm">
+            <Link href="/admin/gallery/library" locale={locale}>
+              <Images aria-hidden="true" className="size-4" />
+              {t("library.open")}
+            </Link>
+          </Button>
+        }
       />
       <AdminList
           items={items}

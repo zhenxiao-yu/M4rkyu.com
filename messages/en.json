@@ -1847,7 +1847,11 @@
       "moveTo": "Move to…",
       "moveDone": "Moved.",
       "toggleFeatured": "Toggle featured",
-      "dragHandle": "Drag to reorder"
+      "dragHandle": "Drag to reorder",
+      "filterFlag": "Filter",
+      "filterAll": "All photos",
+      "filterFeatured": "Featured",
+      "filterNeedsAlt": "Missing alt"
     },
     "batch": {
       "heading": "Batch upload",
@@ -1860,6 +1864,11 @@
       "uploading": "Uploading…",
       "failed": "Some photos couldn't be uploaded.",
       "done": "{count, plural, one {# photo added as draft} other {# photos added as drafts}}"
+    },
+    "library": {
+      "title": "Photo library",
+      "description": "Every photo across all collections — search, filter, set status, feature, or move between collections.",
+      "open": "Library"
     },
     "newCollection": "New collection",
     "newCollectionTitle": "New collection",

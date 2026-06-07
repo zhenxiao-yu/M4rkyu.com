@@ -73,6 +73,8 @@ export default async function CollectionDetailPage({ params }: PageProps) {
     alt: item.alt,
     caption: item.caption,
     imageUrl: storageUrlFor(item.storagePath),
+    collectionSlug: collection.slug,
+    collectionTitle: collection.title,
   }));
   const otherCollections = allCollections
     .filter((c) => c.id !== collection.id)
@@ -131,7 +133,6 @@ export default async function CollectionDetailPage({ params }: PageProps) {
             <CollectionItemsManager
               items={managerItems}
               collections={otherCollections}
-              collectionSlug={collection.slug}
               locale={locale}
               statusOptions={statusOptions}
               setStatusAction={setItemStatusAction}

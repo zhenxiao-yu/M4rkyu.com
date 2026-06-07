@@ -21,7 +21,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Pencil, Star, Trash2, X } from "lucide-react";
+import { GripVertical, Pencil, Search, Star, Trash2, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,10 @@ export interface GalleryManagerItem {
   alt: string;
   caption: string;
   imageUrl: string | null;
+  /** Owning collection — drives the per-item edit link (items can span
+   * collections in the library view). */
+  collectionSlug: string;
+  collectionTitle: string;
 }
 
 export interface GalleryManagerCollection {
@@ -47,11 +51,15 @@ export interface GalleryManagerCollection {
 
 interface Props {
   items: GalleryManagerItem[];
-  /** Other collections, offered as move-to targets. */
+  /** Collections offered as move-to targets. */
   collections: GalleryManagerCollection[];
-  collectionSlug: string;
   locale: Locale;
   statusOptions: { value: string; label: string }[];
+  /** Drag-to-reorder — off for the cross-collection library view, where a
+   * mixed order has no meaning. Defaults to on. */
+  enableReorder?: boolean;
+  /** Show each tile's owning collection — on for the library view. */
+  showCollection?: boolean;
   setStatusAction: (id: string, status: string) => Promise<void>;
   setFeaturedAction: (id: string, featured: boolean) => Promise<void>;
   reorderAction: (id: string, direction: "up" | "down") => Promise<void>;
@@ -71,9 +79,10 @@ interface Props {
 export function CollectionItemsManager({
   items,
   collections,
-  collectionSlug,
   locale,
   statusOptions,
+  enableReorder = true,
+  showCollection = false,
   setStatusAction,
   setFeaturedAction,
   reorderAction,
@@ -93,6 +102,11 @@ export function CollectionItemsManager({
   >({});
   const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
   const [busy, setBusy] = useState(false);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [flagFilter, setFlagFilter] = useState<"all" | "featured" | "needsAlt">(
+    "all",
+  );
   const [, startTransition] = useTransition();
 
   const sensors = useSensors(
@@ -111,13 +125,33 @@ export function CollectionItemsManager({
     return next.length === items.length ? next : items;
   }, [items, orderOverride]);
 
+  const filtering =
+    query.trim().length > 0 || statusFilter !== "all" || flagFilter !== "all";
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return ordered.filter((item) => {
+      if (statusFilter !== "all" && item.status !== statusFilter) return false;
+      if (flagFilter === "featured" && !item.featured) return false;
+      if (flagFilter === "needsAlt" && item.alt.trim().length > 0) return false;
+      if (!q) return true;
+      return (
+        item.title.toLowerCase().includes(q) ||
+        item.slug.toLowerCase().includes(q) ||
+        item.alt.toLowerCase().includes(q)
+      );
+    });
+  }, [ordered, query, statusFilter, flagFilter]);
+
   const selectedIds = useMemo(
-    () => ordered.filter((i) => selected.has(i.id)).map((i) => i.id),
-    [ordered, selected],
+    () => filtered.filter((i) => selected.has(i.id)).map((i) => i.id),
+    [filtered, selected],
   );
   const allSelected =
-    ordered.length > 0 && selectedIds.length === ordered.length;
-  const dragEnabled = !busy && ordered.length > 1;
+    filtered.length > 0 && selectedIds.length === filtered.length;
+  // Reorder maps positions to real DB rows, so it must run against the full,
+  // unfiltered list — disabled while filtering/searching.
+  const dragEnabled = enableReorder && !busy && !filtering && filtered.length > 1;
 
   function toggleOne(id: string) {
     setSelected((prev) => {
@@ -128,7 +162,7 @@ export function CollectionItemsManager({
     });
   }
   function toggleAll() {
-    setSelected(allSelected ? new Set() : new Set(ordered.map((i) => i.id)));
+    setSelected(allSelected ? new Set() : new Set(filtered.map((i) => i.id)));
   }
   function clearSelection() {
     setSelected(new Set());
@@ -184,7 +218,7 @@ export function CollectionItemsManager({
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const ids = ordered.map((i) => i.id);
+    const ids = filtered.map((i) => i.id);
     const oldIndex = ids.indexOf(String(active.id));
     const newIndex = ids.indexOf(String(over.id));
     if (oldIndex < 0 || newIndex < 0) return;
@@ -230,8 +264,52 @@ export function CollectionItemsManager({
           />
           {t("manager.selectAll")}
         </label>
+
+        <div className="relative min-w-40 flex-1">
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={tAdmin("list.search")}
+            className={cn(adminInputClass, "h-9 pl-8")}
+          />
+        </div>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          aria-label={tAdmin("list.status")}
+          className={cn(adminInputClass, "h-9 w-auto")}
+        >
+          <option value="all">{tAdmin("list.allStatuses")}</option>
+          {statusOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={flagFilter}
+          onChange={(e) =>
+            setFlagFilter(e.target.value as "all" | "featured" | "needsAlt")
+          }
+          aria-label={t("manager.filterFlag")}
+          className={cn(adminInputClass, "h-9 w-auto")}
+        >
+          <option value="all">{t("manager.filterAll")}</option>
+          <option value="featured">{t("manager.filterFeatured")}</option>
+          <option value="needsAlt">{t("manager.filterNeedsAlt")}</option>
+        </select>
+
         <p className="ml-auto font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
-          {t("itemsHeading", { count: items.length })}
+          {filtering
+            ? `${filtered.length} / ${items.length}`
+            : t("itemsHeading", { count: items.length })}
         </p>
       </div>
 
@@ -319,17 +397,22 @@ export function CollectionItemsManager({
       ) : null}
 
       {/* Thumbnail grid */}
+      {filtered.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-border/60 bg-card/40 py-10 text-center text-sm text-muted-foreground">
+          {tAdmin("list.noMatches")}
+        </div>
+      ) : (
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={ordered.map((i) => i.id)}
+          items={filtered.map((i) => i.id)}
           strategy={rectSortingStrategy}
         >
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {ordered.map((item) => {
+            {filtered.map((item) => {
               const isSelected = selected.has(item.id);
               const itemBusy = pendingId === item.id;
               const status = optimisticStatus[item.id] ?? item.status;
@@ -422,9 +505,16 @@ export function CollectionItemsManager({
                         </div>
 
                         <div className="grid gap-2 p-2.5">
-                          <p className="truncate text-xs font-medium text-foreground">
-                            {item.title}
-                          </p>
+                          <div className="grid">
+                            <p className="truncate text-xs font-medium text-foreground">
+                              {item.title}
+                            </p>
+                            {showCollection ? (
+                              <p className="truncate font-mono text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground/70">
+                                {item.collectionTitle}
+                              </p>
+                            ) : null}
+                          </div>
                           <div className="flex items-center gap-1.5">
                             <label
                               className="sr-only"
@@ -457,7 +547,7 @@ export function CollectionItemsManager({
                               className="size-7 shrink-0 p-0"
                             >
                               <Link
-                                href={`/admin/gallery/${collectionSlug}/${item.slug}`}
+                                href={`/admin/gallery/${item.collectionSlug}/${item.slug}`}
                                 locale={locale}
                                 aria-label={t("editItem")}
                                 title={t("editItem")}
@@ -497,6 +587,7 @@ export function CollectionItemsManager({
           </ul>
         </SortableContext>
       </DndContext>
+      )}
     </div>
   );
 }
