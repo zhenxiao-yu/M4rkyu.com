@@ -1851,7 +1851,11 @@
       "filterFlag": "筛选",
       "filterAll": "全部照片",
       "filterFeatured": "精选",
-      "filterNeedsAlt": "缺少替代文本"
+      "filterNeedsAlt": "缺少替代文本",
+      "publish": "发布",
+      "altEdit": "编辑替代文本",
+      "altMissing": "添加替代文本",
+      "altPlaceholder": "描述这张照片"
     },
     "batch": {
       "heading": "批量上传",

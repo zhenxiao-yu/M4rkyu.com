@@ -13,6 +13,7 @@ import {
   bulkSetItemStatusAction,
   moveItemsAction,
   reorderItemAction,
+  setItemAltAction,
   setItemFeaturedAction,
   setItemStatusAction,
 } from "@/lib/gallery/admin";
@@ -87,6 +88,7 @@ export default async function GalleryLibraryPage({
         showCollection
         setStatusAction={setItemStatusAction}
         setFeaturedAction={setItemFeaturedAction}
+        setAltAction={setItemAltAction}
         reorderAction={reorderItemAction}
         bulkStatusAction={bulkSetItemStatusAction}
         bulkDeleteAction={bulkDeleteItemsAction}

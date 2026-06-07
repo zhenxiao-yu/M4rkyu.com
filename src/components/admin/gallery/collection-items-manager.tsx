@@ -21,7 +21,17 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Pencil, Search, Star, Trash2, X } from "lucide-react";
+import {
+  Check,
+  Eye,
+  GripVertical,
+  Pencil,
+  Search,
+  Star,
+  Trash2,
+  Type,
+  X,
+} from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
@@ -62,6 +72,7 @@ interface Props {
   showCollection?: boolean;
   setStatusAction: (id: string, status: string) => Promise<void>;
   setFeaturedAction: (id: string, featured: boolean) => Promise<void>;
+  setAltAction: (id: string, alt: string) => Promise<void>;
   reorderAction: (id: string, direction: "up" | "down") => Promise<void>;
   bulkStatusAction: (ids: string[], status: string) => Promise<void>;
   bulkDeleteAction: (ids: string[]) => Promise<void>;
@@ -85,6 +96,7 @@ export function CollectionItemsManager({
   showCollection = false,
   setStatusAction,
   setFeaturedAction,
+  setAltAction,
   reorderAction,
   bulkStatusAction,
   bulkDeleteAction,
@@ -100,6 +112,11 @@ export function CollectionItemsManager({
   const [optimisticFeatured, setOptimisticFeatured] = useState<
     Record<string, boolean>
   >({});
+  const [optimisticAlt, setOptimisticAlt] = useState<Record<string, string>>(
+    {},
+  );
+  const [altEditId, setAltEditId] = useState<string | null>(null);
+  const [altDraft, setAltDraft] = useState("");
   const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [query, setQuery] = useState("");
@@ -131,17 +148,18 @@ export function CollectionItemsManager({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return ordered.filter((item) => {
+      const alt = optimisticAlt[item.id] ?? item.alt;
       if (statusFilter !== "all" && item.status !== statusFilter) return false;
       if (flagFilter === "featured" && !item.featured) return false;
-      if (flagFilter === "needsAlt" && item.alt.trim().length > 0) return false;
+      if (flagFilter === "needsAlt" && alt.trim().length > 0) return false;
       if (!q) return true;
       return (
         item.title.toLowerCase().includes(q) ||
         item.slug.toLowerCase().includes(q) ||
-        item.alt.toLowerCase().includes(q)
+        alt.toLowerCase().includes(q)
       );
     });
-  }, [ordered, query, statusFilter, flagFilter]);
+  }, [ordered, query, statusFilter, flagFilter, optimisticAlt]);
 
   const selectedIds = useMemo(
     () => filtered.filter((i) => selected.has(i.id)).map((i) => i.id),
@@ -212,6 +230,23 @@ export function CollectionItemsManager({
       id,
       () => setFeaturedAction(id, next),
       () => setOptimisticFeatured((m) => ({ ...m, [id]: current })),
+    );
+  }
+
+  function openAlt(id: string, current: string) {
+    setAltDraft(current);
+    setAltEditId(id);
+  }
+
+  function saveAlt(id: string, prev: string) {
+    const next = altDraft.trim();
+    setAltEditId(null);
+    if (next === prev.trim()) return;
+    setOptimisticAlt((m) => ({ ...m, [id]: next }));
+    runItem(
+      id,
+      () => setAltAction(id, next),
+      () => setOptimisticAlt((m) => ({ ...m, [id]: prev })),
     );
   }
 
@@ -372,6 +407,16 @@ export function CollectionItemsManager({
             variant="outline"
             size="sm"
             disabled={busy}
+            onClick={() => runBulk(() => bulkStatusAction(selectedIds, "ready"))}
+          >
+            <Eye className="size-3.5" aria-hidden="true" />
+            {t("manager.publish")}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={busy}
             onClick={() => {
               const message = tAdmin("list.bulk.confirmDelete", {
                 count: selectedIds.length,
@@ -417,6 +462,9 @@ export function CollectionItemsManager({
               const itemBusy = pendingId === item.id;
               const status = optimisticStatus[item.id] ?? item.status;
               const featured = optimisticFeatured[item.id] ?? item.featured;
+              const alt = optimisticAlt[item.id] ?? item.alt;
+              const altMissing = alt.trim().length === 0;
+              const editingAlt = altEditId === item.id;
               return (
                 <SortableTile key={item.id} id={item.id} disabled={!dragEnabled}>
                   {({ setNodeRef, style, handleProps, isDragging }) => (
@@ -540,6 +588,26 @@ export function CollectionItemsManager({
                                 </option>
                               ))}
                             </select>
+                            <button
+                              type="button"
+                              onClick={() => openAlt(item.id, alt)}
+                              disabled={itemBusy}
+                              aria-label={t("manager.altEdit")}
+                              title={
+                                altMissing
+                                  ? t("manager.altMissing")
+                                  : t("manager.altEdit")
+                              }
+                              className={cn(
+                                "inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors disabled:opacity-40",
+                                altMissing
+                                  ? "text-destructive hover:bg-destructive/10"
+                                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                                FOCUS_RING,
+                              )}
+                            >
+                              <Type className="size-3.5" aria-hidden="true" />
+                            </button>
                             <Button
                               asChild
                               variant="ghost"
@@ -577,6 +645,55 @@ export function CollectionItemsManager({
                               <Trash2 className="size-3.5" aria-hidden="true" />
                             </button>
                           </div>
+
+                          {editingAlt ? (
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="text"
+                                autoFocus
+                                value={altDraft}
+                                onChange={(e) => setAltDraft(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    saveAlt(item.id, alt);
+                                  } else if (e.key === "Escape") {
+                                    e.preventDefault();
+                                    setAltEditId(null);
+                                  }
+                                }}
+                                placeholder={t("manager.altPlaceholder")}
+                                className={cn(
+                                  adminInputClass,
+                                  "h-7 flex-1 py-0.5 text-[0.7rem]",
+                                )}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => saveAlt(item.id, alt)}
+                                aria-label={t("save")}
+                                title={t("save")}
+                                className={cn(
+                                  "inline-flex size-7 shrink-0 items-center justify-center rounded-md text-ring hover:bg-ring/10",
+                                  FOCUS_RING,
+                                )}
+                              >
+                                <Check className="size-3.5" aria-hidden="true" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setAltEditId(null)}
+                                aria-label={t("cancel")}
+                                title={t("cancel")}
+                                className={cn(
+                                  "inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted",
+                                  FOCUS_RING,
+                                )}
+                              >
+                                <X className="size-3.5" aria-hidden="true" />
+                              </button>
+                            </div>
+                          ) : null}
                         </div>
                       </div>
                     </li>

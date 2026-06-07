@@ -29,6 +29,7 @@ import {
   deleteCollectionAction,
   moveItemsAction,
   reorderItemAction,
+  setItemAltAction,
   setItemFeaturedAction,
   setItemStatusAction,
   updateCollectionAction,
@@ -254,6 +255,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
           statusOptions={statusOptions}
           setStatusAction={setItemStatusAction}
           setFeaturedAction={setItemFeaturedAction}
+          setAltAction={setItemAltAction}
           reorderAction={reorderItemAction}
           bulkStatusAction={bulkSetItemStatusAction}
           bulkDeleteAction={bulkDeleteItemsAction}

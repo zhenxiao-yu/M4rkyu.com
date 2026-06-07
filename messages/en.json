@@ -1851,7 +1851,11 @@
       "filterFlag": "Filter",
       "filterAll": "All photos",
       "filterFeatured": "Featured",
-      "filterNeedsAlt": "Missing alt"
+      "filterNeedsAlt": "Missing alt",
+      "publish": "Publish",
+      "altEdit": "Edit alt text",
+      "altMissing": "Add alt text",
+      "altPlaceholder": "Describe this photo"
     },
     "batch": {
       "heading": "Batch upload",

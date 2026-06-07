@@ -474,6 +474,16 @@ export async function setItemFeaturedAction(id: string, featured: boolean) {
   revalidateGallery();
 }
 
+export async function setItemAltAction(id: string, alt: string) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  await supabase
+    .from("gallery_items")
+    .update({ alt: (alt ?? "").slice(0, 240) })
+    .eq("id", id);
+  revalidateGallery();
+}
+
 // Single-step reorder scoped to the item's own collection (mirrors
 // reorderCollectionAction). The grid replays this |delta| times for a drag.
 export async function reorderItemAction(id: string, direction: "up" | "down") {
