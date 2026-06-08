@@ -525,7 +525,7 @@
   },
   "Blog": {
     "eyebrow": "field notes",
-    "title": "Writing & Devlog",
+    "title": "Blog",
     "description": "Short, dated, opinionated. Engineering notes, devlog entries, and process essays — added as content ships.",
     "metaDescription": "Writing and devlog from ZhenXiao Mark Yu — engineering notes, design process, and game development.",
     "featuredHeading": "Featured notes",
