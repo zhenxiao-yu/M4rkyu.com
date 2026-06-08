@@ -306,8 +306,8 @@
     "viewSaved": "查看已收藏的帧",
     "savedCount": "{count, plural, =0 {还没有收藏} other {已收藏 # 帧}}",
     "collectionsEyebrow": "按合集",
-    "collectionsTitle": "三个分组",
-    "collectionsDescription": "每个合集都有自己的样片表，节奏更慢一点。",
+    "collectionsTitle": "{count, plural, =0 {还没有合集} other {# 个合集}}",
+    "collectionsDescription": "每个合集都是一组照片，按更慢的节奏添加。",
     "hoverHint": "点开灯箱 · 方向键翻动",
     "previousFrame": "上一张照片",
     "nextFrame": "下一张照片",
@@ -1490,6 +1490,7 @@
     "adminBadge": "管理员",
     "identityLabel": "身份",
     "quickLinks": "快速跳转",
+    "adminConsole": "管理后台",
     "status": {
       "visibilityLabel": "可见性",
       "public": "公开",
@@ -1500,7 +1501,8 @@
     "sectionDescription": {
       "saved": "已收藏的影像、项目与游戏",
       "comments": "你发布过的全部评论",
-      "settings": "资料字段与偏好设置"
+      "settings": "资料字段与偏好设置",
+      "admin": "管理内容、评论与用户"
     },
     "savedTitle": "已保存的内容",
     "savedDescription": "你收藏的全部条目，最新在前。",

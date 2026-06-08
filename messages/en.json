@@ -306,8 +306,8 @@
     "viewSaved": "View saved frames",
     "savedCount": "{count, plural, =0 {nothing saved yet} one {# frame saved} other {# frames saved}}",
     "collectionsEyebrow": "by collection",
-    "collectionsTitle": "Three groupings",
-    "collectionsDescription": "Each collection gets its own contact sheet at a slower pace.",
+    "collectionsTitle": "{count, plural, =0 {No collections yet} one {# collection} other {# collections}}",
+    "collectionsDescription": "Each collection is its own set of photos, added at a slower pace.",
     "hoverHint": "Click for the lightbox · arrow-keys to move through",
     "previousFrame": "Previous photo",
     "nextFrame": "Next photo",
@@ -1490,6 +1490,7 @@
     "adminBadge": "Admin",
     "identityLabel": "Identity",
     "quickLinks": "Quick links",
+    "adminConsole": "Admin console",
     "status": {
       "visibilityLabel": "Visibility",
       "public": "Public",
@@ -1500,7 +1501,8 @@
     "sectionDescription": {
       "saved": "Bookmarked frames, projects & games",
       "comments": "Everything you've posted",
-      "settings": "Profile fields & preferences"
+      "settings": "Profile fields & preferences",
+      "admin": "Manage content, comments & users"
     },
     "savedTitle": "Saved items",
     "savedDescription": "Everything you've bookmarked, newest first.",

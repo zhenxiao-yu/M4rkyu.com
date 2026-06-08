@@ -132,7 +132,7 @@ export default async function ArchivePage({
         <FadeIn>
           <SectionHeading
             eyebrow={t("collectionsEyebrow")}
-            title={t("collectionsTitle")}
+            title={t("collectionsTitle", { count: collections.length })}
             description={t("collectionsDescription")}
           />
         </FadeIn>
