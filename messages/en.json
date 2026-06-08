@@ -469,6 +469,8 @@
     "decorative": "PLAY",
     "insertCoin": "Insert coin",
     "freePlay": "Free play",
+    "emptyTitle": "No games loaded yet",
+    "emptyDescription": "Cartridges are still in development — check back soon. Code-side work lives under Work.",
     "credits": "Credits",
     "pressStart": "Press start",
     "view": "View"
@@ -504,6 +506,9 @@
     "previous": "Previous",
     "next": "Next",
     "backToArchive": "Back to archive",
+    "backToWork": "Back to all work",
+    "backToGames": "Back to all games",
+    "backToLogs": "Back to all posts",
     "overview": "What it is",
     "screenshots": "What it looks like",
     "builtWith": "Built with",

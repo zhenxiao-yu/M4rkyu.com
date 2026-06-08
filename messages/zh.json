@@ -469,6 +469,8 @@
     "decorative": "玩",
     "insertCoin": "投币",
     "freePlay": "免费游玩",
+    "emptyTitle": "暂无游戏",
+    "emptyDescription": "游戏仍在开发中，敬请期待。代码相关作品可在「作品」中查看。",
     "credits": "积分",
     "pressStart": "开始",
     "view": "查看"
@@ -504,6 +506,9 @@
     "previous": "上一篇",
     "next": "下一篇",
     "backToArchive": "返回档案",
+    "backToWork": "返回全部作品",
+    "backToGames": "返回全部游戏",
+    "backToLogs": "返回全部文章",
     "overview": "这是什么",
     "screenshots": "界面一览",
     "builtWith": "技术栈",

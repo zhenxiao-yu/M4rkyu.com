@@ -25,10 +25,15 @@ export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-  return games.flatMap((game) => [
-    { locale: "en", slug: game.slug },
-    { locale: "zh", slug: game.slug },
-  ]);
+  // Only prerender finished games — non-ready slugs 404 at render anyway
+  // (getGameFromSource filters them), so prerendering them just bakes 404
+  // shells. DB-only ready games render on demand, then cache.
+  return games
+    .filter((game) => game.status === "ready")
+    .flatMap((game) => [
+      { locale: "en", slug: game.slug },
+      { locale: "zh", slug: game.slug },
+    ]);
 }
 
 export async function generateMetadata({
@@ -37,7 +42,7 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const game = games.find((item) => item.slug === slug);
+  const game = await getGameFromSource(slug);
   if (!game) return {};
   const localized = localize(game, locale);
   return {

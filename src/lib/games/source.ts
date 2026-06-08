@@ -15,8 +15,11 @@ import type { Game } from "@/content/schemas";
 
 export const getGamesSource = cache(async (): Promise<Game[]> => {
   const rows = await getDbGames();
-  if (rows.length === 0) return games;
-  return rows.map(dbGameRowToGame);
+  const all = rows.length === 0 ? games : rows.map(dbGameRowToGame);
+  // Public surfaces show only finished games — drafts/placeholders/coming-soon
+  // stay out of /games (mirrors shop + gallery sources). Until a real game
+  // ships, /games renders its empty state instead of internal placeholder copy.
+  return all.filter((game) => game.status === "ready");
 });
 
 export const getGameFromSource = cache(

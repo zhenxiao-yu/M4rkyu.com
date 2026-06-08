@@ -28,6 +28,14 @@ export async function CaseStudyFooter({
   archiveHref,
 }: CaseStudyFooterProps) {
   const t = await getTranslations("CaseStudy");
+  // The button returns to the section index it came from — label it for that
+  // destination instead of the old generic "Back to archive", which wrongly
+  // implied the photo /archive on every project/game/log page.
+  const backLabel = archiveHref.endsWith("/games")
+    ? t("backToGames")
+    : archiveHref.endsWith("/logs")
+      ? t("backToLogs")
+      : t("backToWork");
 
   return (
     <footer className="border-t bg-muted/20">
@@ -40,7 +48,7 @@ export async function CaseStudyFooter({
           />
           <div className="hidden lg:block lg:self-center">
             <Button asChild variant="outline">
-              <Link href={archiveHref}>{t("backToArchive")}</Link>
+              <Link href={archiveHref}>{backLabel}</Link>
             </Button>
           </div>
           <CaseStudyAdjacent

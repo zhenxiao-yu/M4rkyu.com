@@ -69,7 +69,9 @@ npm run dev -- --hostname 127.0.0.1 --port 3000
 `src/app/{layout,page,sitemap,robots,icon}.tsx` plus the locale-less
 `opengraph-image.tsx` are infrastructure — the _site_ is everything under
 `[locale]`. Current public route segments are `about`, `work`, `games`,
-`media`, `archive`, `resources`, `logs`, `notes`, `shop`, and `contact`.
+`media`, `archive`, `resources`, `logs`, `notes`, `shop`, and `contact`,
+plus the discovery/aggregator routes `latest`, `topics`, `search`,
+`changelog`, and `colophon`, and the legal `privacy` / `terms` pages.
 Admin/account/auth routes also live under `[locale]`. There is no `/portal`
 route in the current app; older docs that mention it are archival drift unless
 they are explicitly updated in the same change.

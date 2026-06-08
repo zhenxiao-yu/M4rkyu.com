@@ -23,8 +23,16 @@ const actionLink =
  */
 export async function VisualPreview({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home.visual" });
-  const { collections } = await getGallerySource();
+  const { collections, items } = await getGallerySource();
   const covers = collections.slice(0, 4);
+  // Honest per-collection frame count, derived from real items.
+  const countByCollection = items.reduce<Record<string, number>>(
+    (acc, item) => {
+      acc[item.collection] = (acc[item.collection] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
 
   return (
     <HomeSection
@@ -36,16 +44,10 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <Link href="/archive" locale={locale} className={cn(actionLink, FOCUS_RING)}>
-            {t("openArchive")}
-            <ArrowUpRight aria-hidden="true" className="size-3.5" />
-          </Link>
-          <Link href="/media" locale={locale} className={cn(actionLink, FOCUS_RING)}>
-            {t("openMedia")}
-            <ArrowUpRight aria-hidden="true" className="size-3.5" />
-          </Link>
-        </div>
+        <Link href="/archive" locale={locale} className={cn(actionLink, FOCUS_RING)}>
+          {t("openArchive")}
+          <ArrowUpRight aria-hidden="true" className="size-3.5" />
+        </Link>
       }
     >
       {covers.length > 0 ? (
@@ -65,7 +67,9 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
               labels={{
                 collection: t("collectionLabel"),
                 open: t("openCollection"),
-                frames: t("framesCount", { count: collection.count }),
+                frames: t("framesCount", {
+                  count: countByCollection[collection.slug] ?? 0,
+                }),
               }}
             />
           ))}

@@ -15,14 +15,17 @@ export const contentType = OG_CONTENT_TYPE;
 // generate at build time. CJK glyphs are supported via the bundled
 // Noto Sans SC subset in `renderOgImage`.
 export function generateImageMetadata() {
-  return games.flatMap((game) =>
-    routing.locales.map((locale) => ({
-      id: `${locale}-${game.slug}`,
-      alt: `${game.title} — game archive`,
-      contentType: OG_CONTENT_TYPE,
-      size: OG_IMAGE_SIZE,
-    })),
-  );
+  // Only ready games have public detail pages, so only they get an OG card.
+  return games
+    .filter((game) => game.status === "ready")
+    .flatMap((game) =>
+      routing.locales.map((locale) => ({
+        id: `${locale}-${game.slug}`,
+        alt: `${game.title} — game archive`,
+        contentType: OG_CONTENT_TYPE,
+        size: OG_IMAGE_SIZE,
+      })),
+    );
 }
 
 export default async function OpengraphImage({
@@ -32,7 +35,7 @@ export default async function OpengraphImage({
 }) {
   const { slug } = await params;
   const game = getGame(slug);
-  if (!game) notFound();
+  if (!game || game.status !== "ready") notFound();
   return await renderOgImage({
     eyebrow: "GAME ARCHIVE",
     title: game.title,

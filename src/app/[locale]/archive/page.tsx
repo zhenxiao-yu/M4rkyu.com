@@ -56,6 +56,17 @@ export default async function ArchivePage({
       : collections.slice(0, 3);
   const featuredFrames = items.filter((item) => item.featured).slice(0, 8);
 
+  // Real frame count per collection, derived from the actual items on the
+  // page (honest for both the DB and static-fallback sources) instead of a
+  // hardcoded collection.count that can advertise frames that don't exist.
+  const countByCollection = items.reduce<Record<string, number>>(
+    (acc, item) => {
+      acc[item.collection] = (acc[item.collection] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
   return (
     <PageShell locale={locale}>
       <PageHero
@@ -104,7 +115,9 @@ export default async function ArchivePage({
                 <CollectionBanner
                   key={collection.slug}
                   collection={collection}
-                  countLabel={t("framesCount", { count: collection.count })}
+                  countLabel={t("framesCount", {
+                    count: countByCollection[collection.slug] ?? 0,
+                  })}
                   enterLabel={t("viewCollection")}
                   locale={locale}
                 />
@@ -128,7 +141,9 @@ export default async function ArchivePage({
             <CollectionCoverCard
               key={collection.slug}
               collection={collection}
-              countLabel={t("framesCount", { count: collection.count })}
+              countLabel={t("framesCount", {
+                count: countByCollection[collection.slug] ?? 0,
+              })}
               locale={locale}
             />
           ))}

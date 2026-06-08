@@ -5,6 +5,7 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { GameCartridge } from "@/components/games/game-cartridge";
+import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { getGamesSource } from "@/lib/games/source";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -83,16 +84,23 @@ export default async function GamesPage({
 
       {/* ───────── Cartridge shelf ───────── */}
       <PageSection>
-        <Stagger
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          delay={0.05}
-        >
-          {games.map((game, i) => (
-            <StaggerItem key={game.slug}>
-              <GameCartridge game={game} locale={locale} index={i + 1} />
-            </StaggerItem>
-          ))}
-        </Stagger>
+        {games.length === 0 ? (
+          <EmptyArchiveState
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
+          />
+        ) : (
+          <Stagger
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            delay={0.05}
+          >
+            {games.map((game, i) => (
+              <StaggerItem key={game.slug}>
+                <GameCartridge game={game} locale={locale} index={i + 1} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        )}
       </PageSection>
     </PageShell>
   );
