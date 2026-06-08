@@ -21,17 +21,17 @@ export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Navigation" });
 
   const labels: NavLabels = {
-    projects: t("projects"),
+    build: t("build"),
     work: t("work"),
     workDescription: t("workDescription"),
     games: t("games"),
     gamesDescription: t("gamesDescription"),
     gallery: t("gallery"),
-    archive: t("archive"),
+    photos: t("photos"),
     archiveDescription: t("archiveDescription"),
     shop: t("shop"),
     shopDescription: t("shopDescription"),
-    logs: t("logs"),
+    writing: t("writing"),
     blogs: t("blogs"),
     blogsDescription: t("blogsDescription"),
     notes: t("notes"),

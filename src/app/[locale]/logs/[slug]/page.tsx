@@ -102,7 +102,7 @@ export default async function BlogPostPage({
       <JsonLd data={buildArticleJsonLd(meta, locale)} />
       <JsonLd
         data={buildBreadcrumbJsonLd(locale, [
-          { name: tNav("logs"), path: "/logs" },
+          { name: tNav("blog"), path: "/logs" },
           { name: meta.title, path: `/logs/${meta.slug}` },
         ])}
       />

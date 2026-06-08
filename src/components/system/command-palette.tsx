@@ -11,7 +11,6 @@ import {
   Hash,
   Heart,
   HelpCircle,
-  Image as ImageIcon,
   Languages,
   Layers,
   ListChecks,
@@ -73,14 +72,13 @@ interface CommandPaletteProps {
 
 const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
   { key: "search", href: "/search", icon: Search },
-  { key: "projects", href: "/work", icon: Briefcase },
+  { key: "work", href: "/work", icon: Briefcase },
   { key: "games", href: "/games", icon: Gamepad2 },
   { key: "gallery", href: "/archive", icon: Camera },
   { key: "shop", href: "/shop", icon: ShoppingBag },
   { key: "blog", href: "/logs", icon: FileText },
   { key: "notes", href: "/notes", icon: NotebookPen },
   { key: "topics", href: "/topics", icon: Hash },
-  { key: "media", href: "/media", icon: ImageIcon },
   { key: "resources", href: "/resources", icon: Wrench },
   { key: "latest", href: "/latest", icon: Clock3 },
   { key: "changelog", href: "/changelog", icon: ListChecks },
@@ -92,7 +90,7 @@ const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
 const PAGE_ALIASES: Record<string, string> = {
   gallery: "archive photos frames contact sheet images",
   blog: "logs writing posts articles devlog",
-  projects: "work case studies portfolio",
+  work: "projects case studies portfolio",
   resources: "tools links bookmarks utilities",
   latest: "new recent updates feed timeline",
   changelog: "release notes changes ship log updates",

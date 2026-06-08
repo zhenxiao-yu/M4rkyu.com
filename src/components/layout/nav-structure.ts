@@ -33,17 +33,17 @@ export interface NavStructure {
 
 // Label bag passed in by the header — desktop/mobile/palette stay free of next-intl `t()` plumbing.
 export interface NavLabels {
-  projects: string;
+  build: string;
   work: string;
   workDescription: string;
   games: string;
   gamesDescription: string;
   gallery: string;
-  archive: string;
+  photos: string;
   archiveDescription: string;
   shop: string;
   shopDescription: string;
-  logs: string;
+  writing: string;
   blogs: string;
   blogsDescription: string;
   notes: string;
@@ -61,8 +61,8 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
   return {
     groups: [
       {
-        id: "projects",
-        label: labels.projects,
+        id: "build",
+        label: labels.build,
         href: "/work",
         items: [
           {
@@ -87,8 +87,8 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         href: "/archive",
         items: [
           {
-            id: "archive",
-            label: labels.archive,
+            id: "photos",
+            label: labels.photos,
             href: "/archive",
             description: labels.archiveDescription,
             iconKey: "Image",
@@ -103,8 +103,8 @@ export function buildNavStructure(labels: NavLabels): NavStructure {
         ],
       },
       {
-        id: "logs",
-        label: labels.logs,
+        id: "writing",
+        label: labels.writing,
         href: "/logs",
         items: [
           {
