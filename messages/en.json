@@ -56,6 +56,24 @@
     "zh": "中文",
     "switchTo": "Switch to {target}"
   },
+  "Theme": {
+    "label": "Theme",
+    "appearance": "Appearance",
+    "appearanceDescription": "Pick a theme and how it adapts to light and dark.",
+    "mode": "Mode",
+    "modeLight": "Light",
+    "modeDark": "Dark",
+    "modeSystem": "System",
+    "selected": "Selected",
+    "risograph": "Risograph",
+    "terminal": "Terminal",
+    "editorial": "Editorial",
+    "description": {
+      "risograph": "Warm two-ink press",
+      "terminal": "Amber phosphor console",
+      "editorial": "Black, white & one red"
+    }
+  },
   "Hud": {
     "systemStatus": "System status",
     "region": "Ontario · CA",

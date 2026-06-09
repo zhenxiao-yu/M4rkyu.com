@@ -56,6 +56,24 @@
     "zh": "中文",
     "switchTo": "切换到 {target}"
   },
+  "Theme": {
+    "label": "主题",
+    "appearance": "外观",
+    "appearanceDescription": "选择主题，以及它如何适配明暗模式。",
+    "mode": "模式",
+    "modeLight": "浅色",
+    "modeDark": "深色",
+    "modeSystem": "跟随系统",
+    "selected": "当前选用",
+    "risograph": "孔版印刷",
+    "terminal": "终端",
+    "editorial": "刊物",
+    "description": {
+      "risograph": "暖色双油墨印刷风",
+      "terminal": "琥珀荧光终端",
+      "editorial": "黑白与一抹红"
+    }
+  },
   "Hud": {
     "systemStatus": "系统状态",
     "region": "安大略 · 加拿大",
