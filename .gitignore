@@ -88,3 +88,6 @@ session-logs/
 scratch/
 .tmp-screens/
 .env*.local
+
+# local design exploration / prototypes (kept out of the repo)
+/design/
