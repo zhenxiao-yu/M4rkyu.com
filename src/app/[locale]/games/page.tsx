@@ -52,7 +52,7 @@ export default async function GamesPage({
         eyebrow={t("eyebrow")}
         title={tNav("games")}
         description={t("intro")}
-        decorativeWord={t("decorative")}
+        decorativeWord="PLAY"
         effects={
           <>
             <div

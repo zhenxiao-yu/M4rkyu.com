@@ -59,7 +59,7 @@ export default async function NewsletterConfirmedPage({
         eyebrow={t("eyebrow")}
         title={copy[state].title}
         description={copy[state].body}
-        decorativeWord={t("eyebrow")}
+        decorativeWord="NEWSLETTER"
       />
       <PageSection>
         <Link

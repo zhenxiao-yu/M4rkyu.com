@@ -201,12 +201,19 @@
   --border: #cecbc2;
   --input: #cecbc2;
   --ring: #0ea5b7;
-  /* Second accent ink — only the multi-theme palettes use a true second
-   * ink (e.g. Risograph's cobalt). The base/classic fallback keeps a
-   * single accent, so --ring-2 mirrors --ring here. */
+  /* Second + third accent inks — only the multi-theme palettes use true
+   * extra inks (e.g. Risograph's cobalt + marigold). The base/classic
+   * fallback keeps a single accent, so --ring-2 / --ring-3 mirror --ring
+   * here. See docs/UNIFIED_VISUAL_DIRECTION.md §5.3 (three-ink budget). */
   --ring-2: #0ea5b7;
+  --ring-3: #0ea5b7;
   --surface-ink: #111111;
   --surface-paper: #f7f5ef;
+  /* Media well — the consistent near-black mat behind cover art / image
+   * placeholders (project cards, game cartridges, previews). Intentionally
+   * theme-independent so cover images sit on a stable dark backdrop across
+   * every palette; defined once here, never per-palette. */
+  --media-well: #0a0a0a;
   --signal: #d71920;
   --success: #0f8f67;
   --warning: #9a6a00;
@@ -275,6 +282,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-2: var(--ring-2);
+  --color-ring-3: var(--ring-3);
   --color-signal: var(--signal);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -285,6 +293,7 @@
   --color-terminal-glow: var(--terminal-glow);
   --color-mission-surface: var(--mission-surface);
   --color-game-accent: var(--game-accent);
+  --color-media-well: var(--media-well);
   /* Font tokens are also set on <html> by next/font in src/app/layout.tsx;
    * the className-scoped values win on every real page, while these @theme
    * inline definitions keep the Tailwind utilities (font-display, font-heading,
@@ -378,58 +387,63 @@
  * legitimately vary the accent + a second ink now).
  * ============================================================ */
 
-/* —— RISOGRAPH (default) — warm press, vermilion + cobalt two-ink —— */
+/* —— RISOGRAPH (default) — high-contrast press, vermilion + cobalt + marigold
+ * Retuned 2026-06 for B/W snap: near-true-black ink on bright near-white card
+ * over warm paper, with darkened hairlines + secondary text so nothing blends.
+ * See design/risograph-flagship-notes.md. —— */
 :root[data-palette="risograph"] {
-  --background: #efe7d8;
-  --foreground: #16130d;
-  --card: #f6f0e2;
-  --card-foreground: #16130d;
-  --popover: #f6f0e2;
-  --popover-foreground: #16130d;
-  --primary: #16130d;
-  --primary-foreground: #f6f0e2;
-  --secondary: #e7decb;
-  --secondary-foreground: #16130d;
-  --muted: #e7decb;
-  --muted-foreground: #5b5343;
-  --accent: #e3d9c6;
-  --accent-foreground: #16130d;
+  --background: #f1ead9;
+  --foreground: #0c0a06;
+  --card: #fcf8ee;
+  --card-foreground: #0c0a06;
+  --popover: #fcf8ee;
+  --popover-foreground: #0c0a06;
+  --primary: #0c0a06;
+  --primary-foreground: #fcf8ee;
+  --secondary: #e8dfca;
+  --secondary-foreground: #0c0a06;
+  --muted: #e8dfca;
+  --muted-foreground: #463f30;
+  --accent: #e4dac5;
+  --accent-foreground: #0c0a06;
   --destructive: #9e2b2b;
-  --border: #d6ccb6;
-  --input: #d6ccb6;
+  --border: #c6b994;
+  --input: #c6b994;
   --ring: #e8412a;
   --ring-2: #2740e0;
+  --ring-3: #c98a00;
   --signal: #c62a1c;
   --success: #0f8f67;
   --warning: #9a6a00;
-  --surface-ink: #16130d;
-  --surface-paper: #efe7d8;
+  --surface-ink: #0c0a06;
+  --surface-paper: #f1ead9;
 }
 :root[data-palette="risograph"][data-theme="dark"] {
-  --background: #0c0b08;
-  --foreground: #efe7d6;
-  --card: #16130d;
-  --card-foreground: #efe7d6;
-  --popover: #14110a;
-  --popover-foreground: #efe7d6;
-  --primary: #efe7d6;
-  --primary-foreground: #0c0b08;
-  --secondary: #1c1810;
-  --secondary-foreground: #efe7d6;
-  --muted: #1c1810;
-  --muted-foreground: #b9af9c;
-  --accent: #20190f;
-  --accent-foreground: #efe7d6;
+  --background: #080705;
+  --foreground: #f6efe2;
+  --card: #15120c;
+  --card-foreground: #f6efe2;
+  --popover: #13100a;
+  --popover-foreground: #f6efe2;
+  --primary: #f6efe2;
+  --primary-foreground: #080705;
+  --secondary: #1e190f;
+  --secondary-foreground: #f6efe2;
+  --muted: #1e190f;
+  --muted-foreground: #c8bda6;
+  --accent: #221b10;
+  --accent-foreground: #f6efe2;
   --destructive: #d4503f;
-  --border: #2a241a;
-  --input: #2a241a;
+  --border: #342c1e;
+  --input: #342c1e;
   --ring: #ff5a3c;
   --ring-2: #5b78ff;
+  --ring-3: #ffc24d;
   --signal: #ff5a3c;
   --success: #46c08a;
   --warning: #e0a23e;
-  --surface-ink: #efe7d6;
-  --surface-paper: #070605;
+  --surface-ink: #f6efe2;
+  --surface-paper: #050403;
 }
 
 /* —— TERMINAL — phosphor amber + green; daylight / CRT —— */
@@ -453,6 +467,7 @@
   --input: #d2c8b0;
   --ring: #b06a00;
   --ring-2: #1c7a32;
+  --ring-3: #0e7490;
   --signal: #c1271c;
   --success: #1c7a32;
   --warning: #8a5400;
@@ -479,6 +494,7 @@
   --input: #233040;
   --ring: #ffb000;
   --ring-2: #46f06a;
+  --ring-3: #38d6ff;
   --signal: #ff453a;
   --success: #46f06a;
   --warning: #ffb000;
@@ -486,7 +502,7 @@
   --surface-paper: #050608;
 }
 
-/* —— EDITORIAL — black / white / paper + one hot red —— */
+/* —— EDITORIAL — Swiss ink: black / paper, hot red + cobalt + gold —— */
 :root[data-palette="editorial"] {
   --background: #f6f4ee;
   --foreground: #0a0a0a;
@@ -506,7 +522,8 @@
   --border: #d8d4c8;
   --input: #d8d4c8;
   --ring: #e2231a;
-  --ring-2: #e2231a;
+  --ring-2: #1a3fd0;
+  --ring-3: #b07d18;
   --signal: #e2231a;
   --success: #0f8f67;
   --warning: #9a6a00;
@@ -532,7 +549,8 @@
   --border: #2a2a2a;
   --input: #2a2a2a;
   --ring: #ff3b2f;
-  --ring-2: #ff3b2f;
+  --ring-2: #5b78ff;
+  --ring-3: #e0a23e;
   --signal: #ff3b2f;
   --success: #46c08a;
   --warning: #e0a23e;
@@ -566,16 +584,23 @@ body::after {
   display: none;
 }
 
-/* RISOGRAPH — warm paper grain (multiply on paper, screen on ink). */
+/* RISOGRAPH — fine halftone dot screen (the real riso signature). A crisp
+ * 5px ink-dot grid at low coverage textures the paper like a printed sheet
+ * instead of the old grey fractal veil that washed everything out. Multiply
+ * on paper, screen on ink. Kept ≤12% so text stays sharp. */
 :root[data-palette="risograph"] body::before {
   display: block;
-  opacity: 0.4;
+  opacity: 0.12;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-size: 200px 200px;
+  background-image: radial-gradient(
+    circle at center,
+    var(--foreground) 0 0.8px,
+    transparent 1.25px
+  );
+  background-size: 5px 5px;
 }
 :root[data-palette="risograph"][data-theme="dark"] body::before {
-  opacity: 0.26;
+  opacity: 0.1;
   mix-blend-mode: screen;
 }
 
@@ -617,6 +642,18 @@ body::after {
   }
 }
 
+/* Press-proof chrome (RisographMarks component) — registration target + spot
+ * ink bar + proof label. Gated to the risograph theme, sm+ only so phones
+ * stay uncluttered. Display lives here; the component owns position + layout. */
+.riso-print-marks {
+  display: none;
+}
+@media (min-width: 640px) {
+  :root[data-palette="risograph"] .riso-print-marks {
+    display: flex;
+  }
+}
+
 /* —— Risograph display-headline overprint ————————————————————————
  * The theme's signature print move, opt-in via the `m4-overprint` class
  * (applied only to `h1` hero titles in SectionHeading). The ink title
@@ -649,6 +686,44 @@ body::after {
 [data-palette="risograph"][data-theme="dark"] .m4-overprint::before,
 [data-palette="risograph"][data-theme="dark"] .m4-overprint::after {
   mix-blend-mode: screen;
+}
+/* Registration settle — on load the two inks slide in from a heavy
+ * misregistration and lock into their final offset, the way a riso print
+ * registers under the drum. One-shot, motion-safe; `both` parks the ghosts
+ * at the settled offset so the static look is identical afterward. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-palette="risograph"] .m4-overprint::before {
+    animation: riso-register-a 720ms var(--ease-premium) both;
+  }
+  [data-palette="risograph"] .m4-overprint::after {
+    animation: riso-register-b 760ms var(--ease-premium) both;
+  }
+}
+@keyframes riso-register-a {
+  0% {
+    transform: translate(0.52em, 0.36em);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0.045em, 0.05em);
+    opacity: 1;
+  }
+}
+@keyframes riso-register-b {
+  0% {
+    transform: translate(-0.44em, -0.3em);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-0.035em, -0.03em);
+    opacity: 1;
+  }
 }
 @media (prefers-reduced-transparency: reduce) {
   [data-palette="risograph"] .m4-overprint::before,
@@ -860,11 +935,27 @@ h4 {
 }
 
 body {
+  /* Tri-ink ambient wash. A neutral foreground glow crowns the top, then
+   * two whisper-faint accent fields (the second + third inks) bleed in from
+   * opposite corners so every surface the page leaves bare picks up the
+   * active theme's colour — paper that's been near the press, not flat
+   * white. Alphas stay ≤6% so body copy over the bare body never loses
+   * contrast; sections that paint their own --background sit on top. */
   background:
     radial-gradient(
       circle at 50% -10%,
       color-mix(in srgb, var(--foreground) 9%, transparent),
       transparent 30rem
+    ),
+    radial-gradient(
+      ellipse 58% 50% at 100% 0%,
+      color-mix(in srgb, var(--ring-3) 6%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 55% 55% at 0% 100%,
+      color-mix(in srgb, var(--ring-2) 5%, transparent),
+      transparent 62%
     ),
     var(--background);
   color: var(--foreground);
@@ -1013,10 +1104,88 @@ button,
     );
 }
 
+/* ── Tri-ink aurora mesh ───────────────────────────────────────────────
+ * The signature "break the budget" atmosphere: three soft accent fields
+ * — the primary ring crowning the top, the third ink off the right
+ * shoulder, the second ink anchoring the lower-left — so the shared
+ * PageHero backdrop carries all three of the theme's inks at once instead
+ * of a single accent. Token-driven, so each palette paints its own trio
+ * (vermilion/cobalt/marigold, amber/green/cyan, red/cobalt/gold). Dark
+ * mode pushes the alphas up to read against near-black. Drops entirely
+ * under reduced-transparency so contrast never leans on a blend. */
+.aurora-mesh {
+  background-image:
+    radial-gradient(
+      62% 52% at 50% -12%,
+      color-mix(in srgb, var(--ring) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 56% at 102% 26%,
+      color-mix(in srgb, var(--ring-3) 13%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      52% 60% at -4% 104%,
+      color-mix(in srgb, var(--ring-2) 13%, transparent),
+      transparent 72%
+    );
+}
+[data-theme="dark"] .aurora-mesh {
+  background-image:
+    radial-gradient(
+      62% 52% at 50% -12%,
+      color-mix(in srgb, var(--ring) 24%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 56% at 102% 26%,
+      color-mix(in srgb, var(--ring-3) 20%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      52% 60% at -4% 104%,
+      color-mix(in srgb, var(--ring-2) 20%, transparent),
+      transparent 72%
+    );
+}
+@media (prefers-reduced-transparency: reduce) {
+  .aurora-mesh {
+    background-image: none;
+  }
+}
+
+/* Kinetic three-ink rule — a short bar whose gradient travels left so the
+ * theme's full ink trio drifts through it. Used as the eyebrow tick on
+ * section headers (decorative, aria-hidden). Static gradient is the
+ * reduced-motion fallback; the global reduced-motion guard also clamps the
+ * sweep to a no-op. Slow + small, in the spirit of ShinyText. */
+.kinetic-rule {
+  background-image: linear-gradient(
+    90deg,
+    var(--ring) 0%,
+    var(--ring-3) 48%,
+    var(--ring-2) 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kinetic-rule {
+    animation: kinetic-rule 7s linear infinite;
+  }
+}
+@keyframes kinetic-rule {
+  to {
+    background-position: -220% 0;
+  }
+}
+
 [aria-hidden="true"].bg-cyber-grid,
 [aria-hidden="true"].noise-layer,
 [aria-hidden="true"].scanline-layer,
 [aria-hidden="true"].archive-vignette,
+[aria-hidden="true"].aurora-mesh,
 [aria-hidden="true"].hero-vignette,
 [aria-hidden="true"].placeholder-noise,
 [aria-hidden="true"].contact-sheet,

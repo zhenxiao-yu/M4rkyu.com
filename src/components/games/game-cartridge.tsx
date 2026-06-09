@@ -79,7 +79,7 @@ export async function GameCartridge({ game, locale, index }: GameCartridgeProps)
 
       {/* ── CRT cover screen ── always-dark so scanlines read in both
           themes; powers brighter on hover. ── */}
-      <div className="relative aspect-[4/3] overflow-hidden border-b border-border/70 bg-[#080808]">
+      <div className="relative aspect-[4/3] overflow-hidden border-b border-border/70 bg-media-well">
         {cover ? (
           <Image
             src={cover.src}

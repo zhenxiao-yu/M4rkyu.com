@@ -77,7 +77,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
         />
 
         {/* ── Cover plate ── */}
-        <div className="relative aspect-16/10 overflow-hidden border-b border-border bg-[#0b0b0b]">
+        <div className="relative aspect-16/10 overflow-hidden border-b border-border bg-media-well">
           {cover ? (
             <>
               <BlurImage

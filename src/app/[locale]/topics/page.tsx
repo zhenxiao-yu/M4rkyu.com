@@ -65,7 +65,7 @@ export default async function TopicsIndexPage({
         eyebrow={t("indexEyebrow")}
         title={t("indexTitle")}
         description={t("indexDescription")}
-        decorativeWord={t("indexEyebrow")}
+        decorativeWord="TOPICS"
       />
       <PageSection>
         {topics.length === 0 ? (

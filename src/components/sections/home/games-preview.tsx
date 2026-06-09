@@ -109,7 +109,7 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
 
                 {/* CRT mini-screen — cover if present, else a scanlined
                   * placeholder. Desktop-only so mobile rows stay compact. */}
-                <div className="relative hidden aspect-5/3 w-28 shrink-0 self-center overflow-hidden rounded-md border border-border/60 bg-[#080808] sm:block lg:w-36">
+                <div className="relative hidden aspect-5/3 w-28 shrink-0 self-center overflow-hidden rounded-md border border-border/60 bg-media-well sm:block lg:w-36">
                   {cover ? (
                     <Image
                       src={cover.src}

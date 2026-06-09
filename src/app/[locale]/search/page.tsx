@@ -46,7 +46,7 @@ export default async function SearchPage({
         eyebrow={t("eyebrow")}
         title={t("heading")}
         description={t("subheading")}
-        decorativeWord={t("eyebrow")}
+        decorativeWord="SEARCH"
       />
       <PageSection>
         <Suspense fallback={null}>
