@@ -1,161 +1,193 @@
 import { getTranslations } from "next-intl/server";
-import { ArrowRight } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Galaxy } from "@/components/ui/magic/galaxy";
 import { StarGlyph } from "@/components/ui/magic/star-glyph";
-import { Button } from "@/components/ui/button";
+import { DecryptedText } from "@/components/ui/magic/decrypted-text";
+import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
 import { HeroScrollCue } from "./hero-scroll-cue";
-import { RisographMarks } from "./risograph-marks";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * Hero — a registered risograph broadsheet.
+ * Hero — wodniack-patterned "Creative ✦ Developer." stage.
  *
- * The flagship Risograph Press direction printed as a single proofed
- * sheet: warm paper + halftone screen (both global, via body::before),
- * an edition masthead, and a giant `Creative ✦ Developer.` headline that
- * carries the theme's signature `.m4-overprint` ink misregistration —
- * vermilion + cobalt ghosts that slide in and *register* on load. The
- * `+` from the i18n title becomes the StarGlyph jewel, tinted to the
- * live `--ring` ink so it re-inks per palette.
+ *   - Galaxy fills the upper field (both themes; light inverts via
+ *     CSS filter so stars become dark specks on cream).
+ *   - Top-left: 4-line mono status panel.
+ *   - Top-right (sm+): short tag + email-me link.
+ *   - Bottom band (pinned to viewport floor):
+ *       1. Binary-feed marquee (top edge)
+ *       2. Solid theme-bg block with huge headline
+ *          "Creative ✦ Developer." — `+` from the i18n string is
+ *          replaced with the StarGlyph SVG. Solid bg means the
+ *          galaxy doesn't bleed through under the headline (per
+ *          user feedback "background behind text should be solid").
+ *       3. Binary-feed marquee (bottom edge)
  *
- * Everything reads from semantic tokens, so on terminal / editorial the
- * overprint + print-marks gracefully no-op and the poster still holds as
- * a strong editorial layout. Motion is owned by HeroBootSequence
- * (reduced-motion-safe) plus the CSS registration-settle.
+ * `.hero-vignette` was retired — its radial gradient produced a
+ * visible white blob on too many viewports.
  */
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
+  // Binary feed — system-telemetry caps text. Used for both the
+  // top and bottom marquee strips around the headline.
+  const BINARY_FEED =
+    "01001101 00110100 01010010 01001011 01011001 01010101 // 0xFF3E // 11000100 01001011 // 01011001 0xCAFE // 0xDEAD 10101010 // 01010011 01011001 01010011 01000011 // 0xA4B7 // 01101111 01110000 01100101 01110010 01100001 01110100 01101001 01101110 01100111";
 
-  // Split the title at "+" so the StarGlyph can sit between the two
-  // words while each side still flows as plain display type. `spokenTitle`
-  // feeds both the a11y label and the overprint ghosts' `data-text`.
+  // Split title at "+" so we can drop the StarGlyph in between while
+  // each side still flows through SplitHeadline's char-stagger reveal
+  // (EN only). Falls back to plain rendering when no "+" present.
   const title = t("title");
   const [titleA, titleB] = title.includes("+")
     ? title.split("+").map((s) => s.trim())
     : [title, ""];
   const spokenTitle = title.replace("+", " ").replace(/\s+/g, " ").trim();
-  // The overprint ghosts (.m4-overprint::before/::after) duplicate the
-  // title via `data-text` as plain glyphs. Use an em-space where the inline
-  // StarGlyph sits so the ghost tracks the real word spacing and reads as
-  // ink misregistration rather than a stray offset.
-  const overprintText = titleB ? `${titleA} ${titleB}` : spokenTitle;
-
-  const status = [
-    t("heroStatus.line2"),
-    t("heroStatus.line3"),
-    t("heroStatus.line4"),
-  ];
 
   return (
     <section
       data-snap="section"
       className="relative isolate flex min-h-dvh flex-col overflow-hidden border-b"
     >
-      {/* Atmosphere — an oversized registration star bleeding off the
-        * bottom-left, the way a proof sheet carries an outsized folio mark.
-        * Pure decoration; tinted to the live ink at a whisper of opacity. */}
-      <StarGlyph
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-[18%] -left-[10%] -z-10 size-[68vmin] rotate-12 text-ring/[0.05]"
-      />
+      {/* Galaxy backdrop — both themes, dark-mode native, light-mode
+        * inverts so stars become dark specks on cream. */}
+      <div className="absolute inset-0 -z-20 invert dark:invert-0">
+        <Galaxy
+          density={0.5}
+          hueShift={105}
+          speed={0.6}
+          glowIntensity={0.2}
+          saturation={0.15}
+          twinkleIntensity={0.1}
+          starSpeed={0.4}
+          rotationSpeed={0.05}
+          mouseInteraction
+          mouseRepulsion={false}
+          transparent
+        />
+      </div>
 
       <HeroBootSequence>
-        <div className="flex min-h-dvh flex-col px-4 pb-20 pt-24 sm:px-6 sm:pb-24 sm:pt-28 lg:px-8">
-          {/* Masthead — edition line. Mono caps over a hairline rule, like
-            * the header of a printed sheet. */}
-          <header
-            data-boot="eyebrow"
-            className="flex items-baseline justify-between gap-4 border-b border-border/60 pb-3 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-muted-foreground"
-          >
-            <span className="text-foreground/80">{t("eyebrow")}</span>
-            <span>{t("heroTagline")}</span>
-          </header>
+        {/* Bottom band — marquee, solid-bg headline, marquee */}
+        <div
+          data-boot="hud"
+          className="absolute inset-x-0 bottom-0 z-10 bg-background"
+        >
+          {/* Scroll-on cue — floats just above the headline band over the
+            * galaxy and jumps straight to the next section. */}
+          <HeroScrollCue className="absolute bottom-[calc(100%+0.85rem)] left-1/2 z-20 -translate-x-1/2" />
 
-          {/* Stage — headline + colophon rail. Asymmetric 12-col grid on
-            * desktop; the rail stacks beneath on smaller sheets. */}
-          <div className="grid flex-1 grid-cols-1 content-center gap-y-10 py-10 lg:grid-cols-12 lg:items-end lg:gap-12">
-            <div className="lg:col-span-8">
-              <h1
-                data-boot="headline"
-                data-text={overprintText}
-                aria-label={spokenTitle}
-                className="m4-overprint font-display max-w-[15ch] text-[clamp(2.75rem,9vw,8.75rem)] font-black leading-[0.84] tracking-[-0.04em] text-balance"
-              >
-                <span
-                  aria-hidden="true"
-                  className="inline-flex flex-wrap items-baseline gap-x-[0.16em] gap-y-1"
-                >
-                  {titleA}
-                  <StarGlyph
-                    className="inline-block size-[0.52em] shrink-0 self-center text-ring"
-                    style={{
-                      filter:
-                        "drop-shadow(0 0 14px color-mix(in srgb, var(--ring) 45%, transparent))",
-                    }}
-                  />
-                  {titleB}
-                </span>
-              </h1>
+          {/* Top marquee (above headline) */}
+          <BinaryMarquee feed={BINARY_FEED} />
 
-              <p
-                data-boot="subtitle"
-                className="mt-6 max-w-xl text-pretty text-base leading-7 text-muted-foreground sm:mt-7 sm:text-lg"
-              >
-                {t("subtitle")}
-              </p>
-
-              <div
-                data-boot="ctas"
-                className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 sm:mt-9"
-              >
-                <Button asChild>
-                  <Link href="/work">
-                    {t("heroCtaBrowse")}
-                    <ArrowRight aria-hidden="true" className="size-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/logs">{t("heroCtaLogs")}</Link>
-                </Button>
-                <span className="ml-1 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-muted-foreground">
-                  {t("heroCmdkHint")}
-                </span>
-              </div>
-            </div>
-
-            {/* Colophon rail — the print metadata. Left hairline rule does
-              * the visual work; mono spec lines read as proof annotations.
-              * Stacks below the headline on mobile (border flips to top). */}
-            <aside
-              data-boot="hud"
-              className="border-t border-border/60 pt-5 lg:col-span-4 lg:justify-self-end lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+          {/* Headline on solid theme background */}
+          <div className="flex w-full justify-center sm:overflow-hidden">
+            <h1
+              data-boot="headline"
+              aria-label={spokenTitle}
+              className="font-display w-full px-2 pt-4 pb-3 text-center text-[clamp(2.25rem,6.25vw,7.5rem)] font-black leading-[0.9] tracking-[-0.04em] sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pt-5 sm:pb-5"
             >
-              <p className="font-mono text-[0.6rem] uppercase tracking-[0.26em] text-foreground/70">
-                {t("heroTagShort")}
-              </p>
-              <ul className="mt-4 grid gap-2 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">
-                {status.map((line) => (
-                  <li key={line} className="flex items-center gap-2">
-                    <span aria-hidden="true" className="text-ring">
-                      ✦
-                    </span>
-                    {line}
-                  </li>
-                ))}
-              </ul>
-            </aside>
+              {/* Mobile: plain text + star, wraps. Desktop: Shuffle reel
+                * around each word, with the star between, all on one line.
+                * StarGlyph drops to currentColor so it tracks the headline
+                * across themes. */}
+              {/* The centre star is the headline's jewel — tinted to the
+                * active theme's primary ink so it blazes vermilion / amber /
+                * red as the palette changes, with a soft accent bloom. */}
+              <span aria-hidden="true" className="sm:hidden">
+                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}{" "}
+                <StarGlyph
+                  className="-mt-1 inline-block size-[0.65em] align-middle text-ring"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 10px color-mix(in srgb, var(--ring) 45%, transparent))",
+                  }}
+                />{" "}
+                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
+              </span>
+              <span
+                aria-hidden="true"
+                className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]"
+              >
+                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
+                <StarGlyph
+                  className="inline-block size-[0.55em] shrink-0 self-center text-ring"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 12px color-mix(in srgb, var(--ring) 45%, transparent))",
+                  }}
+                />
+                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
+              </span>
+            </h1>
           </div>
+
+          {/* Bottom marquee (below headline) — flips direction so the
+            * pair reads as a frame around the headline. */}
+          <BinaryMarquee feed={BINARY_FEED} reverse />
         </div>
       </HeroBootSequence>
-
-      {/* Press-proof chrome — registration target + spot-ink bar + proof
-        * label. Self-gates to the risograph palette (no-op elsewhere). */}
-      <RisographMarks />
-
-      {/* Scroll-on cue — floats above the bottom edge, jumps to the next
-        * snap section. */}
-      <HeroScrollCue className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2" />
     </section>
+  );
+}
+
+/**
+ * Headline word — single set of Shuffle props in one place. Tuned as
+ * an ambient detail: short scramble, small motion travel, long pause
+ * between loops so the eye lands on the word, not the animation.
+ */
+function HeadlineShuffle({ text }: { text: string }) {
+  return (
+    <Shuffle
+      text={text}
+      duration={0.45}
+      density={0.25}
+      loop
+      loopDelay={4}
+      triggerOnHover
+      shuffleDirection="up"
+    />
+  );
+}
+
+/**
+ * Thin marquee strip used as the binary-feed bookends around the
+ * headline. Doubled track for seamless loop. Reduced-motion → static.
+ * `reverse` flips direction (used for the bottom strip so the two
+ * read as a frame, not a parallel pair).
+ *
+ * Each feed segment is a `DecryptedText animateOn="hover"` — pointing
+ * at the strip scrambles the glyphs that segment shows and resolves
+ * back when the cursor leaves.
+ */
+function BinaryMarquee({
+  feed,
+  reverse = false,
+}: {
+  feed: string;
+  reverse?: boolean;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative overflow-hidden border-y border-foreground/15 py-1"
+    >
+      <div className="pointer-events-none absolute inset-0 mask-[linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]" />
+      <div
+        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/55 motion-safe:animate-[marquee_38s_linear_infinite]"
+        style={reverse ? { animationDirection: "reverse" } : undefined}
+      >
+        {[0, 1, 2, 3].map((i) => (
+          <DecryptedText
+            key={i}
+            text={feed}
+            animateOn="hover"
+            sequential
+            speed={22}
+            useOriginalCharsOnly
+            className="text-foreground/55"
+            encryptedClassName="text-foreground/30"
+          />
+        ))}
+      </div>
+    </div>
   );
 }
