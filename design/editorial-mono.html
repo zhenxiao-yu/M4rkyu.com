@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M4RKYU.SYS — Editorial Mono · theme exploration</title>
+
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500&f[]=satoshi@400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============================================================
+         EDITORIAL MONO + HOT ACCENT — M4RKYU.SYS as a brutalist
+         magazine. Near pure paper / black / white, hard rules, huge
+         Clash Display, big folio numerals. ONE hot accent (#e2231a)
+         used at ~5% — masthead mark, one underline, status, folio.
+         Maximum contrast; gallery, not dashboard.
+         Exploration artifact — does not touch the live design tokens.
+         ============================================================ */
+
+      :root[data-theme="light"] {
+        --paper: #f6f4ee;
+        --paper-2: #eeebe2;
+        --card: #fbfaf5;
+        --ink: #0a0a0a;
+        --ink-soft: #3a3a38;
+        --ink-faint: rgba(10, 10, 10, 0.5);
+        --rule: #0a0a0a;
+        --rule-hair: rgba(10, 10, 10, 0.16);
+        --hot: #e2231a; /* the single hot accent */
+        --on-hot: #fbfaf5;
+      }
+      :root[data-theme="dark"] {
+        --paper: #0b0b0b;
+        --paper-2: #131313;
+        --card: #101010;
+        --ink: #f4f1e8;
+        --ink-soft: #c4c0b5;
+        --ink-faint: rgba(244, 241, 232, 0.5);
+        --rule: #f4f1e8;
+        --rule-hair: rgba(244, 241, 232, 0.18);
+        --hot: #ff3b2f;
+        --on-hot: #0b0b0b;
+      }
+
+      :root {
+        --font-display: "Clash Display", "Cabinet Grotesk", ui-sans-serif,
+          system-ui, sans-serif;
+        --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo,
+          Consolas, monospace;
+        --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+        --measure: 76rem;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+      body {
+        font-family: var(--font-sans);
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.55;
+        transition: background-color 0.35s var(--ease), color 0.35s var(--ease);
+      }
+      .wrap {
+        max-width: var(--measure);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+      }
+      .mono {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      /* ===================== MASTHEAD / HUD ===================== */
+      .hud {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--paper);
+        border-bottom: 2px solid var(--rule);
+      }
+      .hud-inner {
+        max-width: var(--measure);
+        margin: 0 auto;
+        padding: 0.6rem clamp(1.25rem, 4vw, 3.5rem);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--ink-faint);
+      }
+      .hud-mark {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .hud-mark .sq { width: 0.6rem; height: 0.6rem; background: var(--hot); }
+      .hud-right { display: flex; align-items: center; gap: 1.2rem; }
+      .theme-toggle {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 2px solid var(--rule);
+        background: transparent;
+        color: var(--ink);
+        padding: 0.3rem 0.7rem;
+        cursor: pointer;
+        transition: all 0.16s var(--ease);
+      }
+      .theme-toggle:hover { background: var(--ink); color: var(--paper); }
+
+      /* ===================== HERO ===================== */
+      .hero { padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
+      .folio-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--rule-hair);
+        padding-bottom: 0.7rem;
+        color: var(--ink-faint);
+      }
+      .folio-row .hot { color: var(--hot); }
+      .display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -0.025em;
+        font-size: clamp(3rem, 12vw, 9rem);
+        text-transform: uppercase;
+        margin: 1.6rem 0 0;
+        max-width: 14ch;
+      }
+      .display .mark {
+        position: relative;
+        display: inline-block;
+      }
+      .display .mark::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0.08em;
+        height: 0.1em;
+        background: var(--hot);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: draw 0.7s var(--ease) 0.4s forwards;
+      }
+      @keyframes draw { to { transform: scaleX(1); } }
+
+      .hero-grid {
+        margin-top: 2.4rem;
+        display: grid;
+        gap: 1.6rem 3rem;
+        grid-template-columns: 1fr;
+        border-top: 2px solid var(--rule);
+        padding-top: 1.6rem;
+      }
+      @media (min-width: 820px) {
+        .hero-grid { grid-template-columns: 1.4fr 1fr; align-items: start; }
+      }
+      .lede { font-size: clamp(1.05rem, 1.8vw, 1.3rem); max-width: 42ch; }
+      .hero-aside { color: var(--ink-soft); font-size: 0.95rem; }
+      .hero-aside .mono { display: block; color: var(--ink-faint); margin-bottom: 0.5rem; }
+
+      .cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0; }
+      .btn {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.9rem 1.5rem;
+        border: 2px solid var(--rule);
+        background: var(--ink);
+        color: var(--paper);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        transition: all 0.16s var(--ease);
+      }
+      .btn + .btn { border-left: 0; }
+      .btn .n { color: var(--hot); }
+      .btn--ghost { background: transparent; color: var(--ink); }
+      .btn:hover { background: var(--hot); border-color: var(--hot); color: var(--on-hot); }
+      .btn:hover .n { color: var(--on-hot); }
+
+      /* ===================== SECTION ===================== */
+      section.block { padding: clamp(2.5rem, 6vw, 4rem) 0; border-top: 2px solid var(--rule); }
+      .frame-head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: end;
+        gap: 1.4rem;
+        margin-bottom: 2.4rem;
+      }
+      .frame-head .big-num {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        line-height: 0.8;
+        letter-spacing: -0.04em;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--ink);
+      }
+      .frame-head h2 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.4rem, 3vw, 2.2rem);
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      .frame-head .mono { color: var(--ink-faint); text-align: right; }
+
+      /* capability list */
+      .cap {
+        display: grid;
+        grid-template-columns: 6rem 1fr;
+        gap: 1.5rem;
+        padding: 1.8rem 0;
+        border-bottom: 1px solid var(--rule-hair);
+        position: relative;
+      }
+      .cap::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: var(--hot);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.22s var(--ease);
+      }
+      .cap:hover::before { transform: scaleY(1); }
+      .cap:hover { padding-left: 1.2rem; }
+      .cap { transition: padding-left 0.22s var(--ease); }
+      .cap .num {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 2.8rem;
+        line-height: 0.85;
+        letter-spacing: -0.03em;
+      }
+      .cap h3 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      .cap p { margin-top: 0.5rem; max-width: 62ch; color: var(--ink-soft); }
+      .tags { margin-top: 0.85rem; display: flex; flex-wrap: wrap; gap: 0; }
+      .tag {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        border: 1px solid var(--rule);
+        padding: 0.24rem 0.6rem;
+      }
+      .tag + .tag { border-left: 0; }
+
+      /* mission cards = editorial plates */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+        gap: 0;
+        border: 2px solid var(--rule);
+      }
+      .card {
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--rule-hair);
+        transition: background-color 0.18s var(--ease);
+      }
+      .card:last-child { border-right: 0; }
+      .card:hover { background: var(--card); }
+      .card .plate {
+        aspect-ratio: 5 / 4;
+        border-bottom: 1px solid var(--rule-hair);
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .card .plate .folio {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 6rem;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--ink);
+        transition: all 0.2s var(--ease);
+      }
+      .card:hover .plate .folio { color: var(--ink); -webkit-text-stroke-width: 0; }
+      .card .status {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .card .status i { width: 0.5rem; height: 0.5rem; background: var(--hot); }
+      .card .body { padding: 1rem 1.1rem 1.3rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+      .card .meta { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+      .card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; text-transform: uppercase; letter-spacing: -0.01em; }
+      .card p { color: var(--ink-soft); font-size: 0.9rem; }
+
+      /* spec */
+      .specs { display: grid; gap: 2.4rem; grid-template-columns: 1fr; }
+      @media (min-width: 820px) { .specs { grid-template-columns: 1fr 1fr; } }
+      .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); border: 2px solid var(--rule); }
+      .sw {
+        aspect-ratio: 4 / 3; padding: 0.6rem; display: flex; flex-direction: column; justify-content: flex-end;
+        font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em;
+        border-right: 1px solid var(--rule-hair); border-bottom: 1px solid var(--rule-hair);
+      }
+      .sw b { font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; }
+      .type-spec > div { border-bottom: 1px solid var(--rule-hair); padding: 0.9rem 0; display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+      .type-spec .lbl { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); flex-shrink: 0; }
+      .ts-display { font-family: var(--font-display); font-weight: 700; font-size: 2rem; text-transform: uppercase; letter-spacing: -0.02em; }
+      .ts-sans { font-family: var(--font-sans); font-size: 1.05rem; }
+      .ts-mono { font-family: var(--font-mono); font-size: 0.92rem; }
+
+      footer { border-top: 2px solid var(--rule); padding: 2rem 0 3.5rem; margin-top: 1rem; }
+      .colophon { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; align-items: center; }
+      .colophon .chip { display: inline-flex; align-items: center; gap: 0.4rem; }
+      .colophon .chip i { width: 0.7rem; height: 0.7rem; display: inline-block; }
+
+      .rise { opacity: 0; transform: translateY(12px); animation: rise 0.6s var(--ease) forwards; }
+      @keyframes rise { to { opacity: 1; transform: none; } }
+      .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.14s; } .d3 { animation-delay: 0.23s; } .d4 { animation-delay: 0.32s; }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.001ms !important; animation-delay: 0ms !important; transition-duration: 0.001ms !important; }
+        .rise { opacity: 1; transform: none; }
+        .display .mark::after { transform: scaleX(1); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="hud">
+      <div class="hud-inner">
+        <span class="hud-mark"><span class="sq"></span>M4RKYU.SYS</span>
+        <span class="hud-right">
+          <span class="mono">EN · 中文</span>
+          <span class="mono">⌘K</span>
+          <button class="theme-toggle" id="themeToggle" type="button">
+            <span id="themeLabel">Dark</span>
+          </button>
+        </span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div class="folio-row mono rise d1">
+            <span>M4RKYU.SYS — the archive</span>
+            <span><span class="hot">Nº 01</span> · v2027</span>
+          </div>
+          <h1 class="display rise d2">
+            Systems, games &amp;<br /><span class="mark">quiet frames</span>.
+          </h1>
+          <div class="hero-grid">
+            <p class="lede rise d3">
+              A working archive of interfaces, game prototypes, photography, and
+              field notes — set in type, edited by one person.
+            </p>
+            <div class="hero-aside rise d3">
+              <span class="mono">Masthead</span>
+              One operator across four surfaces: production code, game
+              prototypes, the gallery, and the writing. No staff. No filler.
+            </div>
+          </div>
+          <div class="cta-row rise d4">
+            <a class="btn" href="#"><span class="n">01</span> Browse the work</a>
+            <a class="btn btn--ghost" href="#"><span class="n">02</span> Read the logs</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="wrap">
+          <div class="frame-head">
+            <span class="big-num">05</span>
+            <h2>Systems &amp; surfaces</h2>
+            <span class="mono">capabilities<br />index</span>
+          </div>
+
+          <div class="cap">
+            <span class="num">01</span>
+            <div>
+              <h3>Production engineering</h3>
+              <p>Shipping Next.js / TypeScript work with CI, observability, and an eye on the boring parts that keep a site alive.</p>
+              <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">CI/CD</span></div>
+            </div>
+          </div>
+          <div class="cap">
+            <span class="num">02</span>
+            <div>
+              <h3>Interface systems</h3>
+              <p>Design systems, tokens, motion, Storybook, accessibility — the quiet machinery a product is actually made of.</p>
+              <div class="tags"><span class="tag">Tokens</span><span class="tag">Motion</span><span class="tag">A11y</span></div>
+            </div>
+          </div>
+          <div class="cap">
+            <span class="num">03</span>
+            <div>
+              <h3>Game feel &amp; interaction</h3>
+              <p>LAST KERNEL, prototypes, input systems, tuning — reasoning about how a thing feels under the hand, not just how it looks.</p>
+              <div class="tags"><span class="tag">Game-feel</span><span class="tag">Input</span><span class="tag">Tuning</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="wrap">
+          <div class="frame-head">
+            <span class="big-num">03</span>
+            <h2>Featured mission modules</h2>
+            <span class="mono">selected<br />missions</span>
+          </div>
+          <div class="cards">
+            <a class="card" href="#">
+              <div class="plate"><span class="status"><i></i>Live</span><span class="folio">LK</span></div>
+              <div class="body"><span class="meta">game · 2026</span><h3>Last Kernel</h3><p>A systems-driven prototype about keeping one process alive.</p></div>
+            </a>
+            <a class="card" href="#">
+              <div class="plate"><span class="status"><i></i>WIP</span><span class="folio">MV</span></div>
+              <div class="body"><span class="meta">tool · web app</span><h3>M4rketview</h3><p>A reading surface for market data, built for one person's use.</p></div>
+            </a>
+            <a class="card" href="#">
+              <div class="plate"><span class="status"><i></i>Shipped</span><span class="folio">UI</span></div>
+              <div class="body"><span class="meta">system · studio</span><h3>UI Studio</h3><p>The component lab the rest of the archive is set from.</p></div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="wrap">
+          <div class="frame-head">
+            <span class="big-num">SP</span>
+            <h2>The style sheet</h2>
+            <span class="mono">spec<br />one hot mark</span>
+          </div>
+          <div class="specs">
+            <div>
+              <div class="swatches">
+                <div class="sw" style="background: var(--paper); color: var(--ink)"><b>Paper</b><span id="hx-paper">#f6f4ee</span></div>
+                <div class="sw" style="background: var(--card); color: var(--ink)"><b>Card</b><span id="hx-card">#fbfaf5</span></div>
+                <div class="sw" style="background: var(--ink); color: var(--paper)"><b>Ink</b><span id="hx-ink">#0a0a0a</span></div>
+                <div class="sw" style="background: var(--hot); color: var(--on-hot)"><b>Hot</b><span id="hx-hot">#e2231a</span></div>
+                <div class="sw" style="background: var(--paper-2); color: var(--ink)"><b>Tint</b><span id="hx-tint">#eeebe2</span></div>
+                <div class="sw" style="background: var(--paper); color: var(--ink); border-right: 0;"><b>Contrast</b><span>21:1</span></div>
+              </div>
+              <p style="margin-top: 1rem; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--ink-faint); line-height: 1.7;">
+                Black, white, paper — then one hot mark. Red carries the masthead
+                square, a single underline, status ticks, and folio numbers. Never
+                more than ~5% of the page. The rest is type, rule, and air.
+              </p>
+            </div>
+            <div class="type-spec">
+              <div><span class="ts-display">CLASH DISPLAY</span><span class="lbl">display / masthead</span></div>
+              <div><span class="ts-sans">Satoshi — the reading body of the magazine.</span><span class="lbl">sans / body</span></div>
+              <div><span class="ts-mono">JetBrains Mono · Nº 01 · folio</span><span class="lbl">mono / editorial meta</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <div class="colophon">
+          <span>M4RKYU.SYS — editorial mono · theme exploration</span>
+          <span class="chip"><i style="background: var(--ink)"></i>ink</span>
+          <span class="chip"><i style="background: var(--hot)"></i>hot ~5%</span>
+          <span>set in clash + satoshi · hard rules</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const root = document.documentElement;
+      const btn = document.getElementById("themeToggle");
+      const label = document.getElementById("themeLabel");
+      const HEX = {
+        light: { paper: "#f6f4ee", card: "#fbfaf5", ink: "#0a0a0a", hot: "#e2231a", tint: "#eeebe2" },
+        dark: { paper: "#0b0b0b", card: "#101010", ink: "#f4f1e8", hot: "#ff3b2f", tint: "#131313" },
+      };
+      function paint(t) {
+        root.setAttribute("data-theme", t);
+        label.textContent = t === "dark" ? "Light" : "Dark";
+        const h = HEX[t];
+        for (const k of Object.keys(h)) { const el = document.getElementById("hx-" + k); if (el) el.textContent = h[k]; }
+      }
+      btn.addEventListener("click", () => paint(root.getAttribute("data-theme") === "dark" ? "light" : "dark"));
+      paint(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    </script>
+  </body>
+</html>
