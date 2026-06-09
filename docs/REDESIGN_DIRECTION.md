@@ -197,7 +197,10 @@ optional easter eggs. Not a default. Not promoted in nav.
 **Hard rules:**
 
 - Body color is `--foreground` on `--background`. No exceptions for "vibe."
-- Accent color is `--ring`. There is **one** accent. No second brand color.
+- Accent is `--ring` (the active theme's accent), plus an optional single
+  second ink `--ring-2`. **Two inks max per theme**, no third, no rainbow.
+  (Themes are user-selectable — see
+  [UNIFIED_VISUAL_DIRECTION.md §5.4](./UNIFIED_VISUAL_DIRECTION.md#54-multi-theme-system-shipped-2026-06).)
 - `--signal` is for _state_ (live, recording, attention) — not decoration.
 - `--success`, `--warning`, `--destructive` exist for status badges only.
 - Gradients are allowed only as **atmospheric layers** (radial wash behind
@@ -400,7 +403,9 @@ Read these aloud. If a future change makes any of them less true, push back.
 
 ## 10. What the Site Must Avoid
 
-- More than one accent color in production routes.
+- More than two inks in a single theme (the active `--ring` + an optional
+  `--ring-2`), or rainbow palettes. (Themes are user-selectable now — see
+  [UNIFIED_VISUAL_DIRECTION.md §5.4](./UNIFIED_VISUAL_DIRECTION.md#54-multi-theme-system-shipped-2026-06).)
 - Hero animations longer than 1s combined.
 - Components that depend on JS to render their first paint.
 - Content that pretends to be social (fake testimonials, fake counters).

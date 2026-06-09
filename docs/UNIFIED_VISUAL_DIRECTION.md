@@ -110,8 +110,9 @@ or "indie game site."
   (`01 / 05 · capability index`), generous spacing, capped measure, restrained
   color, photographic imagery.
 - **20% cyber / system-core atmosphere** — `bg-cyber-grid` substrate,
-  `scanline-layer` (sparing), `noise-layer`, `--ring` cyan as the single
-  accent, monospace metadata strips, dotted dividers, status pulses.
+  `scanline-layer` (sparing), `noise-layer`, the active theme's `--ring`
+  accent (cyan only on the legacy/default base — see §5.4), monospace
+  metadata strips, dotted dividers, status pulses.
 - **10% playful pixel / game details** — VT323 in HUD chips, labels, and CTAs
   only; cartridge-card spines and notches; dither route transitions; optional
   UI tones; one glitch entrance on the hero headline.
@@ -120,8 +121,8 @@ or "indie game site."
 
 - Pixel typography stays at chip/label scale (10% slice), so it reads as
   *system glyph*, not as *toy*. It never touches paragraphs.
-- The atmospheric layer (20%) is grayscale + one accent — no rainbow gradients,
-  no neon overload.
+- The atmospheric layer (20%) is near-monochrome + the theme accent(s) — no
+  rainbow gradients, no neon overload.
 - The premium layer (70%) carries the credibility — numbered sections,
   editorial spacing, real screenshots. A recruiter or client lands on a
   *studio archive*, not a playground.
@@ -529,8 +530,9 @@ classes like `bg-card`, `border-border`, `text-ring`.
 `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`,
 `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`,
 `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`,
-`--border`, `--input`, `--ring`, `--surface-ink`, `--surface-paper`,
-`--signal`, `--success`, `--warning`.
+`--border`, `--input`, `--ring`, `--ring-2` (optional second ink, per
+theme — see [§5.4](#54-multi-theme-system-shipped-2026-06)), `--surface-ink`,
+`--surface-paper`, `--signal`, `--success`, `--warning`.
 
 **Existing radius tokens:** `--radius`, `--radius-sm`, `--radius-md`,
 `--radius-lg`, `--radius-xl`.
@@ -568,8 +570,51 @@ project is Tailwind v4, CSS-first).
 - No `transition-[colors,transform]` (Tailwind v4 invalid).
 - No new shadow / radius family. Use `shadow-sm | shadow-md | shadow-lg` and
   the `--radius-*` family only.
-- No second accent color in production routes. `--ring` (with `--game-accent`
-  as its semantic alias) is the only accent.
+- At most one accent **per theme**: the active theme's `--ring`, plus an
+  optional single second ink `--ring-2` (e.g. Risograph's cobalt). Never a
+  third ink, no rainbow gradients. `--game-accent` still aliases `--ring`.
+  (This supersedes the old "single cyan only" rule — see [§5.4](#54-multi-theme-system-shipped-2026-06).)
+
+### 5.4 Multi-theme system (shipped 2026-06)
+
+User-selectable themes are now a first-class feature, layered as a **second
+axis** on top of light/dark — the discipline didn't disappear, it generalized.
+
+- **Axes.** `data-theme` = `light | dark` (mode, owned by `ThemeProvider`) ×
+  `data-palette` = the named theme (owned by `PaletteProvider`,
+  [src/components/theme/palette-provider.tsx](../src/components/theme/palette-provider.tsx)).
+  Both are set before paint by the bootstrap in
+  [theme-script.tsx](../src/components/theme/theme-script.tsx) (no FOUC) and
+  persisted to `localStorage` (`theme`, `palette`).
+- **Themes (start set).** `risograph` (default — warm two-ink press,
+  vermilion + cobalt), `terminal` (amber phosphor + green, CRT scanlines),
+  `editorial` (black / white / paper + one hot red). Each is a token block in
+  [globals.css](../src/app/globals.css) under `:root[data-palette="…"]` (+ a
+  `[data-theme="dark"]` override). Glass vars are
+  `color-mix(var(--card)/var(--foreground))`, so they re-derive per theme
+  automatically — no per-theme glass edits.
+- **Accent rule (supersedes single-cyan).** Each theme owns its `--ring`
+  accent plus an optional single second ink `--ring-2`. Two inks max per
+  theme, no third, no rainbow. Editorial sets `--ring-2 = --ring` (truly one
+  accent); Risograph uses a real second ink.
+- **Signature textures.** Decorative, `pointer-events:none`, `[data-palette]`-
+  gated `body::before` / `body::after` layers: Risograph paper grain, Terminal
+  CRT scanlines + dark-mode phosphor vignette. Static (no drift — keeps the
+  no-continuous-loops rule in [§7.3](#73-banned)), dropped under
+  `prefers-reduced-transparency`. Editorial opts out (restraint is its
+  signature).
+- **Switching UI.** `ThemePicker`
+  ([src/components/theme/theme-picker.tsx](../src/components/theme/theme-picker.tsx))
+  in the header + mobile nav, plus palette entries in the ⌘K command palette.
+  i18n under the `Theme` namespace in both `messages/{en,zh}.json`.
+- **Adding a theme.** One token block in `globals.css` + one entry in
+  `PALETTES` (`palette-provider.tsx`) + one whitelist entry in the bootstrap.
+  No component edits — every component already reads semantic tokens.
+
+The earlier "single cyan accent" / "glass over cyber" framing elsewhere in
+this doc describes the *default* identity, not a site-wide constraint: the
+discipline (≤2 inks, tokens only, no rainbow, reduced-motion / reduced-
+transparency safe) now holds **per theme**.
 
 ---
 
@@ -940,8 +985,8 @@ redesign isn't done:
   real screenshots.
 - The site feels **playful** — small game-feel moments at hover / click /
   route change, never on the static page.
-- The site feels **cyber** — `bg-cyber-grid`, `scanline-layer`, a single cyan
-  accent.
+- The site feels **cyber** — `bg-cyber-grid`, `scanline-layer`, and the
+  active theme's accent (cyan on the default base; per-theme — see §5.4).
 - The site stays **readable** — body text is Geist at 1rem/1.65, line-length
   capped at ~70ch.
 - The site is **bilingual** — every visible string has an EN and ZH form,

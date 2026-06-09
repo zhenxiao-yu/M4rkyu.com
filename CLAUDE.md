@@ -104,11 +104,24 @@ link` (no `destructive`). Compose new components from these primitives.
 `src/app/globals.css` (`--ring`, `--motion-fast`, `--ease-premium`,
 `--game-accent`, `--font-pixel`, the `--pixel-*` / `--hud-*` /
 `--mission-*` family). Always use tokens — no `bg-zinc-*`, no hex
-literals, no invalid v4 syntax like `transition-[colors,transform]`. Single
-accent only: `--ring` (aliased `--game-accent` for playful surfaces).
+literals, no invalid v4 syntax like `transition-[colors,transform]`. Accent
+is theme-scoped: the active theme's `--ring`, plus an optional single second
+ink `--ring-2` — two inks max per theme, never a third, no rainbow.
+(`--game-accent` still aliases `--ring` for playful surfaces.)
 Pixel typography (`--font-pixel`, VT323) is opt-in and English-only; the
 `:lang(zh)` / `[lang^="zh"]` guard in `globals.css` swaps it back to the
 sans stack for CJK.
+
+**Theming.** User-selectable themes (`risograph` default, `terminal`,
+`editorial`) form a second axis — `data-palette` — on top of light/dark
+(`data-theme`). Token blocks live in `globals.css` under
+`:root[data-palette="…"]` (+ a `[data-theme="dark"]` override); state and
+persistence in `src/components/theme/palette-provider.tsx`; the before-paint
+bootstrap in `src/components/theme/theme-script.tsx` sets both axes (no
+FOUC). The picker is `src/components/theme/theme-picker.tsx` (header + mobile
+nav + ⌘K). Adding a theme = one token block + one `PALETTES` entry + one
+bootstrap whitelist entry; no component edits (everything reads semantic
+tokens). Full spec: `docs/UNIFIED_VISUAL_DIRECTION.md` §5.4.
 
 **Motion.** `motion/react` (Framer Motion successor) plus GSAP via
 `@gsap/react` for choreographed sequences (`src/lib/gsap.ts`). Every

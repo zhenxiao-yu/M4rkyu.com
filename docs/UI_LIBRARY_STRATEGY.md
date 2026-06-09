@@ -271,8 +271,12 @@ into "the home page using Magic UI" and "the gallery using Aceternity" and
 5. **One typography stack.** `var(--font-display)` for headlines,
    `var(--font-sans)` for UI, `var(--font-mono)` for labels. Imported
    components shipping with their own fonts get rewritten.
-6. **One accent color in production.** `var(--ring)`. No second brand color
-   even if a Magic UI hero "wants" pink/purple.
+6. **Theme-scoped accent in production.** `var(--ring)` (the active theme's
+   accent) plus an optional single second ink `var(--ring-2)` — two inks max
+   per theme, no third, no rainbow. An imported Magic UI hero that "wants"
+   its own pink/purple still gets retokenized to the theme. (Themes are
+   user-selectable — see
+   [UNIFIED_VISUAL_DIRECTION.md §5.4](./UNIFIED_VISUAL_DIRECTION.md#54-multi-theme-system-shipped-2026-06).)
 7. **One cadence of motion entry.** The site's reveal pattern is `FadeIn` /
    `Stagger` (already in `src/components/motion`). Imported
    components with their own scroll-trigger logic get rewritten to use ours
