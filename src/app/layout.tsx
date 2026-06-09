@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import {
+  Fraunces,
   JetBrains_Mono,
   Noto_Sans_SC,
   Shantell_Sans,
@@ -72,6 +73,19 @@ const vt323 = VT323({
 const shantellSans = Shantell_Sans({
   variable: "--font-hand",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+// Literary serif for long-form prose. English-only and only consumed by the
+// editorial-leaning themes (Risograph, Editorial) via `--font-prose` in
+// globals.css — so it's only fetched when one of those themes actually
+// renders prose. preload off; the CJK guard rewires --font-serif to
+// --font-cjk under :lang(zh).
+const fraunces = Fraunces({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
   preload: false,
 });
@@ -171,7 +185,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${clashDisplay.variable} ${cabinetGrotesk.variable} ${satoshi.variable} ${jetbrainsMono.variable} ${notoSansSC.variable} ${vt323.variable} ${shantellSans.variable} h-full antialiased`}
+      className={`${clashDisplay.variable} ${cabinetGrotesk.variable} ${satoshi.variable} ${jetbrainsMono.variable} ${notoSansSC.variable} ${vt323.variable} ${shantellSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body
         suppressHydrationWarning

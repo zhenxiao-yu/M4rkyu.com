@@ -201,6 +201,10 @@
   --border: #cecbc2;
   --input: #cecbc2;
   --ring: #0ea5b7;
+  /* Second accent ink — only the multi-theme palettes use a true second
+   * ink (e.g. Risograph's cobalt). The base/classic fallback keeps a
+   * single accent, so --ring-2 mirrors --ring here. */
+  --ring-2: #0ea5b7;
   --surface-ink: #111111;
   --surface-paper: #f7f5ef;
   --signal: #d71920;
@@ -270,6 +274,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ring-2: var(--ring-2);
   --color-signal: var(--signal);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -315,6 +320,13 @@
   --font-hand:
     "Shantell Sans", "Shantell Sans Fallback", "Bradley Hand", "Comic Sans MS",
     var(--font-cjk), cursive;
+  /* Literary serif (Fraunces) for long-form prose. --font-prose is the
+   * token prose surfaces consume; it defaults to the sans body and is
+   * switched to the serif only by the editorial-leaning themes below. */
+  --font-serif:
+    "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman",
+    var(--font-cjk), serif;
+  --font-prose: var(--font-sans);
 }
 
 [data-theme="dark"] {
@@ -350,6 +362,301 @@
     color-mix(in srgb, var(--background) 78%, transparent);
 }
 
+/* ============================================================
+ * USER-SELECTABLE THEMES (palette × mode)
+ * ------------------------------------------------------------
+ * A second axis on top of light/dark. `data-palette` is set before
+ * paint by the theme bootstrap and mirrored by PaletteProvider; the
+ * default is "risograph". Each palette only re-maps the colour tokens
+ * — every component already reads the semantic tokens, and the glass
+ * vars are color-mix(var(--card)/var(--foreground)) so they re-derive
+ * automatically. Specificity ladder:
+ *   :root[data-palette]            (0,2,0)  light values
+ *   :root[data-palette][data-theme="dark"] (0,3,0)  dark overrides
+ * which sit above the base :root (0,1,0) and [data-theme="dark"]
+ * (0,1,0) fallback. See docs/UNIFIED_VISUAL_DIRECTION.md (themes
+ * legitimately vary the accent + a second ink now).
+ * ============================================================ */
+
+/* —— RISOGRAPH (default) — warm press, vermilion + cobalt two-ink —— */
+:root[data-palette="risograph"] {
+  --background: #efe7d8;
+  --foreground: #16130d;
+  --card: #f6f0e2;
+  --card-foreground: #16130d;
+  --popover: #f6f0e2;
+  --popover-foreground: #16130d;
+  --primary: #16130d;
+  --primary-foreground: #f6f0e2;
+  --secondary: #e7decb;
+  --secondary-foreground: #16130d;
+  --muted: #e7decb;
+  --muted-foreground: #5b5343;
+  --accent: #e3d9c6;
+  --accent-foreground: #16130d;
+  --destructive: #9e2b2b;
+  --border: #d6ccb6;
+  --input: #d6ccb6;
+  --ring: #e8412a;
+  --ring-2: #2740e0;
+  --signal: #c62a1c;
+  --success: #0f8f67;
+  --warning: #9a6a00;
+  --surface-ink: #16130d;
+  --surface-paper: #efe7d8;
+}
+:root[data-palette="risograph"][data-theme="dark"] {
+  --background: #0c0b08;
+  --foreground: #efe7d6;
+  --card: #16130d;
+  --card-foreground: #efe7d6;
+  --popover: #14110a;
+  --popover-foreground: #efe7d6;
+  --primary: #efe7d6;
+  --primary-foreground: #0c0b08;
+  --secondary: #1c1810;
+  --secondary-foreground: #efe7d6;
+  --muted: #1c1810;
+  --muted-foreground: #b9af9c;
+  --accent: #20190f;
+  --accent-foreground: #efe7d6;
+  --destructive: #d4503f;
+  --border: #2a241a;
+  --input: #2a241a;
+  --ring: #ff5a3c;
+  --ring-2: #5b78ff;
+  --signal: #ff5a3c;
+  --success: #46c08a;
+  --warning: #e0a23e;
+  --surface-ink: #efe7d6;
+  --surface-paper: #070605;
+}
+
+/* —— TERMINAL — phosphor amber + green; daylight / CRT —— */
+:root[data-palette="terminal"] {
+  --background: #ece6d8;
+  --foreground: #1a1610;
+  --card: #f2ecde;
+  --card-foreground: #1a1610;
+  --popover: #f2ecde;
+  --popover-foreground: #1a1610;
+  --primary: #1a1610;
+  --primary-foreground: #fdf7e9;
+  --secondary: #e2dac6;
+  --secondary-foreground: #1a1610;
+  --muted: #e2dac6;
+  --muted-foreground: #5a5040;
+  --accent: #e6dcc6;
+  --accent-foreground: #1a1610;
+  --destructive: #c1271c;
+  --border: #d2c8b0;
+  --input: #d2c8b0;
+  --ring: #b06a00;
+  --ring-2: #1c7a32;
+  --signal: #c1271c;
+  --success: #1c7a32;
+  --warning: #8a5400;
+  --surface-ink: #1a1610;
+  --surface-paper: #ece6d8;
+}
+:root[data-palette="terminal"][data-theme="dark"] {
+  --background: #07080a;
+  --foreground: #ded8c8;
+  --card: #0e1217;
+  --card-foreground: #ded8c8;
+  --popover: #0c0f13;
+  --popover-foreground: #ded8c8;
+  --primary: #ded8c8;
+  --primary-foreground: #07080a;
+  --secondary: #141a20;
+  --secondary-foreground: #ded8c8;
+  --muted: #141a20;
+  --muted-foreground: #9a9486;
+  --accent: #16202a;
+  --accent-foreground: #ded8c8;
+  --destructive: #ff453a;
+  --border: #233040;
+  --input: #233040;
+  --ring: #ffb000;
+  --ring-2: #46f06a;
+  --signal: #ff453a;
+  --success: #46f06a;
+  --warning: #ffb000;
+  --surface-ink: #ded8c8;
+  --surface-paper: #050608;
+}
+
+/* —— EDITORIAL — black / white / paper + one hot red —— */
+:root[data-palette="editorial"] {
+  --background: #f6f4ee;
+  --foreground: #0a0a0a;
+  --card: #fbfaf5;
+  --card-foreground: #0a0a0a;
+  --popover: #fbfaf5;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
+  --primary-foreground: #fbfaf5;
+  --secondary: #eeebe2;
+  --secondary-foreground: #0a0a0a;
+  --muted: #eeebe2;
+  --muted-foreground: #46443e;
+  --accent: #e9e6dc;
+  --accent-foreground: #0a0a0a;
+  --destructive: #b51d14;
+  --border: #d8d4c8;
+  --input: #d8d4c8;
+  --ring: #e2231a;
+  --ring-2: #e2231a;
+  --signal: #e2231a;
+  --success: #0f8f67;
+  --warning: #9a6a00;
+  --surface-ink: #0a0a0a;
+  --surface-paper: #f6f4ee;
+}
+:root[data-palette="editorial"][data-theme="dark"] {
+  --background: #0b0b0b;
+  --foreground: #f4f1e8;
+  --card: #101010;
+  --card-foreground: #f4f1e8;
+  --popover: #0e0e0e;
+  --popover-foreground: #f4f1e8;
+  --primary: #f4f1e8;
+  --primary-foreground: #0b0b0b;
+  --secondary: #171717;
+  --secondary-foreground: #f4f1e8;
+  --muted: #171717;
+  --muted-foreground: #a5a59c;
+  --accent: #1c1c1c;
+  --accent-foreground: #f4f1e8;
+  --destructive: #ff4d4d;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #ff3b2f;
+  --ring-2: #ff3b2f;
+  --signal: #ff3b2f;
+  --success: #46c08a;
+  --warning: #e0a23e;
+  --surface-ink: #f4f1e8;
+  --surface-paper: #070707;
+}
+
+/* The editorial-leaning themes set prose in the literary serif; Terminal
+ * and the default base keep the sans (a console reads wrong in serif). */
+:root[data-palette="risograph"],
+:root[data-palette="editorial"] {
+  --font-prose: var(--font-serif);
+}
+
+/* —— Per-theme signature textures ——————————————————————————————
+ * Global, decorative, pointer-events:none overlays gated by
+ * data-palette. body::before = paper grain (risograph); body::after =
+ * CRT scanlines + phosphor vignette (terminal). Static (no animated
+ * drift — perf + the doctrine's no-continuous-loops rule). Editorial
+ * opts out: its signature is restraint, carried by the tokens alone.
+ * Both honour prefers-reduced-transparency. z-90 keeps them above page
+ * content; they're subtle enough (≤8% alpha) to sit over overlays
+ * without hurting legibility. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: none;
+}
+
+/* RISOGRAPH — warm paper grain (multiply on paper, screen on ink). */
+:root[data-palette="risograph"] body::before {
+  display: block;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 200px 200px;
+}
+:root[data-palette="risograph"][data-theme="dark"] body::before {
+  opacity: 0.26;
+  mix-blend-mode: screen;
+}
+
+/* TERMINAL — CRT scanlines (theme-toned), + phosphor vignette/bloom in
+ * the dark (CRT) mode only; daylight mode keeps just the fine lines. */
+:root[data-palette="terminal"] body::after {
+  display: block;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    color-mix(in srgb, var(--foreground) 6%, transparent) 2px 3px
+  );
+}
+:root[data-palette="terminal"][data-theme="dark"] body::after {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 2px,
+      color-mix(in srgb, var(--foreground) 8%, transparent) 2px 3px
+    ),
+    radial-gradient(
+      130% 130% at 50% 50%,
+      transparent 58%,
+      color-mix(in srgb, #000000 38%, transparent) 100%
+    ),
+    radial-gradient(
+      80% 45% at 50% 0%,
+      color-mix(in srgb, var(--ring) 7%, transparent),
+      transparent 70%
+    );
+}
+
+/* Respect the OS "reduce transparency" setting — drop all theme
+ * textures so contrast never depends on a blended overlay. */
+@media (prefers-reduced-transparency: reduce) {
+  body::before,
+  body::after {
+    display: none !important;
+  }
+}
+
+/* —— Risograph display-headline overprint ————————————————————————
+ * The theme's signature print move, opt-in via the `m4-overprint` class
+ * (applied only to `h1` hero titles in SectionHeading). The ink title
+ * gets a vermilion ghost + a cobalt ghost slipped behind it — two-ink
+ * misregistration. Static, risograph-only, and dropped under
+ * reduced-transparency. `data-text` carries the duplicated glyphs;
+ * `isolation` keeps the z-index:-1 ghosts behind the title but above the
+ * page. Other themes render the heading untouched. */
+[data-palette="risograph"] .m4-overprint {
+  position: relative;
+  isolation: isolate;
+}
+[data-palette="risograph"] .m4-overprint::before,
+[data-palette="risograph"] .m4-overprint::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+[data-palette="risograph"] .m4-overprint::before {
+  color: var(--ring);
+  transform: translate(0.045em, 0.05em);
+}
+[data-palette="risograph"] .m4-overprint::after {
+  color: var(--ring-2);
+  transform: translate(-0.035em, -0.03em);
+}
+[data-palette="risograph"][data-theme="dark"] .m4-overprint::before,
+[data-palette="risograph"][data-theme="dark"] .m4-overprint::after {
+  mix-blend-mode: screen;
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-palette="risograph"] .m4-overprint::before,
+  [data-palette="risograph"] .m4-overprint::after {
+    display: none;
+  }
+}
+
 /* CJK typography guard — phase 2 of docs/UNIFIED_VISUAL_DIRECTION.md §6.1.
  * Clash, Cabinet, and Satoshi are Latin-only; VT323 is English-only.
  * Within any Chinese-language scope, redefine the heading/body/pixel
@@ -366,6 +673,7 @@
   --font-sans: var(--font-cjk);
   --font-pixel: var(--font-cjk);
   --font-hand: var(--font-cjk);
+  --font-serif: var(--font-cjk);
 }
 
 * {

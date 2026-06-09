@@ -1,4 +1,5 @@
 import { GlitchText } from "@/components/motion/glitch-text";
+import { cn } from "@/lib/utils";
 
 interface SectionHeadingProps {
   eyebrow?: string;
@@ -24,6 +25,11 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   const Heading = as;
   const useGlitch = as === "h1" && !disableGlitch;
+  // The Risograph theme slips a two-ink misregistration behind h1 hero
+  // titles (the `m4-overprint` CSS is gated to `[data-palette="risograph"]`,
+  // so every other theme renders this untouched). `data-text` carries the
+  // glyphs the ::before/::after ghosts duplicate.
+  const overprint = as === "h1";
   return (
     <div className="max-w-3xl">
       {eyebrow ? (
@@ -31,11 +37,14 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <Heading className={headingClass[as]}>
+      <Heading
+        className={cn(headingClass[as], overprint && "m4-overprint")}
+        data-text={overprint ? title : undefined}
+      >
         {useGlitch ? <GlitchText>{title}</GlitchText> : title}
       </Heading>
       {description ? (
-        <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+        <p className="mt-4 max-w-2xl font-prose text-base leading-7 text-muted-foreground">
           {description}
         </p>
       ) : null}

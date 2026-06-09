@@ -18,6 +18,7 @@ import type { Locale } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
+import { ThemePicker } from "@/components/theme/theme-picker";
 import { useCommandPalette } from "@/components/system/command-palette-provider";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 import { NavDropdownIcon } from "./nav-dropdown-icon";
@@ -378,6 +379,7 @@ export function MobileNav({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <LanguageSwitcher />
+            <ThemePicker />
             <ThemeSwitcher />
             <SoundSettingsButton />
           </div>

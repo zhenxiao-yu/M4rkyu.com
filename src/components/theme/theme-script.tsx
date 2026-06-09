@@ -7,7 +7,7 @@ import Script from "next/script";
  * `beforeInteractive`, which keeps dev/test logs clean and runs before the
  * app hydrates.
  */
-const BOOTSTRAP = `(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=(!s||s==='system')?m:s;document.documentElement.setAttribute('data-theme',r);}catch(e){}})()`;
+const BOOTSTRAP = `(function(){try{var d=document.documentElement;var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=(!s||s==='system')?m:s;d.setAttribute('data-theme',r);var P=['risograph','terminal','editorial'];var p=localStorage.getItem('palette');d.setAttribute('data-palette',P.indexOf(p)>=0?p:'risograph');}catch(e){}})()`;
 
 export function ThemeScript() {
   return (

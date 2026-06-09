@@ -26,6 +26,11 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "@/components/theme/theme-provider";
+import {
+  usePalette,
+  PALETTES,
+  type Palette,
+} from "@/components/theme/palette-provider";
 import { usePathname } from "next/navigation";
 import {
   Dialog,
@@ -128,11 +133,13 @@ export function CommandPalette({
 }: CommandPaletteProps) {
   const tNav = useTranslations("Navigation");
   const tPalette = useTranslations("CommandPalette");
+  const tTheme = useTranslations("Theme");
   const tBlog = useTranslations("Blog");
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale() as Locale;
   const { setTheme } = useTheme();
+  const { setPalette } = usePalette();
   const [search, setSearch] = useState("");
 
   const recentFrames = useMemo(
@@ -169,6 +176,11 @@ export function CommandPalette({
 
   function pickTheme(value: "light" | "dark") {
     setTheme(value);
+    onOpenChange(false);
+  }
+
+  function pickPalette(value: Palette) {
+    setPalette(value);
     onOpenChange(false);
   }
 
@@ -467,6 +479,27 @@ export function CommandPalette({
                   </CommandItem>
                 );
               })}
+              {PALETTES.map((p) => (
+                <CommandItem
+                  key={`palette-${p.value}`}
+                  value={`theme palette ${p.value} ${tTheme(p.key)}`}
+                  onSelect={() => pickPalette(p.value)}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex size-4 shrink-0 overflow-hidden rounded-[3px] border border-border/50"
+                  >
+                    {p.swatch.map((color, i) => (
+                      <span
+                        key={i}
+                        className="flex-1"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </span>
+                  <span className="truncate">{tTheme(p.key)}</span>
+                </CommandItem>
+              ))}
               {LOCALE_LIST.filter((l) => l.code !== locale).map((l) => (
                 <CommandItem
                   key={l.code}

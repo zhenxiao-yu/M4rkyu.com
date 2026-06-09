@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { PaletteProvider } from "@/components/theme/palette-provider";
 import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
 import { ConsentAwareAnalytics } from "@/components/privacy/consent-aware-analytics";
 import { WebVitalsReporter } from "@/components/system/web-vitals-reporter";
@@ -47,7 +48,8 @@ export default async function LocaleLayout({
       <JsonLd data={buildSiteJsonLd(activeLocale)} />
       <NextIntlClientProvider locale={locale} messages={messages}>
         <ThemeProvider>
-          <TooltipProvider delayDuration={400} skipDelayDuration={150}>
+          <PaletteProvider>
+            <TooltipProvider delayDuration={400} skipDelayDuration={150}>
             <AudioPlayerProvider>
               <AudioPlayerDialogHost />
               <CommandPaletteProvider>
@@ -87,7 +89,8 @@ export default async function LocaleLayout({
                 <Toaster />
               </CommandPaletteProvider>
             </AudioPlayerProvider>
-          </TooltipProvider>
+            </TooltipProvider>
+          </PaletteProvider>
         </ThemeProvider>
       </NextIntlClientProvider>
     </>

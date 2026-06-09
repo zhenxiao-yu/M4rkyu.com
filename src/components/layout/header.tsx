@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
+import { ThemePicker } from "@/components/theme/theme-picker";
 import { LanguageSwitcher } from "@/components/system/language-switcher";
 import { SoundSettingsButton } from "@/components/system/sound-settings-button";
 import { CommandPaletteTrigger } from "@/components/system/command-palette-trigger";
@@ -90,6 +91,7 @@ export async function Header({ locale }: { locale: Locale }) {
           <div className="flex items-center gap-0.5 rounded-xl border border-border/60 bg-muted/30 p-0.5">
             <LazyNotificationBell locale={locale} />
             <LanguageSwitcher />
+            <ThemePicker />
             <ThemeSwitcher />
           </div>
           {/* UserMenu renders Sign-in trigger (guest) or account link

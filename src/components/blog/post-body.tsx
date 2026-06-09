@@ -311,7 +311,11 @@ export async function PostBody({ markdown, className }: PostBodyProps) {
     .process(markdown);
 
   return (
-    <div className={cn("max-w-3xl", className)}>
+    // `font-prose` = the body reading face: the sans by default, the literary
+    // serif under the editorial-leaning themes. Headings/code/tables set their
+    // own font-* so they stay put; only the running prose (p, li, blockquote)
+    // picks up the serif.
+    <div className={cn("max-w-3xl font-prose", className)}>
       {file.result as React.ReactNode}
     </div>
   );
