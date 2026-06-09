@@ -1,23 +1,13 @@
 "use client";
 
-import { useMemo, useState, useTransition, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
   rectSortingStrategy,
-  sortableKeyboardCoordinates,
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -37,22 +27,12 @@ import type { Locale } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { adminInputClass } from "../form-kit";
 import { cn, FOCUS_RING } from "@/lib/utils";
+import {
+  useCollectionItemsManager,
+  type GalleryManagerItem,
+} from "./use-collection-items-manager";
 
-export interface GalleryManagerItem {
-  id: string;
-  slug: string;
-  title: string;
-  status: string;
-  type: string;
-  featured: boolean;
-  alt: string;
-  caption: string;
-  imageUrl: string | null;
-  /** Owning collection — drives the per-item edit link (items can span
-   * collections in the library view). */
-  collectionSlug: string;
-  collectionTitle: string;
-}
+export type { GalleryManagerItem };
 
 export interface GalleryManagerCollection {
   id: string;
@@ -86,6 +66,9 @@ interface Props {
  * and drag-to-reorder. The "move" path is the organize core — it reassigns
  * items to another collection (metadata only; the stored object keeps its
  * key, so its public URL still resolves).
+ *
+ * All stateful logic lives in {@link useCollectionItemsManager}; this
+ * component is the view.
  */
 export function CollectionItemsManager({
   items,
@@ -104,175 +87,47 @@ export function CollectionItemsManager({
 }: Props) {
   const t = useTranslations("AdminGallery");
   const tAdmin = useTranslations("Admin");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [pendingId, setPendingId] = useState<string | null>(null);
-  const [optimisticStatus, setOptimisticStatus] = useState<
-    Record<string, string>
-  >({});
-  const [optimisticFeatured, setOptimisticFeatured] = useState<
-    Record<string, boolean>
-  >({});
-  const [optimisticAlt, setOptimisticAlt] = useState<Record<string, string>>(
-    {},
-  );
-  const [altEditId, setAltEditId] = useState<string | null>(null);
-  const [altDraft, setAltDraft] = useState("");
-  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [flagFilter, setFlagFilter] = useState<"all" | "featured" | "needsAlt">(
-    "all",
-  );
-  const [, startTransition] = useTransition();
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const ordered = useMemo(() => {
-    if (!orderOverride) return items;
-    const byId = new Map(items.map((item) => [item.id, item]));
-    const next = orderOverride
-      .map((id) => byId.get(id))
-      .filter((item): item is GalleryManagerItem => Boolean(item));
-    return next.length === items.length ? next : items;
-  }, [items, orderOverride]);
-
-  const filtering =
-    query.trim().length > 0 || statusFilter !== "all" || flagFilter !== "all";
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return ordered.filter((item) => {
-      const alt = optimisticAlt[item.id] ?? item.alt;
-      if (statusFilter !== "all" && item.status !== statusFilter) return false;
-      if (flagFilter === "featured" && !item.featured) return false;
-      if (flagFilter === "needsAlt" && alt.trim().length > 0) return false;
-      if (!q) return true;
-      return (
-        item.title.toLowerCase().includes(q) ||
-        item.slug.toLowerCase().includes(q) ||
-        alt.toLowerCase().includes(q)
-      );
-    });
-  }, [ordered, query, statusFilter, flagFilter, optimisticAlt]);
-
-  const selectedIds = useMemo(
-    () => filtered.filter((i) => selected.has(i.id)).map((i) => i.id),
-    [filtered, selected],
-  );
-  const allSelected =
-    filtered.length > 0 && selectedIds.length === filtered.length;
-  // Reorder maps positions to real DB rows, so it must run against the full,
-  // unfiltered list — disabled while filtering/searching.
-  const dragEnabled = enableReorder && !busy && !filtering && filtered.length > 1;
-
-  function toggleOne(id: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-  function toggleAll() {
-    setSelected(allSelected ? new Set() : new Set(filtered.map((i) => i.id)));
-  }
-  function clearSelection() {
-    setSelected(new Set());
-  }
-
-  function runItem(id: string, fn: () => Promise<void>, onError?: () => void) {
-    setPendingId(id);
-    startTransition(async () => {
-      try {
-        await fn();
-      } catch {
-        toast.error(tAdmin("list.actionFailed"));
-        onError?.();
-      } finally {
-        setPendingId(null);
-      }
-    });
-  }
-
-  function runBulk(fn: () => Promise<void>) {
-    setBusy(true);
-    startTransition(async () => {
-      try {
-        await fn();
-        clearSelection();
-      } catch {
-        toast.error(tAdmin("list.actionFailed"));
-      } finally {
-        setBusy(false);
-      }
-    });
-  }
-
-  function changeStatus(id: string, prev: string, next: string) {
-    setOptimisticStatus((m) => ({ ...m, [id]: next }));
-    runItem(
-      id,
-      () => setStatusAction(id, next),
-      () => setOptimisticStatus((m) => ({ ...m, [id]: prev })),
-    );
-  }
-
-  function toggleFeatured(id: string, current: boolean) {
-    const next = !current;
-    setOptimisticFeatured((m) => ({ ...m, [id]: next }));
-    runItem(
-      id,
-      () => setFeaturedAction(id, next),
-      () => setOptimisticFeatured((m) => ({ ...m, [id]: current })),
-    );
-  }
-
-  function openAlt(id: string, current: string) {
-    setAltDraft(current);
-    setAltEditId(id);
-  }
-
-  function saveAlt(id: string, prev: string) {
-    const next = altDraft.trim();
-    setAltEditId(null);
-    if (next === prev.trim()) return;
-    setOptimisticAlt((m) => ({ ...m, [id]: next }));
-    runItem(
-      id,
-      () => setAltAction(id, next),
-      () => setOptimisticAlt((m) => ({ ...m, [id]: prev })),
-    );
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const ids = filtered.map((i) => i.id);
-    const oldIndex = ids.indexOf(String(active.id));
-    const newIndex = ids.indexOf(String(over.id));
-    if (oldIndex < 0 || newIndex < 0) return;
-    setOrderOverride(arrayMove(ids, oldIndex, newIndex));
-    setBusy(true);
-    const id = String(active.id);
-    const direction = newIndex > oldIndex ? "down" : "up";
-    const steps = Math.abs(newIndex - oldIndex);
-    startTransition(async () => {
-      try {
-        for (let i = 0; i < steps; i++) await reorderAction(id, direction);
-      } catch {
-        toast.error(tAdmin("list.actionFailed"));
-      } finally {
-        setBusy(false);
-        setOrderOverride(null);
-      }
-    });
-  }
+  const {
+    filtered,
+    filtering,
+    selected,
+    selectedIds,
+    allSelected,
+    dragEnabled,
+    pendingId,
+    optimisticStatus,
+    optimisticFeatured,
+    optimisticAlt,
+    altEditId,
+    setAltEditId,
+    altDraft,
+    setAltDraft,
+    query,
+    setQuery,
+    statusFilter,
+    setStatusFilter,
+    flagFilter,
+    setFlagFilter,
+    busy,
+    sensors,
+    toggleOne,
+    toggleAll,
+    clearSelection,
+    runItem,
+    runBulk,
+    changeStatus,
+    toggleFeatured,
+    openAlt,
+    saveAlt,
+    handleDragEnd,
+  } = useCollectionItemsManager({
+    items,
+    enableReorder,
+    setStatusAction,
+    setFeaturedAction,
+    setAltAction,
+    reorderAction,
+  });
 
   if (items.length === 0) {
     return (

@@ -1,26 +1,13 @@
 "use client";
 
-import { useMemo, useState, useTransition, type ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 import {
   DndContext,
-  KeyboardSensor,
-  PointerSensor,
   closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import {
   ArrowUp,
   ArrowDown,
@@ -40,6 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { adminInputClass } from "./form-kit";
 import { cn, FOCUS_RING } from "@/lib/utils";
+import { IconButton, SortableRow } from "./admin-list-row";
+import { useAdminList } from "./use-admin-list";
 
 export interface AdminListItem {
   id: string;
@@ -100,175 +89,40 @@ export function AdminList({
   bulkStatusAction,
   bulkDeleteAction,
 }: AdminListProps) {
-  const tBulk = useTranslations("Admin");
-  // Seed the search + status filter from the URL so deep links like
-  // /admin/projects?status=draft (e.g. from the dashboard's "needs
-  // attention" panel) land pre-filtered. Unknown status values fall back
-  // to "all" rather than showing an empty list with no explanation.
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
-  const [statusFilter, setStatusFilter] = useState(() => {
-    const requested = searchParams.get("status");
-    return requested && statusOptions.some((o) => o.value === requested)
-      ? requested
-      : "all";
+  const {
+    tBulk,
+    query,
+    setQuery,
+    statusFilter,
+    setStatusFilter,
+    pendingId,
+    optimisticStatus,
+    selected,
+    bulkBusy,
+    sensors,
+    bulkEnabled,
+    filtering,
+    ordered,
+    filtered,
+    dragEnabled,
+    selectedIds,
+    allVisibleSelected,
+    toggleOne,
+    toggleAll,
+    clearSelection,
+    runBulk,
+    run,
+    changeStatus,
+    handleDragEnd,
+  } = useAdminList({
+    items,
+    statusOptions,
+    setStatusAction,
+    reorderAction,
+    duplicateAction,
+    bulkStatusAction,
+    bulkDeleteAction,
   });
-  const [pendingId, setPendingId] = useState<string | null>(null);
-  // Optimistic status overrides: a row's select reflects the new value the
-  // instant it's chosen, then reconciles with revalidated props on success
-  // or rolls back on failure.
-  const [optimisticStatus, setOptimisticStatus] = useState<
-    Record<string, string>
-  >({});
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [bulkBusy, setBulkBusy] = useState(false);
-  // While a drag is being persisted, this holds the optimistic id order so
-  // the list stays in its dropped arrangement across the (single-step)
-  // server round-trips before props catch up.
-  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
-  const [reorderBusy, setReorderBusy] = useState(false);
-  const [, startTransition] = useTransition();
-
-  const sensors = useSensors(
-    // A small activation distance keeps clicks on the row's buttons from
-    // being swallowed as drags.
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const bulkEnabled = Boolean(bulkStatusAction && bulkDeleteAction);
-  const filtering = query.trim().length > 0 || statusFilter !== "all";
-
-  // Apply any optimistic drag order on top of the server-provided items.
-  const ordered = useMemo(() => {
-    if (!orderOverride) return items;
-    const byId = new Map(items.map((item) => [item.id, item]));
-    const next = orderOverride
-      .map((id) => byId.get(id))
-      .filter((item): item is AdminListItem => Boolean(item));
-    return next.length === items.length ? next : items;
-  }, [items, orderOverride]);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return ordered.filter((item) => {
-      if (statusFilter !== "all" && item.status !== statusFilter) return false;
-      if (!q) return true;
-      return (
-        item.title.toLowerCase().includes(q) ||
-        item.slug.toLowerCase().includes(q) ||
-        (item.subtitle?.toLowerCase().includes(q) ?? false)
-      );
-    });
-  }, [ordered, query, statusFilter]);
-
-  // Drag reordering only makes sense against the full, unfiltered list —
-  // indices must map to real DB positions. Disabled while searching/filtering
-  // (the up/down arrows are also hidden then) and during an in-flight persist.
-  const dragEnabled = !filtering && !reorderBusy && items.length > 1;
-
-  // Selection only ever references rows currently visible; prune anything
-  // that filtering or a refresh removed so counts never lie.
-  const visibleIds = useMemo(() => new Set(filtered.map((i) => i.id)), [filtered]);
-  const selectedIds = useMemo(
-    () => filtered.filter((i) => selected.has(i.id)).map((i) => i.id),
-    [filtered, selected],
-  );
-  const allVisibleSelected =
-    filtered.length > 0 && selectedIds.length === filtered.length;
-
-  function toggleOne(id: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  function toggleAll() {
-    setSelected(allVisibleSelected ? new Set() : new Set(visibleIds));
-  }
-
-  function clearSelection() {
-    setSelected(new Set());
-  }
-
-  function runBulk(fn: () => Promise<void>) {
-    setBulkBusy(true);
-    startTransition(async () => {
-      try {
-        await fn();
-        clearSelection();
-      } catch {
-        toast.error(tBulk("list.actionFailed"));
-      } finally {
-        setBulkBusy(false);
-      }
-    });
-  }
-
-  function run(id: string, fn: () => Promise<void>) {
-    setPendingId(id);
-    startTransition(async () => {
-      try {
-        await fn();
-      } catch {
-        toast.error(tBulk("list.actionFailed"));
-      } finally {
-        setPendingId(null);
-      }
-    });
-  }
-
-  // Status changes are optimistic: paint the new value immediately, keep it
-  // on success (revalidated props will match), roll back + toast on failure.
-  function changeStatus(id: string, prev: string, next: string) {
-    setOptimisticStatus((map) => ({ ...map, [id]: next }));
-    setPendingId(id);
-    startTransition(async () => {
-      try {
-        await setStatusAction(id, next);
-      } catch {
-        toast.error(tBulk("list.actionFailed"));
-        setOptimisticStatus((map) => ({ ...map, [id]: prev }));
-      } finally {
-        setPendingId(null);
-      }
-    });
-  }
-
-  // Persist a drag move by replaying the existing single-step reorder action
-  // |delta| times. A handful of round-trips for a hand-curated portfolio; a
-  // batch "set order" action could replace this if a list ever grew large.
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const ids = filtered.map((item) => item.id);
-    const oldIndex = ids.indexOf(String(active.id));
-    const newIndex = ids.indexOf(String(over.id));
-    if (oldIndex < 0 || newIndex < 0) return;
-
-    setOrderOverride(arrayMove(ids, oldIndex, newIndex));
-    setReorderBusy(true);
-    const id = String(active.id);
-    const direction = newIndex > oldIndex ? "down" : "up";
-    const steps = Math.abs(newIndex - oldIndex);
-    startTransition(async () => {
-      try {
-        for (let i = 0; i < steps; i++) {
-          await reorderAction(id, direction);
-        }
-      } catch {
-        toast.error(tBulk("list.actionFailed"));
-      } finally {
-        setReorderBusy(false);
-        setOrderOverride(null);
-      }
-    });
-  }
 
   const newButton = (
     <Button asChild size="sm">
@@ -598,65 +452,5 @@ export function AdminList({
         </DndContext>
       )}
     </div>
-  );
-}
-
-// Wraps one row in dnd-kit's sortable wiring and hands the drag bindings to
-// its render-prop child, keeping the (large) row markup inline in the map
-// rather than threading every handler through props.
-function SortableRow({
-  id,
-  disabled,
-  children,
-}: {
-  id: string;
-  disabled: boolean;
-  children: (props: {
-    setNodeRef: (node: HTMLElement | null) => void;
-    style: React.CSSProperties;
-    handleProps: Record<string, unknown>;
-    isDragging: boolean;
-  }) => ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id, disabled });
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 1 : undefined,
-  };
-  return children({
-    setNodeRef,
-    style,
-    handleProps: { ...attributes, ...listeners },
-    isDragging,
-  });
-}
-
-function IconButton({
-  label,
-  disabled,
-  onClick,
-  children,
-}: {
-  label: string;
-  disabled?: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      disabled={disabled}
-      onClick={onClick}
-      className={cn(
-        "inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40",
-        FOCUS_RING,
-      )}
-    >
-      {children}
-    </button>
   );
 }

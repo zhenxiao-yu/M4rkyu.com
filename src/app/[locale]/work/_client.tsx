@@ -1,16 +1,6 @@
 "use client";
 
 import {
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-  type ReactNode,
-} from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
   ChevronDown,
   FilterX,
   LayoutGrid,
@@ -35,33 +25,16 @@ import { WorkDeckReveal } from "@/components/sections/work-deck-reveal";
 import type { Project } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
 import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
-
-const FILTERS: { labelKey: string; value: Project["category"] | null }[] = [
-  { labelKey: "all", value: null },
-  { labelKey: "web-app", value: "web-app" },
-  { labelKey: "game-dev", value: "game-dev" },
-  { labelKey: "ai-tool", value: "ai-tool" },
-  { labelKey: "art-film", value: "art-film" },
-  { labelKey: "experiment", value: "experiment" },
-];
-
-const CATEGORY_VALUES = new Set(
-  FILTERS.map((filter) => filter.value).filter(
-    Boolean,
-  ) as Project["category"][],
-);
-
-const ALL_YEARS = "__all__";
-const SORT_MODES = ["newest", "oldest", "alpha"] as const;
-type SortMode = (typeof SORT_MODES)[number];
-const DEFAULT_SORT: SortMode = "newest";
-
-// GRID = the mission-dossier card deck (cover-led browsing). INDEX = the
-// numbered accession-register ledger (data-led scanning). Persisted to
-// the URL like every other view setting so a shared link restores it.
-const VIEW_MODES = ["grid", "index"] as const;
-type ViewMode = (typeof VIEW_MODES)[number];
-const DEFAULT_VIEW: ViewMode = "grid";
+import { ActiveChip, FacetChip } from "./_chips";
+import {
+  ALL_YEARS,
+  DEFAULT_SORT,
+  FILTERS,
+  SORT_MODES,
+  VIEW_MODES,
+  useWorkFilters,
+  type SortMode,
+} from "./use-work-filters";
 
 export function ProjectsClient({
   projects,
@@ -70,200 +43,28 @@ export function ProjectsClient({
   projects: Project[];
   locale: Locale;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
   const t = useTranslations("Projects");
   const tCategories = useTranslations("Categories");
 
-  const categoryParam = searchParams.get("category");
-  const activeCategory = CATEGORY_VALUES.has(
-    categoryParam as Project["category"],
-  )
-    ? (categoryParam as Project["category"])
-    : null;
-  const yearParam = searchParams.get("year");
-  const featuredOnly = searchParams.get("featured") === "true";
-  const sortParam = searchParams.get("sort") as SortMode | null;
-  const activeSort: SortMode = SORT_MODES.includes(sortParam as SortMode)
-    ? (sortParam as SortMode)
-    : DEFAULT_SORT;
-  const viewParam = searchParams.get("view") as ViewMode | null;
-  const activeView: ViewMode = VIEW_MODES.includes(viewParam as ViewMode)
-    ? (viewParam as ViewMode)
-    : DEFAULT_VIEW;
-  const [query, setQuery] = useState(searchParams.get("q") ?? "");
-  // Filter against the deferred value so typing fast doesn't re-run
-  // the full project filter + re-mount cards on every keystroke.
-  const deferredQuery = useDeferredValue(query);
-
-  // Year counts memoized once per project list — used both as the year
-  // dropdown badges and as the active-chip label suffix.
-  const yearCounts = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const project of projects) {
-      map.set(project.year, (map.get(project.year) ?? 0) + 1);
-    }
-    return map;
-  }, [projects]);
-
-  const yearOptions = useMemo(
-    () => Array.from(yearCounts.keys()).sort((a, b) => b.localeCompare(a)),
-    [yearCounts],
-  );
-  const activeYear = yearOptions.includes(yearParam ?? "")
-    ? (yearParam as string)
-    : ALL_YEARS;
-
-  // Per-facet counts (global, like yearCounts) — surfaced on each tag chip
-  // so the taxonomy reads as a populated index. Empty categories still show
-  // (taxonomy is real) but render disabled rather than as dead clicks.
-  const categoryCounts = useMemo(() => {
-    const map = new Map<Project["category"], number>();
-    for (const project of projects) {
-      map.set(project.category, (map.get(project.category) ?? 0) + 1);
-    }
-    return map;
-  }, [projects]);
-  const featuredCount = useMemo(
-    () => projects.filter((project) => project.featured).length,
-    [projects],
-  );
-
-  function updateUrl(next: {
-    category?: Project["category"] | null;
-    year?: string | null;
-    q?: string;
-    featured?: boolean;
-    sort?: SortMode;
-    view?: ViewMode;
-  }) {
-    const params = new URLSearchParams(searchParams);
-    if ("category" in next) {
-      if (next.category) params.set("category", next.category);
-      else params.delete("category");
-    }
-    if ("year" in next) {
-      if (next.year && next.year !== ALL_YEARS) params.set("year", next.year);
-      else params.delete("year");
-    }
-    if ("q" in next) {
-      const value = next.q?.trim();
-      if (value) params.set("q", value);
-      else params.delete("q");
-    }
-    if ("featured" in next) {
-      if (next.featured) params.set("featured", "true");
-      else params.delete("featured");
-    }
-    if ("sort" in next) {
-      if (next.sort && next.sort !== DEFAULT_SORT)
-        params.set("sort", next.sort);
-      else params.delete("sort");
-    }
-    if ("view" in next) {
-      if (next.view && next.view !== DEFAULT_VIEW)
-        params.set("view", next.view);
-      else params.delete("view");
-    }
-    startTransition(() => {
-      const nextQuery = params.toString();
-      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
-        scroll: false,
-      });
-    });
-  }
-
-  const filtered = useMemo(() => {
-    let result = projects;
-    if (activeCategory !== null) {
-      result = result.filter((p) => p.category === activeCategory);
-    }
-    if (activeYear !== ALL_YEARS) {
-      result = result.filter((p) => p.year === activeYear);
-    }
-    if (featuredOnly) {
-      result = result.filter((p) => p.featured);
-    }
-    if (deferredQuery.trim()) {
-      const q = deferredQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.shortPitch.toLowerCase().includes(q) ||
-          p.stack.some((s) => s.toLowerCase().includes(q)),
-      );
-    }
-    if (activeSort === "alpha") {
-      result = [...result].sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-      const direction = activeSort === "newest" ? -1 : 1;
-      result = [...result].sort(
-        (a, b) => a.year.localeCompare(b.year) * direction,
-      );
-    }
-    return result;
-  }, [
-    projects,
+  const {
     activeCategory,
     activeYear,
     featuredOnly,
-    deferredQuery,
     activeSort,
-  ]);
-
-  // Always-current params, reachable from the debounced timer without
-  // putting `searchParams` in its deps (which would re-arm the debounce).
-  const searchParamsRef = useRef(searchParams);
-  useEffect(() => {
-    searchParamsRef.current = searchParams;
-  }, [searchParams]);
-
-  // Debounce the URL sync so router.replace doesn't fire per keystroke.
-  // Build from the live searchParams (not window.location, which could be
-  // a stale snapshot from before a facet change landed mid-debounce and
-  // would clobber it).
-  useEffect(() => {
-    const id = setTimeout(() => {
-      const params = new URLSearchParams(searchParamsRef.current.toString());
-      const trimmed = query.trim();
-      if (trimmed) params.set("q", trimmed);
-      else params.delete("q");
-      startTransition(() => {
-        const nextQuery = params.toString();
-        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
-          scroll: false,
-        });
-      });
-    }, 250);
-    return () => clearTimeout(id);
-  }, [query, pathname, router]);
-
-  const production = useMemo(
-    () => filtered.filter((p) => p.contentStatus === "ready"),
-    [filtered],
-  );
-  const drafts = useMemo(
-    () => filtered.filter((p) => p.contentStatus !== "ready"),
-    [filtered],
-  );
-
-  // True when the user has narrowed from the default view — drives the
-  // active-chip row visibility and the inline / empty-state Clear CTAs.
-  const hasActiveFilters =
-    activeCategory !== null ||
-    activeYear !== ALL_YEARS ||
-    featuredOnly ||
-    query.trim() !== "" ||
-    activeSort !== DEFAULT_SORT;
-
-  function clearAllFilters() {
-    setQuery("");
-    startTransition(() => {
-      router.replace(pathname, { scroll: false });
-    });
-  }
+    activeView,
+    query,
+    setQuery,
+    yearCounts,
+    yearOptions,
+    categoryCounts,
+    featuredCount,
+    filtered,
+    production,
+    drafts,
+    hasActiveFilters,
+    updateUrl,
+    clearAllFilters,
+  } = useWorkFilters(projects);
 
   return (
     <>
@@ -603,86 +404,5 @@ export function ProjectsClient({
         </details>
       ) : null}
     </>
-  );
-}
-
-function ActiveChip({
-  label,
-  onRemove,
-  removeLabel,
-}: {
-  label: string;
-  onRemove: () => void;
-  removeLabel: string;
-}) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card/80 py-0.5 pl-2.5 pr-1 text-xs text-foreground">
-      <span>{label}</span>
-      <button
-        type="button"
-        onClick={onRemove}
-        aria-label={`${removeLabel}: ${label}`}
-        className={cn(
-          "-mr-0.5 grid size-7 place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
-          FOCUS_RING_INSET,
-        )}
-      >
-        <X aria-hidden="true" className="size-3" />
-      </button>
-    </span>
-  );
-}
-
-// Console "register" facet — a monospace tag with its global count. Active
-// fills solid (monochrome, so the single --ring accent stays reserved);
-// empty categories render disabled rather than as dead clicks.
-function FacetChip({
-  label,
-  count,
-  active,
-  disabled = false,
-  onClick,
-  icon,
-}: {
-  label: string;
-  count?: number;
-  active: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  icon?: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-pressed={active}
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[0.66rem] uppercase tracking-[0.1em] transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
-        FOCUS_RING,
-        disabled
-          ? "cursor-not-allowed border-dashed border-border/60 text-muted-foreground/35"
-          : active
-            ? "border-foreground bg-foreground text-background"
-            : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
-      )}
-    >
-      {icon}
-      <span>{label}</span>
-      {typeof count === "number" ? (
-        <span
-          className={cn(
-            "tabular-nums",
-            disabled
-              ? "text-muted-foreground/35"
-              : active
-                ? "text-background/55"
-                : "text-muted-foreground/50",
-          )}
-        >
-          {count}
-        </span>
-      ) : null}
-    </button>
   );
 }

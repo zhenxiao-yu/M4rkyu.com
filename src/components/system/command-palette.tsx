@@ -3,25 +3,13 @@
 import { useCallback, useMemo, useState } from "react";
 import {
   BookOpen,
-  Briefcase,
-  Camera,
-  Clock3,
-  FileText,
-  Gamepad2,
-  Hash,
   Heart,
   HelpCircle,
   Languages,
   Layers,
-  ListChecks,
-  Mail,
-  Moon,
   NotebookPen,
-  Search,
   SearchX,
   ShoppingBag,
-  Sun,
-  User,
   Wrench,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -56,6 +44,8 @@ import { resources } from "@/content/resources";
 import { getShopProducts } from "@/content/shop";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { PAGES, PAGE_ALIASES, THEMES } from "./command-palette-data";
+import { HighlightedText } from "./command-palette-highlight";
 
 /**
  * Slim post shape the palette indexes — keeps the prop payload
@@ -73,57 +63,6 @@ interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   posts?: PalettePost[];
-}
-
-const PAGES: { key: string; href: string; icon: typeof Briefcase }[] = [
-  { key: "search", href: "/search", icon: Search },
-  { key: "work", href: "/work", icon: Briefcase },
-  { key: "games", href: "/games", icon: Gamepad2 },
-  { key: "gallery", href: "/archive", icon: Camera },
-  { key: "shop", href: "/shop", icon: ShoppingBag },
-  { key: "blog", href: "/logs", icon: FileText },
-  { key: "notes", href: "/notes", icon: NotebookPen },
-  { key: "topics", href: "/topics", icon: Hash },
-  { key: "resources", href: "/resources", icon: Wrench },
-  { key: "latest", href: "/latest", icon: Clock3 },
-  { key: "changelog", href: "/changelog", icon: ListChecks },
-  { key: "colophon", href: "/colophon", icon: FileText },
-  { key: "about", href: "/about", icon: User },
-  { key: "contact", href: "/contact", icon: Mail },
-];
-
-const PAGE_ALIASES: Record<string, string> = {
-  gallery: "archive photos frames contact sheet images",
-  blog: "logs writing posts articles devlog",
-  work: "projects case studies portfolio",
-  resources: "tools links bookmarks utilities",
-  latest: "new recent updates feed timeline",
-  changelog: "release notes changes ship log updates",
-  colophon: "about this site stack technology credits build",
-};
-
-const THEMES = [
-  { value: "light", icon: Sun, key: "themeLight" },
-  { value: "dark", icon: Moon, key: "themeDark" },
-] as const;
-
-function HighlightedText({ text, query }: { text: string; query: string }) {
-  const needle = query.trim();
-  if (!needle) return <>{text}</>;
-  const index = text.toLowerCase().indexOf(needle.toLowerCase());
-  if (index < 0) return <>{text}</>;
-  const before = text.slice(0, index);
-  const match = text.slice(index, index + needle.length);
-  const after = text.slice(index + needle.length);
-  return (
-    <>
-      {before}
-      <mark className="rounded-sm bg-ring/20 px-0.5 text-foreground">
-        {match}
-      </mark>
-      {after}
-    </>
-  );
 }
 
 export function CommandPalette({
