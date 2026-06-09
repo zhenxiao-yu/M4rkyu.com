@@ -251,7 +251,7 @@ function ThemeTile({
           />
         </div>
 
-        {/* accent chip + second ink */}
+        {/* accent chip + the second & third inks (the three-ink budget) */}
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
             className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[0.5rem] font-bold"
@@ -262,6 +262,10 @@ function ThemeTile({
           <span
             className="size-2 rounded-full"
             style={{ backgroundColor: c.accent2 }}
+          />
+          <span
+            className="size-2 rounded-full"
+            style={{ backgroundColor: c.accent3 }}
           />
         </div>
       </div>

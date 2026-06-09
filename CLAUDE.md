@@ -105,8 +105,8 @@ link` (no `destructive`). Compose new components from these primitives.
 `--game-accent`, `--font-pixel`, the `--pixel-*` / `--hud-*` /
 `--mission-*` family). Always use tokens — no `bg-zinc-*`, no hex
 literals, no invalid v4 syntax like `transition-[colors,transform]`. Accent
-is theme-scoped: the active theme's `--ring`, plus an optional single second
-ink `--ring-2` — two inks max per theme, never a third, no rainbow.
+is theme-scoped: the active theme's `--ring`, plus up to two further inks
+`--ring-2` / `--ring-3` — three inks max per theme, never a fourth, no rainbow.
 (`--game-accent` still aliases `--ring` for playful surfaces.)
 Pixel typography (`--font-pixel`, VT323) is opt-in and English-only; the
 `:lang(zh)` / `[lang^="zh"]` guard in `globals.css` swaps it back to the

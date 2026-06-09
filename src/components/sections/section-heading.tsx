@@ -12,8 +12,8 @@ interface SectionHeadingProps {
 }
 
 const headingClass = {
-  h1: "mt-3 text-4xl font-[700] leading-[1.02] tracking-normal text-balance sm:text-5xl lg:text-6xl",
-  h2: "mt-3 text-3xl font-[700] leading-[1.05] tracking-normal text-balance sm:text-4xl lg:text-5xl",
+  h1: "mt-4 text-[2.6rem] font-[700] leading-[0.98] tracking-[-0.02em] text-balance sm:text-6xl lg:text-7xl",
+  h2: "mt-3 text-3xl font-[700] leading-[1.02] tracking-[-0.015em] text-balance sm:text-4xl lg:text-5xl",
 };
 
 export function SectionHeading({
@@ -33,9 +33,18 @@ export function SectionHeading({
   return (
     <div className="max-w-3xl">
       {eyebrow ? (
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          {eyebrow}
-        </p>
+        <div className="flex items-center gap-3">
+          {/* Kinetic three-ink tick — the theme's full ink trio drifts
+            * through this rule, the editorial signature on every header.
+            * Decorative; the eyebrow text carries the meaning. */}
+          <span
+            aria-hidden="true"
+            className="kinetic-rule h-0.75 w-9 shrink-0 rounded-full"
+          />
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            {eyebrow}
+          </p>
+        </div>
       ) : null}
       <Heading
         className={cn(headingClass[as], overprint && "m4-overprint")}

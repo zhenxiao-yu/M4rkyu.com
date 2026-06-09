@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
 import { DotGrid } from "@/components/ui/magic/dot-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { RisographMarks } from "@/components/sections/risograph-marks";
 import { cn } from "@/lib/utils";
 
 interface PageHeroProps {
@@ -51,6 +52,12 @@ export function PageHero({
         className="absolute inset-0 bg-cyber-grid opacity-25"
         aria-hidden="true"
       />
+      {/* Tri-ink aurora — the theme's full ink trio washes the header field,
+        * fading out before the content baseline so type stays crisp. */}
+      <div
+        className="aurora-mesh pointer-events-none absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,black,transparent_86%)]"
+        aria-hidden="true"
+      />
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
       <DotGrid
         className="pointer-events-none absolute inset-0 opacity-35 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]"
@@ -76,23 +83,37 @@ export function PageHero({
         <span className="absolute bottom-4 left-4 size-3 border-b border-l border-foreground/25 lg:left-6" />
         <span className="absolute bottom-4 right-4 size-3 border-b border-r border-foreground/25 lg:right-6" />
       </div>
-      {/* Accent baseline — the single ring accent signs the bottom edge,
+      {/* Accent baseline — the theme's three inks sign the bottom edge,
         * doubling as the ruled line the ghosted wordmark sits on. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-ring/45 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px]"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, color-mix(in srgb, var(--ring) 65%, transparent) 20%, color-mix(in srgb, var(--ring-3) 70%, transparent) 50%, color-mix(in srgb, var(--ring-2) 65%, transparent) 80%, transparent)",
+        }}
       />
 
       {decorativeWord ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-[-0.2em] hidden justify-center md:flex"
+          className="pointer-events-none absolute inset-0 flex items-end overflow-hidden"
         >
-          <span className="font-display text-[10rem] font-black leading-none tracking-normal text-foreground/[0.035] dark:text-foreground/[0.055] lg:text-[13rem]">
+          {/* Oversized folio word, bled off the lower-left edge on every
+            * viewport — the editorial anchor that turns each header into a
+            * magazine spread instead of a heading floating in an empty box.
+            * `clamp` keeps it bold on phones and capped on desktop; long
+            * words run off the right edge by design (the bleed is the
+            * device). Kept faint enough to sit behind the live copy. */}
+          <span className="mb-[-0.14em] ml-[-0.03em] whitespace-nowrap font-display text-[clamp(5rem,26vw,15rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-foreground/4.5 dark:text-foreground/6">
             {decorativeWord}
           </span>
         </div>
       ) : null}
+
+      {/* Press-proof chrome — risograph-only registration marks + spot-ink bar,
+        * bottom-right, balancing the folio word that bleeds bottom-left. */}
+      <RisographMarks />
 
       <div
         className={cn(

@@ -530,9 +530,9 @@ classes like `bg-card`, `border-border`, `text-ring`.
 `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`,
 `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`,
 `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`,
-`--border`, `--input`, `--ring`, `--ring-2` (optional second ink, per
-theme — see [§5.4](#54-multi-theme-system-shipped-2026-06)), `--surface-ink`,
-`--surface-paper`, `--signal`, `--success`, `--warning`.
+`--border`, `--input`, `--ring`, `--ring-2` / `--ring-3` (optional second +
+third inks, per theme — see [§5.4](#54-multi-theme-system-shipped-2026-06)),
+`--surface-ink`, `--surface-paper`, `--signal`, `--success`, `--warning`.
 
 **Existing radius tokens:** `--radius`, `--radius-sm`, `--radius-md`,
 `--radius-lg`, `--radius-xl`.
@@ -570,10 +570,11 @@ project is Tailwind v4, CSS-first).
 - No `transition-[colors,transform]` (Tailwind v4 invalid).
 - No new shadow / radius family. Use `shadow-sm | shadow-md | shadow-lg` and
   the `--radius-*` family only.
-- At most one accent **per theme**: the active theme's `--ring`, plus an
-  optional single second ink `--ring-2` (e.g. Risograph's cobalt). Never a
-  third ink, no rainbow gradients. `--game-accent` still aliases `--ring`.
-  (This supersedes the old "single cyan only" rule — see [§5.4](#54-multi-theme-system-shipped-2026-06).)
+- A bounded ink budget **per theme**: the active theme's `--ring`, plus up to
+  two further inks `--ring-2` / `--ring-3` (e.g. Risograph's cobalt + marigold).
+  **Three inks max per theme**, no fourth, no rainbow gradients. `--game-accent`
+  still aliases `--ring`. (This supersedes both the old "single cyan only" and
+  the interim "two inks max" rules — see [§5.4](#54-multi-theme-system-shipped-2026-06).)
 
 ### 5.4 Multi-theme system (shipped 2026-06)
 
@@ -586,17 +587,22 @@ axis** on top of light/dark — the discipline didn't disappear, it generalized.
   Both are set before paint by the bootstrap in
   [theme-script.tsx](../src/components/theme/theme-script.tsx) (no FOUC) and
   persisted to `localStorage` (`theme`, `palette`).
-- **Themes (start set).** `risograph` (default — warm two-ink press,
-  vermilion + cobalt), `terminal` (amber phosphor + green, CRT scanlines),
-  `editorial` (black / white / paper + one hot red). Each is a token block in
+- **Themes (start set).** `risograph` (default — warm three-ink press,
+  vermilion + cobalt + marigold), `terminal` (amber phosphor + green + cyan,
+  CRT scanlines), `editorial` (Swiss ink — black / paper, hot red + cobalt +
+  gold). Each is a token block in
   [globals.css](../src/app/globals.css) under `:root[data-palette="…"]` (+ a
   `[data-theme="dark"]` override). Glass vars are
   `color-mix(var(--card)/var(--foreground))`, so they re-derive per theme
   automatically — no per-theme glass edits.
-- **Accent rule (supersedes single-cyan).** Each theme owns its `--ring`
-  accent plus an optional single second ink `--ring-2`. Two inks max per
-  theme, no third, no rainbow. Editorial sets `--ring-2 = --ring` (truly one
-  accent); Risograph uses a real second ink.
+- **Accent rule (supersedes single-cyan and the interim two-ink cap).** Each
+  theme owns its `--ring` accent plus up to two further inks `--ring-2` /
+  `--ring-3`. **Three inks max per theme**, no fourth, no rainbow. All three
+  ship as a real trio now — Risograph (vermilion + cobalt + marigold), Terminal
+  (amber + green + cyan), Editorial (red + cobalt + gold). The shared
+  `PageHero` aurora mesh + the `SectionHeading` kinetic rule render all three
+  at once; base/classic fallback still mirrors `--ring-2` / `--ring-3` to
+  `--ring` (single accent off-theme).
 - **Signature textures.** Decorative, `pointer-events:none`, `[data-palette]`-
   gated `body::before` / `body::after` layers: Risograph paper grain, Terminal
   CRT scanlines + dark-mode phosphor vignette. Static (no drift — keeps the
@@ -613,7 +619,7 @@ axis** on top of light/dark — the discipline didn't disappear, it generalized.
 
 The earlier "single cyan accent" / "glass over cyber" framing elsewhere in
 this doc describes the *default* identity, not a site-wide constraint: the
-discipline (≤2 inks, tokens only, no rainbow, reduced-motion / reduced-
+discipline (≤3 inks, tokens only, no rainbow, reduced-motion / reduced-
 transparency safe) now holds **per theme**.
 
 ---

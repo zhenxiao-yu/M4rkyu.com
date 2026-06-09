@@ -30,6 +30,7 @@ export interface PreviewColors {
   ink: string;
   accent: string;
   accent2: string;
+  accent3: string;
   muted: string;
 }
 
@@ -52,8 +53,8 @@ export const PALETTES: readonly PaletteMeta[] = [
     swatch: ["#efe7d8", "#16130d", "#e8412a"],
     texture: "grain",
     preview: {
-      light: { paper: "#efe7d8", ink: "#16130d", accent: "#e8412a", accent2: "#2740e0", muted: "#d6ccb6" },
-      dark: { paper: "#0c0b08", ink: "#efe7d6", accent: "#ff5a3c", accent2: "#5b78ff", muted: "#2a241a" },
+      light: { paper: "#efe7d8", ink: "#16130d", accent: "#e8412a", accent2: "#2740e0", accent3: "#c98a00", muted: "#d6ccb6" },
+      dark: { paper: "#0c0b08", ink: "#efe7d6", accent: "#ff5a3c", accent2: "#5b78ff", accent3: "#ffc24d", muted: "#2a241a" },
     },
   },
   {
@@ -62,8 +63,8 @@ export const PALETTES: readonly PaletteMeta[] = [
     swatch: ["#07080a", "#ded8c8", "#ffb000"],
     texture: "scanlines",
     preview: {
-      light: { paper: "#ece6d8", ink: "#1a1610", accent: "#b06a00", accent2: "#1c7a32", muted: "#d2c8b0" },
-      dark: { paper: "#07080a", ink: "#ded8c8", accent: "#ffb000", accent2: "#46f06a", muted: "#233040" },
+      light: { paper: "#ece6d8", ink: "#1a1610", accent: "#b06a00", accent2: "#1c7a32", accent3: "#0e7490", muted: "#d2c8b0" },
+      dark: { paper: "#07080a", ink: "#ded8c8", accent: "#ffb000", accent2: "#46f06a", accent3: "#38d6ff", muted: "#233040" },
     },
   },
   {
@@ -72,8 +73,8 @@ export const PALETTES: readonly PaletteMeta[] = [
     swatch: ["#f6f4ee", "#0a0a0a", "#e2231a"],
     texture: "none",
     preview: {
-      light: { paper: "#f6f4ee", ink: "#0a0a0a", accent: "#e2231a", accent2: "#0a0a0a", muted: "#d8d4c8" },
-      dark: { paper: "#0b0b0b", ink: "#f4f1e8", accent: "#ff3b2f", accent2: "#f4f1e8", muted: "#2a2a2a" },
+      light: { paper: "#f6f4ee", ink: "#0a0a0a", accent: "#e2231a", accent2: "#1a3fd0", accent3: "#b07d18", muted: "#d8d4c8" },
+      dark: { paper: "#0b0b0b", ink: "#f4f1e8", accent: "#ff3b2f", accent2: "#5b78ff", accent3: "#e0a23e", muted: "#2a2a2a" },
     },
   },
 ] as const;

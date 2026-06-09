@@ -89,9 +89,18 @@ export async function HeroSection({ locale }: { locale: Locale }) {
                 * around each word, with the star between, all on one line.
                 * StarGlyph drops to currentColor so it tracks the headline
                 * across themes. */}
+              {/* The centre star is the headline's jewel — tinted to the
+                * active theme's primary ink so it blazes vermilion / amber /
+                * red as the palette changes, with a soft accent bloom. */}
               <span aria-hidden="true" className="sm:hidden">
                 {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}{" "}
-                <StarGlyph className="-mt-1 inline-block size-[0.65em] align-middle" />{" "}
+                <StarGlyph
+                  className="-mt-1 inline-block size-[0.65em] align-middle text-ring"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 10px color-mix(in srgb, var(--ring) 45%, transparent))",
+                  }}
+                />{" "}
                 {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
               </span>
               <span
@@ -99,7 +108,13 @@ export async function HeroSection({ locale }: { locale: Locale }) {
                 className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]"
               >
                 {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
-                <StarGlyph className="inline-block size-[0.55em] shrink-0 self-center" />
+                <StarGlyph
+                  className="inline-block size-[0.55em] shrink-0 self-center text-ring"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 12px color-mix(in srgb, var(--ring) 45%, transparent))",
+                  }}
+                />
                 {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
               </span>
             </h1>
