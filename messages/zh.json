@@ -45,11 +45,6 @@
     "toolsDescription": "38 款浏览器内开发工具",
     "linksDescription": "每日使用的开发与设计书签"
   },
-  "Theme": {
-    "label": "主题",
-    "dark": "暗色",
-    "light": "亮色"
-  },
   "Language": {
     "label": "语言",
     "en": "English",

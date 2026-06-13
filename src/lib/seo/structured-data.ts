@@ -28,6 +28,7 @@ export function buildSiteJsonLd(locale: Locale) {
           "https://github.com/zhenxiao-yu",
           "https://dev.to/zhenxiao_yu_a87bb6b2017f1",
         ],
+        knowsLanguage: ["English", "Chinese"],
       },
       {
         "@type": "WebSite",

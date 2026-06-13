@@ -45,11 +45,6 @@
     "toolsDescription": "38 in-browser developer utilities",
     "linksDescription": "Daily-use dev and design bookmarks"
   },
-  "Theme": {
-    "label": "Theme",
-    "dark": "Dark",
-    "light": "Light"
-  },
   "Language": {
     "label": "Language",
     "en": "English",
