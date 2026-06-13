@@ -5,6 +5,7 @@ import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { ToolIcon } from "@/components/resources/tool-icon";
 import { getResourcesSource } from "@/lib/resources/source";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
@@ -52,17 +53,9 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <Link
-          href="/resources"
-          locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-            FOCUS_RING,
-          )}
-        >
+        <SectionActionLink href="/resources" locale={locale}>
           {t("open")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
     >
       <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">

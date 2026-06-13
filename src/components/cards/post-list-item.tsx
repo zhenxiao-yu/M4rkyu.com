@@ -89,7 +89,7 @@ export function PostListItem({ post }: PostListItemProps) {
               alt=""
               fill
               sizes="128px"
-              className="object-cover grayscale transition duration-300 group-hover:scale-[1.04] group-hover:grayscale-0"
+              className="object-cover [@media(pointer:fine)]:grayscale transition duration-300 group-hover:scale-[1.04] [@media(pointer:fine)]:group-hover:grayscale-0"
             />
           </div>
         ) : null}

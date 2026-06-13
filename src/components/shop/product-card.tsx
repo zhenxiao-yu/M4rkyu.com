@@ -34,7 +34,7 @@ export async function ProductCard({ product, locale }: ProductCardProps) {
               alt={product.image.alt}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover grayscale transition duration-300 group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
+              className="object-cover [@media(pointer:fine)]:grayscale transition duration-300 [@media(pointer:fine)]:group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
             />
           ) : (
             <PlaceholderImage

@@ -1,13 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { FadeIn } from "@/components/motion/fade-in";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { profile } from "@/content/profile";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
-import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 const FOCAL: Record<string, string> = {
@@ -47,7 +45,7 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
                   alt={portrait.alt}
                   fill
                   sizes="(max-width: 768px) 70vw, 24rem"
-                  className="object-cover grayscale transition duration-500 ease-(--ease-premium) hover:grayscale-0"
+                  className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:hover:grayscale-0"
                   style={{ objectPosition: FOCAL[portrait.focal] ?? "center" }}
                 />
               </div>
@@ -72,17 +70,9 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
           <p className="mt-5 text-base leading-7 text-foreground/85">
             {t("lede")}
           </p>
-          <Link
-            href="/about"
-            locale={locale}
-            className={cn(
-              "mt-7 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-              FOCUS_RING,
-            )}
-          >
+          <SectionActionLink href="/about" locale={locale} className="mt-7">
             {t("open")}
-            <ArrowUpRight aria-hidden="true" className="size-3.5" />
-          </Link>
+          </SectionActionLink>
         </FadeIn>
       </div>
     </HomeSection>

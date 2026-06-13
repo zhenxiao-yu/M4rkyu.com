@@ -1,41 +1,34 @@
 import { getTranslations } from "next-intl/server";
-import { Galaxy } from "@/components/ui/magic/galaxy";
-import { StarGlyph } from "@/components/ui/magic/star-glyph";
+import { HomeBackdropSwitcher } from "./home-backdrop-switcher";
+import { HeroWordmark } from "./hero-wordmark";
 import { DecryptedText } from "@/components/ui/magic/decrypted-text";
-import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
 import { HeroScrollCue } from "./hero-scroll-cue";
+import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * Hero — wodniack-patterned "Creative ✦ Developer." stage.
+ * Hero — "Compile ✦ Compose", the homepage's centred focal wordmark over
+ * the switchable, mouse-and-touch interactive backdrop.
  *
- *   - Galaxy fills the upper field (both themes; light inverts via
- *     CSS filter so stars become dark specks on cream).
- *   - Top-left: 4-line mono status panel.
- *   - Top-right (sm+): short tag + email-me link.
- *   - Bottom band (pinned to viewport floor):
- *       1. Binary-feed marquee (top edge)
- *       2. Solid theme-bg block with huge headline
- *          "Creative ✦ Developer." — `+` from the i18n string is
- *          replaced with the StarGlyph SVG. Solid bg means the
- *          galaxy doesn't bleed through under the headline (per
- *          user feedback "background behind text should be solid").
- *       3. Binary-feed marquee (bottom edge)
- *
- * `.hero-vignette` was retired — its radial gradient produced a
- * visible white blob on too many viewports.
+ *   - Backdrop: HomeBackdropSwitcher (galaxy / iridescence / threads /
+ *     grid / waves), interactive on desktop AND mobile.
+ *   - Centre: a translucent frosted band framed by two binary-feed
+ *     marquees (accent edges facing inward), holding the blocky wordmark.
+ *     Both words are 7 letters so the star lands dead-centre; words
+ *     auto-shuffle on a fine pointer. The block is vertically centred in
+ *     the viewport — the page's focal point.
+ *   - Scroll cue floats at the section floor.
  */
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
-  // Binary feed — system-telemetry caps text. Used for both the
-  // top and bottom marquee strips around the headline.
+  // Binary feed — system-telemetry caps text for the two marquee strips.
   const BINARY_FEED =
     "01001101 00110100 01010010 01001011 01011001 01010101 // 0xFF3E // 11000100 01001011 // 01011001 0xCAFE // 0xDEAD 10101010 // 01010011 01011001 01010011 01000011 // 0xA4B7 // 01101111 01110000 01100101 01110010 01100001 01110100 01101001 01101110 01100111";
 
-  // Split title at "+" so we can drop the StarGlyph in between while
-  // each side still flows through SplitHeadline's char-stagger reveal
-  // (EN only). Falls back to plain rendering when no "+" present.
+  // Split the title at "+" so the StarGlyph (the centre jewel) lands
+  // between the two 7-letter words. Plain blocky type on every locale:
+  // this is an English identity wordmark, not translated copy.
   const title = t("title");
   const [titleA, titleB] = title.includes("+")
     ? title.split("+").map((s) => s.trim())
@@ -47,132 +40,67 @@ export async function HeroSection({ locale }: { locale: Locale }) {
       data-snap="section"
       className="relative isolate flex min-h-dvh flex-col overflow-hidden border-b"
     >
-      {/* Galaxy backdrop — both themes, dark-mode native, light-mode
-        * inverts so stars become dark specks on cream. */}
-      <div className="absolute inset-0 -z-20 invert dark:invert-0">
-        <Galaxy
-          density={0.5}
-          hueShift={105}
-          speed={0.6}
-          glowIntensity={0.2}
-          saturation={0.15}
-          twinkleIntensity={0.1}
-          starSpeed={0.4}
-          rotationSpeed={0.05}
-          mouseInteraction
-          mouseRepulsion={false}
-          transparent
-        />
-      </div>
+      {/* Switchable, interactive backdrop — the centre wow-piece. */}
+      <HomeBackdropSwitcher />
 
       <HeroBootSequence>
-        {/* Bottom band — marquee, solid-bg headline, marquee */}
-        <div
-          data-boot="hud"
-          className="absolute inset-x-0 bottom-0 z-10 bg-background"
-        >
-          {/* Scroll-on cue — floats just above the headline band over the
-            * galaxy and jumps straight to the next section. */}
-          <HeroScrollCue className="absolute bottom-[calc(100%+0.85rem)] left-1/2 z-20 -translate-x-1/2" />
+        {/* Vertically centre the framed wordmark in the viewport. */}
+        <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center">
+          {/* Frosted band — keeps the wordmark legible over any backdrop
+            * while the field still reads through. Marquees bookend it with
+            * accent edges facing the wordmark. */}
+          <div
+            data-boot="hud"
+            className="relative w-full bg-background/35 backdrop-blur-[2px]"
+          >
+            <BinaryMarquee feed={BINARY_FEED} edge="bottom" />
 
-          {/* Top marquee (above headline) */}
-          <BinaryMarquee feed={BINARY_FEED} />
+            <div className="flex justify-center px-4 py-8 sm:py-12">
+              <HeroWordmark
+                wordA={titleA}
+                wordB={titleB}
+                spokenTitle={spokenTitle}
+              />
+            </div>
 
-          {/* Headline on solid theme background */}
-          <div className="flex w-full justify-center sm:overflow-hidden">
-            <h1
-              data-boot="headline"
-              aria-label={spokenTitle}
-              className="font-display w-full px-2 pt-4 pb-3 text-center text-[clamp(2.25rem,6.25vw,7.5rem)] font-black leading-[0.9] tracking-[-0.04em] sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pt-5 sm:pb-5"
-            >
-              {/* Mobile: plain text + star, wraps. Desktop: Shuffle reel
-                * around each word, with the star between, all on one line.
-                * StarGlyph drops to currentColor so it tracks the headline
-                * across themes. */}
-              {/* The centre star is the headline's jewel — tinted to the
-                * active theme's primary ink so it blazes vermilion / amber /
-                * red as the palette changes, with a soft accent bloom. */}
-              <span aria-hidden="true" className="sm:hidden">
-                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}{" "}
-                <StarGlyph
-                  className="-mt-1 inline-block size-[0.65em] align-middle text-ring"
-                  style={{
-                    filter:
-                      "drop-shadow(0 0 10px color-mix(in srgb, var(--ring) 45%, transparent))",
-                  }}
-                />{" "}
-                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
-              </span>
-              <span
-                aria-hidden="true"
-                className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]"
-              >
-                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
-                <StarGlyph
-                  className="inline-block size-[0.55em] shrink-0 self-center text-ring"
-                  style={{
-                    filter:
-                      "drop-shadow(0 0 12px color-mix(in srgb, var(--ring) 45%, transparent))",
-                  }}
-                />
-                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
-              </span>
-            </h1>
+            <BinaryMarquee feed={BINARY_FEED} reverse edge="top" />
           </div>
-
-          {/* Bottom marquee (below headline) — flips direction so the
-            * pair reads as a frame around the headline. */}
-          <BinaryMarquee feed={BINARY_FEED} reverse />
         </div>
+
+        {/* Scroll-on cue — jumps straight to the next snap section. */}
+        <HeroScrollCue className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2" />
       </HeroBootSequence>
     </section>
   );
 }
 
 /**
- * Headline word — single set of Shuffle props in one place. Tuned as
- * an ambient detail: short scramble, small motion travel, long pause
- * between loops so the eye lands on the word, not the animation.
- */
-function HeadlineShuffle({ text }: { text: string }) {
-  return (
-    <Shuffle
-      text={text}
-      duration={0.45}
-      density={0.25}
-      loop
-      loopDelay={4}
-      triggerOnHover
-      shuffleDirection="up"
-    />
-  );
-}
-
-/**
- * Thin marquee strip used as the binary-feed bookends around the
- * headline. Doubled track for seamless loop. Reduced-motion → static.
- * `reverse` flips direction (used for the bottom strip so the two
- * read as a frame, not a parallel pair).
- *
- * Each feed segment is a `DecryptedText animateOn="hover"` — pointing
- * at the strip scrambles the glyphs that segment shows and resolves
- * back when the cursor leaves.
+ * Binary-feed marquee — a data-ticker strip bookending the wordmark. The
+ * accent hairline sits on the edge facing the wordmark (`edge`), so the
+ * pair frames the headline. Doubled track for a seamless loop; each
+ * segment is a `DecryptedText animateOn="hover"` whose scrambled glyphs
+ * flash in the accent ink. Reduced-motion → static.
  */
 function BinaryMarquee({
   feed,
   reverse = false,
+  edge,
 }: {
   feed: string;
   reverse?: boolean;
+  edge: "top" | "bottom";
 }) {
   return (
     <div
       aria-hidden="true"
-      className="relative overflow-hidden border-y border-foreground/15 py-1"
+      className={cn(
+        "relative overflow-hidden bg-background/40 py-1.5",
+        edge === "bottom" ? "border-b border-ring/25" : "border-t border-ring/25",
+      )}
     >
-      <div className="pointer-events-none absolute inset-0 mask-[linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]" />
+      <div className="pointer-events-none absolute inset-0 mask-[linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]" />
       <div
-        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/55 motion-safe:animate-[marquee_38s_linear_infinite]"
+        className="flex w-max gap-10 whitespace-nowrap font-mono text-[0.6rem] uppercase tracking-[0.38em] text-foreground/45 motion-safe:animate-[marquee_34s_linear_infinite]"
         style={reverse ? { animationDirection: "reverse" } : undefined}
       >
         {[0, 1, 2, 3].map((i) => (
@@ -183,8 +111,8 @@ function BinaryMarquee({
             sequential
             speed={22}
             useOriginalCharsOnly
-            className="text-foreground/55"
-            encryptedClassName="text-foreground/30"
+            className="text-foreground/45"
+            encryptedClassName="text-ring/40"
           />
         ))}
       </div>

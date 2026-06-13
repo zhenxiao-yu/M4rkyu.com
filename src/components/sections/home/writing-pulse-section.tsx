@@ -1,10 +1,8 @@
-import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { WritingPulseRow } from "@/components/sections/writing-pulse-row";
-import { Link } from "@/i18n/navigation";
 import { getPosts } from "@/lib/blog/get-posts";
-import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
 import type { Locale } from "@/i18n/routing";
 
@@ -42,17 +40,9 @@ export async function WritingPulseSection({ locale }: WritingPulseSectionProps) 
       heading={t("latest")}
       lede={t("latestDescription")}
       action={
-        <Link
-          href="/logs"
-          locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-            FOCUS_RING,
-          )}
-        >
+        <SectionActionLink href="/logs" locale={locale}>
           {t("allLogs")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
       dataSection="writing-pulse"
     >

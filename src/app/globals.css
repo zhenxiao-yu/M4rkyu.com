@@ -9,6 +9,22 @@
  * utilities (icons, color tweaks) just work. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* iOS / iPadOS Safari (and in-app webviews like Instagram's) auto-zoom the
+ * viewport whenever a focused form control renders below 16px. Pin a 16px
+ * floor on touch pointers so tapping any field never jolts the page into a
+ * zoom — one place that covers every input, textarea, and select, including
+ * the bespoke monospace tool editors, on phones AND tablets. Scoped to
+ * `(pointer: coarse)` (not a width) so iPads are covered; unlayered so it
+ * wins over Tailwind's `text-*` utilities. Fine-pointer (desktop) keeps its
+ * tighter sizes untouched. */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Theme view-transition: when ThemeSwitcher sets data-theme-sweep="on"
  * on <html> and the View Transitions API is available, the next
  * theme is revealed via a circle expanding from the click position

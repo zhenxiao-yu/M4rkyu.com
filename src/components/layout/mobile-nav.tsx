@@ -137,7 +137,7 @@ export function MobileNav({
               type="button"
               aria-label="Close menu"
               className={cn(
-                "inline-flex size-10 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground",
+                "inline-flex size-11 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground",
                 FOCUS_RING_INSET,
               )}
             >

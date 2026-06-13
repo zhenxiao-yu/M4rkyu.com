@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import {
   updateProfileAction,
@@ -59,16 +60,13 @@ export function ProfileForm({ initial }: ProfileFormProps) {
       </Field>
 
       <Field id="bio" label={t("fields.bio")} hint={t("fieldsHint.bio")}>
-        <textarea
+        <Textarea
           id="bio"
           name="bio"
           maxLength={280}
           rows={3}
           defaultValue={initial.bio}
-          className={cn(
-            "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm",
-            FOCUS_RING_INSET,
-          )}
+          className={cn("border-border", FOCUS_RING_INSET)}
         />
       </Field>
 

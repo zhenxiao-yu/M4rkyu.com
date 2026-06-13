@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
-import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 // Perlin-noise line field with cursor repulsion (2D canvas, no WebGL). Theme-aware via MutationObserver on data-theme; reduced-motion paints one static frame; IntersectionObserver pauses off-screen. Port of ReactBits Waves (MIT).
@@ -119,11 +118,13 @@ export function Waves({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduce = useReducedMotion();
-  // Touch devices render one static wave frame, no canvas physics loop:
-  // the Perlin field redrawn every frame at devicePixelRatio is the
-  // costly part on high-DPI phones, and there's no cursor to repel.
-  const finePointer = useMediaQuery("(pointer: fine)");
-  const lite = reduce || !finePointer;
+  // Only reduced-motion users get the single static frame. Everyone else —
+  // including touch — gets the live, cursor-/touch-reactive field (the
+  // `touchmove` handler below repels the lines under a finger). The
+  // per-frame cost stays bounded: a 30fps gate, a DPR cap (1.5), hard grid
+  // caps, and an IntersectionObserver that pauses it whenever it scrolls
+  // off-screen, so an idle background never burns the phone's battery.
+  const lite = reduce;
 
   useEffect(() => {
     const container = containerRef.current;

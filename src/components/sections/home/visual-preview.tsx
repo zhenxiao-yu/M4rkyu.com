@@ -7,12 +7,9 @@ import { Carousel } from "@/components/ui/magic/carousel";
 import type { GalleryCollection } from "@/content/schemas";
 import { getGallerySource } from "@/lib/gallery/source";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
-import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
-
-const actionLink =
-  "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring";
 
 /**
  * Visual entry-point slide — the gallery's front door. One collection
@@ -44,10 +41,9 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <Link href="/archive" locale={locale} className={cn(actionLink, FOCUS_RING)}>
+        <SectionActionLink href="/archive" locale={locale}>
           {t("openArchive")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
     >
       {covers.length > 0 ? (
@@ -107,7 +103,7 @@ function CollectionSlide({
           alt={collection.cover.alt}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover grayscale transition duration-500 ease-(--ease-premium) hover:grayscale-0"
+          className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:hover:grayscale-0"
         />
       </div>
 

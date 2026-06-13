@@ -92,22 +92,18 @@
     "info": "信息"
   },
   "Home": {
-    "eyebrow": "M4RKYU.SYS · 2027",
     "scrollNext": "向下",
     "scrollNextAria": "跳到下一节",
-    "title": "创作 + 开发。",
-    "subtitle": "软件、游戏、视觉系统。在安大略，慢慢地、认真地搭建——一份贯通工程、艺术与写作的档案。",
-    "heroTagline": "自 2014 起",
-    "heroStatus": {
-      "line2": "档案构建 · v2027",
-      "line3": "加拿大 · 安大略",
-      "line4": "认真搭建"
+    "title": "Compile + Compose",
+    "backdropPrev": "上一个背景",
+    "backdropNext": "下一个背景",
+    "backdrops": {
+      "galaxy": "星系",
+      "iridescence": "虹彩",
+      "threads": "丝线",
+      "grid": "网格扭曲",
+      "waves": "波纹"
     },
-    "heroTagShort": "软件 · 游戏 · 视觉系统",
-    "scroll": "向下",
-    "heroCtaBrowse": "看看作品",
-    "heroCtaLogs": "阅读日志",
-    "heroCmdkHint": ">_ 按 ⌘K",
     "compass": {
       "eyebrow": "00 / 起点",
       "heading": "先看看这里有什么。",
@@ -235,31 +231,6 @@
       "emailDirect": "直接邮件",
       "sendBrief": "提交简报",
       "followLabel": "关注进展"
-    },
-    "capabilities": {
-      "eyebrow": "05 / 能力",
-      "title": "系统与界面",
-      "lede": "五个相互重叠的系统。每一项都是真实的实践，不是流行语。",
-      "production": {
-        "title": "生产工程",
-        "description": "Next.js / TypeScript / CI / 可观测性 —— 缓慢、谨慎、能在第二年仍然站得住的那种代码。"
-      },
-      "interface": {
-        "title": "界面系统",
-        "description": "设计系统、Token、动效、Storybook、可访问性 —— 可以从头读到尾的界面。"
-      },
-      "game": {
-        "title": "游戏感与交互",
-        "description": "原型、输入系统、手感调校。LAST KERNEL 与一座小型互动想法的工作间。"
-      },
-      "ai": {
-        "title": "AI 辅助创作工具",
-        "description": "Agent 工作流、内容流水线、内部工具。把模型当作手艺，不当作品牌。"
-      },
-      "visual": {
-        "title": "视觉叙事",
-        "description": "摄影、影像、艺术指导、影像档案策展 —— 每一帧都值得留下。"
-      }
     },
     "primaryCta": "看看作品",
     "featured": "选出来的几件",

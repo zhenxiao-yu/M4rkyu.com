@@ -136,20 +136,30 @@ or "indie game site."
 Each section gets a one-line job, a recommended primitive set, and a translation
 key prefix it should own in `messages/{en,zh}.json`.
 
-### A. Hero Command Center — `home.hero.*`
+### A. Hero — atmosphere-first wordmark · `Home.*`
 
-**Job:** in one screen, state who Mark is, show what he's building right now,
-offer two clear next steps.
+**Shipped direction (2027).** The hero is deliberately atmosphere-first: a
+full-bleed, switchable WebGL backdrop (`HomeBackdropSwitcher` — galaxy /
+iridescence / threads / grid-warp / waves; interactive on pointer *and* touch,
+choice persisted to `localStorage`) with the **`HeroWordmark`** — "Compile ✦
+Compose", the centre jewel re-inking per palette — held in a frosted band
+framed by two binary-feed marquees. `HeroBootSequence` lets the field breathe,
+then settles the band into place; `HeroScrollCue` waits at the floor. No
+identity paragraph, no CTAs *inside* the hero, by design — the statement is the
+surface.
 
-- Left column (60% width on desktop): mono eyebrow (`M4RKYU.SYS · v2027`),
-  display headline (Syne, `clamp(3rem, 8vw, 7rem)`), 1-line subtitle (Geist
-  body L), primary CTA (`Browse the work`), secondary CTA (`Read the logs`).
-- Right column (40%): `CommandHero` visual — an atmospheric "terminal /
-  project preview" card built on `PixelPanel` + `bg-cyber-grid` + restrained
-  Motion. Single live data point if available (latest project status), no fake
-  metrics.
-- Footer strip: `GameHud` status row — locale switch · theme toggle · sound
-  toggle · `>_ press ⌘K` hint.
+**Job:** drop the visitor straight into the work's atmosphere with the M4rkyu
+wordmark in the first screen, then hand wayfinding to the **Compass** section
+below (`Home.compass.*` — "Find your way around." + six orientation tiles),
+which carries the who / what / where the command-center layout used to.
+
+> **Divergence note.** This replaces the original *Hero Command Center* spec
+> (left identity column + `CommandHero` card + `GameHud` footer strip). That
+> spec is retained below as a documented alternative — `CommandHero` (§4.1) and
+> the hero copy banks (§10) still apply should the hero ever be re-pointed — but
+> the live homepage ships the wordmark variant. Responsive notes (§9) and Phase
+> 3 of the build log describe the original layout; treat them as historical for
+> the hero specifically.
 
 ### B. Numbered Capability System — `home.capabilities.*`
 

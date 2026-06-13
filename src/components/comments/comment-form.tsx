@@ -3,6 +3,7 @@
 import { useActionState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { SignInSheet } from "@/components/auth/sign-in-sheet";
 import {
   submitCommentAction,
@@ -55,7 +56,7 @@ export function CommentForm({
       <label className="sr-only" htmlFor="comment-body">
         {t("bodyLabel")}
       </label>
-      <textarea
+      <Textarea
         id="comment-body"
         name="body"
         rows={3}
@@ -64,10 +65,7 @@ export function CommentForm({
         placeholder={t("placeholder")}
         required
         disabled={pending}
-        className={cn(
-          "w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm",
-          FOCUS_RING_INSET,
-        )}
+        className={cn("border-border bg-background", FOCUS_RING_INSET)}
       />
       <div className="flex items-center justify-between gap-3">
         <p className="text-[0.7rem] text-muted-foreground">{t("moderationNotice")}</p>

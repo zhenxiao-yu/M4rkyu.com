@@ -75,7 +75,7 @@ export function Polaroid({
             sizes={sizes}
             priority={priority}
             unoptimized={src.endsWith(".svg")}
-            className="object-cover grayscale transition duration-500 ease-(--ease-premium) group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
+            className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:group-hover:grayscale-0 motion-safe:group-hover:scale-[1.03]"
           />
         ) : (
           <div className="absolute inset-0 grid place-items-center">

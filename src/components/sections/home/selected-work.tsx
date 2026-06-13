@@ -1,17 +1,16 @@
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
-import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { MissionModuleCard } from "@/components/ui/pixel/mission-module-card";
 import { SystemBadge } from "@/components/ui/pixel/system-badge";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
 import { SelectedWorkRail } from "./selected-work-rail";
 import type { Locale } from "@/i18n/routing";
 import { localize } from "@/lib/content/localize";
 import type { Project } from "@/content/schemas";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface SelectedWorkProps {
   locale: Locale;
@@ -50,17 +49,9 @@ export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <Link
-          href="/work"
-          locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-            FOCUS_RING,
-          )}
-        >
+        <SectionActionLink href="/work" locale={locale}>
           {t("openWork")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
       dataSection="selected-work"
     >
@@ -139,7 +130,7 @@ function RailFrame({
         className={cn(
           "min-h-0 flex-1",
           draft &&
-            "opacity-75 grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) group-hover/frame:opacity-100 group-hover/frame:grayscale-0",
+            "opacity-75 [@media(pointer:fine)]:grayscale transition-[opacity,filter] duration-(--motion-base) ease-(--ease-premium) group-hover/frame:opacity-100 [@media(pointer:fine)]:group-hover/frame:grayscale-0",
         )}
       >
         {children}

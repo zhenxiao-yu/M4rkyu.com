@@ -61,7 +61,7 @@ export function ArchiveTile({
               alt={item.src.alt}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover grayscale transition duration-(--motion-slow) ease-(--ease-premium) group-hover:scale-[1.02] group-hover:grayscale-0"
+              className="object-cover [@media(pointer:fine)]:grayscale transition duration-(--motion-slow) ease-(--ease-premium) group-hover:scale-[1.02] [@media(pointer:fine)]:group-hover:grayscale-0"
             />
           ) : (
             <PlaceholderImage

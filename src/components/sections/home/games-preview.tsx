@@ -7,6 +7,7 @@ import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { getGamesSource } from "@/lib/games/source";
 import { localize } from "@/lib/content/localize";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
@@ -45,17 +46,13 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <Link
+        <SectionActionLink
           href="/games"
           locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-game-accent",
-            FOCUS_RING,
-          )}
+          className="hover:text-game-accent"
         >
           {t("open")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
     >
       <Stagger as="ol" className="flex flex-col gap-3 sm:gap-3.5">
@@ -117,7 +114,7 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
                       fill
                       sizes="9rem"
                       unoptimized={cover.src.endsWith(".svg")}
-                      className="object-cover grayscale transition duration-500 ease-(--ease-premium) group-hover:grayscale-0"
+                      className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:group-hover:grayscale-0"
                     />
                   ) : (
                     <div className="absolute inset-0 grid place-items-center">

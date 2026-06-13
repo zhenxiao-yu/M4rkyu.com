@@ -9,6 +9,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { toast } from "sonner";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/forms/form-field";
 import { CopyEmailButton } from "./_copy-email-button";
 import { useTurnstile } from "@/lib/hooks/use-turnstile";
@@ -193,11 +194,11 @@ export function ContactForm({ email }: { email: string }) {
           className="!flex flex-1 flex-col gap-2"
           errorMessage={errors.message ? resolveError(t, errors.message.message) : undefined}
           render={({ id, name, value, onChange, onBlur, "aria-invalid": ai, "aria-describedby": ad }) => (
-            <textarea
+            <Textarea
               id={id}
               name={name}
               rows={5}
-              className="min-h-32 flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="min-h-32 flex-1 resize-none border-border bg-background text-foreground"
               placeholder={t("messagePlaceholder")}
               value={typeof value === "string" ? value : ""}
               onChange={(event) => onChange(event.target.value)}

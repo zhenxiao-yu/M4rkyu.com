@@ -58,10 +58,22 @@ function Swatch({
   );
 }
 
+/**
+ * The header chip reads the *live* theme tokens, not the JS palette state.
+ * `data-palette` is set before paint by the bootstrap, so these CSS vars
+ * resolve to the active theme during SSR and on the client identically — no
+ * hydration mismatch — and the chip tracks light/dark for free. (Reading the
+ * stored palette in render would diverge: server renders the default, client
+ * renders localStorage.)
+ */
+const LIVE_SWATCH = [
+  "var(--surface-paper)",
+  "var(--foreground)",
+  "var(--ring)",
+] as const;
+
 export function ThemePicker() {
   const t = useTranslations("Theme");
-  const { palette, palettes } = usePalette();
-  const current = palettes.find((p) => p.value === palette) ?? palettes[0];
 
   return (
     <Dialog>
@@ -73,7 +85,7 @@ export function ThemePicker() {
           className={cn(HUD_CONTROL, "w-auto pl-2 pr-2.5", FOCUS_RING)}
         >
           <ChannelEdge />
-          <Swatch swatch={current.swatch} />
+          <Swatch swatch={LIVE_SWATCH} />
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl gap-6">

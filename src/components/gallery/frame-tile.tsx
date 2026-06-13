@@ -78,7 +78,7 @@ export function FrameTile({
             sizes={sizes}
             placeholder={item.src.blurDataURL ? "blur" : undefined}
             blurDataURL={item.src.blurDataURL}
-            className="object-cover grayscale transition duration-300 group-hover:scale-[1.02] group-hover:grayscale-0"
+            className="object-cover [@media(pointer:fine)]:grayscale transition duration-300 group-hover:scale-[1.02] [@media(pointer:fine)]:group-hover:grayscale-0"
           />
         ) : (
           <PlaceholderImage

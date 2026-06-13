@@ -88,7 +88,7 @@ export async function GameCartridge({ game, locale, index }: GameCartridgeProps)
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             unoptimized={cover.src.endsWith(".svg")}
             className={cn(
-              "object-cover grayscale transition duration-500 ease-(--ease-premium) group-hover:grayscale-0 motion-safe:group-hover:scale-[1.04]",
+              "object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:group-hover:grayscale-0 motion-safe:group-hover:scale-[1.04]",
               soon && "opacity-40",
             )}
           />

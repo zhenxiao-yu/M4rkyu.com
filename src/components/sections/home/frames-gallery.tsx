@@ -1,16 +1,15 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
-import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 import { DotGrid } from "@/components/ui/magic/dot-grid";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import type { Locale } from "@/i18n/routing";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface FrameData {
   year: string;
@@ -56,17 +55,9 @@ export function FramesGallery({ locale }: FramesGalleryProps) {
       heading={t("heading")}
       lede={t("lede")}
       action={
-        <Link
-          href="/archive"
-          locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-            FOCUS_RING,
-          )}
-        >
+        <SectionActionLink href="/archive" locale={locale}>
           {t("openArchive")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
       dataSection="frames"
       className="overflow-hidden"

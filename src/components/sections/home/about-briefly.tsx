@@ -1,11 +1,9 @@
-import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { PlaceholderImage } from "@/components/placeholders/placeholder-image";
 import { FadeIn } from "@/components/motion/fade-in";
 import { profile } from "@/content/profile";
-import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
+import { SectionActionLink } from "./section-action-link";
 import type { Locale } from "@/i18n/routing";
 
 interface AboutBrieflyProps {
@@ -32,17 +30,9 @@ export async function AboutBriefly({ locale }: AboutBrieflyProps) {
       heading={t("heading")}
       lede={profile.intro}
       action={
-        <Link
-          href="/about"
-          locale={locale}
-          className={cn(
-            "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring",
-            FOCUS_RING,
-          )}
-        >
+        <SectionActionLink href="/about" locale={locale}>
           {t("readLonger")}
-          <ArrowUpRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        </SectionActionLink>
       }
       dataSection="about-briefly"
     >

@@ -89,7 +89,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
                 // without `dangerouslyAllowSVG` and gains nothing anyway, so
                 // serve them as-is. Raster covers (uploads) still optimize.
                 unoptimized={cover.src.endsWith(".svg")}
-                className="object-cover grayscale transition duration-500 ease-(--ease-premium) group-hover:grayscale-0 motion-safe:group-hover:scale-[1.04]"
+                className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:group-hover:grayscale-0 motion-safe:group-hover:scale-[1.04]"
               />
               {/* Blueprint registration marks — light corner ticks that
                   read on the dark cover substrate; brighten on hover. */}
