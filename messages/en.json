@@ -2293,6 +2293,9 @@
     "sfxVolume": "Effects",
     "sfxTest": "Test",
     "sfxTestAria": "Play test sound effect",
+    "sfxEnableAria": "Toggle UI sound effects",
+    "sfxOn": "On",
+    "sfxOff": "Off",
     "playlist": "Playlist"
   },
   "AskConsole": {

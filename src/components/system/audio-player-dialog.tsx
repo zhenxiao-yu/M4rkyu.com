@@ -26,7 +26,7 @@ import {
 import { useSoundEnabled } from "@/hooks/use-sound-enabled";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { useAudioPlayer } from "@/lib/audio/audio-player-context";
-import { playCue } from "@/lib/audio/ui-sound";
+import { playCue, setSoundEnabled } from "@/lib/audio/ui-sound";
 import type { LoopMode } from "@/content/music";
 
 function formatTime(seconds: number): string {
@@ -282,22 +282,49 @@ export function AudioPlayerDialog({
             value={sfxVolume}
             onChange={setSfxVolume}
             trailing={
-              <button
-                type="button"
-                onClick={() => playCue("confirm")}
-                aria-label={t("sfxTestAria")}
-                disabled={!soundEnabled}
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-sm border border-border bg-background/40 px-2 py-1",
-                  "font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground",
-                  "transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium)",
-                  "hover:border-ring/60 hover:bg-ring/10 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45",
-                  FOCUS_RING,
-                )}
-              >
-                <PlayTest aria-hidden="true" className="size-2.5" />
-                {t("sfxTest")}
-              </button>
+              <div className="flex items-center gap-1.5">
+                {/* Enable/disable UI sound. This is the only reachable control
+                  * for the cue system (the old SoundToggle lived in the
+                  * never-mounted GameHud); without it every cue is a no-op. */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = !soundEnabled;
+                    setSoundEnabled(next);
+                    // Persist first, then play — playCue re-reads the flag.
+                    if (next) playCue("confirm");
+                  }}
+                  aria-pressed={soundEnabled}
+                  aria-label={t("sfxEnableAria")}
+                  className={cn(
+                    "inline-flex items-center rounded-sm border px-2 py-1",
+                    "font-mono text-[0.6rem] uppercase tracking-[0.18em]",
+                    "transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium)",
+                    FOCUS_RING,
+                    soundEnabled
+                      ? "border-ring/60 bg-ring/10 text-foreground"
+                      : "border-border bg-background/40 text-muted-foreground hover:border-ring/60 hover:text-foreground",
+                  )}
+                >
+                  {soundEnabled ? t("sfxOn") : t("sfxOff")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => playCue("confirm")}
+                  aria-label={t("sfxTestAria")}
+                  disabled={!soundEnabled}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-sm border border-border bg-background/40 px-2 py-1",
+                    "font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground",
+                    "transition-[background-color,border-color,color] duration-(--motion-fast) ease-(--ease-premium)",
+                    "hover:border-ring/60 hover:bg-ring/10 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45",
+                    FOCUS_RING,
+                  )}
+                >
+                  <PlayTest aria-hidden="true" className="size-2.5" />
+                  {t("sfxTest")}
+                </button>
+              </div>
             }
           />
         </div>

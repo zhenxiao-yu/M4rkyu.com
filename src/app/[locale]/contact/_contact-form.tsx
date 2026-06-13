@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/forms/form-field";
 import { CopyEmailButton } from "./_copy-email-button";
 import { useTurnstile } from "@/lib/hooks/use-turnstile";
+import { playContactSentCue } from "@/lib/audio/ui-sound";
 import {
   inquirySchema,
   type InquiryInput,
@@ -88,7 +89,12 @@ export function ContactForm({ email }: { email: string }) {
       setLastResult(result);
       // Flip the button to its "sent" confirmation here (an event callback,
       // not an effect) so we never setState during render/effect.
-      if (result.status === "success") setSent(true);
+      if (result.status === "success") {
+        setSent(true);
+        // The one "confirm" tone on a successful send — opt-in and
+        // reduced-motion-safe (a no-op unless the visitor enabled UI sound).
+        playContactSentCue();
+      }
     });
   }
 

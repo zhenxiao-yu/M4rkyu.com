@@ -2293,6 +2293,9 @@
     "sfxVolume": "音效",
     "sfxTest": "试听",
     "sfxTestAria": "试听音效",
+    "sfxEnableAria": "开关界面音效",
+    "sfxOn": "开",
+    "sfxOff": "关",
     "playlist": "播放列表"
   },
   "AskConsole": {
