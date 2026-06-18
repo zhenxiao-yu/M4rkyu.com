@@ -23,13 +23,15 @@ it.
 npm run dev                 # next dev
 npm run build               # next build (production)
 npm run start               # next start
-npm run lint                # eslint src .storybook tests next.config.ts playwright.config.ts
+npm run lint                # eslint src .storybook tests next.config.ts playwright.config.ts vitest.config.ts
 npm run typecheck           # tsc --noEmit --incremental false
 npm run validate            # lint + typecheck (the pre-PR gate)
 npm run format              # legacy whole-repo prettier check; currently noisy
 npm run format:write        # prettier --write
 npm run clean               # remove generated local build/test artifacts
 npm run analyze             # ANALYZE=true next build (bundle analyzer)
+npm run budget:build        # build into .next-budgets for the bundle-budget check
+npm run budget              # check bundle size against budgets (budget:update to rebaseline)
 npm run storybook           # storybook dev -p 6006
 npm run build-storybook     # storybook build
 npm run test:e2e            # playwright test (route smoke matrix)
@@ -138,7 +140,7 @@ forms/email in `src/lib/email/` + `src/lib/forms/`, social/share in
 next-intl locale negotiation with Supabase session refresh.
 
 **Verification & doctrine docs.** The repo's design + workflow doctrine
-lives under `docs/` — `AI_WORKFLOW.md` (PR cadence, validation gate),
+lives under `docs/` — `AI_WORKFLOW.md` (commit cadence, validation gate),
 `COPY_VOICE.md` (tone test, §6 is the bar for autonomous copy), the
 `REDESIGN_DIRECTION.md` / `UNIFIED_VISUAL_DIRECTION.md` pair (visual budget).
 Treat older phase docs as historical unless they match the current file tree.
@@ -197,6 +199,15 @@ doctrine docs (`docs/COPY_VOICE.md`, `docs/REDESIGN_DIRECTION.md`,
 `docs/UNIFIED_VISUAL_DIRECTION.md`) and the actual file tree. The doctrine is
 the budget — work within it freely, but do not resurrect historical routes or
 libraries from stale docs.
+
+**Positioning.** m4rkyu.com is a warm **personal archive for friends/family**
+with a sharp editorial-engineer spine — _not_ an Awwwards/SOTD program.
+"Impressive for its own sake" is never the reason to build something; every
+addition must clear a "not-cringe" bar (genuine, restrained, personal over
+performative). `docs/SPRINT_ROADMAP.md` is a **menu, not a mandate** — a
+component or roadmap line existing is not approval to wire it into a production
+surface. The flow (commit cadence, validation, review) lives in
+`docs/AI_WORKFLOW.md`.
 
 ## Vibe-Coding Operating Loop
 

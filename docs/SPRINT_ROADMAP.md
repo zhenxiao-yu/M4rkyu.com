@@ -1,237 +1,138 @@
-# m4rkyu.com — 20-Sprint Roadmap to Site of the Month
+# m4rkyu.com — Working Backlog
 
-> Pair every sprint with [`AGENT_OPERATING_PROMPT.md`](AGENT_OPERATING_PROMPT.md).
-> Design + flagship work is front-loaded (S1–S9) because that is what wins
-> galleries; content, completeness, and growth follow. Each sprint is ~1 coherent
-> PR; reorder freely as feedback lands.
+> Impact-ordered, not date-bound. This is a **menu, not a mandate** — trim
+> anything that smells try-hard. The goal is a warm, genuine **personal archive
+> for friends/family** with a sharp editorial-engineer spine; it is *not* an
+> Awwwards submission program, so "looks impressive" is never the reason to
+> build something. Earn each addition (see `docs/COPY_VOICE.md` and the
+> "not-cringe" bar).
+>
+> Workflow lives in `CLAUDE.md` → **Vibe-Coding Operating Loop** + the
+> green/yellow/red zones. Don't duplicate it here.
 
-**Sprint anatomy:** Goal · Why high-impact · Key work · Files/areas · Skills ·
-Validation · Done-when.
-
----
-
-## Phase A — Design foundation & hero (S1–S4)
-
-### S1 — Resolve the hero, kill the WIP limbo
-
-- **Goal:** Commit ONE hero direction and finish it; clear the uncommitted
-  `hero-wordmark`, `home-backdrop-switcher`, `iridescence`, `threads` files.
-- **Why:** The landing is the gallery juror's first 3 seconds; the current
-  half-committed state reads as unfinished.
-- **Work:** Decide wordmark+backdrop vs. doctrine command-center (recommend:
-  keep the OGL backdrop as atmosphere AND add a mono eyebrow + 1-line identity +
-  two CTAs so a visitor gets _who/what_ immediately). Reduced-motion + touch +
-  mobile defaults. Update the doctrine doc to match the shipped reality.
-- **Files:** `src/components/sections/hero-section.tsx`, `hero-wordmark.tsx`,
-  `home-backdrop-switcher.tsx`, `ui/magic/{iridescence,threads}.tsx`,
-  `messages/*.json`, `docs/UNIFIED_VISUAL_DIRECTION.md`.
-- **Skills:** `brainstorming`, `frontend-design`, `taste-check`, `a11y`.
-- **Validation:** build + e2e smoke + Chrome DevTools perf trace on `/`.
-- **Done-when:** hero is committed, intentional, fast (LCP < 2.5s), legible on
-  mobile, reduced-motion-safe, EN/ZH parity.
-
-### S2 — Ship the Numbered Capabilities section (load-bearing)
-
-- **Goal:** Add the missing homepage spine: 5 numbered systems (Production
-  engineering / Interface systems / Game feel / AI tools / Visual storytelling).
-- **Why:** Without it the homepage shows atmosphere + work but never states the
-  _range_. It's the Lambda-inspired narrative the doctrine is built on.
-- **Work:** Build on shipped `NumberedCapability`; add the spec'd `PixelDivider`
-  between rows; data-drive the five systems from `src/content`.
-- **Files:** `src/app/[locale]/page.tsx`, `src/components/sections/*`,
-  `src/components/ui/pixel/{numbered-capability,pixel-divider}.tsx`, content + messages.
-- **Skills:** `frontend-design`, `taste-check`, `a11y`.
-- **Done-when:** five rows live, dividers in, BlurFade-in, Storybook story, EN/ZH.
-
-### S3 — Wire the sound system + tactile micro-moments
-
-- **Goal:** Deliver the 4-cue Web Audio payload (click/confirm/scene-enter/error)
-  behind the existing `SoundToggle`; wire to `PixelButton` + primary CTAs.
-- **Why:** A reward-loop layer that feels alive — a site-specific "tell."
-- **Work:** Flesh out `src/lib/audio/ui-sound.ts`; opt-in, off by default,
-  reduced-motion/`prefers-reduced-motion` aware, no autoplay.
-- **Files:** `src/lib/audio/*`, `src/components/system/sound-toggle.tsx`,
-  `src/components/ui/pixel/pixel-button.tsx`.
-- **Skills:** `frontend-design`, `a11y`, `test-gen` (audio module unit test exists — extend).
-- **Done-when:** cues fire on intent, toggle persists, silent when off / reduced-motion.
-
-### S4 — One signature scroll moment + route-transition polish
-
-- **Goal:** Add exactly one memorable scroll moment (e.g. animated beam
-  hero→capabilities, or a single tasteful pinned reveal) within budget.
-- **Why:** The difference between "solid" and "memorable" in juror notes.
-- **Work:** GSAP/motion within the no-scroll-jack rule; refine View Transitions.
-- **Files:** `src/lib/gsap.ts`, relevant sections, `globals.css` tokens.
-- **Skills:** `frontend-design`, `taste-check`, `perf-profile`.
-- **Done-when:** one moment, ≤800ms, reduced-motion fallback, no CLS regression.
+Each ticket: **Goal · Why it matters · Where · Done-when.** A ticket is roughly
+one coherent commit (or a short series). Reorder freely as reality lands.
 
 ---
 
-## Phase B — Flagship AI-native features (S5–S9)
+## ✅ Shipped (don't re-open)
 
-### S5 — AI Portfolio Concierge ("ask my site anything")
-
-- **Goal:** Streaming chat that answers from the actual content layer (RAG over
-  `src/content/*` + posts/notes), grounded, cited, refusing to invent.
-- **Why:** The standout, genuinely-useful AI feature; uses installed AI SDK 6 +
-  `@ai-sdk/deepseek` (or AI Gateway `provider/model` string).
-- **Work:** Server route with AI SDK streaming + tool-calling over a content
-  index; `CommandConsole`-skinned UI; rate-limited (`src/lib/server/rate-limit.ts`);
-  graceful no-key degrade. Read `vercel:ai-sdk` skill + `context7` AI SDK docs first.
-- **Files:** new `src/app/[locale]/api/concierge/route.ts` (or `/api/`), AI lib
-  under `src/lib/ai/`, console UI, content-index builder.
-- **Skills:** `vercel:ai-sdk`, `vercel:nextjs`, `superpowers:brainstorming`,
-  `security-reviewer` (prompt-injection, key safety).
-- **Done-when:** grounded answers with links, refuses out-of-scope, rate-limited,
-  reduced-motion, EN/ZH, no key → clean fallback.
-
-### S6 — Command Console navigation (Cmd-K, skinned + AI-routed)
-
-- **Goal:** Ship the spec'd `CommandConsole` skin over cmdk: jump to any route,
-  run tools, theme/locale switch, and "ask" hand-off to the concierge.
-- **Why:** Power-user navigation = a recurring SOTD signature; ties the system
-  metadata aesthetic together.
-- **Files:** `src/components/ui/pixel/command-console.tsx`, command registry,
-  header + mobile-nav + ⌘K wiring.
-- **Skills:** `frontend-design`, `a11y` (focus trap, ARIA), `test-gen`.
-- **Done-when:** keyboard-complete, themed, actions work, e2e covers open/route/close.
-
-### S7 — Generative / personalized share cards (OG v2)
-
-- **Goal:** Upgrade OG to dynamic, per-entity, on-brand cards (riso palette,
-  real titles, maybe per-visitor/topic variants).
-- **Why:** Share surfaces are how galleries + social discover you.
-- **Files:** `src/lib/seo/og-image.tsx`, `opengraph-image.tsx` handlers.
-- **Skills:** `vercel:nextjs`, `taste-check`. (Keep no `runtime="edge"`.)
-- **Done-when:** distinct branded cards per route, CJK glyphs render, snapshot-tested.
-
-### S8 — Live surfaces (GitHub / now / activity)
-
-- **Goal:** Real-time "alive" signals: GitHub activity, now-playing/now-building,
-  coding stats, status pulse — cached + graceful.
-- **Why:** Proof-of-life beats static; the `StatusPulse` primitive already exists.
-- **Files:** `src/lib/server/*` fetchers (GitHub/Steam sync routes exist —
-  extend), a `/now`-style surface, homepage status strip.
-- **Skills:** `vercel:nextjs` (cache components), `dep-audit`, `security-reviewer`.
-- **Done-when:** cached (no rate-limit blowups), degrades offline, EN/ZH.
-
-### S9 — Interactive playgrounds
-
-- **Goal:** Turn the 35+ in-browser resource tools into showcased live demos and
-  add 1 flagship interactive (e.g. a sandboxed code/shader playground).
-- **Why:** "Try it here" interactivity is sticky and demonstrates craft.
-- **Files:** `src/components/tools/*`, `resources/[slug]`, new playground route.
-- **Skills:** `frontend-design`, `perf-profile` (lazy-load heavy demos).
-- **Done-when:** demos lazy-loaded, mobile-usable, no bundle-budget breach.
+- **Hero** — minimal "wodniack" stage: cursor-reactive wave field +
+  `Compile ✦ Compose` wordmark + binary marquees. Locked; do not re-add nav /
+  keyword-cloud / ledger / preview-reel / backdrop-switcher clutter.
+- **Home scroll** — continuous-scroll spine (`data-home-section`), retired the
+  slide-snap.
+- **Themes** — `risograph` / `terminal` / `editorial` × light/dark, no-FOUC
+  bootstrap, ⌘K picker.
+- **Blog reading** — editorial reading experience + TOC rail + page frame
+  (first slice of "native writing").
+- **Audio** — UI sound is reachable + contact-send cue wired (first cues only;
+  full set is still open below).
+- **SEO base** — canonical host, per-route metadata/hreflang, Person schema
+  with `knowsLanguage`.
 
 ---
 
-## Phase C — Content & asset pipelines (S10–S13)
+## 🔥 Now — high priority (the real gaps)
 
-### S10 — Gallery pipeline + real photography live
+### H1 — Fill the empty content surfaces (photos + games)
 
-- **Goal:** Move gallery items from 0% → real; EXIF (`exifr` installed),
-  blur-data, collections populated, save-to-account ready.
-- **Files:** `src/content/gallery.ts`, `ArchiveTile`, asset pipeline scripts.
-- **Skills:** `asset-audit`, `content-audit`.
-- **Done-when:** ≥2 collections fully real.
+- **Goal:** Gallery and games are *built but content-empty* — real photos,
+  real game screenshots/clips, real captions. Ship the asset pipeline + at least
+  2 fully-real gallery collections and de-stubbed games.
+- **Why:** This is the **single highest-impact item for the friends/family
+  goal** — non-technical visitors come for the photos and games, and right now
+  there's nothing there. No copy or animation fixes this. *(Assets only the user
+  can supply; the agent can build the pipeline, blur-data, EXIF, and honest
+  empty-states for what's genuinely pending.)*
+- **Where:** `src/content/{gallery,games,projects}.ts`, `ArchiveTile`, asset
+  scripts (`exifr` installed), game covers, real project screenshots (replace
+  placeholder SVGs).
+- **Done-when:** ≥2 real collections live; games de-duped + real metadata;
+  remaining gaps show an intentional empty-state, not a stub.
 
-### S11 — Media production surface
+### H2 — Finish the warm copy layer
 
-- **Goal:** Populate reels/process/posters; real posters + captions; empty-state
-  only where genuinely pending.
-- **Files:** `src/content/media.ts`, media section/route.
-- **Skills:** `content-audit`.
+- **Goal:** Complete the "warm human layer" pass: hero intro lifted into the
+  Compass section, friendlier ask-console chips, the renamed drafts section,
+  per-project "why I made this" asides, `/notes` surfaced as the casual stream,
+  Instagram in the footer (needs the handle).
+- **Why:** A friend should get *who I am in ~10 seconds*. The Risograph
+  editorial voice stays the spine — warm, not Gen-Z slang (fails the not-cringe
+  bar). Mostly copy + small composition; low risk, high warmth.
+- **Where:** `messages/{en,zh}.json`, Compass/home sections, project content,
+  footer.
+- **Done-when:** plain-language intro reads warm; EN/ZH parity; passes the
+  `COPY_VOICE.md` §6 tone test; Instagram link live.
 
-### S12 — Games + real project screenshots
+### H3 — Finish the UI sound set
 
-- **Goal:** De-stub games (dedupe "Descent Into Madness"), add real metadata;
-  replace placeholder project SVGs with real screenshots.
-- **Files:** `src/content/{games,projects}.ts`, covers.
-- **Skills:** `content-audit`, `taste-check`.
-
-### S13 — Shop launch (Stripe end-to-end)
-
-- **Goal:** Promote ≥3 products draft→ready; verify cart→Stripe→success→email
-  webhook; physical vs digital paths.
-- **Files:** `src/content/shop.ts`, shop routes, `/api/webhooks/stripe`.
-- **Skills:** `stripe:stripe-best-practices`, `security-reviewer` (webhook sig).
-- **Done-when:** test-mode purchase completes both paths; receipts send.
-
----
-
-## Phase D — Engineering completeness (S14–S17)
-
-### S14 — Admin CMS completion
-
-- **Goal:** Finish server actions + revalidation for all content CRUD; batch
-  publish/archive; optimistic UI.
-- **Files:** `src/app/[locale]/admin/**`, server actions, `revalidatePath`.
-- **Skills:** `vercel:nextjs` (server actions), `security-reviewer` (authz), `test-gen`.
-
-### S15 — Comments + light community
-
-- **Goal:** Public comment threads on posts/notes with moderation
-  (`/admin/comments` exists); rate-limited, spam-guarded.
-- **Skills:** `security-reviewer`, `a11y`.
-- **Done-when:** post/read/moderate works, RLS verified.
-
-### S16 — Cross-device sync + account settings
-
-- **Goal:** Migrate saved items localStorage→Supabase with merge; finish
-  `/account/settings`.
-- **Files:** save hooks, Supabase tables/RLS, account routes.
-- **Skills:** `test-gen`, `security-reviewer`.
-
-### S17 — Native writing/editor (reduce dev.to coupling)
-
-- **Goal:** First-class local posts (MDX/markdown via installed remark/shiki),
-  dev.to as secondary with correct canonical attribution.
-- **Files:** content/post pipeline, `logs` route, structured data.
-- **Skills:** `vercel:nextjs`, `seo`.
+- **Goal:** Complete the small cue payload (click / confirm / scene-enter /
+  error) behind the existing toggle; wire to primary CTAs. Build on the audio
+  work already shipped.
+- **Why:** A site-specific "tell" that's genuine, not gimmicky — *if* it stays
+  subtle. Off by default, reduced-motion aware, never autoplay.
+- **Where:** `src/lib/audio/*`, `sound-toggle.tsx`, CTA buttons.
+- **Done-when:** cues fire on intent, toggle persists, silent when off /
+  reduced-motion; extend the existing audio unit test.
 
 ---
 
-## Phase E — Quality, performance, growth (S18–S20)
+## 🟡 Next — when the above lands
 
-### S18 — SEO depth + i18n content translation
+### N1 — Native writing over dev.to coupling
 
-- **Goal:** Enrich Person/Organization schema, breadcrumbs on index pages,
-  resolve www/apex, fix duplicate message keys; translate key content (not just
-  chrome) for ZH.
-- **Files:** `src/lib/seo/*`, `messages/*`, content translations.
-- **Skills:** `i18n-localization`, `localize`.
-- **Done-when:** rich-results valid, ZH real.
+- **Goal:** First-class local posts (markdown via the installed
+  remark → rehype → shiki pipeline), dev.to demoted to secondary with correct
+  canonical attribution. Builds on the shipped blog reading experience.
+- **Where:** content/post pipeline, `logs` route, structured data.
+- **Done-when:** a local post renders end-to-end; canonical correct; EN/ZH.
 
-### S19 — Performance, a11y, and test depth
+### N2 — One signature scroll moment
 
-- **Goal:** LCP/CLS/INP budgets in CI; lazy-split GSAP/OGL/Leaflet; visual
-  regression (Chromatic-style) + axe in Storybook (`test:"todo"`→on); journey
-  e2e (signup→save→comment).
-- **Files:** `next.config.ts` (Red — propose first), `.storybook/*`, CI, tests.
-- **Skills:** `perf-profile`, `a11y`, `test-gen`, Chrome DevTools MCP `lighthouse_audit`.
-- **Done-when:** Lighthouse ≥95 mobile, budgets enforced, a11y automated.
+- **Goal:** Exactly *one* memorable, tasteful scroll beat (e.g. a single pinned
+  reveal or hero→next beam) — not a scroll-jacked tour.
+- **Why:** The line between "solid" and "memorable." One is the budget; more is
+  cringe.
+- **Done-when:** ≤800ms, reduced-motion fallback, no CLS regression.
 
-### S20 — Observability, growth, and SOTD submission polish
+### N3 — Quality pass: a11y + perf + SEO depth
 
-- **Goal:** Analytics funnels (signup/save/shop), error monitoring, newsletter
-  loop, final `release-check`; prepare Awwwards/CSSDA/SOTD submission assets.
-- **Files:** analytics wrappers, monitoring, `feed.*`, release docs.
-- **Skills:** `release-check`, `product-polish`, `taste-check`.
-- **Done-when:** funnels tracked, monitoring live, submission kit ready.
+- **Goal:** LCP/CLS/INP budgets, lazy-split heavy libs (GSAP/OGL/Leaflet), axe
+  in Storybook, breadcrumbs + richer schema, resolve www/apex, real ZH content
+  translation (not just chrome).
+- **Where:** `next.config.ts` (Red — propose first), `.storybook/*`,
+  `src/lib/seo/*`, `messages/*`, CI.
+- **Done-when:** Lighthouse ≥95 mobile, budgets enforced, ZH content real.
 
 ---
 
-## Cross-sprint cadence
+## 🟢 Optional / opt-in — earn each one
 
-- One coherent PR per sprint; `npm run validate && npm run build && npm run test:e2e`
-  before opening. `sprint-status` at start, `code-review` before merge.
-- Reassess after every 5 sprints with `scope-check`; reorder by feedback + impact.
+These are real, buildable features — but **none is required for the
+friends/family goal**, and several lean toward "impressive for its own sake."
+Build one *only* when there's a concrete reason and it clears the not-cringe
+bar. Do not wire any of these into a production surface just because it's listed
+here or a component already exists.
 
-## Open forks to settle early
+- **AI portfolio concierge** — grounded RAG chat over `src/content` (AI SDK 6 +
+  DeepSeek/Gateway). Genuinely useful *if* grounded + cited + refuses to invent;
+  a gimmick otherwise. Security-review prompt-injection + key safety first.
+- **Command console (⌘K v2)** — skinned cmdk: route jump, theme/locale, "ask"
+  hand-off. Power-user nice-to-have; the basic ⌘K picker already exists.
+- **Generative OG cards** — per-entity branded share cards (keep no
+  `runtime="edge"`).
+- **Live surfaces** — GitHub/now-building/status pulse, cached + graceful.
+- **Interactive playgrounds** — showcase the in-browser resource tools.
+- **Shop (Stripe end-to-end)** — only if there's something real to sell.
+- **Comments / community**, **cross-device sync**, **admin CMS completion** —
+  engineering-completeness items; pursue only when the content above is real and
+  there's actual demand.
 
-- **Hero direction** (S1) — wordmark+backdrop vs. command-center. Recommend a
-  hybrid; decide and commit in S1, then update `docs/UNIFIED_VISUAL_DIRECTION.md`
-  to match the shipped reality.
-- **AI provider** (S5) — DeepSeek direct (installed) vs. Vercel AI Gateway
-  `provider/model` string; decide based on cost/latency.
+---
+
+## Open decisions (settle before building the relevant ticket)
+
+- **AI provider** (concierge) — DeepSeek direct vs. Vercel AI Gateway
+  `provider/model` string; decide on cost/latency *if* the concierge is greenlit.
+- **Instagram handle** (H2) — needed to wire the footer link.

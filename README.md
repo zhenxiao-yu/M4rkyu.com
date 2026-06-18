@@ -9,9 +9,9 @@ and is reachable on a free `*.vercel.app` URL for rollback.
 
 > **First time contributing (human or AI)?** Start with
 > [docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) — it documents the
-> one-PR-per-phase cadence, validation gate, code-reviewer
-> subagent contract, and the cross-cutting rules learned during
-> the redesign.
+> commit cadence (small commits on `main`; PR when large/risky),
+> the validation gate, the code-review contract, and the
+> non-negotiables for this codebase.
 
 ## Stack
 
@@ -112,9 +112,9 @@ npm run test:e2e
 
 ## Working with AI agents
 
-See [docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) for the
-one-PR-per-phase cadence, code-reviewer subagent gate, validation contract,
-and the cross-cutting rules learned during the redesign.
+See [docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) for the commit cadence,
+code-review gate, validation contract, and the non-negotiables for this
+codebase.
 
 ## Content Safety
 

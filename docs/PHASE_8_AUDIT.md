@@ -71,7 +71,7 @@ the audit log for traceability but didn't require code.
   `resource-preview-card.tsx:22`, `case-study-footer.tsx:86`
 - **Finding:** Four legacy components used `transition-[border-color,box-shadow]`
   / `transition-[border-color,transform,box-shadow]` — comma-separated arbitrary
-  values which `docs/AI_WORKFLOW.md §2` explicitly bans (invalid in Tailwind v4).
+  values which `docs/AI_WORKFLOW.md §4` explicitly bans (invalid in Tailwind v4).
 - **Fix:** Replaced each with the plain `transition` utility, which in v4's
   default set covers `color, background-color, border-color, text-decoration-color,
   fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter` — so

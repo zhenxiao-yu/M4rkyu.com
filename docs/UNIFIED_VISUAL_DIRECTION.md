@@ -691,7 +691,7 @@ VT323 (pixel) — *added*, not replacing. No fifth font is allowed.
   `matchMedia("(pointer: fine)").matches`. Touch surfaces get no hover-only
   signal.
 - **Hardcoded easings** inside `motion/react` props get the carve-out comment
-  required by [AI_WORKFLOW.md §2](./AI_WORKFLOW.md#2-the-cross-cutting-rules).
+  required by [AI_WORKFLOW.md §4](./AI_WORKFLOW.md#4-the-non-negotiables-quick-list).
 
 ### 7.2 Interaction grammar
 
@@ -983,7 +983,7 @@ Every PR must pass before merge:
 npm run lint
 npm run typecheck
 npm run validate       # = lint + typecheck
-npm run build          # CI on Linux is the source of truth — local Windows hits the EISDIR issue (see AI_WORKFLOW.md §3)
+npm run build          # CI on Linux is the source of truth — local Windows hits the EISDIR issue (see AI_WORKFLOW.md §2)
 npm run build-storybook
 npm run test:e2e
 ```
@@ -1041,8 +1041,8 @@ redesign isn't done:
 3. Add the `:lang(zh)` CSS guard that prevents `var(--font-pixel)` from
    applying on the ZH route.
 4. Add one short paragraph to
-   [docs/AI_WORKFLOW.md §2](./AI_WORKFLOW.md#2-the-cross-cutting-rules)
-   adding the new token + font conventions to the cross-cutting rules.
+   [docs/AI_WORKFLOW.md §4](./AI_WORKFLOW.md#4-the-non-negotiables-quick-list)
+   adding the new token + font conventions to the non-negotiables list.
 5. **No component changes, no page changes.**
 
 Validation: `npm run validate && npm run build-storybook && npm run test:e2e`.
