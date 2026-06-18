@@ -139,14 +139,12 @@ key prefix it should own in `messages/{en,zh}.json`.
 ### A. Hero — atmosphere-first wordmark · `Home.*`
 
 **Shipped direction (2027).** The hero is deliberately atmosphere-first: a
-full-bleed, switchable WebGL backdrop (`HomeBackdropSwitcher` — galaxy /
-iridescence / threads / grid-warp / waves; interactive on pointer *and* touch,
-choice persisted to `localStorage`) with the **`HeroWordmark`** — "Compile ✦
-Compose", the centre jewel re-inking per palette — held in a frosted band
-framed by two binary-feed marquees. `HeroBootSequence` lets the field breathe,
-then settles the band into place; `HeroScrollCue` waits at the floor. No
-identity paragraph, no CTAs *inside* the hero, by design — the statement is the
-surface.
+full-bleed, cursor-reactive Waves field with the **"Compile ✦ Compose"**
+wordmark pinned to the floor, the centre jewel re-inking per palette, framed by
+two binary-feed marquees. `HeroBootSequence` gives the masthead and wordmark a
+small fade-up; `HeroScrollCue` waits above the floor band and jumps to the next
+home section. No identity paragraph, no CTAs *inside* the hero, by design — the
+statement is the surface.
 
 **Job:** drop the visitor straight into the work's atmosphere with the M4rkyu
 wordmark in the first screen, then hand wayfinding to the **Compass** section
