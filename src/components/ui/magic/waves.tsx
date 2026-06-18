@@ -96,6 +96,9 @@ interface WavesProps {
   friction?: number;
   tension?: number;
   maxCursorMove?: number;
+  /** When true, a tap (touchstart) injects a one-off velocity burst so
+    * the field ripples on touch, not only on drag. Default false. */
+  touchImpulse?: boolean;
   style?: CSSProperties;
   className?: string;
 }
@@ -112,6 +115,7 @@ export function Waves({
   friction = 0.925,
   tension = 0.005,
   maxCursorMove = 100,
+  touchImpulse = false,
   style,
   className,
 }: WavesProps) {
@@ -325,12 +329,26 @@ export function Waves({
       const touch = e.touches[0];
       if (touch) updateMouse(touch.clientX, touch.clientY);
     }
+    function onTouchStart(e: TouchEvent) {
+      const touch = e.touches[0];
+      if (!touch) return;
+      updateMouse(touch.clientX, touch.clientY);
+      if (touchImpulse) {
+        // A bare tap carries no cursor velocity, so the field wouldn't
+        // react. Seed a one-off velocity burst (decays via the tick's
+        // `vs` smoothing) plus a random shove angle so each touch ripples
+        // the lines outward.
+        mouse.vs = Math.max(mouse.vs, 64);
+        mouse.a = Math.random() * Math.PI * 2;
+      }
+    }
 
     setSize();
     setLines();
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
 
     if (lite) {
       // One static frame, no ticker.
@@ -340,6 +358,7 @@ export function Waves({
         window.removeEventListener("resize", onResize);
         window.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchstart", onTouchStart);
         themeObserver.disconnect();
       };
     }
@@ -365,6 +384,7 @@ export function Waves({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchstart", onTouchStart);
       themeObserver.disconnect();
     };
   }, [
@@ -378,6 +398,7 @@ export function Waves({
     friction,
     tension,
     maxCursorMove,
+    touchImpulse,
     lite,
   ]);
 

@@ -1,34 +1,31 @@
 import { getTranslations } from "next-intl/server";
-import { HomeBackdropSwitcher } from "./home-backdrop-switcher";
-import { HeroWordmark } from "./hero-wordmark";
-import { DecryptedText } from "@/components/ui/magic/decrypted-text";
+import { Waves } from "@/components/ui/magic/waves";
+import { StarGlyph } from "@/components/ui/magic/star-glyph";
+import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
 import { HeroScrollCue } from "./hero-scroll-cue";
-import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * Hero — "Compile ✦ Compose", the homepage's centred focal wordmark over
- * the switchable, mouse-and-touch interactive backdrop.
+ * Hero — a calm, mostly-empty stage. A cursor-reactive Perlin wave
+ * field (theme-aware, reduced-motion-safe, self-pausing off-screen)
+ * fills the screen; the bold "Compile ✦ Compose" wordmark sits pinned
+ * to the floor, framed top and bottom by a thin binary-feed marquee.
  *
- *   - Backdrop: HomeBackdropSwitcher (galaxy / iridescence / threads /
- *     grid / waves), interactive on desktop AND mobile.
- *   - Centre: a translucent frosted band framed by two binary-feed
- *     marquees (accent edges facing inward), holding the blocky wordmark.
- *     Both words are 7 letters so the star lands dead-centre; words
- *     auto-shuffle on a fine pointer. The block is vertically centred in
- *     the viewport — the page's focal point.
- *   - Scroll cue floats at the section floor.
+ * The restraint is the point — no index nav, keyword cloud, discipline
+ * ledger, or preview reel. One screen tall (`min-h-dvh`), tagged
+ * `data-home-section` so PageDown / the scroll cue page to the next
+ * section. The on-load reveal + reduced-motion are owned by
+ * HeroBootSequence.
  */
+const BINARY_FEED =
+  "01001101 00110100 01010010 01001011 01011001 01010101 // 0xFF3E // COMPILE // 11000100 01001011 // 01011001 0xCAFE // COMPOSE // 0xDEAD 10101010 // 01010011 01011001 01010011 01000011 // 0xA4B7";
+
 export async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Home" });
-  // Binary feed — system-telemetry caps text for the two marquee strips.
-  const BINARY_FEED =
-    "01001101 00110100 01010010 01001011 01011001 01010101 // 0xFF3E // 11000100 01001011 // 01011001 0xCAFE // 0xDEAD 10101010 // 01010011 01011001 01010011 01000011 // 0xA4B7 // 01101111 01110000 01100101 01110010 01100001 01110100 01101001 01101110 01100111";
 
-  // Split the title at "+" so the StarGlyph (the centre jewel) lands
-  // between the two 7-letter words. Plain blocky type on every locale:
-  // this is an English identity wordmark, not translated copy.
+  // Split the title at "+" so the StarGlyph can sit between the two
+  // words while each side still flows through its Shuffle reveal.
   const title = t("title");
   const [titleA, titleB] = title.includes("+")
     ? title.split("+").map((s) => s.trim())
@@ -37,83 +34,131 @@ export async function HeroSection({ locale }: { locale: Locale }) {
 
   return (
     <section
-      data-snap="section"
-      className="relative isolate flex min-h-dvh flex-col overflow-hidden border-b"
+      data-home-section="stage"
+      className="relative isolate min-h-dvh overflow-hidden border-b border-border/60 bg-background"
     >
-      {/* Switchable, interactive backdrop — the centre wow-piece. */}
-      <HomeBackdropSwitcher />
+      {/* Interactive wave field — cursor-reactive, kept sparse + faint so
+        * the stage reads as mostly empty. A floor-ward fade settles the
+        * field onto calm ground for the wordmark; grain de-digitises it. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <Waves
+          className="opacity-[0.55] dark:opacity-[0.5]"
+          xGap={30}
+          yGap={38}
+          waveAmpX={20}
+          waveAmpY={11}
+          touchImpulse
+        />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent,transparent_44%,color-mix(in_srgb,var(--background)_72%,transparent))]" />
+        <div className="noise-layer pointer-events-none absolute inset-0 opacity-40" />
+      </div>
 
       <HeroBootSequence>
-        {/* Vertically centre the framed wordmark in the viewport. */}
-        <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center">
-          {/* Frosted band — keeps the wordmark legible over any backdrop
-            * while the field still reads through. Marquees bookend it with
-            * accent edges facing the wordmark. */}
-          <div
-            data-boot="hud"
-            className="relative w-full bg-background/35 backdrop-blur-[2px]"
-          >
-            <BinaryMarquee feed={BINARY_FEED} edge="bottom" />
-
-            <div className="flex justify-center px-4 py-8 sm:py-12">
-              <HeroWordmark
-                wordA={titleA}
-                wordB={titleB}
-                spokenTitle={spokenTitle}
-              />
-            </div>
-
-            <BinaryMarquee feed={BINARY_FEED} reverse edge="top" />
-          </div>
+        {/* Subtle masthead — one quiet line, not a nav. */}
+        <div
+          data-hero-intro
+          className="absolute inset-x-4 top-[calc(var(--dock-h)+1.1rem)] z-10 flex items-center justify-between font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/45 sm:inset-x-6"
+        >
+          <span>M4RKYU.SYS</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-ring shadow-[0_0_8px_var(--ring)]" />
+            Ontario
+          </span>
         </div>
 
-        {/* Scroll-on cue — jumps straight to the next snap section. */}
-        <HeroScrollCue className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2" />
+        {/* Bottom band — marquee · wordmark · marquee, pinned to the
+          * floor over a solid base so the headline stays crisp. */}
+        <div
+          data-hero-intro
+          className="absolute inset-x-0 bottom-0 z-10 bg-background"
+        >
+          <HeroScrollCue className="absolute bottom-[calc(100%+1rem)] left-1/2 z-20 -translate-x-1/2" />
+
+          <BinaryMarquee feed={BINARY_FEED} />
+
+          <div className="flex w-full justify-center sm:overflow-hidden">
+            <h1
+              aria-label={spokenTitle}
+              className="font-display w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,8.5rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
+            >
+              {/* Mobile: plain wrap with the star. Desktop: Shuffle reels on
+                * one line. The star is tinted to the active accent ink. */}
+              <span
+                aria-hidden="true"
+                className="flex flex-col items-center gap-1.5 sm:hidden"
+              >
+                <span>
+                  {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
+                </span>
+                <StarGlyph className="size-[0.5em] text-ring drop-shadow-[0_0_12px_color-mix(in_srgb,var(--ring)_45%,transparent)]" />
+                <span>
+                  {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="hidden sm:inline-flex sm:items-baseline sm:gap-[0.18em]"
+              >
+                {locale === "en" ? <HeadlineShuffle text={titleA} /> : titleA}
+                <StarGlyph className="inline-block size-[0.5em] shrink-0 self-center text-ring drop-shadow-[0_0_12px_color-mix(in_srgb,var(--ring)_45%,transparent)]" />
+                {locale === "en" ? <HeadlineShuffle text={titleB} /> : titleB}
+              </span>
+            </h1>
+          </div>
+
+          <BinaryMarquee feed={BINARY_FEED} reverse />
+        </div>
       </HeroBootSequence>
     </section>
   );
 }
 
 /**
- * Binary-feed marquee — a data-ticker strip bookending the wordmark. The
- * accent hairline sits on the edge facing the wordmark (`edge`), so the
- * pair frames the headline. Doubled track for a seamless loop; each
- * segment is a `DecryptedText animateOn="hover"` whose scrambled glyphs
- * flash in the accent ink. Reduced-motion → static.
+ * Headline word — a single ambient scramble. Resolves on mount and on
+ * hover; no auto-loop, so the eye lands on the word, not the motion.
+ */
+function HeadlineShuffle({ text }: { text: string }) {
+  return (
+    <Shuffle
+      text={text}
+      duration={0.45}
+      density={0.22}
+      triggerOnHover
+      shuffleDirection="up"
+    />
+  );
+}
+
+/**
+ * Thin binary-feed marquee used as the bookends around the wordmark.
+ * Four identical segments + the `marquee` keyframe (translate -50%) give
+ * a seamless loop; edges fade via a mask. Decorative + reduced-motion
+ * static (the animation is `motion-safe` only).
  */
 function BinaryMarquee({
   feed,
   reverse = false,
-  edge,
 }: {
   feed: string;
   reverse?: boolean;
-  edge: "top" | "bottom";
 }) {
   return (
     <div
       aria-hidden="true"
-      className={cn(
-        "relative overflow-hidden bg-background/40 py-1.5",
-        edge === "bottom" ? "border-b border-ring/25" : "border-t border-ring/25",
-      )}
+      className="relative overflow-hidden border-y border-border/60 py-1.5"
+      style={{
+        maskImage:
+          "linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)",
+        WebkitMaskImage:
+          "linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)",
+      }}
     >
-      <div className="pointer-events-none absolute inset-0 mask-[linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]" />
       <div
-        className="flex w-max gap-10 whitespace-nowrap font-mono text-[0.6rem] uppercase tracking-[0.38em] text-foreground/45 motion-safe:animate-[marquee_34s_linear_infinite]"
+        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/40 motion-safe:animate-[marquee_42s_linear_infinite]"
         style={reverse ? { animationDirection: "reverse" } : undefined}
       >
         {[0, 1, 2, 3].map((i) => (
-          <DecryptedText
-            key={i}
-            text={feed}
-            animateOn="hover"
-            sequential
-            speed={22}
-            useOriginalCharsOnly
-            className="text-foreground/45"
-            encryptedClassName="text-ring/40"
-          />
+          <span key={i}>{feed}</span>
         ))}
       </div>
     </div>
