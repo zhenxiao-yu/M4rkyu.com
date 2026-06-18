@@ -138,7 +138,7 @@ export function IntroLoader() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
-              className="font-display text-6xl font-extrabold tracking-tight sm:text-7xl"
+              className="font-wordmark text-6xl font-extrabold tracking-tight sm:text-7xl"
             >
               <DecryptedText
                 text="M4RKYU"

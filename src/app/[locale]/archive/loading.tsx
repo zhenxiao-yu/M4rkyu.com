@@ -15,18 +15,18 @@ export default function ArchiveLoading() {
     <article aria-busy="true" aria-live="polite">
       <SkeletonHero atmosphereOpacity="opacity-35" />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-wrap gap-2">
           {Array.from({ length: 3 }).map((_, index) => (
             <SkeletonChip key={index} className="w-24" />
           ))}
         </div>
         <div className="mt-8">
-          <SkeletonGrid count={3} className="grid gap-5 md:grid-cols-3" />
+          <SkeletonGrid count={3} className="grid gap-5 md:grid-cols-3 3xl:grid-cols-4" />
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 pb-20 sm:px-6 lg:px-8">
         <SkeletonLine className="h-2.5 w-24" />
         <div className="mt-3 space-y-2">
           <SkeletonLine className="h-6 w-4/12 sm:h-7" />

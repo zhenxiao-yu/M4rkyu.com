@@ -18,7 +18,7 @@ export default function AboutLoading() {
         rightSlot={<SkeletonBlock className="aspect-4/5 w-full" />}
       />
 
-      <section className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+      <section className="mx-auto grid w-full max-w-page gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
         <div className="grid gap-3">
           <SkeletonLine className="h-2.5 w-24" />
           <SkeletonLine className="h-5 w-6/12" />

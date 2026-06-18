@@ -42,6 +42,12 @@ interface Labels {
   socialMastodonLabel: string;
   socialFacebookLabel: string;
   socialYoutubeLabel: string;
+  socialCodepenLabel: string;
+  socialSpotifyLabel: string;
+  socialSnapchatLabel: string;
+  socialWechatLabel: string;
+  socialDiscordLabel: string;
+  socialBuymeacoffeeLabel: string;
   timelineLabel: string;
   valuesLabel: string;
   skillsLabel: string;
@@ -184,6 +190,48 @@ export function ProfileForm({
             name="socialYoutube"
             type="url"
             defaultValue={socials.youtube ?? ""}
+          />
+          <Field
+            label={labels.socialCodepenLabel}
+            name="socialCodepen"
+            type="url"
+            defaultValue={socials.codepen ?? ""}
+          />
+        </Row>
+        <Row cols={2}>
+          <Field
+            label={labels.socialSpotifyLabel}
+            name="socialSpotify"
+            type="url"
+            defaultValue={socials.spotify ?? ""}
+          />
+          <Field
+            label={labels.socialSnapchatLabel}
+            name="socialSnapchat"
+            type="url"
+            defaultValue={socials.snapchat ?? ""}
+          />
+        </Row>
+        <Row cols={2}>
+          <Field
+            label={labels.socialWechatLabel}
+            name="socialWechat"
+            type="text"
+            defaultValue={socials.wechat ?? ""}
+          />
+          <Field
+            label={labels.socialDiscordLabel}
+            name="socialDiscord"
+            type="text"
+            defaultValue={socials.discord ?? ""}
+          />
+        </Row>
+        <Row cols={2}>
+          <Field
+            label={labels.socialBuymeacoffeeLabel}
+            name="socialBuymeacoffee"
+            type="url"
+            defaultValue={socials.buymeacoffee ?? ""}
           />
         </Row>
       </Section>

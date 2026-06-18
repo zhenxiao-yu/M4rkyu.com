@@ -10,7 +10,7 @@ import {
 export default function ToolLoading() {
   return (
     <article aria-busy="true" aria-live="polite">
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 lg:px-8">
         <SkeletonLine className="mb-8 h-3 w-32" />
         <div className="grid gap-5">
           <div className="flex flex-wrap items-center gap-2">

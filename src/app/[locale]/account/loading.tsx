@@ -11,7 +11,7 @@ export default function AccountLoading() {
     <article aria-busy="true" aria-live="polite">
       <SkeletonHero atmosphereOpacity="opacity-20" />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section className="mx-auto w-full max-w-page px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         {/* Top tab nav */}
         <div className="mb-8 flex gap-2 border-b border-border pb-3">
           <SkeletonBlock className="h-7 w-20 rounded-md" />

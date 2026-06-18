@@ -12,7 +12,7 @@ interface PageSectionProps {
 }
 
 const widthClass: Record<PageSectionWidth, string> = {
-  default: "max-w-7xl",
+  default: "max-w-page",
   narrow: "max-w-5xl",
 };
 

@@ -79,7 +79,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           <div className="flex w-full justify-center sm:overflow-hidden">
             <h1
               aria-label={spokenTitle}
-              className="font-display w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,8.5rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
+              className="font-wordmark w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,12rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
             >
               {/* Mobile: plain wrap with the star. Desktop: Shuffle reels on
                 * one line. The star is tinted to the active accent ink. */}

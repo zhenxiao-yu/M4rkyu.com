@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { CopyCitationButton } from "@/components/system/copy-citation-button";
 import { ShareActions } from "@/components/system/share-actions";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { Link } from "@/i18n/navigation";
 import { topicSlugForTag } from "@/lib/search/topics";
 import { cn, FOCUS_RING } from "@/lib/utils";
@@ -47,14 +48,14 @@ export async function PostHeader({
   return (
     <header className="relative overflow-hidden border-b">
       <ReadingProgress />
-      {/* Atmosphere constrained to the content frame (max-w-7xl) so the
+      {/* Atmosphere constrained to the content frame (max-w-page) so the
         * grid + vignette stop smearing full-bleed into the wide-desktop
         * gutters past the editorial margins. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="relative mx-auto h-full max-w-7xl">
+        <div className="relative mx-auto h-full max-w-page">
           <div className="absolute inset-0 bg-cyber-grid opacity-30" />
           <div className="archive-vignette absolute inset-0" />
         </div>
@@ -64,9 +65,13 @@ export async function PostHeader({
           {t("syndicatedHeader", { username })}
         </p>
 
-        <h1 className="mt-6 font-display text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl">
+        <SplitReveal
+          as="h1"
+          splitBy="lines"
+          className="serif-morph mt-6 font-display text-3xl font-semibold leading-tight tracking-[-0.01em] text-balance sm:text-4xl lg:text-5xl"
+        >
           {title}
-        </h1>
+        </SplitReveal>
 
         <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
           {description}

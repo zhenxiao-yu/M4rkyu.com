@@ -88,7 +88,7 @@ export default async function ColophonPage({
         decorativeWord="COLOPHON"
       />
       <PageSection innerClassName="py-10 sm:py-12 lg:py-14">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {STACK.map((item, index) => {
             const Icon = item.icon;
             return (

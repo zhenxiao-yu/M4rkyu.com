@@ -45,7 +45,7 @@ export async function ProjectCartridge({
       />
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+      <div className="relative mx-auto w-full max-w-page px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
         <Link
           href="/work"
           locale={locale}
@@ -74,7 +74,7 @@ export async function ProjectCartridge({
             </PixelPanel>
           </aside>
 
-          <h1 className="max-w-5xl text-balance font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold leading-[0.95] tracking-tight">
+          <h1 className="max-w-5xl text-balance font-wordmark text-[clamp(2.5rem,6vw,7.5rem)] font-bold leading-[0.95] tracking-tight">
             {title}
           </h1>
 

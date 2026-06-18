@@ -143,7 +143,7 @@ export function PostListItem({ post }: PostListItemProps) {
               </span>
             ) : null}
           </div>
-          <h3 className="text-lg font-semibold leading-snug text-foreground">
+          <h3 className="card-title-morph text-lg font-semibold leading-snug text-foreground">
             {post.title}
             <ArrowUpRight
               aria-hidden="true"

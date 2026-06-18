@@ -323,13 +323,23 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-display:
-    "Clash Display", "Clash Display Fallback", "Cabinet Grotesk",
-    "Cabinet Grotesk Fallback", "Satoshi", "Satoshi Fallback", "Noto Sans SC",
-    ui-sans-serif, system-ui, sans-serif;
-  --font-heading:
-    "Cabinet Grotesk", "Cabinet Grotesk Fallback", "Satoshi",
-    "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  /* Editorial serif is the star. --font-display (h1) and --font-heading
+   * (h2/h3/h4) alias the Fraunces binding (--font-serif), so every editorial
+   * headline reads as a designed magazine title. Aliasing via var() — not a
+   * literal "Fraunces" chain — is deliberate: next/font registers local fonts
+   * under generated family names, so only the bound var reliably resolves to
+   * the loaded face. Brand + cyber/pixel display lives on --font-wordmark
+   * (Clash). The :lang(zh) guard repoints all three to --font-cjk. */
+  --font-display: var(--font-serif);
+  --font-heading: var(--font-serif);
+  /* Brand / logotype + loud cyber/pixel display. Clash Display stays the
+   * punchy machine voice on the masthead, footer wordmark, game/project
+   * cartridges. References the next/font binding (--font-clash) by var() — a
+   * literal "Clash Display" would not match next/font's generated local-font
+   * family. The :lang(zh) guard repoints --font-clash → --font-cjk. */
+  --font-wordmark:
+    var(--font-clash), "Clash Display Fallback", ui-sans-serif, system-ui,
+    sans-serif;
   --font-sans:
     "Satoshi", "Satoshi Fallback", "Noto Sans SC", ui-sans-serif, system-ui,
     sans-serif;
@@ -345,13 +355,46 @@
   --font-hand:
     "Shantell Sans", "Shantell Sans Fallback", "Bradley Hand", "Comic Sans MS",
     var(--font-cjk), cursive;
-  /* Literary serif (Fraunces) for long-form prose. --font-prose is the
-   * token prose surfaces consume; it defaults to the sans body and is
-   * switched to the serif only by the editorial-leaning themes below. */
+  /* Literary serif (Fraunces). Drives display + headings (above) and is the
+   * default long-form reading face on every theme via --font-prose. */
   --font-serif:
     "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman",
     var(--font-cjk), serif;
-  --font-prose: var(--font-sans);
+  /* Reading face. The .font-prose utility inlines this value, so it reads
+   * `var(--font-reading)` — a plain cascading var (defined at :root below, NOT
+   * in @theme, so it stays overridable) that defaults to serif and flips to
+   * sans on the Terminal palette. Overriding --font-prose itself wouldn't work
+   * (an inlined utility never reads the outer token). */
+  --font-prose: var(--font-reading);
+
+  /* Breakpoints, pinned to px. Tailwind 4 ships rem-based breakpoints, so the
+   * responsive root font-size ramp below (large-screen scale-up) would
+   * otherwise drag every `sm:`/`lg:`/`2xl:` trigger to a smaller physical
+   * width. Pinning to px decouples the two: these values equal the rem×16
+   * defaults, so ≤1919px behavior is byte-identical, while the root ramp only
+   * scales sizes — never layout breakpoints. `3xl` is a new ultra-wide stop
+   * that lets card grids gain a column past 1920px. */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
+
+  /* The page content ceiling. Replaces the old per-page `max-w-7xl` (80rem)
+   * so large/4K displays fill out instead of stranding content in a narrow
+   * column. `max(108rem, 88vw)` is deliberate, not `min(…)`:
+   *   - Below ~108rem viewport the 108rem floor exceeds the viewport, so the
+   *     `w-full` host fills to the section's responsive `px-4/6/8` padding
+   *     exactly as before — phones and ~1280px laptops are unchanged, no new
+   *     side gutters.
+   *   - On ultra-wide the 88vw term wins, so content keeps filling to ~88vw
+   *     (≈6vw gutter each side) instead of stranding a fixed column in a sea
+   *     of dead space — ≈230px gutters at native 4K vs ≈790px from a flat cap.
+   * Only grid/hero/shell layouts use this; long-form prose keeps its own
+   * narrow `max-w-5xl/3xl` reading column, so line length stays sane. */
+  --container-page: max(108rem, 88vw);
 }
 
 [data-theme="dark"] {
@@ -574,11 +617,16 @@
   --surface-paper: #070707;
 }
 
-/* The editorial-leaning themes set prose in the literary serif; Terminal
- * and the default base keep the sans (a console reads wrong in serif). */
-:root[data-palette="risograph"],
-:root[data-palette="editorial"] {
-  --font-prose: var(--font-serif);
+/* The reading face indirection. A plain :root var (not a @theme token, so the
+ * inlined .font-prose utility resolves it dynamically). Serif everywhere by
+ * default; Terminal reverts to sans — a console reads wrong in serif. Chains
+ * through --font-serif/--font-sans, so the :lang(zh) guard carries it to Noto
+ * automatically. */
+:root {
+  --font-reading: var(--font-serif);
+}
+:root[data-palette="terminal"] {
+  --font-reading: var(--font-sans);
 }
 
 /* —— Per-theme signature textures ——————————————————————————————
@@ -765,6 +813,9 @@ body::after {
   --font-pixel: var(--font-cjk);
   --font-hand: var(--font-cjk);
   --font-serif: var(--font-cjk);
+  /* Repoint the physical Clash binding (the .font-wordmark utility inlines
+   * var(--font-clash), so overriding the role token alone wouldn't reach it). */
+  --font-clash: var(--font-cjk);
 }
 
 * {
@@ -783,6 +834,30 @@ html {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent)
     transparent;
+}
+
+/* Large-screen scale-up. Container width, spacing, type, and micro-labels are
+ * all rem-based, so a measured root font-size ramp scales the whole page in
+ * concert on big/4K displays — the deliberate version of what users get by
+ * hitting 150% browser zoom. Breakpoints are pinned to px in @theme above, so
+ * this changes sizes only, never the responsive layout. px media queries here
+ * are independent of the (now px) Tailwind breakpoints. The (pointer: coarse)
+ * 16px input floor near the top of this file is a separate scope and is
+ * intentionally left untouched, so touch devices keep tap-zoom protection. */
+@media (min-width: 1920px) {
+  html {
+    font-size: 17.5px;
+  }
+}
+@media (min-width: 2560px) {
+  html {
+    font-size: 19.5px;
+  }
+}
+@media (min-width: 3200px) {
+  html {
+    font-size: 21px;
+  }
 }
 
 /* Site-wide WebKit scrollbar. Thin track, theme-token thumb with a
@@ -940,14 +1015,22 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   }
 }
 
-h1 {
-  font-family: var(--font-display), var(--font-sans);
-}
+/* Heading defaults live in @layer base so the font utilities (.font-wordmark,
+ * .font-display, …) in @layer utilities can override them. Unlayered, these
+ * element rules would outrank the utilities and pin every h1/h2 to the serif —
+ * which silently broke `font-wordmark` on h1 brand mastheads. */
+@layer base {
+  h1 {
+    font-family: var(--font-display), var(--font-sans);
+    font-optical-sizing: auto;
+  }
 
-h2,
-h3,
-h4 {
-  font-family: var(--font-heading), var(--font-sans);
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading), var(--font-sans);
+    font-optical-sizing: auto;
+  }
 }
 
 body {
@@ -1268,15 +1351,127 @@ html {
 }
 
 .font-mono {
-  font-variant-numeric: tabular-nums;
+  /* Lining + tabular so HUD/spec/timestamp figures align in columns and sit
+   * at cap height (oldstyle figures stay prose-only, see .font-prose). */
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-.font-display {
-  letter-spacing: 0;
-}
-
+/* Serif display/heading (Fraunces). Optical sizing lets one file read with
+ * gentle contrast at sub-head sizes and dramatic contrast at title sizes from
+ * the loaded `opsz` axis. letter-spacing 0 keeps serifs from colliding — never
+ * negative display tracking on a serif. */
+.font-display,
 .font-heading {
   letter-spacing: 0;
+  font-optical-sizing: auto;
+}
+
+/* Brand / cyber wordmark (Clash Display) — keep the punchy machine tracking. */
+.font-wordmark {
+  letter-spacing: -0.01em;
+}
+
+/* Long-form reading (Fraunces). Optical sizing for legible body contrast;
+ * real ligatures + kerning; oldstyle, proportional figures so numerals sit
+ * inside running prose like a book (HUD/data keeps lining+tabular via
+ * .font-mono). `text-wrap: pretty` evens ragged edges + kills widows
+ * (progressive — older engines ignore it). */
+.font-prose {
+  font-optical-sizing: auto;
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-variant-ligatures: common-ligatures contextual;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+.font-prose p,
+.font-prose li,
+.font-prose blockquote {
+  text-wrap: pretty;
+}
+/* Hanging punctuation hangs opening quotes/marks into the margin for a true
+ * typeset left edge. Safari-only today, so it's a pure enhancement behind
+ * @supports — blockquotes must still read correctly without it. */
+@supports (hanging-punctuation: first) {
+  .font-prose,
+  .font-prose blockquote {
+    hanging-punctuation: first last;
+  }
+}
+
+/* —— Kinetic / artistic display treatments —————————————————————————
+ * Opt-in utilities for flagship serif headlines. All degrade safely:
+ * reduced-motion drops the morph, reduced-transparency / forced-colors
+ * restore solid ink so a transparent-fill headline never disappears. */
+
+/* Variable-font morph — Fraunces shifts weight + softness + wonk on hover.
+ * Pinning `opsz` to a display value gives it title-grade contrast and is the
+ * intentional opt-in override of font-optical-sizing: auto on these few
+ * headlines. If the SOFT/WONK axes aren't in the loaded build, the browser
+ * simply ignores them — still safe. */
+.serif-morph {
+  font-variation-settings: "opsz" 144, "wght" 600, "SOFT" 0, "WONK" 0;
+  transition: font-variation-settings var(--motion-medium) var(--ease-premium);
+}
+@media (pointer: fine) {
+  .serif-morph:hover {
+    font-variation-settings: "opsz" 144, "wght" 760, "SOFT" 80, "WONK" 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .serif-morph {
+    transition: none;
+  }
+}
+
+/* Card-title weight morph. Lives on a serif title inside a `.group` card; the
+ * title gains weight (and a touch of wonk) when the whole card is hovered.
+ * Base `wght` matches the title's nominal `font-semibold` so it's neutral at
+ * rest. opsz is left to font-optical-sizing: auto (not pinned), so small card
+ * titles still get their text optical size. Desktop + reduced-motion safe. */
+@media (pointer: fine) {
+  .card-title-morph {
+    font-variation-settings: "wght" 600, "WONK" 0;
+    transition: font-variation-settings var(--motion-medium) var(--ease-premium);
+  }
+  .group:hover .card-title-morph {
+    font-variation-settings: "wght" 740, "WONK" 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-title-morph {
+    transition: none;
+  }
+}
+
+/* Hollow / outlined display text. */
+.text-stroke {
+  -webkit-text-stroke: 1.5px var(--foreground);
+  color: transparent;
+}
+
+/* Three-ink gradient display text (the active theme's riso inks). */
+.text-gradient-ink {
+  background-image: linear-gradient(
+    92deg,
+    var(--ring) 0%,
+    var(--ring-3) 50%,
+    var(--ring-2) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Transparent-fill text is invisible if the stroke/clip can't paint — restore
+ * solid ink under reduced-transparency and forced-colors. */
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .text-stroke {
+    -webkit-text-stroke: 0;
+    color: var(--foreground);
+  }
+  .text-gradient-ink {
+    background-image: none;
+    color: var(--foreground);
+  }
 }
 
 /* EQ-style indicator bars for "status: open" pulses. Three bars whose

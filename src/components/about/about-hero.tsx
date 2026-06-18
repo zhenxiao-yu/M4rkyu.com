@@ -112,7 +112,7 @@ export function AboutHero({
             <KineticHeading
               text={title}
               delay={0.12}
-              className="max-w-4xl text-balance font-display text-[clamp(3.25rem,9vw,7.5rem)] font-semibold leading-[0.88] tracking-normal"
+              className="serif-morph max-w-4xl text-balance font-display text-[clamp(3.25rem,9vw,10rem)] font-semibold leading-[0.88] tracking-normal"
             />
 
             {roles.length > 0 ? (

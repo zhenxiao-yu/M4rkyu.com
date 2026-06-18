@@ -52,6 +52,12 @@ function buildSocials(formData: FormData): Record<string, string> {
     ["socialMastodon", "mastodon"],
     ["socialFacebook", "facebook"],
     ["socialYoutube", "youtube"],
+    ["socialCodepen", "codepen"],
+    ["socialSpotify", "spotify"],
+    ["socialSnapchat", "snapchat"],
+    ["socialWechat", "wechat"],
+    ["socialDiscord", "discord"],
+    ["socialBuymeacoffee", "buymeacoffee"],
   ];
   const socials: Record<string, string> = {};
   for (const [field, key] of keys) {

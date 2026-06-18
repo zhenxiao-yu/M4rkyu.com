@@ -8,9 +8,14 @@ import {
   Camera,
   Code2,
   Coffee,
+  Ghost,
   Mail,
   MessageCircle,
+  Music2,
+  PlaySquare,
+  SquareCode,
   Star,
+  ThumbsUp,
 } from "lucide-react";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
@@ -25,6 +30,7 @@ import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { ContactForm } from "./_contact-form";
+import { CopyHandleChip } from "./_handle-chip";
 
 // No DB reads — static shell + client form. setRequestLocale →
 // prerender statically, revalidate hourly.
@@ -76,6 +82,11 @@ export default async function ContactPage({
     { label: tFooter("socialLinkedin"), href: socials.linkedin, icon: Briefcase },
     { label: tFooter("socialTwitter"), href: socials.twitter, icon: MessageCircle },
     { label: tFooter("socialInstagram"), href: socials.instagram, icon: Camera },
+    { label: tFooter("socialFacebook"), href: socials.facebook, icon: ThumbsUp },
+    { label: tFooter("socialYoutube"), href: socials.youtube, icon: PlaySquare },
+    { label: tFooter("socialCodepen"), href: socials.codepen, icon: SquareCode },
+    { label: tFooter("socialSpotify"), href: socials.spotify, icon: Music2 },
+    { label: tFooter("socialSnapchat"), href: socials.snapchat, icon: Ghost },
   ];
 
   const host = SITE_URL.replace(/^https?:\/\//, "");
@@ -174,6 +185,28 @@ export default async function ContactPage({
                       <SocialChip entry={entry} pendingLabel={tFooter("socialPending")} />
                     </li>
                   ))}
+                  {socials.wechat ? (
+                    <li>
+                      <CopyHandleChip
+                        variant="wechat"
+                        label={tFooter("socialWechat")}
+                        value={socials.wechat}
+                        copyHint={t("copyHandle")}
+                        copiedHint={t("copyHandleDone")}
+                      />
+                    </li>
+                  ) : null}
+                  {socials.discord ? (
+                    <li>
+                      <CopyHandleChip
+                        variant="discord"
+                        label={tFooter("socialDiscord")}
+                        value={socials.discord}
+                        copyHint={t("copyHandle")}
+                        copiedHint={t("copyHandleDone")}
+                      />
+                    </li>
+                  ) : null}
                 </ul>
               </SidebarBlock>
 

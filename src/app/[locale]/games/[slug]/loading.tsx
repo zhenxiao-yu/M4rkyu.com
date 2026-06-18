@@ -10,7 +10,7 @@ export default function GameDetailLoading() {
   return (
     <article aria-busy="true" aria-live="polite">
       <header className="relative overflow-hidden border-b">
-        <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+        <div className="mx-auto w-full max-w-page px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
           <div className="flex flex-wrap items-center gap-2">
             <SkeletonChip className="w-12" />
             <SkeletonChip className="w-16" />
@@ -25,7 +25,7 @@ export default function GameDetailLoading() {
         </div>
       </header>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
         <SkeletonBlock className="aspect-[16/9] w-full rounded-lg" />
       </section>
     </article>

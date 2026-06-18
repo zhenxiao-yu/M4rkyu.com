@@ -143,7 +143,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
               locale={locale}
               className="inline-flex items-start gap-1 text-foreground after:absolute after:inset-0 after:z-10 after:content-[''] focus-visible:outline-none"
             >
-              <span className="decoration-ring/60 underline-offset-4 group-hover:underline">
+              <span className="card-title-morph decoration-ring/60 underline-offset-4 group-hover:underline">
                 {localized.title}
               </span>
               <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-[transform,color] duration-(--motion-fast) ease-(--ease-premium) group-hover:text-ring motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5" />
