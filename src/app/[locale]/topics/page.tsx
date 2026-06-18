@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -47,7 +46,6 @@ export default async function TopicsIndexPage({
 
   return (
     <PageShell locale={locale}>
-      <ScrollProgress />
       <JsonLd
         data={buildBlogJsonLd(locale, {
           name: tMeta("topicsTitle"),

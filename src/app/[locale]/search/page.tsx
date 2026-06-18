@@ -4,7 +4,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import { SearchClient } from "@/components/search/search-client";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -41,7 +40,6 @@ export default async function SearchPage({
 
   return (
     <PageShell locale={locale}>
-      <ScrollProgress />
       <PageHero
         eyebrow={t("eyebrow")}
         title={t("heading")}

@@ -364,7 +364,7 @@ export function ProjectsClient({
       ) : null}
 
       {production.length === 0 && drafts.length > 0 ? (
-        <p className="mt-10 text-sm text-muted-foreground">
+        <p className="mt-10 rounded-lg border border-dashed border-border bg-muted/20 px-5 py-4 text-center text-sm leading-6 text-muted-foreground">
           {t("noProductionMatches", { count: drafts.length })}
         </p>
       ) : null}

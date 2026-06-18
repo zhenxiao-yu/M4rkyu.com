@@ -5,7 +5,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
@@ -128,7 +127,6 @@ export default async function TopicPage({
 
   return (
     <PageShell locale={locale}>
-      <ScrollProgress />
       <JsonLd
         data={buildCollectionPageJsonLd(locale, {
           name: t("metaTitle", { label: topic.label }),

@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
-import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { Link } from "@/i18n/navigation";
 import {
@@ -91,7 +90,6 @@ export default async function NotesPage({
           { name: tNav("notes"), path: "/notes" },
         ])}
       />
-      <ScrollProgress />
       <PageHero
         eyebrow={tNotes("eyebrow")}
         title={tMeta("notesTitle")}
