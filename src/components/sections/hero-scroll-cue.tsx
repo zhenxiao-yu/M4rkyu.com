@@ -7,12 +7,12 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 
 /**
  * Hero "scroll on" affordance — a mono label over a bouncing chevron that
- * jumps straight to the next snap section (skips the wheel work). Pure
- * button, so keyboard + touch get it for free; the bounce is motion-safe.
- * Site-wide PageUp / PageDown paging is wired in HomeSmoothScroll.
+ * jumps to the next home section. Pure button, so keyboard + touch get it
+ * for free; the bounce is motion-safe.
  */
 export function HeroScrollCue({ className }: { className?: string }) {
   const t = useTranslations("Home");
+
   return (
     <button
       type="button"

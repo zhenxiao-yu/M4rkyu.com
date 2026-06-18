@@ -34,12 +34,12 @@ export async function generateMetadata({
   };
 }
 
-// Home spine — a storybook of full-page snap slides, each an
+// Home spine — a storybook of continuous scroll stages, each an
 // entry-point dashboard into one area of the site:
 //   Hero (identity) → Compass (orientation map) → Work → Games →
 //   Visual (archive + media) → Writing → Resources → About → CTA.
-// Snap is owned by HomeSmoothScroll (Lenis Snap on desktop, native CSS
-// scroll-snap on touch); every HomeSection defaults to a snap point.
+// HomeSmoothScroll owns Lenis + GSAP ScrollTrigger for smooth, scrubbed
+// movement; sections are explicit scroll targets, not snap points.
 export default async function HomePage({
   params,
 }: {

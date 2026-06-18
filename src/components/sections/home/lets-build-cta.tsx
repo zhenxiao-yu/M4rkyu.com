@@ -39,7 +39,7 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
 
   return (
     <section
-      data-snap="section"
+      data-home-section="stage"
       className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden border-y bg-background py-20 sm:py-28 lg:py-36"
     >
       {/* Waves backdrop — ReactBits port. Perlin-noise field of
@@ -51,9 +51,9 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
         className="absolute inset-0 -z-20 opacity-60 dark:opacity-45"
       >
         {/* xGap/yGap widened from 16/42 → ~2× fewer grid points per frame.
-          * Waves runs a Perlin eval + physics + path segment per point every
-          * frame, so density is the dominant cost; at this faint opacity the
-          * wider spacing reads the same. (Static on touch via the lite gate.) */}
+         * Waves runs a Perlin eval + physics + path segment per point every
+         * frame, so density is the dominant cost; at this faint opacity the
+         * wider spacing reads the same. (Static on touch via the lite gate.) */}
         <Waves
           xGap={26}
           yGap={52}

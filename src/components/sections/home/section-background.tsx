@@ -4,7 +4,7 @@ import { Particles } from "@/components/ui/magic/particles";
 import { cn } from "@/lib/utils";
 
 /**
- * Full-bleed atmospheric backdrop for a home-spine snap slide. One bold,
+ * Full-bleed atmospheric backdrop for a home-spine stage. One bold,
  * theme-aware identity per section so each screen reads as a designed
  * stage rather than a band on the global page background.
  *
@@ -62,7 +62,11 @@ function Layer({
   style?: CSSProperties;
 }) {
   return (
-    <div aria-hidden="true" className={cn("absolute inset-0", className)} style={style} />
+    <div
+      aria-hidden="true"
+      className={cn("absolute inset-0", className)}
+      style={style}
+    />
   );
 }
 

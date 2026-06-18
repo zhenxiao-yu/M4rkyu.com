@@ -12,7 +12,8 @@ interface AnimatedSeparatorProps {
   className?: string;
 }
 
-const DEFAULT_TEXT = "M4RKYU.SYS · CREATIVE + DEVELOPER · ONTARIO · BUILT DELIBERATELY · EST. 2014";
+const DEFAULT_TEXT =
+  "M4RKYU.SYS · CREATIVE + DEVELOPER · ONTARIO · BUILT DELIBERATELY · EST. 2014";
 
 /**
  * Thin horizontal band used between sections on the home page. Two
@@ -34,7 +35,10 @@ export function AnimatedSeparator({
 
   if (mode === "line") {
     return (
-      <div data-snap="skip" className={cn("relative h-12 sm:h-16", className)} aria-hidden="true">
+      <div
+        className={cn("relative h-12 sm:h-16", className)}
+        aria-hidden="true"
+      >
         <div className="absolute inset-x-0 top-1/2 h-px bg-linear-to-r from-transparent via-foreground/40 to-transparent" />
       </div>
     );
@@ -44,7 +48,6 @@ export function AnimatedSeparator({
   // text never hard-clips.
   return (
     <div
-      data-snap="skip"
       className={cn(
         "relative overflow-hidden border-y bg-muted/10 h-12 sm:h-14 flex items-center",
         className,

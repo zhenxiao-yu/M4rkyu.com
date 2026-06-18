@@ -13,22 +13,21 @@ interface HomeSectionProps {
   /** Tint variant for visual rhythm between sections. */
   tone?: "default" | "muted";
   /**
-   * Whether the section is a snap-point in the home spine.
+   * Whether the section is a full-height stage in the home spine.
    *
-   * `true` (default) — forces `min-h-dvh`, emits `data-snap="section"`,
-   *   and vertically centers content. Use for tentpole moments (Hero,
-   *   Selected Work, Closing CTA).
+   * `true` (default) — forces `min-h-dvh` and vertically centers content.
+   *   Use for tentpole moments (Hero, Selected Work, Closing CTA).
    * `false` — section sizes to content with the standard
-   *   `py-24 sm:py-28 lg:py-32` rhythm; no snap. Use for soft sections
-   *   (Compass, Writing Pulse) so the home doesn't pay 100vh per band.
+   *   `py-24 sm:py-28 lg:py-32` rhythm. Use for soft sections (Compass,
+   *   Writing Pulse) so the home doesn't pay 100vh per band.
    */
   snap?: boolean;
   /** Section content. */
   children: ReactNode;
   /**
    * Full-bleed atmospheric backdrop (typically `<SectionBackground />`).
-   * Rendered as the section's first child so it fills the whole snap
-   * stage behind the content; the component itself owns its
+   * Rendered as the section's first child so it fills the whole stage behind
+   * the content; the component itself owns its
    * `absolute inset-0 -z-10` positioning.
    */
   background?: ReactNode;
@@ -70,7 +69,7 @@ export function HomeSection({
   return (
     <section
       data-section={dataSection}
-      data-snap={snap ? "section" : "skip"}
+      data-home-section={snap ? "stage" : "section"}
       className={cn(
         "relative isolate flex flex-col",
         snap ? "min-h-dvh justify-center" : "justify-start",
