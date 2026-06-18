@@ -6,6 +6,7 @@ import { PageFade } from "@/components/motion/page-fade";
 import { RouteAttribute } from "@/components/system/route-attribute";
 import { ScrollProgress } from "@/components/system/scroll-progress";
 import { ClickSpark } from "@/components/ui/magic/click-spark";
+import { EditorialFrame } from "./editorial-frame";
 
 export async function PageShell({
   locale,
@@ -25,6 +26,7 @@ export async function PageShell({
         * TiltedCard already carry the "cursor responds to you"
         * feeling at the element level. */}
       <ClickSpark />
+      <EditorialFrame />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"

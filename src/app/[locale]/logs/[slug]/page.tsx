@@ -4,11 +4,12 @@ import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
 import { PostHeader } from "@/components/blog/post-header";
-import { PostBody } from "@/components/blog/post-body";
+import { PostBody, extractHeadings } from "@/components/blog/post-body";
+import { PostToc } from "@/components/blog/post-toc";
+import { SectionBackground } from "@/components/sections/home/section-background";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
-import { ScrollProgress } from "@/components/ui/magic/scroll-progress";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { SITE_URL } from "@/lib/seo/site";
@@ -96,6 +97,7 @@ export default async function BlogPostPage({
   const t = await getTranslations({ locale, namespace: "Blog" });
   const tNav = await getTranslations({ locale, namespace: "Navigation" });
   const { meta, full } = resolved;
+  const headings = extractHeadings(full.body_markdown);
 
   return (
     <PageShell locale={locale}>
@@ -106,7 +108,6 @@ export default async function BlogPostPage({
           { name: meta.title, path: `/logs/${meta.slug}` },
         ])}
       />
-      <ScrollProgress />
       <article>
         <PostHeader
           title={meta.title}
@@ -121,10 +122,26 @@ export default async function BlogPostPage({
           shareUrl={`${SITE_URL}/${locale}/logs/${meta.slug}`}
         />
 
-        <section className="mx-auto w-full max-w-3xl bg-muted/10 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-          <BlurFade delay={0.05}>
-            <PostBody markdown={full.body_markdown} />
-          </BlurFade>
+        <section className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          {/* Reading outline — floats in the left gutter on wide screens
+           * (xl+) without shifting the centred prose, and sticks while the
+           * body scrolls. Renders nothing when the post has no h2/h3. */}
+          <aside className="pointer-events-none absolute inset-y-0 left-4 hidden w-52 xl:block lg:left-6">
+            <div className="pointer-events-auto sticky top-24">
+              <PostToc headings={headings} label={t("tocLabel")} />
+            </div>
+          </aside>
+          {/* Prose column — centred so it aligns with the header + meta; the
+           * manuscript ruled-paper field sits behind it for editorial texture
+           * in place of the old flat tint. */}
+          <div className="relative mx-auto max-w-3xl">
+            <SectionBackground variant="manuscript" className="rounded-lg" />
+            <BlurFade delay={0.05}>
+              <div className="prose-dropcap">
+                <PostBody markdown={full.body_markdown} />
+              </div>
+            </BlurFade>
+          </div>
         </section>
 
         {/* Cascade order matches DOM order so the reveal reads

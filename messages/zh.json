@@ -87,9 +87,11 @@
     "info": "信息"
   },
   "Home": {
-    "scrollNext": "向下",
-    "scrollNextAria": "跳到下一节",
+    "scrollNext": "继续探索",
+    "scrollNextAria": "继续浏览首页主视觉",
     "title": "Compile + Compose",
+    "heroIntro": "嗨，我是 Mark。平时做做网页、小游戏和各种趁手的小工具，也喜欢用黑白镜头记录生活——这个网站就是我把它们收在一起的地方。",
+    "heroStatement": "软件、游戏、视觉系统与现场笔记，编译成一个持续生长的个人档案。",
     "backdropPrev": "上一个背景",
     "backdropNext": "下一个背景",
     "backdrops": {
@@ -430,9 +432,9 @@
     },
     "activeFiltersLabel": "已应用",
     "removeFilter": "移除筛选",
-    "draftsHeading": "开发中的草稿",
-    "draftsCount": "{count, plural, =0 {没有草稿} other {隐藏 # 个草稿}}",
-    "noProductionMatches": "{count, plural, =0 {没有匹配。} other {没有匹配的上线项目 — 下方隐藏了 # 个草稿。}}"
+    "draftsHeading": "还没做完的脑洞",
+    "draftsCount": "{count, plural, =0 {暂时还没有} other {这儿藏着 # 个}}",
+    "noProductionMatches": "{count, plural, =0 {没有匹配。} other {没有做完的项目匹配 — 下面还藏着 # 个脑洞。}}"
   },
   "Game": {
     "gamesIndex": "游戏档案",
@@ -559,6 +561,9 @@
     "viewOnDevto": "在 dev.to 查看",
     "discuss": "评论",
     "syndicatedHeader": "同步 · dev.to / @{username}",
+    "tocLabel": "本页目录",
+    "codeCopyAria": "复制代码",
+    "codeCopied": "已复制到剪贴板",
     "metaPublished": "发布日期",
     "metaReadingTime": "阅读时长",
     "metaReactions": "点赞",
@@ -2299,7 +2304,12 @@
     "lede": "一个接入了 Mark 全部作品的终端。用大白话提问——它会带着作品本身、附上链接回答你。",
     "statusLabel": "● 在线",
     "greeting": "查询档案库。试试这些，或者问你自己的问题：",
-    "suggestions": ["Mark 做什么？", "看看这些游戏", "适合创业公司的项目？", "用的是什么技术栈？"],
+    "suggestions": [
+      "看看 Mark 做的游戏",
+      "Mark 平时都做些什么？",
+      "有摄影作品吗？",
+      "Mark 最近在折腾什么？"
+    ],
     "thinking": "思考中…",
     "inputLabel": "向 M4RKYU.SYS 提问",
     "placeholder": "问问关于 Mark 作品的任何事……",

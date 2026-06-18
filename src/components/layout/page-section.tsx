@@ -25,7 +25,17 @@ export function PageSection({
 }: PageSectionProps) {
   return (
     <section
-      className={cn(tone === "muted" && "border-y bg-muted/20", className)}
+      className={cn(
+        // Soft vertical wash for the "muted" rhythm instead of a hard
+        // `border-y` + flat tint — the old treatment drew a visible
+        // horizontal contrast seam where the band met the sections above and
+        // below (most obvious on wide screens). The tint now fades from
+        // transparent at both edges, so the section still reads as its own
+        // stage without an edge line.
+        tone === "muted" &&
+          "bg-linear-to-b from-transparent via-muted/15 to-transparent",
+        className,
+      )}
     >
       <div
         className={cn(

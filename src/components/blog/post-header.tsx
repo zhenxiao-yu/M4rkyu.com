@@ -47,11 +47,18 @@ export async function PostHeader({
   return (
     <header className="relative overflow-hidden border-b">
       <ReadingProgress />
+      {/* Atmosphere constrained to the content frame (max-w-7xl) so the
+        * grid + vignette stop smearing full-bleed into the wide-desktop
+        * gutters past the editorial margins. */}
       <div
-        className="absolute inset-0 bg-cyber-grid opacity-30"
         aria-hidden="true"
-      />
-      <div className="archive-vignette absolute inset-0" aria-hidden="true" />
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="relative mx-auto h-full max-w-7xl">
+          <div className="absolute inset-0 bg-cyber-grid opacity-30" />
+          <div className="archive-vignette absolute inset-0" />
+        </div>
+      </div>
       <div className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
           {t("syndicatedHeader", { username })}

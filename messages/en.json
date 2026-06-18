@@ -87,9 +87,11 @@
     "info": "Info"
   },
   "Home": {
-    "scrollNext": "Scroll",
-    "scrollNextAria": "Skip to the next section",
+    "scrollNext": "Scroll to explore",
+    "scrollNextAria": "Continue through the hero",
     "title": "Compile + Compose",
+    "heroIntro": "Hi, I’m Mark — I build websites, small games, and little tools, and shoot black-and-white photos. This is where I keep all of it.",
+    "heroStatement": "Software, games, visual systems, and field notes compiled into one living archive.",
     "backdropPrev": "Previous backdrop",
     "backdropNext": "Next backdrop",
     "backdrops": {
@@ -430,9 +432,9 @@
     },
     "activeFiltersLabel": "Active",
     "removeFilter": "Remove filter",
-    "draftsHeading": "Drafts in development",
-    "draftsCount": "{count, plural, =0 {no drafts} one {# draft hidden} other {# drafts hidden}}",
-    "noProductionMatches": "{count, plural, =0 {No matches.} one {No production projects match — # draft hidden below.} other {No production projects match — # drafts hidden below.}}"
+    "draftsHeading": "Half-baked ideas",
+    "draftsCount": "{count, plural, =0 {nothing here yet} one {# idea tucked away} other {# ideas tucked away}}",
+    "noProductionMatches": "{count, plural, =0 {No matches.} one {Nothing finished matches — # half-baked idea sits below.} other {Nothing finished matches — # half-baked ideas sit below.}}"
   },
   "Game": {
     "gamesIndex": "games",
@@ -559,6 +561,9 @@
     "viewOnDevto": "View on dev.to",
     "discuss": "Discuss",
     "syndicatedHeader": "syndicated · dev.to / @{username}",
+    "tocLabel": "On this page",
+    "codeCopyAria": "Copy code",
+    "codeCopied": "Copied to clipboard",
     "metaPublished": "Published",
     "metaReadingTime": "Reading time",
     "metaReactions": "Reactions",
@@ -577,7 +582,13 @@
     "refined": {
       "heroTitle": "Mark Yu",
       "heroBody": "Ontario, by way of China. I make small digital things: interfaces, game-feel experiments, tools, images, notes. The rest is intentionally left quiet.",
-      "heroRoles": ["interfaces", "game feel", "tools", "images", "quiet systems"],
+      "heroRoles": [
+        "interfaces",
+        "game feel",
+        "tools",
+        "images",
+        "quiet systems"
+      ],
       "indexEyebrow": "index",
       "indexCaption": "A small life, roughly mapped.",
       "statCities": "cities",
@@ -2299,7 +2310,12 @@
     "lede": "A terminal wired into everything Mark has shipped. Ask in plain language — it answers with the work itself, linked.",
     "statusLabel": "● online",
     "greeting": "Query the archive. Try one of these, or ask your own:",
-    "suggestions": ["What does Mark build?", "Show me the games", "Best project for a startup?", "What’s the tech stack?"],
+    "suggestions": [
+      "Show me the games",
+      "What does Mark make?",
+      "Got any photos?",
+      "What’s Mark into lately?"
+    ],
     "thinking": "thinking…",
     "inputLabel": "Ask M4RKYU.SYS a question",
     "placeholder": "ask anything about Mark’s work…",

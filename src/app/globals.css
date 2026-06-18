@@ -1120,6 +1120,20 @@ button,
     );
 }
 
+/* Editorial drop cap on the opening paragraph of a long-form post body,
+ * scoped to the reading template via the `.prose-dropcap` wrapper. Uses the
+ * display face; post bodies are English (dev.to) so no CJK guard needed. */
+.prose-dropcap .font-prose > p:first-of-type::first-letter {
+  float: left;
+  margin-right: 0.09em;
+  padding-top: 0.04em;
+  font-family: var(--font-display), var(--font-sans);
+  font-weight: 600;
+  font-size: 3.3em;
+  line-height: 0.72;
+  color: var(--foreground);
+}
+
 /* ── Tri-ink aurora mesh ───────────────────────────────────────────────
  * The signature "break the budget" atmosphere: three soft accent fields
  * — the primary ring crowning the top, the third ink off the right
@@ -1148,21 +1162,24 @@ button,
     );
 }
 [data-theme="dark"] .aurora-mesh {
+  /* Edge radials pulled inward + alphas eased so the ink wash stays a
+   * centred glow behind the hero content instead of bleeding to the
+   * viewport edges (where it smeared into the wide-desktop gutters). */
   background-image:
     radial-gradient(
-      62% 52% at 50% -12%,
-      color-mix(in srgb, var(--ring) 24%, transparent),
+      58% 48% at 50% -6%,
+      color-mix(in srgb, var(--ring) 18%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      42% 50% at 90% 20%,
+      color-mix(in srgb, var(--ring-3) 13%, transparent),
       transparent 70%
     ),
     radial-gradient(
-      46% 56% at 102% 26%,
-      color-mix(in srgb, var(--ring-3) 20%, transparent),
-      transparent 72%
-    ),
-    radial-gradient(
-      52% 60% at -4% 104%,
-      color-mix(in srgb, var(--ring-2) 20%, transparent),
-      transparent 72%
+      48% 54% at 8% 100%,
+      color-mix(in srgb, var(--ring-2) 13%, transparent),
+      transparent 70%
     );
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -1664,31 +1681,9 @@ html {
   animation: blur-image-fade var(--motion-medium) var(--ease-premium);
 }
 
-/* Home-page full-page slide snapping.
- *
- *  - Desktop (pointer: fine): owned by Lenis' `Snap` plugin in
- *    `src/providers/home-smooth-scroll.tsx`, which snaps every
- *    `[data-snap="section"]` start into the smooth-wheel loop. No CSS
- *    snap there — `scroll-snap-type` on the document would fight Lenis'
- *    programmatic scrolling.
- *  - Mobile / coarse pointer: Lenis is skipped, so native CSS
- *    scroll-snap drives the slides. `proximity` (not `mandatory`) keeps
- *    sections taller than the viewport fully scrollable and never traps
- *    the user mid-section.
- *  - Reduced motion: no snap on either path — the provider only sets
- *    `data-home-snap` when motion is allowed, and this rule also
- *    requires `prefers-reduced-motion: no-preference`.
- *
- * Scoped to the home route via the `data-home-snap` flag the provider
- * toggles on <html>, so other routes never become snap containers. */
-@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
-  html[data-home-snap] {
-    scroll-snap-type: y proximity;
-  }
-  html[data-home-snap] [data-snap="section"] {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
-  }
+/* Home sections are scroll targets for explicit cues, not snap points. */
+html[data-home-scroll] [data-home-section] {
+  scroll-margin-top: var(--dock-h);
 }
 
 @media (prefers-reduced-motion: reduce) {
