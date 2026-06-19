@@ -127,11 +127,18 @@ export function NavigationProgress() {
       suppressHydrationWarning
     >
       <div
-        className="h-full origin-left bg-ring transition-[transform,opacity] duration-150 ease-out"
+        className="h-full origin-left transition-[transform,opacity] duration-150 ease-out"
         style={{
           transform: `scaleX(${(active ? progress : 0) / 100})`,
           opacity: active ? 1 : 0,
-          boxShadow: active ? "0 0 8px var(--ring)" : "none",
+          // Two-ink gradient leading into the accent + a soft bloom — reads
+          // premium when it surfaces for non-curtain navigations (command
+          // palette, programmatic pushes) and slow post-reveal loads.
+          backgroundImage:
+            "linear-gradient(90deg, color-mix(in srgb, var(--ring-2) 65%, var(--ring)), var(--ring))",
+          boxShadow: active
+            ? "0 0 10px 0 color-mix(in srgb, var(--ring) 80%, transparent)"
+            : "none",
         }}
       />
     </div>
