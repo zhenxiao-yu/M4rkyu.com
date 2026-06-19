@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { MissionModuleCard } from "@/components/ui/pixel/mission-module-card";
 import { SystemBadge } from "@/components/ui/pixel/system-badge";
+import { BentoTilt } from "@/components/ui/magic/bento-tilt";
 import { HomeSection } from "./home-section";
 import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
@@ -63,11 +64,13 @@ export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
         >
           {ready.map((project, index) => (
             <RailFrame key={project.slug} index={index + 1}>
-              <MissionModuleCard
-                project={project}
-                locale={locale}
-                highlighted={index === 0}
-              />
+              <BentoTilt glare className="h-full rounded-lg">
+                <MissionModuleCard
+                  project={project}
+                  locale={locale}
+                  highlighted={index === 0}
+                />
+              </BentoTilt>
             </RailFrame>
           ))}
 

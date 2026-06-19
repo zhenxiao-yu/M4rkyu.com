@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Check, Monitor, Moon, Sun } from "lucide-react";
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
 import {
   Dialog,
@@ -189,6 +190,15 @@ function ThemeTile({
   selectedLabel: string;
 }) {
   const c = meta.preview[mode];
+  const reduce = useReducedMotion();
+  // One-shot accent bloom that confirms a palette switch. Fired only on a
+  // real user selection (not on initial mount), and skipped under
+  // reduced-motion — the border + check already signal the active tile.
+  const [pulse, setPulse] = useState(false);
+  const handleSelect = () => {
+    onSelect();
+    if (!reduce) setPulse(true);
+  };
 
   // The signature texture, drawn as an inline overlay so the tile is fully
   // self-contained (no globals dependency). currentColor = the tile's ink.
@@ -211,7 +221,7 @@ function ThemeTile({
   return (
     <button
       type="button"
-      onClick={onSelect}
+      onClick={handleSelect}
       aria-pressed={active}
       aria-label={`${name}${active ? ` — ${selectedLabel}` : ""}`}
       className={cn(
@@ -222,6 +232,23 @@ function ThemeTile({
           : "border-border hover:border-ring/55",
       )}
     >
+      {pulse ? (
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--ring) 38%, transparent), transparent 68%)",
+          }}
+          initial={{ opacity: 0.6 }}
+          animate={{ opacity: 0 }}
+          // Inline easing: motion can't read CSS vars in `transition.ease`,
+          // so --ease-premium is mirrored here by hand.
+          transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
+          onAnimationComplete={() => setPulse(false)}
+        />
+      ) : null}
+
       {/* Poster — a miniature page rendered in the theme's own colours. */}
       <div
         className="relative isolate aspect-[5/4] overflow-hidden p-3"
