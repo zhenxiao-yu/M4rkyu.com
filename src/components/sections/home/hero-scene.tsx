@@ -248,7 +248,7 @@ export function HeroScene({ className }: { className?: string }) {
       ref={wrapRef}
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 size-full transition-opacity duration-1200 ease-(--ease-premium) motion-reduce:transition-none",
+        "pointer-events-none absolute inset-0 size-full transition-opacity duration-(--motion-cinematic) ease-(--ease-premium) motion-reduce:transition-none",
         entered ? "opacity-100" : "opacity-0",
         className,
       )}

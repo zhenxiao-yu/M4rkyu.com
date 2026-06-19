@@ -243,8 +243,9 @@ function ThemeTile({
           initial={{ opacity: 0.6 }}
           animate={{ opacity: 0 }}
           // Inline easing: motion can't read CSS vars in `transition.ease`,
-          // so --ease-premium is mirrored here by hand.
-          transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
+          // so --ease-premium is mirrored here by hand. 0.45s keeps the
+          // confirm flash inside the <500ms UI-feedback budget.
+          transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
           onAnimationComplete={() => setPulse(false)}
         />
       ) : null}

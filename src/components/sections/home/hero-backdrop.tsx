@@ -36,7 +36,7 @@ export function HeroBackdrop() {
     <>
       <Waves
         className={cn(
-          "transition-opacity duration-1200 ease-(--ease-premium) motion-reduce:transition-none",
+          "transition-opacity duration-(--motion-cinematic) ease-(--ease-premium) motion-reduce:transition-none",
           enable3d
             ? "opacity-[0.18] dark:opacity-[0.16]"
             : "opacity-[0.55] dark:opacity-[0.5]",
