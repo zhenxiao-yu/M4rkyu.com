@@ -220,7 +220,16 @@ function ContourField({
   );
 }
 
-export function HeroScene({ className }: { className?: string }) {
+export function HeroScene({
+  className,
+  onReady,
+}: {
+  className?: string;
+  /** Fired once the canvas has mounted and the field begins its reveal —
+   *  the parent uses it to cross-fade the Waves floor down only when the
+   *  field is actually present (not the instant the chunk is requested). */
+  onReady?: () => void;
+}) {
   const { inksRef } = useThemeInks();
   const reduced = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -236,12 +245,17 @@ export function HeroScene({ className }: { className?: string }) {
     });
     io.observe(el);
     // Cross-fade in on the next frame so the field arrives, it doesn't pop.
-    const id = requestAnimationFrame(() => setEntered(true));
+    // If WebGL had failed, the Canvas would have thrown to the parent's
+    // error boundary before reaching here, so onReady marks a real success.
+    const id = requestAnimationFrame(() => {
+      setEntered(true);
+      onReady?.();
+    });
     return () => {
       io.disconnect();
       cancelAnimationFrame(id);
     };
-  }, []);
+  }, [onReady]);
 
   return (
     <div
