@@ -20,6 +20,10 @@ interface BentoTiltProps {
   /** Scale applied while hovered. Default 0.985 — a barely-there
    *  press-into-screen feel that pairs with the rotation. */
   hoverScale?: number;
+  /** Opt-in cursor-tracked sheen — a soft accent highlight that follows
+   *  the pointer, reading as light catching a glass surface. Off by
+   *  default so existing call sites are untouched. */
+  glare?: boolean;
 }
 
 /**
@@ -45,10 +49,15 @@ export function BentoTilt({
   className,
   maxTilt = 6,
   hoverScale = 0.985,
+  glare = false,
 }: BentoTiltProps) {
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement | null>(null);
   const [transform, setTransform] = useState<string>("");
+  // Glare position as percentages of the card; null when not hovering.
+  const [glarePos, setGlarePos] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
   const onPointerMove = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -66,12 +75,14 @@ export function BentoTilt({
       setTransform(
         `perspective(720px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(${hoverScale}, ${hoverScale}, ${hoverScale})`,
       );
+      if (glare) setGlarePos({ x: relativeX * 100, y: relativeY * 100 });
     },
-    [hoverScale, maxTilt],
+    [glare, hoverScale, maxTilt],
   );
 
   const onPointerLeave = useCallback(() => {
     setTransform("");
+    setGlarePos(null);
   }, []);
 
   if (reduceMotion) {
@@ -94,9 +105,22 @@ export function BentoTilt({
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       style={style}
-      className={cn(className)}
+      className={cn(glare && "relative isolate", className)}
     >
       {children}
+      {glare ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] opacity-0 transition-opacity duration-300 ease-(--ease-premium)"
+          style={{
+            opacity: glarePos ? 1 : 0,
+            background: glarePos
+              ? `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, color-mix(in srgb, var(--ring) 24%, transparent), transparent 48%)`
+              : undefined,
+            mixBlendMode: "plus-lighter",
+          }}
+        />
+      ) : null}
     </div>
   );
 }
