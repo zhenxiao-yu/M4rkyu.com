@@ -1,7 +1,7 @@
 {
   "sharedBaselineKB": 168.6,
-  "totalClientJsKB": 1153.1,
+  "totalClientJsKB": 1677.6,
   "tolerancePct": 10,
-  "chunkCount": 122,
+  "chunkCount": 141,
   "note": "Gzipped. Regenerate with `npm run budget:update` after an intentional size change."
 }
