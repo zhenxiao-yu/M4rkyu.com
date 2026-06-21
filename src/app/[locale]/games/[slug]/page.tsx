@@ -103,7 +103,7 @@ export default async function GameDetailPage({
           role={localized.role as string}
         />
 
-        <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <BlurFade>
             <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
               {game.cover ? (
@@ -128,7 +128,7 @@ export default async function GameDetailPage({
 
         {game.pillars.length > 0 ? (
           <section className="border-y bg-muted/20">
-            <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
               <BlurFade>
                 <CaseStudySection
                   eyebrow={tGame("pillarsEyebrow")}
@@ -142,7 +142,7 @@ export default async function GameDetailPage({
         ) : null}
 
         {game.outcome ? (
-          <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <section className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
             <BlurFade>
               <PullQuoteBlock
                 eyebrow={tCase("outcomeEyebrow")}
@@ -153,7 +153,7 @@ export default async function GameDetailPage({
         ) : null}
 
         {game.postmortem ? (
-          <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
             <BlurFade>
               <CaseStudySection
                 eyebrow={tGame("postmortemEyebrow")}
@@ -166,7 +166,7 @@ export default async function GameDetailPage({
         ) : null}
 
         {game.notes.length > 0 ? (
-          <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
             <BlurFade>
               <CaseStudySection
                 eyebrow={tGame("notesEyebrow")}

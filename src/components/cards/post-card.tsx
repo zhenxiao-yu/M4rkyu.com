@@ -88,7 +88,7 @@ export function PostCard({ post, priority = false }: PostCardProps) {
             <span className={monoMeta}>{post.date}</span>
           </div>
 
-          <h3 className="text-base font-semibold leading-snug text-foreground sm:text-lg">
+          <h3 className="card-title-morph text-base font-semibold leading-snug text-foreground sm:text-lg">
             {post.title}
             <ArrowUpRight
               aria-hidden="true"

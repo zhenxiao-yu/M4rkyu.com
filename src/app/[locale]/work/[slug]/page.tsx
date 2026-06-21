@@ -213,7 +213,7 @@ export default async function ProjectDetailPage({
           tagline={tagline}
         />
 
-        <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[260px_1fr] lg:gap-16 lg:px-8">
+        <div className="mx-auto grid w-full max-w-page gap-12 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[260px_1fr] lg:gap-16 lg:px-8">
           <SpecRail
             sections={toc}
             facts={facts}
@@ -374,7 +374,7 @@ export default async function ProjectDetailPage({
 
         {related.length > 0 ? (
           <section className="border-t bg-muted/20">
-            <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
               <h2 className={eyebrowMono}>{tCase("relatedWork")}</h2>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 {related.map((item) => (

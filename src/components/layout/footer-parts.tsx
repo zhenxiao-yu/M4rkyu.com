@@ -12,7 +12,12 @@ export interface FooterSocial {
     | "devto"
     | "linkedin"
     | "twitter"
-    | "instagram";
+    | "instagram"
+    | "facebook"
+    | "youtube"
+    | "codepen"
+    | "spotify"
+    | "snapchat";
   label: string;
   href?: string;
   icon: ComponentType<{

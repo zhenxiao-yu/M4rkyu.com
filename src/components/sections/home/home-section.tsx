@@ -41,7 +41,7 @@ interface HomeSectionProps {
  * Shared shell every home-page section composes through. Locks down:
  *
  *   - Vertical rhythm: `py-24 sm:py-28 lg:py-32`
- *   - Inner container: `mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8`
+ *   - Inner container: `mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8`
  *   - Header pattern: eyebrow → heading → lede on the left,
  *     optional action link on the right (stacks under header on mobile)
  *   - Spacing between header and content: `mt-14`
@@ -84,7 +84,7 @@ export function HomeSection({
       )}
     >
       {background}
-      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
         {(eyebrow || heading || lede || action) && (
           <header className="grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
             <div className="max-w-2xl">

@@ -123,6 +123,12 @@ export const profileSchema = z.object({
       mastodon: z.string().url().optional(),
       facebook: z.string().url().optional(),
       youtube: z.string().url().optional(),
+      codepen: z.string().url().optional(),
+      spotify: z.string().url().optional(),
+      snapchat: z.string().url().optional(),
+      // WeChat / Discord are IDs, not URLs — surfaced as copyable handles.
+      wechat: z.string().optional(),
+      discord: z.string().optional(),
       buymeacoffee: z.string().url().optional(),
     })
     .partial()

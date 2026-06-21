@@ -105,7 +105,7 @@ export function PageHero({
             * `clamp` keeps it bold on phones and capped on desktop; long
             * words run off the right edge by design (the bleed is the
             * device). Kept faint enough to sit behind the live copy. */}
-          <span className="mb-[-0.14em] ml-[-0.03em] whitespace-nowrap font-display text-[clamp(5rem,26vw,15rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-foreground/4.5 dark:text-foreground/6">
+          <span className="mb-[-0.14em] ml-[-0.03em] whitespace-nowrap font-wordmark text-[clamp(5rem,26vw,22rem)] font-black uppercase leading-[0.8] tracking-[-0.045em] text-foreground/4.5 dark:text-foreground/6">
             {decorativeWord}
           </span>
         </div>
@@ -117,7 +117,7 @@ export function PageHero({
 
       <div
         className={cn(
-          "relative mx-auto grid w-full max-w-7xl gap-8 px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-8",
+          "relative mx-auto grid w-full max-w-page gap-8 px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-8",
           hasSidecar &&
             "lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)] lg:items-end lg:gap-12",
           contentClassName,

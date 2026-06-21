@@ -12,19 +12,28 @@ import { ThemeScript } from "@/components/theme/theme-script";
 import { SITE_URL } from "@/lib/seo/site";
 import "./globals.css";
 
+// Clash Display now drives the BRAND/cyber wordmark (--font-wordmark), not the
+// editorial display role — Fraunces owns headlines. next/font binds the font to
+// this CSS var on <html>, and that binding is the real source of truth (it
+// overrides the @theme token), so the role re-assignment happens HERE, not just
+// in globals.css. The CJK guard rewires --font-wordmark → --font-cjk on /zh.
 const clashDisplay = localFont({
   src: "../../public/fonts/clash-display/ClashDisplay-Variable.woff2",
-  variable: "--font-display",
+  variable: "--font-clash",
   weight: "200 700",
   display: "swap",
   preload: true,
 });
 
+// Cabinet Grotesk is retired from the heading role (Fraunces serif owns h2-h4
+// now). Kept loaded under a parked var so the file isn't fetched unless a future
+// surface opts into --font-grotesk; nothing references it today.
 const cabinetGrotesk = localFont({
   src: "../../public/fonts/cabinet-grotesk/CabinetGrotesk-Variable.woff2",
-  variable: "--font-heading",
+  variable: "--font-grotesk",
   weight: "100 900",
   display: "swap",
+  preload: false,
 });
 
 const satoshi = localFont({
@@ -77,17 +86,25 @@ const shantellSans = Shantell_Sans({
   preload: false,
 });
 
-// Literary serif for long-form prose. English-only and only consumed by the
-// editorial-leaning themes (Risograph, Editorial) via `--font-prose` in
-// globals.css — so it's only fetched when one of those themes actually
-// renders prose. preload off; the CJK guard rewires --font-serif to
-// --font-cjk under :lang(zh).
+// The editorial serif — now the typographic star. Fraunces drives BOTH the
+// editorial display faces (`--font-display`/`--font-heading`) and long-form
+// reading (`--font-prose`) on every theme; Clash Display is reserved for the
+// brand/cyber wordmark via `--font-wordmark` (globals.css). The variable axes
+// earn their keep: `opsz` lets one file read right at body size and dramatic
+// at display size (`font-optical-sizing: auto`), while `SOFT`/`WONK` power the
+// `.serif-morph` hover treatment. `wght` is intentionally NOT listed in `axes`
+// (next/font rejects it for variable fonts) — omitting `weight` keeps the full
+// 100–900 range. Now critical, so preload on; adjustFontFallback (default true)
+// emits the metric-matched "Fraunces Fallback" to hold CLS. The CJK guard
+// rewires --font-serif (and --font-display/-heading/-wordmark) to --font-cjk
+// under :lang(zh), so Fraunces never paints on /zh.
 const fraunces = Fraunces({
   variable: "--font-serif",
   subsets: ["latin"],
+  axes: ["opsz", "SOFT", "WONK"],
   style: ["normal", "italic"],
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 export const metadata: Metadata = {

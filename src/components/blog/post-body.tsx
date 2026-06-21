@@ -345,11 +345,12 @@ export async function PostBody({ markdown, className }: PostBodyProps) {
     .process(markdown);
 
   return (
-    // `font-prose` = the body reading face: the sans by default, the literary
-    // serif under the editorial-leaning themes. Headings/code/tables set their
-    // own font-* so they stay put; only the running prose (p, li, blockquote)
-    // picks up the serif.
-    <div className={cn("max-w-3xl font-prose", className)}>
+    // `font-prose` = the body reading face: the literary serif (Fraunces) on
+    // every theme except Terminal (which reverts to sans — a console reads
+    // wrong in serif). Headings/code/tables set their own font-* so they stay
+    // put; only the running prose (p, li, blockquote) picks up the serif.
+    // max-w-[68ch] holds the line length near the ~70ch editorial measure.
+    <div className={cn("max-w-[68ch] font-prose", className)}>
       {file.result as React.ReactNode}
     </div>
   );

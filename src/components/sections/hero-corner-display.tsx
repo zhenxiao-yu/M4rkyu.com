@@ -63,7 +63,7 @@ export async function HeroCornerDisplay({ locale, className }: HeroCornerDisplay
         // message (which may include `<b>` markup for emphasis on a
         // featured letter) — fully under our control, not user input.
         className={cn(
-          "font-display font-black uppercase leading-[0.85] tracking-tight text-foreground/14 dark:text-foreground/18",
+          "font-wordmark font-black uppercase leading-[0.85] tracking-tight text-foreground/14 dark:text-foreground/18",
           sizeClass,
         )}
         dangerouslySetInnerHTML={{ __html: wordmark }}

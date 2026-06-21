@@ -311,7 +311,7 @@ export function CollectionItemsManager({
           items={filtered.map((i) => i.id)}
           strategy={rectSortingStrategy}
         >
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6">
             {filtered.map((item) => {
               const isSelected = selected.has(item.id);
               const itemBusy = pendingId === item.id;

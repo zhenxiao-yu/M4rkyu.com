@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Waves } from "@/components/ui/magic/waves";
+import { HeroBackdrop } from "./home/hero-backdrop";
 import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
@@ -37,18 +37,13 @@ export async function HeroSection({ locale }: { locale: Locale }) {
       data-home-section="stage"
       className="relative isolate min-h-dvh overflow-hidden border-b border-border/60 bg-background"
     >
-      {/* Interactive wave field — cursor-reactive, kept sparse + faint so
-        * the stage reads as mostly empty. A floor-ward fade settles the
-        * field onto calm ground for the wordmark; grain de-digitises it. */}
+      {/* Interactive backdrop — the cursor-reactive Perlin Waves floor,
+        * plus a Three.js contour field layered above it on capable
+        * desktops. Kept sparse + faint so the stage reads as mostly empty.
+        * A floor-ward fade settles the field onto calm ground for the
+        * wordmark; grain de-digitises it. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <Waves
-          className="opacity-[0.55] dark:opacity-[0.5]"
-          xGap={30}
-          yGap={38}
-          waveAmpX={20}
-          waveAmpY={11}
-          touchImpulse
-        />
+        <HeroBackdrop />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent,transparent_44%,color-mix(in_srgb,var(--background)_72%,transparent))]" />
         <div className="noise-layer pointer-events-none absolute inset-0 opacity-40" />
       </div>
@@ -79,7 +74,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           <div className="flex w-full justify-center sm:overflow-hidden">
             <h1
               aria-label={spokenTitle}
-              className="font-display w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,8.5rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
+              className="font-wordmark w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,12rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
             >
               {/* Mobile: plain wrap with the star. Desktop: Shuffle reels on
                 * one line. The star is tinted to the active accent ink. */}

@@ -10,6 +10,7 @@ import { WebVitalsReporter } from "@/components/system/web-vitals-reporter";
 import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { NavigationProgress } from "@/components/system/navigation-progress";
+import { InkCurtain } from "@/components/system/ink-curtain";
 import { CursorTrail } from "@/components/ui/magic/cursor-trail";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { AudioPlayerDialogHost } from "@/components/system/audio-player-dialog-host";
@@ -64,6 +65,10 @@ export default async function LocaleLayout({
                 <Suspense fallback={null}>
                   <NavigationProgress />
                 </Suspense>
+                {/* Full-screen accent-ink wipe that covers each route swap;
+                  * persists here so the cover→reveal spans the navigation.
+                  * Reduced-motion navigates instantly (no curtain). */}
+                <InkCurtain />
                 <div lang={locale} className="contents">
                   {children}
                 </div>

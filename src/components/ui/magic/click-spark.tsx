@@ -242,7 +242,11 @@ export function ClickSpark() {
     };
   }, [reduce]);
 
-  if (reduce) return null;
+  // Canvas always renders so SSR and client markup match; the effect above
+  // is the reduced-motion gate (it bails before attaching listeners or
+  // painting, leaving an inert invisible canvas). A render-level branch on
+  // useReducedMotion() caused a hydration mismatch — the server painted the
+  // canvas while the client under reduced-motion rendered null.
 
   return (
     <canvas

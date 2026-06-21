@@ -2,7 +2,8 @@
 
 // Adapted from Magic UI · BorderBeam · sprint-2 phase 2.3
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 interface BorderBeamProps {
@@ -44,7 +45,11 @@ export function BorderBeam({
   borderRadius = 8,
   borderWidth = 1.5,
 }: BorderBeamProps) {
-  const reduceMotion = useReducedMotion();
+  // SSR-stable reduced-motion read (useSyncExternalStore w/ server
+  // fallback), so the server and hydration render agree. motion's
+  // useReducedMotion returns the real value on first client render, which
+  // mismatched the SSR markup and regenerated the subtree.
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)", false);
   if (reduceMotion) return null;
 
   return (

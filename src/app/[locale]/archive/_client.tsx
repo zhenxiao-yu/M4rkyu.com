@@ -77,7 +77,7 @@ export function GalleryGrid({
           {t("hoverHint")}
         </p>
       ) : null}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 3xl:grid-cols-5">
         {orderedItems.map((item) => (
           <FrameTile
             key={item.slug}

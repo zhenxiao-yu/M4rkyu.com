@@ -48,7 +48,7 @@ export function SkeletonHero({
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
       <div
         className={cn(
-          "relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8",
+          "relative mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8",
           rightSlot && "grid gap-10 lg:grid-cols-[1fr_22rem]",
         )}
       >
@@ -76,7 +76,7 @@ export function SkeletonHero({
  */
 export function SkeletonGrid({
   count = 6,
-  className = "grid gap-5 md:grid-cols-2 lg:grid-cols-3",
+  className = "grid gap-5 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4",
   withThumb = true,
 }: {
   count?: number;

@@ -138,10 +138,10 @@ export async function CompassSection({ locale }: CompassSectionProps) {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                {/* Glyph chip. */}
+                {/* Glyph chip — lifts a soft accent halo on hover. */}
                 <span
                   aria-hidden="true"
-                  className="grid size-9 place-items-center rounded-md border border-border/60 bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:border-ring/50 group-hover:text-foreground"
+                  className="grid size-9 place-items-center rounded-md border border-border/60 bg-background/70 text-muted-foreground transition-[color,border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) group-hover:border-ring/50 group-hover:text-foreground group-hover:shadow-[0_0_16px_-4px_var(--ring)]"
                 >
                   <route.icon className="size-4" />
                 </span>

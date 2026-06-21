@@ -2,31 +2,25 @@
 
 import { forwardRef, type AnchorHTMLAttributes, type MouseEvent } from "react";
 import { Link as NextIntlLink, useRouter } from "@/i18n/navigation.internal";
+import { playInkWipe } from "@/lib/route-transition";
 
 import type { Locale } from "@/i18n/routing";
 
 /**
- * View Transitions wrapper around `next-intl`'s Link. When the browser
- * supports `document.startViewTransition`, plain left-clicks are
- * intercepted and routed through the API so the route change captures
- * before/after snapshots and runs the keyframes registered in
- * `globals.css`. Otherwise the native Link handles navigation as
- * before — no behavior change, no JS overhead.
+ * Ink-wipe wrapper around `next-intl`'s Link. Plain left-clicks are
+ * intercepted and routed through `playInkWipe`, which covers the viewport
+ * with the accent-ink curtain, performs the navigation behind the cover,
+ * then reveals the new page. Re-exported as the public `Link` from
+ * `@/i18n/navigation`, so every existing import picks up the transition
+ * with no call-site change.
  *
- * Why a wrapper and not patching every call site:
- *   Re-exported from `@/i18n/navigation` so existing imports automatically
- *   pick up the upgrade. Locale-aware navigation, replace/scroll/prefetch
- *   props, and a11y semantics all flow through to next-intl's Link
- *   unchanged.
- *
- * What we do not intercept:
- *   - Middle-click, ctrl/cmd-click, shift-click → preserved for
- *     "open in new tab" / "open in new window" expectations.
- *   - External links (different origin) → next-intl's Link doesn't
- *     handle those anyway.
- *   - `prefers-reduced-motion: reduce` users → still navigate via
- *     startViewTransition, but the keyframes in globals.css collapse
- *     to an instant cross-fade for that media query.
+ * What we do not intercept (native Link handles these unchanged):
+ *   - Middle-click, ctrl/cmd/shift/alt-click → "open in new tab/window".
+ *   - `target` other than `_self`.
+ *   - Object hrefs (~1% of call sites) → fall through so navigation still
+ *     works; we just skip the wipe wrap.
+ *   - `prefers-reduced-motion: reduce` users → `playInkWipe` navigates
+ *     instantly with no curtain (handled inside the store).
  */
 
 type NextIntlLinkProps = React.ComponentProps<typeof NextIntlLink>;
@@ -39,25 +33,6 @@ interface TransitionLinkProps
     > {
   href: NextIntlLinkProps["href"];
   locale?: Locale;
-}
-
-let routeTransitionInFlight = false;
-
-function releaseRouteTransition() {
-  window.setTimeout(() => {
-    routeTransitionInFlight = false;
-  }, 0);
-}
-
-function hasViewTransition(): boolean {
-  return (
-    typeof document !== "undefined" &&
-    typeof (
-      document as Document & {
-        startViewTransition?: (cb: () => void) => unknown;
-      }
-    ).startViewTransition === "function"
-  );
 }
 
 export const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>(
@@ -77,41 +52,23 @@ export const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>
       ) {
         return;
       }
-      if (!hasViewTransition()) return;
       const target = (rest.target as string | undefined) ?? "_self";
       if (target !== "_self") return;
-      // Only string hrefs (~99 % of call sites). Object hrefs fall
-      // through to the native Link path so the navigation still
-      // works — we just skip the view-transition wrap.
+      // Only string hrefs. Object hrefs fall through to the native Link
+      // path so the navigation still works — we just skip the wipe.
       if (typeof href !== "string") return;
 
       event.preventDefault();
-      if (routeTransitionInFlight) return;
-
-      routeTransitionInFlight = true;
-      const transition = (
-        document as Document & {
-          startViewTransition: (cb: () => void) => {
-            finished?: Promise<unknown>;
-          };
-        }
-      ).startViewTransition(() => {
-        // next-intl's router handles the locale prefix; the second
-        // arg lets us cross-locale-navigate when `locale` differs
-        // from the active one.
+      // The curtain owns the transition; the route swap runs behind the
+      // cover. next-intl's router handles the locale prefix, and the second
+      // arg lets us cross-locale-navigate when `locale` differs.
+      playInkWipe(() => {
         if (locale) {
           router.push(href, { locale });
         } else {
           router.push(href);
         }
       });
-      if (transition.finished) {
-        transition.finished.finally(releaseRouteTransition);
-      } else {
-        window.setTimeout(() => {
-          routeTransitionInFlight = false;
-        }, 500);
-      }
     }
 
     return (

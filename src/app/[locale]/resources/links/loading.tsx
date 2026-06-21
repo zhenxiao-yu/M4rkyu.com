@@ -15,7 +15,7 @@ export default function ResourcesLinksLoading() {
     <article aria-busy="true" aria-live="polite">
       <SkeletonHero atmosphereOpacity="opacity-25" />
 
-      <section className="mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 pt-10 sm:px-6 lg:px-8">
         <div className="grid gap-3 lg:grid-cols-3 lg:auto-rows-[minmax(11rem,1fr)]">
           <div className="lg:col-span-2 lg:row-span-2">
             <SkeletonBlock className="h-full min-h-64 w-full rounded-lg" />
@@ -27,7 +27,7 @@ export default function ResourcesLinksLoading() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center gap-2">
           <SkeletonChip className="w-12" />
           <SkeletonChip className="w-20" />

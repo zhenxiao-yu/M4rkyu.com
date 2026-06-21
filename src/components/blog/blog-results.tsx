@@ -33,7 +33,7 @@ export function BlogResults({
       {viewMode === "grid" ? (
         <motion.ol
           layout={!reduceMotion}
-          className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+          className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4"
         >
           <AnimatePresence initial={false}>
             {posts.map((post, i) => (

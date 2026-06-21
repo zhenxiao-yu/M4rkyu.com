@@ -80,9 +80,11 @@ export function DotGrid({
     const themeObserver = new MutationObserver(() => {
       baseColor = readColor();
     });
+    // Watch light/dark AND palette — `--ring` (or a custom `colorVar`)
+    // changes on a palette swap, not just on a light/dark toggle.
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "data-palette"],
     });
 
     function onPointerMove(event: PointerEvent) {

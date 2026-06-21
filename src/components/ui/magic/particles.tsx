@@ -3,7 +3,7 @@
 // Adapted from Magic UI · sprint-4 phase 4.4
 
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "motion/react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 interface ParticlesProps {
@@ -45,7 +45,10 @@ export function Particles({
   maxOpacity = 0.55,
   className,
 }: ParticlesProps) {
-  const reduceMotion = useReducedMotion();
+  // SSR-stable reduced-motion read so the server and hydration render
+  // agree (motion's useReducedMotion returns the real value on first
+  // client render, mismatching SSR markup and regenerating the subtree).
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)", false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number | null>(null);

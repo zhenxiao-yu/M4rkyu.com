@@ -23,7 +23,7 @@ export default async function NotFoundPage() {
       <section className="relative overflow-hidden border-b">
         <div className="absolute inset-0 bg-cyber-grid opacity-25" aria-hidden="true" />
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="relative mx-auto w-full max-w-page px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <FadeIn>
             <div className="flex flex-col items-start gap-12 sm:gap-16">
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -58,7 +58,7 @@ export default async function NotFoundPage() {
       </section>
 
       {readyProjects.length > 0 ? (
-        <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
           <FadeIn>
             <SectionHeading
               eyebrow={t("archiveEyebrow")}

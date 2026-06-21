@@ -152,9 +152,13 @@ export function Waves({
     const themeObserver = new MutationObserver(() => {
       strokeColor = readColor();
     });
+    // Watch both axes: light/dark (`data-theme`) AND the palette
+    // (`data-palette`). The token (`--foreground` / a custom `lineColor`)
+    // shifts on a palette swap too, so observing only `data-theme` left
+    // the field stale until the next light/dark toggle.
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "data-palette"],
     });
 
     interface Point {

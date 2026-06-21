@@ -18,11 +18,11 @@ export default function MediaLoading() {
         rightSlot={<SkeletonBlock className="aspect-video w-full" />}
       />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
         <SkeletonGrid count={4} className="grid gap-5 md:grid-cols-2" />
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 pb-20 sm:px-6 lg:px-8">
         <SkeletonLine className="h-2.5 w-24" />
         <div className="mt-3 grid grid-cols-2 gap-4 md:grid-cols-3">
           {Array.from({ length: 3 }).map((_, index) => (

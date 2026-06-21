@@ -2,9 +2,17 @@ import { getTranslations } from "next-intl/server";
 import {
   ArrowUpRight,
   AtSign,
+  Briefcase,
+  Camera,
   Code2,
+  Ghost,
   Mail,
   MapPin,
+  MessageCircle,
+  Music2,
+  PlaySquare,
+  SquareCode,
+  ThumbsUp,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -82,6 +90,36 @@ export async function Footer({ locale }: { locale: Locale }) {
     ...(socials.devto
       ? [{ label: t("socialDevto"), href: socials.devto, external: true } as FooterLink]
       : []),
+    ...(socials.linkedin
+      ? [{ label: t("socialLinkedin"), href: socials.linkedin, external: true } as FooterLink]
+      : []),
+    ...(socials.twitter
+      ? [{ label: t("socialTwitter"), href: socials.twitter, external: true } as FooterLink]
+      : []),
+    ...(socials.instagram
+      ? [
+          {
+            label: t("socialInstagram"),
+            href: socials.instagram,
+            external: true,
+          } as FooterLink,
+        ]
+      : []),
+    ...(socials.facebook
+      ? [{ label: t("socialFacebook"), href: socials.facebook, external: true } as FooterLink]
+      : []),
+    ...(socials.youtube
+      ? [{ label: t("socialYoutube"), href: socials.youtube, external: true } as FooterLink]
+      : []),
+    ...(socials.codepen
+      ? [{ label: t("socialCodepen"), href: socials.codepen, external: true } as FooterLink]
+      : []),
+    ...(socials.spotify
+      ? [{ label: t("socialSpotify"), href: socials.spotify, external: true } as FooterLink]
+      : []),
+    ...(socials.snapchat
+      ? [{ label: t("socialSnapchat"), href: socials.snapchat, external: true } as FooterLink]
+      : []),
     { label: t("socialEmail"), href: `mailto:${profile.email}`, external: true },
   ];
   const socialSoon = [
@@ -103,13 +141,93 @@ export async function Footer({ locale }: { locale: Locale }) {
     },
     { key: "github", label: t("socialGithub"), href: githubHref, icon: Code2 },
     { key: "devto", label: t("socialDevto"), href: socials.devto, icon: AtSign },
+    ...(socials.linkedin
+      ? [
+          {
+            key: "linkedin",
+            label: t("socialLinkedin"),
+            href: socials.linkedin,
+            icon: Briefcase,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.twitter
+      ? [
+          {
+            key: "twitter",
+            label: t("socialTwitter"),
+            href: socials.twitter,
+            icon: MessageCircle,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.instagram
+      ? [
+          {
+            key: "instagram",
+            label: t("socialInstagram"),
+            href: socials.instagram,
+            icon: Camera,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.facebook
+      ? [
+          {
+            key: "facebook",
+            label: t("socialFacebook"),
+            href: socials.facebook,
+            icon: ThumbsUp,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.youtube
+      ? [
+          {
+            key: "youtube",
+            label: t("socialYoutube"),
+            href: socials.youtube,
+            icon: PlaySquare,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.codepen
+      ? [
+          {
+            key: "codepen",
+            label: t("socialCodepen"),
+            href: socials.codepen,
+            icon: SquareCode,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.spotify
+      ? [
+          {
+            key: "spotify",
+            label: t("socialSpotify"),
+            href: socials.spotify,
+            icon: Music2,
+          } as FooterSocial,
+        ]
+      : []),
+    ...(socials.snapchat
+      ? [
+          {
+            key: "snapchat",
+            label: t("socialSnapchat"),
+            href: socials.snapchat,
+            icon: Ghost,
+          } as FooterSocial,
+        ]
+      : []),
   ];
 
   return (
     // Editorial footer — no inner card panels. Sits on a soft DotGrid
     // backdrop with a low ring-tinted glow at the bottom, and runs
     // top-to-bottom as: status strip · hero CTA · sitemap · wordmark ·
-    // micro rail. Everything inside a single max-w-7xl column so the
+    // micro rail. Everything inside a single max-w-page column so the
     // rhythm reads like end credits rather than a SaaS hand-off.
     <footer className="relative isolate overflow-hidden border-t bg-background">
       <DotGrid
@@ -129,7 +247,7 @@ export async function Footer({ locale }: { locale: Locale }) {
         }}
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
         {/* 1. Status strip — slim, alive */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b py-3.5">
           <div className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
@@ -294,7 +412,7 @@ export async function Footer({ locale }: { locale: Locale }) {
               text="M4RKYU"
               ghosts={6}
               spread={22}
-              className="font-display text-[clamp(3.25rem,15vw,11rem)] font-bold leading-[0.95] tracking-[-0.04em] text-foreground/90 transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
+              className="font-wordmark text-[clamp(3.25rem,15vw,14rem)] font-bold leading-[0.95] tracking-[-0.04em] text-foreground/90 transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
             />
           </Link>
           <div className="flex items-center gap-4 font-mono text-[0.65rem] uppercase tracking-[0.32em] text-muted-foreground">
@@ -357,7 +475,7 @@ export async function Footer({ locale }: { locale: Locale }) {
 
             <ul
               className="flex flex-wrap items-center gap-1"
-              aria-label="social links"
+              aria-label={t("sectionSocials")}
             >
               {socialEntries.map((entry) => (
                 <li key={entry.key}>

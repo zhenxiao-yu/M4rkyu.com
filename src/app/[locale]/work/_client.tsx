@@ -352,7 +352,7 @@ export function ProjectsClient({
           <WorkDeckReveal
             key={`deck-${activeCategory ?? "all"}-${activeYear}-${featuredOnly ? "f" : "n"}-${activeSort}`}
           >
-            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
               {production.map((project) => (
                 <div data-deck-card key={project.slug}>
                   <ProjectCard project={project} locale={locale} />
@@ -391,7 +391,7 @@ export function ProjectsClient({
             />
           </summary>
           <div className="border-t p-5">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
               {drafts.map((project) => (
                 <ProjectCard
                   key={project.slug}

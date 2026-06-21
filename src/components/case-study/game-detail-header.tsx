@@ -33,7 +33,7 @@ export async function GameDetailHeader({
     <section className="relative overflow-hidden border-b">
       <div className="absolute inset-0 bg-cyber-grid opacity-30" aria-hidden="true" />
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+      <div className="relative mx-auto w-full max-w-page px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
         <Link
           href="/games"
           className="font-mono text-[0.7rem] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
@@ -49,7 +49,7 @@ export async function GameDetailHeader({
           {game.status !== "ready" ? <DraftBadge label={game.status} /> : null}
         </div>
 
-        <h1 className="mt-6 max-w-5xl text-balance font-display text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-tight">
+        <h1 className="mt-6 max-w-5xl text-balance font-wordmark text-[clamp(2.5rem,6vw,7.5rem)] font-semibold leading-[0.95] tracking-tight">
           {title}
         </h1>
 

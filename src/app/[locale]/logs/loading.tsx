@@ -19,7 +19,7 @@ export default function BlogLoading() {
           aria-hidden="true"
         />
         <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="relative mx-auto w-full max-w-page px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <div className={`${lineBase} h-2.5 w-32`} />
           <div className="mt-6 space-y-3">
             <div className={`${lineBase} h-8 w-full sm:h-10`} />
@@ -33,7 +33,7 @@ export default function BlogLoading() {
       </header>
 
       {/* Toolbar + list */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-start">
           <div className="flex flex-wrap items-center gap-2">
             <div className={`${chipBase} w-12`} />

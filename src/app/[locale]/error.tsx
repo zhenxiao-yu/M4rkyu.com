@@ -32,7 +32,7 @@ export default function ErrorBoundary({
         aria-hidden="true"
       />
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
-      <section className="relative mx-auto flex w-full max-w-7xl flex-1 items-center px-4 py-24 sm:px-6 lg:px-8">
+      <section className="relative mx-auto flex w-full max-w-page flex-1 items-center px-4 py-24 sm:px-6 lg:px-8">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             {t("eyebrow")}

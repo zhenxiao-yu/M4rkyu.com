@@ -69,7 +69,7 @@ export default async function ShopPage({
                 eyebrow={tShop("featuredEyebrow")}
                 title={tShop("featuredTitle")}
               />
-              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
                 {featured.map((product) => (
                   <ProductCard key={product.slug} product={product} locale={locale} />
                 ))}
@@ -85,7 +85,7 @@ export default async function ShopPage({
             />
             <Paginated
               pageSize={9}
-              className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+              className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4"
             >
               {products.map((product) => (
                 <ProductCard key={product.slug} product={product} locale={locale} />

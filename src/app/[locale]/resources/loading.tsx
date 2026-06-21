@@ -14,7 +14,7 @@ export default function ResourcesLandingLoading() {
     <article aria-busy="true" aria-live="polite">
       <SkeletonHero atmosphereOpacity="opacity-25" />
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-4 lg:grid-cols-2">
           {[0, 1].map((i) => (
             <div

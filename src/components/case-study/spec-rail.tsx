@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
+import { Button } from "@/components/ui/button";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 export interface SpecRailSection {
@@ -95,31 +96,23 @@ export function SpecRail({
         {liveUrl || githubUrl ? (
           <div className="mt-5 flex flex-col gap-2">
             {liveUrl ? (
-              <a
-                href={liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-primary/90",
-                  FOCUS_RING,
-                )}
-              >
-                {labels.live}
-                <ArrowUpRight aria-hidden="true" className="size-3.5" />
-              </a>
+              <Button asChild className="w-full justify-center">
+                <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+                  {labels.live}
+                  <ArrowUpRight aria-hidden="true" className="size-3.5" />
+                </a>
+              </Button>
             ) : null}
             {githubUrl ? (
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
-                  FOCUS_RING,
-                )}
+              <Button
+                asChild
+                variant="outline"
+                className="w-full justify-center"
               >
-                {labels.source}
-              </a>
+                <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+                  {labels.source}
+                </a>
+              </Button>
             ) : null}
           </div>
         ) : null}

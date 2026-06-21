@@ -122,7 +122,7 @@ export default async function BlogPostPage({
           shareUrl={`${SITE_URL}/${locale}/logs/${meta.slug}`}
         />
 
-        <section className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <section className="relative mx-auto w-full max-w-page px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
           {/* Reading outline — floats in the left gutter on wide screens
            * (xl+) without shifting the centred prose, and sticks while the
            * body scrolls. Renders nothing when the post has no h2/h3. */}
