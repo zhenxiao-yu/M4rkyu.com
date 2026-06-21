@@ -6,6 +6,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { Badge } from "@/components/ui/badge";
 import { BlurImage } from "@/components/ui/blur-image";
 import { Carousel } from "@/components/ui/magic/carousel";
@@ -127,27 +128,39 @@ export default async function ArchivePage({
         </PageSection>
       ) : null}
 
-      {/* Browse collections — cover cards into each set's masonry. */}
+      {/* Browse collections — cover cards into each set's masonry. When no
+       * ready collection exists yet (static fallback returns ready-only), show
+       * an honest empty-state instead of a "0 collections" heading over a blank
+       * grid. Mirrors the /games empty-state pattern. */}
       <PageSection tone="muted">
-        <FadeIn>
-          <SectionHeading
-            eyebrow={t("collectionsEyebrow")}
-            title={t("collectionsTitle", { count: collections.length })}
-            description={t("collectionsDescription")}
+        {collections.length > 0 ? (
+          <>
+            <FadeIn>
+              <SectionHeading
+                eyebrow={t("collectionsEyebrow")}
+                title={t("collectionsTitle", { count: collections.length })}
+                description={t("collectionsDescription")}
+              />
+            </FadeIn>
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
+              {collections.map((collection) => (
+                <CollectionCoverCard
+                  key={collection.slug}
+                  collection={collection}
+                  countLabel={t("framesCount", {
+                    count: countByCollection[collection.slug] ?? 0,
+                  })}
+                  locale={locale}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <EmptyArchiveState
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
           />
-        </FadeIn>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-          {collections.map((collection) => (
-            <CollectionCoverCard
-              key={collection.slug}
-              collection={collection}
-              countLabel={t("framesCount", {
-                count: countByCollection[collection.slug] ?? 0,
-              })}
-              locale={locale}
-            />
-          ))}
-        </div>
+        )}
       </PageSection>
 
       {/* Featured frames — individual artwork, opens the lightbox. */}

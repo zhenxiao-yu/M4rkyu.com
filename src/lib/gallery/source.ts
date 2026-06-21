@@ -32,7 +32,14 @@ export const getGallerySource = cache(async (): Promise<GallerySource> => {
   ]);
 
   if (dbCollections.length === 0) {
-    return { collections: galleryCollections, items: galleryItems };
+    // Public surfaces show only ready content — placeholders/drafts/coming-soon
+    // stay out of /archive (mirrors the games + shop sources, and the DB branch
+    // below). Until real frames land, the static fallback is empty and the page
+    // renders its honest empty-state instead of leaking internal placeholders.
+    return {
+      collections: galleryCollections.filter((c) => c.status === "ready"),
+      items: galleryItems.filter((item) => item.status === "ready"),
+    };
   }
 
   const itemsBySlug = new Map<string, GalleryItem[]>();
