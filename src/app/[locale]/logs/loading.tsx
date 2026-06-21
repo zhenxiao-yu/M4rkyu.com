@@ -1,15 +1,12 @@
 /**
  * Skeleton shown while the `/logs` server component awaits the
  * dev.to listing fetch. Mirrors the live composition: hero + toolbar
- * + first batch of timeline rows. Static Tailwind `animate-pulse`
- * only; `prefers-reduced-motion` halts the pulse via Tailwind 4
- * defaults.
+ * + first batch of timeline rows. Rides the shared `skeleton-shimmer`
+ * utility (globals.css) — token-driven, reduced-motion-safe.
  */
 export default function BlogLoading() {
-  const lineBase =
-    "h-3 rounded-sm bg-muted animate-pulse [animation-duration:1.6s]";
-  const chipBase =
-    "h-5 rounded-full bg-muted animate-pulse [animation-duration:1.6s]";
+  const lineBase = "h-3 rounded-sm skeleton-shimmer";
+  const chipBase = "h-5 rounded-full skeleton-shimmer";
   return (
     <article aria-busy="true" aria-live="polite">
       {/* Hero */}
@@ -46,7 +43,7 @@ export default function BlogLoading() {
           </div>
           <div
             aria-hidden="true"
-            className="h-10 w-full animate-pulse rounded-md bg-muted [animation-duration:1.6s] lg:w-72"
+            className="h-10 w-full skeleton-shimmer rounded-md lg:w-72"
           />
         </div>
 

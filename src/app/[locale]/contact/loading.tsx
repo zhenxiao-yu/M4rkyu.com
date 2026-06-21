@@ -1,17 +1,13 @@
 /**
  * Skeleton shown while the `/contact` server components stream in.
  * Matches the live composition: hero band + two-column layout
- * (services list + inquiry card). Static Tailwind `animate-pulse`
- * only; `prefers-reduced-motion` halts the pulse via Tailwind 4
- * defaults.
+ * (services list + inquiry card). Rides the shared `skeleton-shimmer`
+ * utility (globals.css) — token-driven, reduced-motion-safe.
  */
 export default function ContactLoading() {
-  const lineBase =
-    "h-3 rounded-sm bg-muted animate-pulse [animation-duration:1.6s]";
-  const chipBase =
-    "h-5 rounded-full bg-muted animate-pulse [animation-duration:1.6s]";
-  const blockBase =
-    "rounded-md bg-muted animate-pulse [animation-duration:1.6s]";
+  const lineBase = "h-3 rounded-sm skeleton-shimmer";
+  const chipBase = "h-5 rounded-full skeleton-shimmer";
+  const blockBase = "rounded-md skeleton-shimmer";
 
   return (
     <article aria-busy="true" aria-live="polite">

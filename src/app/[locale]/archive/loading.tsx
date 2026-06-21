@@ -38,7 +38,7 @@ export default function ArchiveLoading() {
               key={index}
               className="grid gap-2 overflow-hidden rounded-md border border-border/60 bg-card/80"
             >
-              <div className="aspect-4/5 bg-muted [animation-duration:1.6s] animate-pulse" />
+              <div className="aspect-4/5 skeleton-shimmer" />
               <div className="grid gap-2 p-3">
                 <SkeletonChip className="w-12" />
                 <SkeletonLine className="h-4 w-9/12" />

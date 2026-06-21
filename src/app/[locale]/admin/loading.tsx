@@ -20,7 +20,8 @@ export default function AdminLoading() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="grid gap-3 rounded-lg border border-border/60 bg-card/40 p-5"
+            className="skeleton-rise grid gap-3 rounded-lg border border-border/60 bg-card/40 p-5"
+            style={{ animationDelay: `${i * 60}ms` }}
           >
             <SkeletonLine className="h-3 w-28" />
             <div className="grid gap-3 sm:grid-cols-2">

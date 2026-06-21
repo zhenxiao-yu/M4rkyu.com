@@ -5,13 +5,12 @@
  * route's RSC payload resolves — a click on a timeline row goes
  * from "blank" to "loading" with no perceived gap.
  *
- * Uses static Tailwind `animate-pulse` only; no client motion.
- * `prefers-reduced-motion` automatically halts pulse via Tailwind 4
- * defaults so this is safe to unconditionally render.
+ * Uses the shared `skeleton-shimmer` utility (globals.css) — token-driven
+ * and reduced-motion-safe (collapses to a flat --muted block) — so this is
+ * safe to unconditionally render.
  */
 export default function BlogPostLoading() {
-  const lineBase =
-    "h-3 rounded-sm bg-muted animate-pulse [animation-duration:1.6s]";
+  const lineBase = "h-3 rounded-sm skeleton-shimmer";
   return (
     <article aria-busy="true" aria-live="polite">
       <header className="relative overflow-hidden border-b">
@@ -77,7 +76,7 @@ export default function BlogPostLoading() {
         {/* Faux code block */}
         <div
           aria-hidden="true"
-          className="mt-8 h-40 w-full animate-pulse rounded-md border border-border bg-muted/60 [animation-duration:1.6s]"
+          className="mt-8 h-40 w-full skeleton-shimmer rounded-md border border-border"
         />
         <div className="mt-8 space-y-3">
           <div className={`${lineBase} w-full`} />

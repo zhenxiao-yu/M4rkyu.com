@@ -1770,6 +1770,72 @@ html {
   }
 }
 
+/* Skeleton shimmer — a soft light band travelling across loading
+ * placeholders. Animates only `background-position` (compositor-cheap). The
+ * band is built from --muted (base) + a --card highlight carrying a trace of
+ * --ring, so it reads as *this site* loading rather than a generic grey pulse.
+ * Reduced-motion collapses it to a flat --muted block (no band parked
+ * mid-sweep). */
+.skeleton-shimmer {
+  background-color: var(--muted);
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--card) 70%, transparent) 45%,
+    color-mix(in srgb, var(--ring) 8%, var(--card)) 50%,
+    color-mix(in srgb, var(--card) 70%, transparent) 55%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  background-position: 180% 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton-shimmer {
+    animation: skeleton-shimmer 1.8s var(--ease-premium) infinite;
+  }
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 180% 0;
+  }
+  to {
+    background-position: -80% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    background-image: none;
+    animation: none;
+  }
+}
+
+/* Skeleton entrance — a one-shot rise used to stagger grid cells so content
+ * reads as flowing in. `both` keeps a cell hidden until its delay fires. The
+ * global reduce clamp only resets animation-*duration*, not animation-delay, so
+ * a delayed cell would otherwise hold `opacity: 0` through its stagger under
+ * reduced-motion — the explicit override below shows every cell at once. */
+.skeleton-rise {
+  animation: skeleton-rise 420ms var(--ease-premium) both;
+}
+@keyframes skeleton-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-rise {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Contact "battlestation" scene — slow yaw/pitch drift around the static
  * base pose, plus a blinking terminal caret on the monitor. Both are
  * motion-safe gated at the consumer (WorkspaceScene), so reduced-motion

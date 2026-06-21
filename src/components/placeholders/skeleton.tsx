@@ -2,27 +2,29 @@ import { cn } from "@/lib/utils";
 
 /**
  * Tiny composable skeleton primitives used across `loading.tsx`
- * boundaries. All static Tailwind — no client JS, no `useEffect`s.
- * `animate-pulse` honours `prefers-reduced-motion: reduce` via
- * Tailwind v4 defaults.
+ * boundaries. All static markup — no client JS, no `useEffect`s.
+ *
+ * Animation rides on the `skeleton-shimmer` utility (globals.css): a soft
+ * light band sweeping across each placeholder, token-driven (--muted base,
+ * --card highlight, a trace of --ring) and reduced-motion-safe — it collapses
+ * to a flat --muted block. `SkeletonGrid` layers a staggered `skeleton-rise`
+ * entrance on top.
  *
  * Naming follows the existing `loading.tsx` files
  * (logs/loading.tsx, contact/loading.tsx) so a new contributor sees
  * the same vocabulary in every skeleton.
  */
 
-const PULSE = "animate-pulse [animation-duration:1.6s]";
-
 export function SkeletonLine({ className }: { className?: string }) {
-  return <div className={cn("h-3 rounded-sm bg-muted", PULSE, className)} />;
+  return <div className={cn("h-3 rounded-sm skeleton-shimmer", className)} />;
 }
 
 export function SkeletonChip({ className }: { className?: string }) {
-  return <div className={cn("h-5 rounded-full bg-muted", PULSE, className)} />;
+  return <div className={cn("h-5 rounded-full skeleton-shimmer", className)} />;
 }
 
 export function SkeletonBlock({ className }: { className?: string }) {
-  return <div className={cn("rounded-md bg-muted", PULSE, className)} />;
+  return <div className={cn("rounded-md skeleton-shimmer", className)} />;
 }
 
 /**
@@ -88,7 +90,8 @@ export function SkeletonGrid({
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
-          className="grid gap-3 overflow-hidden rounded-lg border border-border/60 bg-card/80"
+          className="skeleton-rise grid gap-3 overflow-hidden rounded-lg border border-border/60 bg-card/80"
+          style={{ animationDelay: `${index * 60}ms` }}
         >
           {withThumb ? <SkeletonBlock className="aspect-video w-full rounded-none" /> : null}
           <div className="grid gap-3 p-5">
