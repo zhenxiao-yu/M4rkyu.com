@@ -68,6 +68,7 @@ export function HttpStatus() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search code, name, or description…"
+        aria-label="Search HTTP status codes"
         className="font-mono"
       />
       <ul className="grid gap-1.5">

@@ -57,6 +57,7 @@ export function JwtDecoder() {
         rows={4}
         spellCheck={false}
         placeholder="Paste a JWT"
+        aria-label="JWT input"
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       {!decoded.ok ? (

@@ -95,12 +95,15 @@ export function HtmlEntities() {
         onChange={(e) => setInput(e.target.value)}
         rows={6}
         spellCheck={false}
+        aria-label="Input text"
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       <textarea
         readOnly
         value={output}
         rows={6}
+        aria-label="Converted output"
+        aria-live="polite"
         className="w-full rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-xs"
       />
     </div>

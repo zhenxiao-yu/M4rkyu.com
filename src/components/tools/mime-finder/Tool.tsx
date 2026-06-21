@@ -82,6 +82,7 @@ export function MimeFinder() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search by extension, MIME, or name…"
+        aria-label="Search MIME types"
         className="font-mono"
       />
       <ul className="grid gap-1.5">

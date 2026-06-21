@@ -70,6 +70,7 @@ export function BaseConverter() {
                 value={drafts[base]}
                 onChange={(e) => handleChange(base, e.target.value)}
                 spellCheck={false}
+                aria-label={`${LABELS[base]} (base ${base})`}
                 className={`font-mono ${valid ? "" : "border-destructive/50"}`}
               />
               <Button type="button" size="sm" variant="outline" onClick={() => copy(base)}>

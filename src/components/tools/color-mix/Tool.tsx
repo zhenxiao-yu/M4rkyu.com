@@ -78,6 +78,7 @@ export function ColorMix() {
             max={100}
             value={ratio}
             onChange={(e) => setRatio(Number(e.target.value))}
+            aria-label="Ratio of color A"
             className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
           />
         </div>
@@ -139,6 +140,7 @@ function Swatch({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={!valid}
+          aria-label={`${label} hex value`}
           className={`w-full rounded-md border bg-background px-3 py-2 font-mono text-sm ${
             valid ? "border-border" : "border-signal"
           }`}

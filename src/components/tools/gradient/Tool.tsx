@@ -87,6 +87,7 @@ export function GradientGenerator() {
               max={360}
               value={angle}
               onChange={(e) => setAngle(Number(e.target.value))}
+              aria-label="Gradient angle"
               className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
             />
           </div>

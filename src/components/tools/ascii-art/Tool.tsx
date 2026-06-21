@@ -78,6 +78,7 @@ export function AsciiArt() {
           placeholder="Text"
           spellCheck={false}
           maxLength={16}
+          aria-label="Text to render"
           className="font-mono"
         />
         <Input

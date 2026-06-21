@@ -81,6 +81,8 @@ export function LoremIpsum() {
         readOnly
         value={output}
         rows={12}
+        aria-label="Generated lorem ipsum"
+        aria-live="polite"
         className="w-full rounded-md border border-border bg-card/40 px-3 py-2 text-sm leading-6"
       />
     </div>

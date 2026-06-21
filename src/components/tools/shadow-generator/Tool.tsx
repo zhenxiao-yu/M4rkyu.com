@@ -117,6 +117,7 @@ export function ShadowGenerator() {
             onChange={(event) => update("color", event.target.value)}
             spellCheck={false}
             autoComplete="off"
+            aria-label="Shadow color"
             className="font-mono text-xs"
           />
           <p className="text-[0.65rem] text-muted-foreground/70">
@@ -169,6 +170,7 @@ function SliderRow({
         max={max}
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
+        aria-label={label}
         className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
       />
     </div>

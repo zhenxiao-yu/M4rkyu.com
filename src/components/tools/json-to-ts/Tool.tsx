@@ -122,6 +122,7 @@ export function JsonToTs() {
           onChange={(e) => setInput(e.target.value)}
           rows={14}
           spellCheck={false}
+          aria-label="JSON input"
           className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
         />
         <pre className={`w-full overflow-auto rounded-md border bg-card/40 px-3 py-2 font-mono text-xs leading-5 ${ts.ok ? "border-border" : "border-destructive/40 text-destructive"}`}>

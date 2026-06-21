@@ -105,6 +105,7 @@ export function PasswordGenerator() {
             max={64}
             value={length}
             onChange={(e) => setLength(Number(e.target.value))}
+            aria-label="Password length"
             className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
           />
         </div>

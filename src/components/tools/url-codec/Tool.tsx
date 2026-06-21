@@ -55,12 +55,15 @@ export function UrlCodec() {
         onChange={(e) => setInput(e.target.value)}
         rows={5}
         spellCheck={false}
+        aria-label={mode === "encode" ? "Text to URL-encode" : "Text to URL-decode"}
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       <textarea
         readOnly
         value={result.ok ? result.output : result.error}
         rows={5}
+        aria-label={mode === "encode" ? "URL-encoded output" : "URL-decoded output"}
+        aria-live="polite"
         className={`w-full rounded-md border bg-card/40 px-3 py-2 font-mono text-xs ${result.ok ? "border-border" : "border-destructive/40 text-destructive"}`}
       />
     </div>

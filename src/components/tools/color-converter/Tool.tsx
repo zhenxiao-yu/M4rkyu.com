@@ -278,6 +278,7 @@ function ConvertField({
           onChange={(event) => onChange(event.target.value)}
           spellCheck={false}
           autoComplete="off"
+          aria-label={`${label} value`}
           className="font-mono"
         />
         <Button

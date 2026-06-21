@@ -38,6 +38,7 @@ export function WordCounter() {
         onChange={(e) => setText(e.target.value)}
         rows={10}
         spellCheck={false}
+        aria-label="Text to count"
         className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6"
       />
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">

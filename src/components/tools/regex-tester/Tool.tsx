@@ -72,6 +72,7 @@ export function RegexTester() {
           value={pattern}
           onChange={(e) => setPattern(e.target.value)}
           spellCheck={false}
+          aria-label="Regular expression pattern"
           className="flex-1 font-mono"
         />
         <span className="font-mono text-base text-muted-foreground">/</span>
@@ -102,6 +103,7 @@ export function RegexTester() {
         onChange={(e) => setText(e.target.value)}
         rows={6}
         spellCheck={false}
+        aria-label="Test string"
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       <div className="rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-xs leading-6 whitespace-pre-wrap">

@@ -34,6 +34,7 @@ export function SlugGenerator() {
         rows={3}
         spellCheck={false}
         placeholder="Any text"
+        aria-label="Text to slugify"
         className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
       />
       <div className="flex flex-wrap items-center gap-2">

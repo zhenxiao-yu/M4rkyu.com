@@ -88,12 +88,15 @@ export function Morse() {
         onChange={(e) => setInput(e.target.value)}
         rows={6}
         spellCheck={false}
+        aria-label={mode === "encode" ? "Text to encode" : "Morse to decode"}
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-sm"
       />
       <textarea
         readOnly
         value={output}
         rows={6}
+        aria-label={mode === "encode" ? "Morse output" : "Decoded text output"}
+        aria-live="polite"
         className="w-full rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-sm"
       />
       <p className="text-[0.65rem] text-muted-foreground/70">

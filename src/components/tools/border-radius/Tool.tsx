@@ -99,6 +99,7 @@ function CornerRow({
         max={96}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
+        aria-label={label}
         className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
       />
     </div>

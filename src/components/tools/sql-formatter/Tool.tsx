@@ -178,6 +178,7 @@ export function SqlFormatter() {
         rows={6}
         spellCheck={false}
         placeholder="Paste SQL…"
+        aria-label="SQL input"
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       <pre className="overflow-auto rounded-md border border-border bg-card/40 px-3 py-3 font-mono text-xs leading-6">

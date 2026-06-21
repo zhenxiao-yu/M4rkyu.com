@@ -122,12 +122,15 @@ export function CsvJson() {
           onChange={(e) => setInput(e.target.value)}
           rows={14}
           spellCheck={false}
+          aria-label={direction === "csv-to-json" ? "CSV input" : "JSON input"}
           className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
         />
         <textarea
           readOnly
           value={result.ok ? result.output : result.error}
           rows={14}
+          aria-label={direction === "csv-to-json" ? "JSON output" : "CSV output"}
+          aria-live="polite"
           className={`w-full rounded-md border bg-card/40 px-3 py-2 font-mono text-xs ${result.ok ? "border-border" : "border-destructive/40 text-destructive"}`}
         />
       </div>

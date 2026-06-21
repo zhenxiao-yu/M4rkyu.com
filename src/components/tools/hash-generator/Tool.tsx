@@ -55,6 +55,7 @@ export function HashGenerator() {
         rows={4}
         spellCheck={false}
         placeholder="Text to hash"
+        aria-label="Text to hash"
         className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
       />
       <ul className="grid gap-2">

@@ -119,6 +119,7 @@ export function BlobGenerator() {
               spellCheck={false}
               value={color}
               onChange={(e) => setColor(e.target.value)}
+              aria-label="Fill color hex value"
               className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-sm"
             />
           </div>
@@ -167,6 +168,7 @@ function Slider({
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
+        aria-label={label}
         className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
       />
     </div>

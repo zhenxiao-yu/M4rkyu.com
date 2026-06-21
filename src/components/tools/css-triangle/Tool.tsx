@@ -81,6 +81,7 @@ export function CssTriangle() {
             max={200}
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
+            aria-label="Triangle size"
             className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
           />
         </div>
@@ -90,6 +91,7 @@ export function CssTriangle() {
             type="color"
             value={color}
             onChange={(e) => setColor(e.target.value)}
+            aria-label="Triangle color"
             className="h-10 w-full cursor-pointer rounded-md border border-border bg-transparent p-1"
           />
         </div>
