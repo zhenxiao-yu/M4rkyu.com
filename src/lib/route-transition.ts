@@ -1,3 +1,5 @@
+import { playCue } from "@/lib/audio/ui-sound";
+
 // Ink-wipe page transition — a tiny module singleton (same shape as
 // home-spine.ts / hero-scroll-progress.ts: plain module, subscribe +
 // snapshot, no React state) that drives the full-screen accent-ink
@@ -80,6 +82,12 @@ export function playInkWipe(navigate: () => void): void {
   }
 
   inFlight = true;
+  // Soft "scene-enter" cue on the navigation gesture. `playCue` is a no-op
+  // unless the user has explicitly enabled UI sound, and the reduced-motion
+  // guard above already returned (so this only runs with motion allowed). The
+  // click that triggered this wipe is the user gesture Web Audio needs to
+  // resume a suspended context. A 3s cue cooldown keeps rapid nav from spamming.
+  playCue("scene-enter");
   const { coverMs, revealMs } = pickDurations();
   emit({ phase: "covering", coverMs, revealMs });
 
