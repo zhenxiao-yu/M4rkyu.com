@@ -9,6 +9,7 @@ const projects = [
     slug: "nimbus",
     shortPitch:
       "A secure file management platform shaped around calm organization, OTP access, and storage analytics.",
+    why: "I wanted a place to put my own files that felt calm instead of like a settings panel — and the authentication flow was the part of product work I most wanted to actually get good at, not just wire up.",
     category: "web-app",
     year: "2024",
     status: "ready",
@@ -52,6 +53,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "围绕文件组织、OTP 访问和存储分析构建的安全文件管理平台。",
+        why: "想给自己的文件找个看着舒服的地方，而不是又一个设置面板——而身份验证那一块，是我最想认真做好、而不只是接上能用的部分。",
         problem:
           "很多个人云工具要么过于简陋，要么过于封闭。Nimbus 把文件存储重新整理成一个清晰的操作界面。",
         solution:
@@ -64,6 +66,7 @@ const projects = [
     slug: "bioloom",
     shortPitch:
       "An AI-assisted bio generator that turns scattered identity notes into concise, platform-ready personal copy.",
+    why: "I have rewritten my own bio about forty times and hated every version, so I built the thing that narrows the decision before the blank box gets a chance to.",
     category: "ai-tool",
     year: "2024",
     status: "ready",
@@ -105,6 +108,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "AI 辅助简介生成器，把零散的身份信息整理成适合不同平台的短文案。",
+        why: "我自己的简介大概重写过四十遍，每一版都嫌弃，于是干脆做了个在空白框开口逼问之前、先帮你把选择缩小的工具。",
         problem:
           "个人简介看似很短，却要压缩语气、受众、背景和职业信号，写起来并不简单。",
         solution:
@@ -117,6 +121,7 @@ const projects = [
     slug: "m4rketview",
     shortPitch:
       "A cryptocurrency screener built for quick scanning, watchlist thinking, and market table clarity.",
+    why: "I was tired of crypto dashboards that flash and pulse at you. I wanted one boring table I could actually read, so I made it.",
     category: "web-app",
     year: "2024",
     status: "ready",
@@ -159,6 +164,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "为快速浏览、自选观察和行情表格清晰度设计的加密货币筛选工具。",
+        why: "受够了那些一直闪、一直跳的加密货币面板。我只想要一张能好好看的、无聊的表格，于是自己做了一张。",
         problem:
           "很多加密货币面板被颜色、动效和信息层级淹没。M4rketView 更关注比较效率。",
         solution:
@@ -231,6 +237,7 @@ const projects = [
     slug: "purecreate",
     shortPitch:
       "A 3D apparel customizer that designs your shirt in real time and generates decals from a text prompt with DALL·E 3.",
+    why: "Half curiosity about putting a real-time 3D scene next to an image model, half an excuse to fold an old two-server monorepo into one app I could deploy without thinking about it.",
     category: "ai-tool",
     year: "2024",
     status: "ready",
@@ -276,6 +283,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "一个 3D 服装定制器，实时设计你的 T 恤，并通过 DALL·E 3 根据文字提示生成图案。",
+        why: "一半是好奇把实时 3D 场景和图像模型放在一起会怎样，一半是给自己找个借口，把一个旧的双服务器仓库塞进一个能随手部署的应用里。",
         problem:
           "定制服装通常意味着繁琐的样机工具，或与设计师反复沟通——缺少一种快速、可视化地把想法呈现在产品上并迭代的方式。",
         solution:
@@ -343,6 +351,7 @@ const projects = [
     slug: "descent-into-madness",
     shortPitch:
       "A 2D pixel-art roguelike shooter built in Unity — descend, fight, and survive escalating runs.",
+    why: "I wanted to know how roguelikes feel from the inside, and the only honest way to find out was to ship a rough one to itch.io and let strangers tell me where it hurt.",
     category: "game-dev",
     year: "2024",
     status: "ready",
@@ -388,6 +397,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "用 Unity 制作的 2D 像素风 Roguelike 射击游戏——不断深入、战斗，并在逐步升级的关卡中生存。",
+        why: "想从内部搞懂 Roguelike 到底是什么手感，而最诚实的办法，就是先做一个粗糙的版本丢上 itch.io，让陌生人告诉我哪里不对劲。",
         problem:
           "一个聚焦的原型，用来学习 Roguelike 的核心循环：程序化的压力、以局为单位的成长，以及像素风格下利落的射击手感。",
         solution:
@@ -400,6 +410,7 @@ const projects = [
     slug: "ui-studio",
     shortPitch:
       "A real-time collaborative design canvas where multiple people sketch, arrange, and edit the same board at once.",
+    why: "Multiplayer always felt like sorcery to me, so I built the smallest shared canvas I could and watched the other cursors move until it stopped feeling like magic.",
     category: "web-app",
     year: "2024",
     status: "ready",
@@ -444,6 +455,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "实时协作设计画布，多人可以在同一块画板上同时绘制、排布与编辑。",
+        why: "多人协作在我看来一直像某种魔法，所以我做了一个能做到的最小的共享画布，盯着别人的光标移动，直到它不再像魔法为止。",
         problem:
           "设计工具往往要么是单人使用，要么过于笨重。UI Studio 探索一个共享画布能做到多轻量，同时仍能处理实时在线状态与并发编辑。",
         solution:
@@ -511,6 +523,7 @@ const projects = [
     slug: "m4rkdown",
     shortPitch:
       "An offline-first markdown editor with realtime collaboration, PWA install, and a multiplayer typing arena.",
+    why: "I write in markdown constantly and resent every editor that gives up the moment the wifi does. The multiplayer typing game was just me refusing to stop once it worked offline.",
     category: "web-app",
     year: "2024",
     status: "ready",
@@ -556,6 +569,7 @@ const projects = [
     translations: {
       zh: {
         shortPitch: "离线优先的 Markdown 编辑器，支持实时协作、PWA 安装，以及多人打字竞技模式。",
+        why: "我天天用 markdown 写东西，也烦透了那些一断网就罢工的编辑器。至于那个多人打字小游戏，纯粹是它能离线工作之后，我没忍住继续往下做。",
         problem:
           "大多数 Markdown 编辑器都默认联网且单人使用。M4rkdown 想探索一个离线优先、并且能邀请他人加入的编辑器会是什么体验。",
         solution:

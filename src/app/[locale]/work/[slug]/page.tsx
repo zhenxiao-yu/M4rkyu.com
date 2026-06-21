@@ -251,6 +251,20 @@ export default async function ProjectDetailPage({
               </figure>
             </BlurFade>
 
+            {/* Why I made this — the human voice, ahead of the spec voice. A
+                warm "interruption" (COPY_VOICE §11), kept out of the numbered
+                section/TOC rhythm on purpose. Renders only when authored. */}
+            {localized.why ? (
+              <BlurFade>
+                <aside className="rounded-lg border border-border/60 bg-card/40 p-6 sm:p-7">
+                  <p className={eyebrowMono}>{tProjects("why")}</p>
+                  <p className="mt-3 text-pretty text-base leading-8 text-foreground/90 sm:text-lg sm:leading-9">
+                    {localized.why as string}
+                  </p>
+                </aside>
+              </BlurFade>
+            ) : null}
+
             {/* Overview — product framing of problem + solution */}
             <Section id="overview" index={indexOf("overview")} title={tCase("overview")}>
               <div className="grid gap-8 sm:grid-cols-2">

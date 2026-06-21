@@ -34,6 +34,11 @@ export const projectSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
   shortPitch: z.string().min(1),
+  // Optional first-person "why I made this" aside — a warm interruption on the
+  // case-study page, in the human voice rather than the spec voice. Optional so
+  // existing static entries and DB-sourced rows validate untouched; the aside
+  // simply doesn't render when absent.
+  why: z.string().optional(),
   category: z.enum([
     "web-app",
     "game-dev",
