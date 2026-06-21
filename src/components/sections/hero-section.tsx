@@ -4,6 +4,7 @@ import { StarGlyph } from "@/components/ui/magic/star-glyph";
 import { Shuffle } from "@/components/ui/magic/shuffle";
 import { HeroBootSequence } from "./hero-boot-sequence";
 import { HeroScrollCue } from "./hero-scroll-cue";
+import { HeroScrollChoreography } from "./hero-scroll-choreography";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -48,6 +49,10 @@ export async function HeroSection({ locale }: { locale: Locale }) {
         <div className="noise-layer pointer-events-none absolute inset-0 opacity-40" />
       </div>
 
+      {/* Scrubbed hero-exit motion (desktop, motion-OK only) — drives the
+        * wordmark lift + cue retire off scroll progress. Inert anchor. */}
+      <HeroScrollChoreography />
+
       <HeroBootSequence>
         {/* Subtle masthead — one quiet line, not a nav. */}
         <div
@@ -67,12 +72,18 @@ export async function HeroSection({ locale }: { locale: Locale }) {
           data-hero-intro
           className="absolute inset-x-0 bottom-0 z-10 bg-background"
         >
-          <HeroScrollCue className="absolute bottom-[calc(100%+1rem)] left-1/2 z-20 -translate-x-1/2" />
+          <div
+            data-hero-cue
+            className="pointer-events-none absolute inset-x-0 bottom-[calc(100%+1rem)] z-20 flex justify-center"
+          >
+            <HeroScrollCue className="pointer-events-auto" />
+          </div>
 
           <BinaryMarquee feed={BINARY_FEED} />
 
           <div className="flex w-full justify-center sm:overflow-hidden">
             <h1
+              data-hero-wordmark
               aria-label={spokenTitle}
               className="font-wordmark w-full px-3 pb-4 pt-4 text-center text-[clamp(2.25rem,8.6vw,12rem)] font-black uppercase leading-[0.84] tracking-[-0.04em] text-foreground sm:w-auto sm:shrink-0 sm:whitespace-nowrap sm:pb-5 sm:pt-5"
             >

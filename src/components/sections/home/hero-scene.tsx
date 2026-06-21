@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useReducedMotion } from "motion/react";
-import { DoubleSide, Vector2, Vector3, type ShaderMaterial } from "three";
+import { DoubleSide, Vector2, Vector3, type Mesh, type ShaderMaterial } from "three";
 import { useThemeInks, type ThemeInks } from "@/lib/hooks/use-theme-inks";
+import { getHeroExitProgress } from "@/lib/hero-scroll-progress";
 import { cn } from "@/lib/utils";
 
 /**
@@ -141,8 +142,12 @@ function ContourField({
   amp: number;
 }) {
   const materialRef = useRef<ShaderMaterial>(null);
+  const meshRef = useRef<Mesh>(null);
   const targetPointer = useRef(new Vector2(0, 0));
   const smoothPointer = useRef(new Vector2(0, 0));
+  // Eased hero-exit progress (0 at rest → 1 scrolled past) so the recede
+  // glides rather than tracking raw scroll steps.
+  const smoothExit = useRef(0);
   // Reused scratch vectors for the per-frame colour lerp (no allocations
   // in the loop). Held in a ref — refs are the mutable lane the
   // react-hooks rules expect; a useMemo'd value must not be mutated.
@@ -200,10 +205,24 @@ function ContourField({
       u.uRing3.value.lerp(s.ring3.fromArray(inks.ring3.float), 0.08);
       u.uGround.value.lerp(s.ground.fromArray(inks.background.float), 0.08);
     }
+
+    // Recede with the descent: as the hero scrolls away the plane lays
+    // down, sinks below the floor and dissolves into the palette ground —
+    // the field leaves through depth instead of clipping at the edge. The
+    // frameloop is already parked once the hero is fully off-screen, so
+    // this only runs through the exit window.
+    smoothExit.current += (getHeroExitProgress() - smoothExit.current) * 0.1;
+    const e = smoothExit.current;
+    const mesh = meshRef.current;
+    if (mesh) {
+      mesh.rotation.x = -0.66 - e * 0.55;
+      mesh.position.y = -0.15 - e * 1.4;
+    }
+    u.uOpacity.value = 0.6 * (1 - e * 0.9);
   });
 
   return (
-    <mesh rotation={[-0.66, 0, 0]} position={[0, -0.15, 0]}>
+    <mesh ref={meshRef} rotation={[-0.66, 0, 0]} position={[0, -0.15, 0]}>
       <planeGeometry args={[10, 10, SEG, SEG]} />
       <shaderMaterial
         ref={materialRef}
