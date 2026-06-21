@@ -12,7 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { cn, PANEL_WELL, PANEL_TILE } from "@/lib/utils";
 
 type Tool = {
   label: string;
@@ -21,8 +21,26 @@ type Tool = {
 
 type ToolGroup = [string, Tool[]];
 
-export function ToolsCollapsibleCard({ groups }: { groups: ToolGroup[] }) {
+export function ToolsCollapsibleCard({
+  groups,
+  bare = false,
+}: {
+  groups: ToolGroup[];
+  /** Render just the collapsible groups — no Card chrome or header. Used
+   * when an outer shell (the dossier LOADOUT panel) supplies the framing. */
+  bare?: boolean;
+}) {
   const t = useTranslations("About.refined");
+
+  if (bare) {
+    return (
+      <div className="grid gap-3">
+        {groups.map(([group, tools]) => (
+          <ToolCategory key={group} group={group} tools={tools} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <Card className="h-full bg-card/85">
@@ -55,7 +73,7 @@ function ToolCategory({ group, tools }: { group: string; tools: Tool[] }) {
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className="overflow-hidden rounded-md border border-border/60 bg-background/35"
+      className={cn(PANEL_WELL, "overflow-hidden")}
     >
       <div className="grid gap-2 p-3">
         <div className="flex min-w-0 items-start justify-between gap-3">
@@ -96,7 +114,7 @@ function ToolCategory({ group, tools }: { group: string; tools: Tool[] }) {
           {tools.map((tool) => (
             <div
               key={`${group}-${tool.label}`}
-              className="flex min-w-0 items-center gap-2 rounded-md border border-border/50 bg-card/60 px-2.5 py-2"
+              className={cn(PANEL_TILE, "flex min-w-0 items-center gap-2 px-2.5 py-2")}
             >
               <ToolBrandIcon label={tool.label} className="size-7" />
               <span className="min-w-0 text-xs font-medium leading-tight">
@@ -131,11 +149,11 @@ function LogoLoop({ tools }: { tools: Tool[] }) {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-linear-to-r from-background to-transparent"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-linear-to-l from-background to-transparent"
       />
       <div className="flex w-max gap-1.5 motion-safe:animate-[marquee_52s_linear_infinite] group-hover:[animation-play-state:paused]">
         <LogoTrack tools={loopTools} />

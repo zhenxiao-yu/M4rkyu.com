@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
-import { cn } from "@/lib/utils";
+import { cn, PANEL_WELL } from "@/lib/utils";
 
 /**
  * Portrait bento cell. Renders `profile.portrait` if set, otherwise a
@@ -46,7 +46,7 @@ export async function PortraitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 pt-0">
-        <div className="relative aspect-square overflow-hidden rounded-md border border-border/60 bg-background/40">
+        <div className={cn(PANEL_WELL, "relative aspect-square overflow-hidden")}>
           {portrait ? (
             <Image
               src={portrait.src}

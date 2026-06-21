@@ -5,7 +5,7 @@ import { ArrowUpRight, Code2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn, FOCUS_RING_INSET } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET, PANEL_WELL } from "@/lib/utils";
 import type { GithubStats } from "@/app/api/about/github/route";
 
 // Live GitHub stats — pulls from /api/about/github once per mount. The
@@ -94,7 +94,7 @@ export function GithubStatsCard({ className }: { className?: string }) {
           </div>
         ) : null}
         {loadState === "error" ? (
-          <p className="text-xs text-muted-foreground/80">
+          <p className="text-xs text-muted-foreground">
             {t("loadFailed")}
           </p>
         ) : null}
@@ -113,7 +113,7 @@ function Stat({
   loaded: boolean;
 }) {
   return (
-    <div className="grid gap-1 rounded-md border border-border/60 bg-background/40 p-3">
+    <div className={cn(PANEL_WELL, "grid gap-1 p-3")}>
       <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-muted-foreground">
         {label}
       </p>

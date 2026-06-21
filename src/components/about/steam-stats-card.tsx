@@ -135,7 +135,7 @@ export function SteamStatsCard({ className }: { className?: string }) {
         ) : null}
 
         {loadState === "error" && !stats ? (
-          <p className="text-xs text-muted-foreground/80">{t("loadFailed")}</p>
+          <p className="text-xs text-muted-foreground">{t("loadFailed")}</p>
         ) : null}
         {!loaded ? (
           <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">

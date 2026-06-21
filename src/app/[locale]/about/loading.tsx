@@ -1,47 +1,38 @@
-import {
-  SkeletonBlock,
-  SkeletonChip,
-  SkeletonHero,
-  SkeletonLine,
-} from "@/components/placeholders/skeleton";
+import { SkeletonBlock, SkeletonLine } from "@/components/placeholders/skeleton";
 
 /**
- * Suspense fallback for `/about`. Mirrors the live layout: hero band
- * with a right-side portrait/card slot, then a two-column bio +
- * timeline section.
+ * Suspense fallback for `/about`. Mirrors the live dossier layout: a tall
+ * subject band followed by a stack of labelled field panels.
  */
 export default function AboutLoading() {
   return (
     <article aria-busy="true" aria-live="polite">
-      <SkeletonHero
-        atmosphereOpacity="opacity-30"
-        rightSlot={<SkeletonBlock className="aspect-4/5 w-full" />}
-      />
-
-      <section className="mx-auto grid w-full max-w-page gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-        <div className="grid gap-3">
-          <SkeletonLine className="h-2.5 w-24" />
-          <SkeletonLine className="h-5 w-6/12" />
-          <div className="mt-4 grid gap-2">
-            <SkeletonLine className="w-full" />
-            <SkeletonLine className="w-11/12" />
-            <SkeletonLine className="w-10/12" />
-            <SkeletonLine className="w-9/12" />
+      <section className="mx-auto grid w-full max-w-page gap-7 px-4 py-10 sm:gap-9 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+        {/* Subject band */}
+        <div className="grid gap-6 rounded-lg border border-border/60 p-6 sm:p-8 lg:p-10">
+          <div className="flex items-center justify-between gap-3">
+            <SkeletonLine className="h-3 w-40" />
+            <SkeletonLine className="h-3 w-28" />
+          </div>
+          <SkeletonLine className="h-16 w-8/12 sm:h-24" />
+          <SkeletonLine className="h-3 w-56" />
+          <SkeletonLine className="h-3 w-72" />
+          <div className="flex gap-2">
+            <SkeletonBlock className="h-9 w-28" />
+            <SkeletonBlock className="h-9 w-24" />
           </div>
         </div>
-        <ol className="grid gap-6 border-l border-border/60 pl-6">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <li key={index} className="grid gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <SkeletonChip className="w-16" />
-                <SkeletonLine className="h-3 w-24" />
-              </div>
-              <SkeletonLine className="h-4 w-7/12" />
-              <SkeletonLine className="w-10/12" />
-              <SkeletonLine className="w-9/12" />
-            </li>
-          ))}
-        </ol>
+
+        {/* Field panels */}
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="grid gap-3.5">
+            <div className="flex items-center gap-3">
+              <SkeletonLine className="h-4 w-44" />
+              <span className="h-px flex-1 bg-border/60" aria-hidden="true" />
+            </div>
+            <SkeletonBlock className="h-40 w-full" />
+          </div>
+        ))}
       </section>
     </article>
   );

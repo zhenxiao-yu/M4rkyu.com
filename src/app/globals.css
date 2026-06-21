@@ -237,6 +237,11 @@
   --motion-micro: 120ms;
   --motion-fast: 180ms;
   --motion-medium: 280ms;
+  /* The editorial "base" beat — mirrors `motionTokens.base` (0.36s) in
+   * `src/lib/gsap.ts` so the CSS and GSAP layers share one pacing. Several
+   * card/tile transitions read `duration-(--motion-base)`; without this
+   * the token resolved to nothing and they snapped instantly. */
+  --motion-base: 360ms;
   --motion-slow: 500ms;
   --motion-cinematic: 800ms;
   --ease-premium: cubic-bezier(0.2, 0.7, 0.2, 1);

@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/magic/count-up";
-import { cn, FOCUS_RING_INSET } from "@/lib/utils";
+import { cn, FOCUS_RING_INSET, PANEL_WELL, PANEL_TILE } from "@/lib/utils";
 import type { GithubStats } from "@/app/api/about/github/route";
 import type { SteamStats } from "@/app/api/about/steam/route";
 
@@ -22,7 +22,13 @@ function steamStatus(state: number, inGame: boolean) {
   return "offline";
 }
 
-export function AboutSignalsCard() {
+export function AboutSignalsCard({
+  bare = false,
+}: {
+  /** Render just the GitHub + Steam feeds — no Card chrome or header. Used
+   * when an outer shell (the dossier TELEMETRY panel) supplies the framing. */
+  bare?: boolean;
+}) {
   const t = useTranslations("About.signals");
   const steamT = useTranslations("About.steam");
   const locale = useLocale();
@@ -78,16 +84,9 @@ export function AboutSignalsCard() {
     ? github.data.languageBytes.slice(0, 4).map((item) => item.name)
     : github.data?.topLanguages;
 
-  return (
-    <Card className="h-full bg-card/85">
-      <CardHeader>
-        <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-          {t("eyebrow")}
-        </p>
-        <CardTitle className="text-base">{t("title")}</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-3 md:grid-cols-2">
-        <section className="rounded-md border border-border/60 bg-background/35 p-4">
+  const sections = (
+    <>
+        <section className={cn(PANEL_WELL, "p-4")}>
           <div className="flex items-start justify-between gap-3">
             <div className="grid gap-1">
               <p className="flex items-center gap-2 text-sm font-medium">
@@ -119,7 +118,7 @@ export function AboutSignalsCard() {
             <SignalStat label={t("followers")} value={github.data?.followers} />
           </div>
           <div className="mt-4 grid gap-3">
-            <div className="rounded-md border border-border/50 bg-card/60 p-3">
+            <div className={cn(PANEL_TILE, "p-3")}>
               <div className="flex items-center justify-between gap-3">
                 <p className="font-mono text-[0.55rem] uppercase tracking-[0.16em] text-muted-foreground">
                   {t("recently")}
@@ -156,7 +155,7 @@ export function AboutSignalsCard() {
           </div>
         </section>
 
-        <section className="rounded-md border border-border/60 bg-background/35 p-4">
+        <section className={cn(PANEL_WELL, "p-4")}>
           <div className="flex items-start justify-between gap-3">
             <div className="grid gap-1">
               <p className="flex items-center gap-2 text-sm font-medium">
@@ -211,7 +210,7 @@ export function AboutSignalsCard() {
               {steam.data.recentGames.map((recent) => (
                 <div
                   key={recent.name}
-                  className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border/50 bg-card/60 px-3 py-2"
+                  className={cn(PANEL_TILE, "flex min-w-0 items-center justify-between gap-3 px-3 py-2")}
                 >
                   <span className="min-w-0 truncate text-xs font-medium">
                     {recent.name}
@@ -232,7 +231,22 @@ export function AboutSignalsCard() {
             <SignalStat label={t("hours")} value={steam.data?.totalHours} />
           </div>
         </section>
-      </CardContent>
+    </>
+  );
+
+  if (bare) {
+    return <div className="grid gap-3 md:grid-cols-2">{sections}</div>;
+  }
+
+  return (
+    <Card className="h-full bg-card/85">
+      <CardHeader>
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
+          {t("eyebrow")}
+        </p>
+        <CardTitle className="text-base">{t("title")}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-3 md:grid-cols-2">{sections}</CardContent>
     </Card>
   );
 }
@@ -288,7 +302,7 @@ function SignalStat({
   value: number | undefined;
 }) {
   return (
-    <div className="rounded-md border border-border/50 bg-card/60 px-3 py-2">
+    <div className={cn(PANEL_TILE, "px-3 py-2")}>
       <p className="font-mono text-[0.55rem] uppercase tracking-[0.16em] text-muted-foreground">
         {label}
       </p>

@@ -106,7 +106,7 @@ export function GithubChartsCard({ className }: { className?: string }) {
         </div>
 
         {loadState === "error" && !stats ? (
-          <p className="text-xs text-muted-foreground/80 sm:col-span-2">
+          <p className="text-xs text-muted-foreground sm:col-span-2">
             {t("loadFailed")}
           </p>
         ) : null}

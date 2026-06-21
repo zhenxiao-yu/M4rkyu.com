@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/magic/count-up";
 import { ShinyText } from "@/components/ui/magic/shiny-text";
+import { cn, PANEL_WELL } from "@/lib/utils";
 
 export interface IndexStat {
   value: number;
@@ -36,7 +37,7 @@ export function AboutIndexBand({ eyebrow, caption, stats }: AboutIndexBandProps)
           </p>
         </div>
 
-        <dl className="grid grid-cols-3 overflow-hidden rounded-lg border border-border/60 bg-background/35">
+        <dl className={cn(PANEL_WELL, "grid grid-cols-3 overflow-hidden rounded-lg")}>
           {stats.map((stat, i) => (
             <div
               key={stat.label}

@@ -6,6 +6,7 @@ import { profile } from "@/content/profile";
 import { HomeSection } from "./home-section";
 import { SectionActionLink } from "./section-action-link";
 import { SectionBackground } from "./section-background";
+import { SectionEyebrow } from "./section-eyebrow";
 import type { Locale } from "@/i18n/routing";
 
 const FOCAL: Record<string, string> = {
@@ -61,9 +62,7 @@ export async function AboutPreview({ locale }: { locale: Locale }) {
 
         {/* Copy — minimal. */}
         <FadeIn className="max-w-xl">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            {t("eyebrow")}
-          </p>
+          <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-heading text-balance text-3xl font-semibold leading-[1.04] tracking-tight sm:text-4xl lg:text-5xl">
             {t("heading")}
           </h2>

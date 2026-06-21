@@ -68,9 +68,9 @@ export function TimelineTrack({ timeline, nowLabel, nowBody }: TimelineTrackProp
             <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground">
               {item.date}
             </p>
-            <h2 className="mt-1 text-sm font-semibold transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover/stop:text-ring">
+            <h3 className="mt-1 text-sm font-semibold transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover/stop:text-ring">
               {item.label}
-            </h2>
+            </h3>
             <p className="mt-1 max-w-[32ch] text-xs leading-5 text-muted-foreground">
               {item.detail}
             </p>
