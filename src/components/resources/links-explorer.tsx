@@ -237,7 +237,7 @@ function LinkCard({
           {resource.description}
         </p>
         {resource.why ? (
-          <p className="line-clamp-2 text-xs leading-5 text-muted-foreground/80">
+          <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">
             {resource.why}
           </p>
         ) : null}

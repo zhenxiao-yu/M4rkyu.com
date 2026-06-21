@@ -50,7 +50,7 @@ export function TagSection({
             </Badge>
           </div>
           {lede ? (
-            <p className="text-xs text-muted-foreground/80">{lede}</p>
+            <p className="text-xs text-muted-foreground">{lede}</p>
           ) : null}
         </header>
         {viewMode === "grid" ? (

@@ -91,7 +91,7 @@ export function BentoTilt({
 
   const style: CSSProperties = {
     transform: transform || undefined,
-    transition: "transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1)",
+    transition: "transform var(--motion-medium) var(--ease-premium)",
     transformStyle: "preserve-3d",
     willChange: transform ? "transform" : undefined,
   };

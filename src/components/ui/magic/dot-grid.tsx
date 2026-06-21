@@ -61,7 +61,9 @@ export function DotGrid({
       probe.remove();
       // Convert "rgb(r, g, b)" → "r, g, b" for rgba() composition.
       const match = color.match(/rgba?\(([^)]+)\)/);
-      return match ? match[1].split(",").slice(0, 3).join(",").trim() : "34, 211, 238";
+      // Neutral mid-grey fallback (never the legacy accent) so a failed
+      // probe degrades to something theme-agnostic rather than a ghost cyan.
+      return match ? match[1].split(",").slice(0, 3).join(",").trim() : "127, 127, 127";
     }
 
     let baseColor = readColor();
