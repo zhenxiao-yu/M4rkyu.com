@@ -13,7 +13,7 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
 
 const scanlines =
-  "repeating-linear-gradient(to bottom, transparent 0 2px, rgba(255,255,255,0.05) 3px)";
+  "repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in srgb, var(--foreground) 6%, transparent) 3px)";
 
 /**
  * Games entry-point slide — a "cartridge shelf". Game work is mostly

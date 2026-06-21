@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "./section-eyebrow";
 
 interface HomeSectionProps {
   /** Optional eyebrow line — small mono caps. */
@@ -88,11 +89,7 @@ export function HomeSection({
         {(eyebrow || heading || lede || action) && (
           <header className="grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
             <div className="max-w-2xl">
-              {eyebrow ? (
-                <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  {eyebrow}
-                </p>
-              ) : null}
+              {eyebrow ? <SectionEyebrow>{eyebrow}</SectionEyebrow> : null}
               {heading ? (
                 <h2 className="mt-3 font-heading text-balance text-[2rem] font-semibold leading-[1.04] tracking-normal sm:mt-4 sm:text-5xl sm:leading-[1.02] lg:text-6xl">
                   {heading}

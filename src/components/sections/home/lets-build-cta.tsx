@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { RotatingText } from "@/components/ui/magic/rotating-text";
 import { Waves } from "@/components/ui/magic/waves";
 import { Button } from "@/components/ui/button";
+import { SectionEyebrow } from "./section-eyebrow";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { profile } from "@/content/profile";
@@ -75,9 +76,7 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
          * Mobile padding eases so the slab doesn't dominate a short
          * phone viewport when stacked with the section's outer py. */}
         <div className="glass-surface rounded-2xl px-5 py-10 text-center sm:px-10 sm:py-16">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            {t("eyebrow")}
-          </p>
+          <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
           <h2 className="mt-6 font-heading text-balance text-5xl font-semibold leading-[0.95] sm:text-6xl lg:text-7xl">
             <span className="inline-block">
               {t("letsLabel")}{" "}

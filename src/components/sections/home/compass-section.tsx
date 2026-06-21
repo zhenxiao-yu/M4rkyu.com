@@ -15,6 +15,7 @@ import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { HomeSection } from "./home-section";
 import { SectionBackground } from "./section-background";
+import { SectionEyebrow } from "./section-eyebrow";
 import type { Locale } from "@/i18n/routing";
 
 interface CompassSectionProps {
@@ -66,9 +67,7 @@ export async function CompassSection({ locale }: CompassSectionProps) {
       <div className="grid gap-8 lg:grid-cols-[4fr_7fr] lg:gap-14">
         {/* Left rail — editorial intro + compass instrument. */}
         <FadeIn className="flex flex-col">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            {t("eyebrow")}
-          </p>
+          <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-heading text-balance text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl">
             {t("heading")}
           </h2>

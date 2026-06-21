@@ -49,6 +49,29 @@ export function WorkPointGrid({ progressRef, className }: WorkPointGridProps) {
     resize();
     window.addEventListener("resize", resize);
 
+    // Theme-aware ink: resolve `--ring` to an "r, g, b" string once, then
+    // re-read on any light/dark or palette swap. Keeps the grid on the
+    // active accent instead of a baked legacy cyan (mirrors DotGrid/Waves).
+    function readRingColor() {
+      const probe = document.createElement("span");
+      probe.style.color = "var(--ring)";
+      document.body.appendChild(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      const match = color.match(/rgba?\(([^)]+)\)/);
+      return match
+        ? match[1].split(",").slice(0, 3).join(",").trim()
+        : "127, 127, 127";
+    }
+    let ringColor = readRingColor();
+    const themeObserver = new MutationObserver(() => {
+      ringColor = readRingColor();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "data-palette"],
+    });
+
     const COLS = 12;
     const ROWS = 8;
 
@@ -72,7 +95,7 @@ export function WorkPointGrid({ progressRef, className }: WorkPointGridProps) {
       const prog = progressRef.current;
       const strength = 6 + prog * 14;
 
-      ctx!.strokeStyle = `rgba(34, 211, 238, ${0.06 + prog * 0.08})`;
+      ctx!.strokeStyle = `rgba(${ringColor}, ${0.06 + prog * 0.08})`;
       ctx!.lineWidth = 1;
 
       // Pass 1: stroke faint lines between adjacent points.
@@ -104,7 +127,7 @@ export function WorkPointGrid({ progressRef, className }: WorkPointGridProps) {
       ctx!.stroke();
 
       // Pass 2: dots at each point, slightly brighter.
-      ctx!.fillStyle = `rgba(34, 211, 238, ${0.4 + prog * 0.25})`;
+      ctx!.fillStyle = `rgba(${ringColor}, ${0.4 + prog * 0.25})`;
       for (let r = 1; r <= ROWS; r++) {
         for (let c = 1; c <= COLS; c++) {
           const x = c * gapX;
@@ -135,6 +158,7 @@ export function WorkPointGrid({ progressRef, className }: WorkPointGridProps) {
 
     return () => {
       io.disconnect();
+      themeObserver.disconnect();
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       running = false;
