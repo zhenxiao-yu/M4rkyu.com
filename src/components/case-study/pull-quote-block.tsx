@@ -20,10 +20,20 @@ export function PullQuoteBlock({
   return (
     <figure
       className={cn(
-        "relative mx-auto max-w-4xl border-y py-12 sm:py-16",
+        "relative isolate mx-auto max-w-4xl border-y py-12 sm:py-16",
         className,
       )}
     >
+      {/* Oversized opening quote — the star serif as a faint riso watermark.
+       * Decorative + aria-hidden; sits at -z-10 within the figure's own
+       * stacking context (isolate) so the quote reads cleanly over it, and
+       * stays inside the figure (no negative inset → no mobile overflow). */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-5 -z-10 select-none font-display text-[5rem] font-semibold leading-none text-ring/15 sm:top-3 sm:text-[7rem]"
+      >
+        &ldquo;
+      </span>
       {eyebrow ? (
         <p className="flex items-center gap-3 font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
           <span aria-hidden="true" className="h-px w-8 bg-foreground/20" />

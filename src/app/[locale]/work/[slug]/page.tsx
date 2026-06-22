@@ -65,7 +65,25 @@ export async function generateMetadata({
 const eyebrowMono =
   "font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground";
 
-/** Anchored, numbered section shell — shared rhythm + permalink affordance. */
+/**
+ * Ruled mono eyebrow — a short riso tick + uppercase label. The spec-sheet
+ * voice that labels each block under a section. Pairs against the serif
+ * headings to hold the editorial-engineer tension.
+ */
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p className={cn("flex items-center gap-2.5", eyebrowMono)}>
+      <span aria-hidden="true" className="h-px w-6 bg-ring/50" />
+      {children}
+    </p>
+  );
+}
+
+/**
+ * Numbered section shell — an oversized Fraunces folio numeral hung beside a
+ * serif heading (the "field report" rhythm), plus a permalink affordance. The
+ * star serif does the structural work; mono is reserved for the spec labels.
+ */
 function Section({
   id,
   index,
@@ -83,11 +101,14 @@ function Section({
       className="group scroll-mt-24 border-t border-border/60 pt-10 first:border-t-0 first:pt-0"
     >
       <BlurFade>
-        <div className="flex items-baseline gap-3">
-          <span className="font-mono text-xs text-muted-foreground tabular-nums">
+        <div className="flex items-baseline gap-3 sm:gap-4">
+          <span
+            aria-hidden="true"
+            className="font-display text-4xl font-light leading-none text-ring/30 tabular-nums sm:text-5xl"
+          >
             {index}
           </span>
-          <h2 className="text-2xl font-semibold leading-snug text-balance sm:text-3xl">
+          <h2 className="font-display text-2xl font-semibold leading-snug text-balance sm:text-3xl">
             {title}
           </h2>
           <a
@@ -100,7 +121,7 @@ function Section({
           </a>
         </div>
       </BlurFade>
-      <div className="mt-5">{children}</div>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }
@@ -228,55 +249,64 @@ export default async function ProjectDetailPage({
           />
 
           <div className="min-w-0 space-y-12 lg:space-y-16">
-            {/* Hero cover */}
+            {/* Hero cover — framed as a numbered plate (Fig. 01). */}
             <BlurFade>
-              <figure className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
-                {cover ? (
-                  <BlurImage
-                    src={cover.src}
-                    alt={cover.alt}
-                    fill
-                    priority
-                    sizes="(min-width: 1280px) 880px, 100vw"
-                    unoptimized={cover.src.endsWith(".svg")}
-                    className="object-cover"
-                  />
-                ) : (
-                  <PlaceholderImage
-                    label={tProjects("mediaTbd")}
-                    aspect="h-full"
-                    className="rounded-none border-0"
-                  />
-                )}
+              <figure>
+                <div className="relative aspect-16/10 overflow-hidden rounded-lg border bg-muted">
+                  {cover ? (
+                    <BlurImage
+                      src={cover.src}
+                      alt={cover.alt}
+                      fill
+                      priority
+                      sizes="(min-width: 1280px) 880px, 100vw"
+                      unoptimized={cover.src.endsWith(".svg")}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <PlaceholderImage
+                      label={tProjects("mediaTbd")}
+                      aspect="h-full"
+                      className="rounded-none border-0"
+                    />
+                  )}
+                </div>
+                <figcaption className="mt-3 flex items-center gap-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
+                  <span aria-hidden="true" className="h-px w-6 bg-ring/40" />
+                  Fig. 01 — {localized.title as string}
+                </figcaption>
               </figure>
             </BlurFade>
 
-            {/* Why I made this — the human voice, ahead of the spec voice. A
-                warm "interruption" (COPY_VOICE §11), kept out of the numbered
-                section/TOC rhythm on purpose. Renders only when authored. */}
+            {/* Why I made this — the human voice, ahead of the spec voice. Set
+                in the star serif and hung off a riso rule so it reads as a warm
+                margin note, not another spec block (COPY_VOICE §11). Kept out of
+                the numbered section/TOC rhythm on purpose. */}
             {localized.why ? (
               <BlurFade>
-                <aside className="rounded-lg border border-border/60 bg-card/40 p-6 sm:p-7">
-                  <p className={eyebrowMono}>{tProjects("why")}</p>
-                  <p className="mt-3 text-pretty text-base leading-8 text-foreground/90 sm:text-lg sm:leading-9">
+                <aside className="border-l-2 border-ring/40 pl-5 sm:pl-6">
+                  <Eyebrow>{tProjects("why")}</Eyebrow>
+                  <p className="mt-4 text-pretty font-display text-xl font-light leading-normal text-foreground/90 sm:text-2xl">
                     {localized.why as string}
                   </p>
                 </aside>
               </BlurFade>
             ) : null}
 
-            {/* Overview — product framing of problem + solution */}
+            {/* Overview — problem + solution as a two-column editorial spread,
+                split by a hairline rule, body lifted out of muted into the
+                foreground so it reads with weight. */}
             <Section id="overview" index={indexOf("overview")} title={tCase("overview")}>
-              <div className="grid gap-8 sm:grid-cols-2">
+              <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">
                 <div>
-                  <p className={eyebrowMono}>{tProjects("problem")}</p>
-                  <p className="mt-3 text-base leading-8 text-muted-foreground">
+                  <Eyebrow>{tProjects("problem")}</Eyebrow>
+                  <p className="mt-4 text-base leading-8 text-foreground/80">
                     {localized.problem as string}
                   </p>
                 </div>
-                <div>
-                  <p className={eyebrowMono}>{tProjects("solution")}</p>
-                  <p className="mt-3 text-base leading-8 text-muted-foreground">
+                <div className="sm:border-l sm:border-border/60 sm:pl-10">
+                  <Eyebrow>{tProjects("solution")}</Eyebrow>
+                  <p className="mt-4 text-base leading-8 text-foreground/80">
                     {localized.solution as string}
                   </p>
                 </div>
@@ -335,16 +365,16 @@ export default async function ProjectDetailPage({
                 <div className="grid gap-10 sm:grid-cols-2">
                   {project.architectureNotes.length > 0 ? (
                     <div>
-                      <p className={eyebrowMono}>{tProjects("architecture")}</p>
-                      <div className="mt-3">
+                      <Eyebrow>{tProjects("architecture")}</Eyebrow>
+                      <div className="mt-4">
                         <CaseStudyList items={project.architectureNotes} />
                       </div>
                     </div>
                   ) : null}
                   {project.challenges.length > 0 ? (
                     <div>
-                      <p className={eyebrowMono}>{tCase("challenges")}</p>
-                      <div className="mt-3">
+                      <Eyebrow>{tCase("challenges")}</Eyebrow>
+                      <div className="mt-4">
                         <CaseStudyList items={project.challenges} />
                       </div>
                     </div>
@@ -366,16 +396,16 @@ export default async function ProjectDetailPage({
                 <div className="grid gap-10 sm:grid-cols-2">
                   {project.lessonsLearned.length > 0 ? (
                     <div>
-                      <p className={eyebrowMono}>{tProjects("lessons")}</p>
-                      <div className="mt-3">
+                      <Eyebrow>{tProjects("lessons")}</Eyebrow>
+                      <div className="mt-4">
                         <CaseStudyList items={project.lessonsLearned} numbered />
                       </div>
                     </div>
                   ) : null}
                   {project.nextSteps.length > 0 ? (
                     <div>
-                      <p className={eyebrowMono}>{tProjects("next")}</p>
-                      <div className="mt-3">
+                      <Eyebrow>{tProjects("next")}</Eyebrow>
+                      <div className="mt-4">
                         <CaseStudyList items={project.nextSteps} numbered />
                       </div>
                     </div>
@@ -389,7 +419,10 @@ export default async function ProjectDetailPage({
         {related.length > 0 ? (
           <section className="border-t bg-muted/20">
             <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
-              <h2 className={eyebrowMono}>{tCase("relatedWork")}</h2>
+              <h2 className={cn("flex items-center gap-2.5", eyebrowMono)}>
+                <span aria-hidden="true" className="h-px w-6 bg-ring/50" />
+                {tCase("relatedWork")}
+              </h2>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 {related.map((item) => (
                   <Link
