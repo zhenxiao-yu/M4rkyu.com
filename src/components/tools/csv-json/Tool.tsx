@@ -1,120 +1,92 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { csvToJson, jsonToCsv, type CsvJsonResult } from "@/lib/tools/csv-json";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 type Direction = "csv-to-json" | "json-to-csv";
 
-// Minimal CSV parser — handles quoted cells with embedded commas,
-// escaped quotes ("" → "), and CRLF/LF line endings. Sufficient for
-// hand-pasted inputs.
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let cell = "";
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (inQuotes) {
-      if (ch === '"' && text[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else if (ch === '"') {
-        inQuotes = false;
-      } else {
-        cell += ch;
-      }
-    } else if (ch === '"') {
-      inQuotes = true;
-    } else if (ch === ",") {
-      row.push(cell);
-      cell = "";
-    } else if (ch === "\n" || ch === "\r") {
-      if (ch === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell);
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else {
-      cell += ch;
-    }
-  }
-  if (cell || row.length > 0) {
-    row.push(cell);
-    rows.push(row);
-  }
-  return rows.filter((r) => r.some((c) => c.length > 0));
-}
-
-function csvToJson(text: string): { ok: true; output: string } | { ok: false; error: string } {
-  const rows = parseCsv(text);
-  if (rows.length === 0) return { ok: true, output: "[]" };
-  const [header, ...body] = rows;
-  const out = body.map((row) => {
-    const obj: Record<string, string> = {};
-    header.forEach((key, i) => {
-      obj[key] = row[i] ?? "";
-    });
-    return obj;
-  });
-  return { ok: true, output: JSON.stringify(out, null, 2) };
-}
-
-function jsonToCsv(text: string): { ok: true; output: string } | { ok: false; error: string } {
-  try {
-    const data = JSON.parse(text);
-    if (!Array.isArray(data)) return { ok: false, error: "Expected a JSON array of objects." };
-    if (data.length === 0) return { ok: true, output: "" };
-    const keys = Array.from(
-      new Set(data.flatMap((row: unknown) => (row && typeof row === "object" ? Object.keys(row) : []))),
-    );
-    const escape = (v: unknown) => {
-      const s = v === undefined || v === null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v);
-      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-    };
-    const lines = [keys.join(",")];
-    for (const row of data as Record<string, unknown>[]) {
-      lines.push(keys.map((k) => escape(row?.[k])).join(","));
-    }
-    return { ok: true, output: lines.join("\n") };
-  } catch (err) {
-    return { ok: false, error: (err as Error).message };
-  }
-}
+const DIRECTIONS = ["csv-to-json", "json-to-csv"] as const;
+const SAMPLE_CSV = "name,role\nMark,engineer\nZhen,designer";
+// Debounce keystrokes so a large paste doesn't re-parse on every character.
+const DEBOUNCE_MS = 180;
 
 export function CsvJson() {
+  const t = useTranslations("Tools.csvJson");
+  const tc = useTranslations("Tools.common");
   const [direction, setDirection] = useState<Direction>("csv-to-json");
-  const [input, setInput] = useState("name,role\nMark,engineer\nZhen,designer");
+  const [input, setInput] = useState(SAMPLE_CSV);
+  const [deferred, setDeferred] = useState(SAMPLE_CSV);
 
-  const result = useMemo(() => (direction === "csv-to-json" ? csvToJson(input) : jsonToCsv(input)), [direction, input]);
+  useEffect(() => {
+    const id = window.setTimeout(() => setDeferred(input), DEBOUNCE_MS);
+    return () => window.clearTimeout(id);
+  }, [input]);
 
-  function copy() {
-    if (!result.ok) return;
-    void navigator.clipboard.writeText(result.output).then(() => toast.success("Copied"));
-  }
+  const result = useMemo<CsvJsonResult>(
+    () => (direction === "csv-to-json" ? csvToJson(deferred) : jsonToCsv(deferred)),
+    [direction, deferred],
+  );
+
+  const empty = result.ok && result.empty;
+  const errorText = !result.ok
+    ? result.reason === "non-array"
+      ? t("error.nonArray")
+      : t("error.malformedJson")
+    : "";
+  const outputValue = result.ok ? (result.empty ? "" : result.output) : errorText;
+  const status = result.ok ? (result.empty ? tc("empty") : tc("valid")) : tc("invalid");
+
+  const isCsvToJson = direction === "csv-to-json";
+  const copyLabel = isCsvToJson ? "JSON" : "CSV";
 
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <div role="tablist" className="inline-flex rounded-md border border-border bg-card/40 p-0.5">
-          {(["csv-to-json", "json-to-csv"] as const).map((d) => (
+        <div
+          role="tablist"
+          aria-label={t("directionLabel")}
+          className="inline-flex min-w-0 rounded-md border border-border bg-card/40 p-0.5"
+        >
+          {DIRECTIONS.map((d) => (
             <button
               key={d}
-              type="button"
               role="tab"
+              type="button"
               aria-selected={direction === d}
               onClick={() => setDirection(d)}
-              className={`rounded-sm px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] ${direction === d ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
+              className={cn(
+                "min-h-9 rounded-sm px-3 py-1 text-xs font-medium uppercase tracking-[0.15em]",
+                "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+                FOCUS_RING_INSET,
+                direction === d
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
-              {d === "csv-to-json" ? "CSV → JSON" : "JSON → CSV"}
+              {t(`direction.${d}`)}
             </button>
           ))}
         </div>
-        <Button type="button" size="sm" variant="outline" onClick={copy} disabled={!result.ok} className="ml-auto">
-          <Copy className="size-3.5" aria-hidden="true" /> Copy
-        </Button>
+        <CopyButton
+          value={result.ok && !result.empty ? result.output : ""}
+          label={copyLabel}
+          disabled={!result.ok || result.empty}
+          className="ml-auto"
+        >
+          {tc("copy")}
+        </CopyButton>
+        <span
+          className={cn(
+            "w-full font-mono text-xs sm:w-auto",
+            result.ok ? "text-muted-foreground" : "text-destructive",
+          )}
+          aria-live="polite"
+        >
+          {status}
+        </span>
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
         <textarea
@@ -122,16 +94,25 @@ export function CsvJson() {
           onChange={(e) => setInput(e.target.value)}
           rows={14}
           spellCheck={false}
-          aria-label={direction === "csv-to-json" ? "CSV input" : "JSON input"}
-          className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
+          aria-label={isCsvToJson ? t("inputAriaCsv") : t("inputAriaJson")}
+          placeholder={isCsvToJson ? t("placeholderCsv") : t("placeholderJson")}
+          className={cn(
+            "min-h-36 w-full resize-y overflow-x-auto rounded-md border border-border bg-background px-3 py-2 font-mono text-xs",
+            FOCUS_RING_INSET,
+          )}
         />
         <textarea
           readOnly
-          value={result.ok ? result.output : result.error}
+          value={empty ? "" : outputValue}
           rows={14}
-          aria-label={direction === "csv-to-json" ? "JSON output" : "CSV output"}
+          aria-label={isCsvToJson ? t("outputAriaJson") : t("outputAriaCsv")}
           aria-live="polite"
-          className={`w-full rounded-md border bg-card/40 px-3 py-2 font-mono text-xs ${result.ok ? "border-border" : "border-destructive/40 text-destructive"}`}
+          placeholder={tc("emptyHint")}
+          className={cn(
+            "min-h-36 w-full resize-y overflow-x-auto rounded-md border bg-card/40 px-3 py-2 font-mono text-xs",
+            FOCUS_RING_INSET,
+            result.ok ? "border-border" : "border-destructive/40 text-destructive",
+          )}
         />
       </div>
     </div>

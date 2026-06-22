@@ -1,134 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
+import {
+  formatHsl,
+  formatRgb,
+  hslToRgb,
+  parseHex,
+  parseHslString,
+  parseRgbString,
+  rgbToHex,
+  rgbToHsl,
+  type RGB,
+} from "@/lib/tools/color";
 
 // Three-way Hex ↔ RGB ↔ HSL converter. Editing any field updates the
-// other two and the live preview swatch. Pure logic, no deps.
-
-interface RGB {
-  r: number;
-  g: number;
-  b: number;
-}
-
-interface HSL {
-  h: number;
-  s: number;
-  l: number;
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function toHex(n: number) {
-  return clamp(Math.round(n), 0, 255).toString(16).padStart(2, "0");
-}
-
-function rgbToHex({ r, g, b }: RGB) {
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
-
-function parseHex(input: string): RGB | null {
-  const match = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(input.trim());
-  if (!match) return null;
-  let hex = match[1];
-  if (hex.length === 3) hex = hex.split("").map((c) => c + c).join("");
-  const num = parseInt(hex, 16);
-  return { r: (num >> 16) & 0xff, g: (num >> 8) & 0xff, b: num & 0xff };
-}
-
-function rgbToHsl({ r, g, b }: RGB): HSL {
-  const rn = r / 255;
-  const gn = g / 255;
-  const bn = b / 255;
-  const max = Math.max(rn, gn, bn);
-  const min = Math.min(rn, gn, bn);
-  const delta = max - min;
-  const l = (max + min) / 2;
-  let h = 0;
-  let s = 0;
-  if (delta !== 0) {
-    s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
-    switch (max) {
-      case rn:
-        h = ((gn - bn) / delta + (gn < bn ? 6 : 0)) * 60;
-        break;
-      case gn:
-        h = ((bn - rn) / delta + 2) * 60;
-        break;
-      default:
-        h = ((rn - gn) / delta + 4) * 60;
-    }
-  }
-  return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
-}
-
-function hslToRgb({ h, s, l }: HSL): RGB {
-  const sn = clamp(s, 0, 100) / 100;
-  const ln = clamp(l, 0, 100) / 100;
-  const c = (1 - Math.abs(2 * ln - 1)) * sn;
-  const hp = (((h % 360) + 360) % 360) / 60;
-  const x = c * (1 - Math.abs((hp % 2) - 1));
-  const m = ln - c / 2;
-  let r = 0;
-  let g = 0;
-  let b = 0;
-  if (hp < 1) [r, g, b] = [c, x, 0];
-  else if (hp < 2) [r, g, b] = [x, c, 0];
-  else if (hp < 3) [r, g, b] = [0, c, x];
-  else if (hp < 4) [r, g, b] = [0, x, c];
-  else if (hp < 5) [r, g, b] = [x, 0, c];
-  else [r, g, b] = [c, 0, x];
-  return {
-    r: Math.round((r + m) * 255),
-    g: Math.round((g + m) * 255),
-    b: Math.round((b + m) * 255),
-  };
-}
-
-function parseRgbString(input: string): RGB | null {
-  const parts = input
-    .replace(/rgba?\(|\)|\s/gi, "")
-    .split(/[,/]/)
-    .map((part) => parseInt(part, 10));
-  if (parts.length < 3 || parts.some((n) => Number.isNaN(n))) return null;
-  return {
-    r: clamp(parts[0], 0, 255),
-    g: clamp(parts[1], 0, 255),
-    b: clamp(parts[2], 0, 255),
-  };
-}
-
-function parseHslString(input: string): HSL | null {
-  const parts = input
-    .replace(/hsla?\(|\)|%|deg|\s/gi, "")
-    .split(/[,/]/)
-    .map((part) => parseFloat(part));
-  if (parts.length < 3 || parts.some((n) => Number.isNaN(n))) return null;
-  return {
-    h: ((parts[0] % 360) + 360) % 360,
-    s: clamp(parts[1], 0, 100),
-    l: clamp(parts[2], 0, 100),
-  };
-}
-
-function formatRgb(value: RGB) {
-  return `rgb(${value.r}, ${value.g}, ${value.b})`;
-}
-
-function formatHsl(value: HSL) {
-  return `hsl(${value.h}, ${value.s}%, ${value.l}%)`;
-}
+// other two and the live preview swatch. Color math lives in
+// @/lib/tools/color (pure + unit-tested).
 
 const INITIAL_RGB: RGB = { r: 124, g: 58, b: 237 };
 
 export function ColorConverter() {
+  const t = useTranslations("Tools.colorConverter");
   const [rgb, setRgbState] = useState<RGB>(INITIAL_RGB);
   const [hexInput, setHexInput] = useState(rgbToHex(INITIAL_RGB));
   const [rgbInput, setRgbInput] = useState(formatRgb(INITIAL_RGB));
@@ -163,27 +59,21 @@ export function ColorConverter() {
     if (parsed) commitRgb(hslToRgb(parsed));
   }
 
-  function copyToClipboard(text: string, label: string) {
-    void navigator.clipboard
-      .writeText(text)
-      .then(() => toast.success(`Copied ${label}`))
-      .catch(() => toast.error("Copy failed"));
-  }
-
   const hex = rgbToHex(rgb);
+  const hsl = rgbToHsl(rgb);
 
   return (
     <div className="grid gap-6">
       <div className="grid items-start gap-4 md:grid-cols-[10rem_1fr] md:items-center">
         <div
-          aria-label="Color preview"
+          aria-label={t("preview")}
           className="aspect-square w-full rounded-md border border-border/60"
           style={{ backgroundColor: hex }}
         />
         <div className="grid gap-2">
           <label className="grid gap-1.5 text-xs text-muted-foreground">
             <span className="font-mono uppercase tracking-[0.18em]">
-              Picker
+              {t("picker")}
             </span>
             <input
               type="color"
@@ -192,7 +82,7 @@ export function ColorConverter() {
                 const parsed = parseHex(event.target.value);
                 if (parsed) commitRgb(parsed);
               }}
-              aria-label="Color picker"
+              aria-label={t("picker")}
               className="h-10 w-full cursor-pointer rounded-md border border-border bg-transparent p-1"
             />
           </label>
@@ -203,31 +93,28 @@ export function ColorConverter() {
         <ConvertField
           label="Hex"
           value={hexInput}
+          valid={parseHex(hexInput) !== null}
           onChange={handleHexChange}
-          onCopy={() => copyToClipboard(hex, "hex")}
+          copyValue={hex}
         />
         <ConvertField
           label="RGB"
           value={rgbInput}
+          valid={parseRgbString(rgbInput) !== null}
           onChange={handleRgbChange}
-          onCopy={() =>
-            copyToClipboard(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`, "rgb")
-          }
+          copyValue={formatRgb(rgb)}
         />
         <ConvertField
           label="HSL"
           value={hslInput}
+          valid={parseHslString(hslInput) !== null}
           onChange={handleHslChange}
-          onCopy={() => {
-            const hsl = rgbToHsl(rgb);
-            copyToClipboard(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`, "hsl");
-          }}
+          copyValue={formatHsl(hsl)}
         />
       </div>
 
       <div className="grid grid-cols-5 gap-2">
         {[15, 35, 50, 65, 85].map((targetL) => {
-          const hsl = rgbToHsl(rgb);
           const shade = rgbToHex(hslToRgb({ h: hsl.h, s: hsl.s, l: targetL }));
           return (
             <button
@@ -237,9 +124,9 @@ export function ColorConverter() {
                 const parsed = parseHex(shade);
                 if (parsed) commitRgb(parsed);
               }}
-              aria-label={`Use lightness ${targetL}% shade ${shade}`}
+              aria-label={t("shade", { lightness: targetL, hex: shade })}
               className={cn(
-                "grid aspect-square place-items-end rounded-md border border-border/60 p-1.5 text-[0.55rem] font-mono uppercase tracking-[0.18em] transition-transform hover:-translate-y-0.5",
+                "grid aspect-square place-items-end rounded-md border border-border/60 p-1.5 font-mono text-[0.55rem] uppercase tracking-[0.18em] transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5",
                 FOCUS_RING_INSET,
               )}
               style={{
@@ -259,13 +146,15 @@ export function ColorConverter() {
 function ConvertField({
   label,
   value,
+  valid,
   onChange,
-  onCopy,
+  copyValue,
 }: {
   label: string;
   value: string;
+  valid: boolean;
   onChange: (value: string) => void;
-  onCopy: () => void;
+  copyValue: string;
 }) {
   return (
     <div className="grid gap-1.5">
@@ -279,17 +168,10 @@ function ConvertField({
           spellCheck={false}
           autoComplete="off"
           aria-label={`${label} value`}
-          className="font-mono"
+          aria-invalid={!valid}
+          className={cn("min-w-0 font-mono", !valid && "border-destructive/50")}
         />
-        <Button
-          type="button"
-          onClick={onCopy}
-          variant="outline"
-          size="sm"
-          aria-label={`Copy ${label}`}
-        >
-          <Copy className="size-3.5" aria-hidden="true" />
-        </Button>
+        <CopyButton value={copyValue} label={label} className="shrink-0" />
       </div>
     </div>
   );

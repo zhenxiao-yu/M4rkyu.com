@@ -1,30 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { runSlug, type SlugSeparator } from "@/lib/tools/slug";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
-function slugify(text: string, separator: "-" | "_"): string {
-  return text
-    .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "") // strip combining diacritics
-    .replace(/['"`]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, separator)
-    .replace(new RegExp(`^${separator}+|${separator}+$`, "g"), "")
-    .replace(new RegExp(`${separator}{2,}`, "g"), separator);
-}
+const SEPARATORS = ["-", "_"] as const;
 
 export function SlugGenerator() {
+  const t = useTranslations("Tools.slug");
+  const tc = useTranslations("Tools.common");
   const [input, setInput] = useState("Building React Things — 2026 edition");
-  const [separator, setSeparator] = useState<"-" | "_">("-");
+  const [separator, setSeparator] = useState<SlugSeparator>("-");
+  const [lowercase, setLowercase] = useState(true);
 
-  const slug = useMemo(() => slugify(input, separator), [input, separator]);
-
-  function copy() {
-    void navigator.clipboard.writeText(slug).then(() => toast.success("Copied slug"));
-  }
+  const { slug, empty } = useMemo(
+    () => runSlug(input, { separator, lowercase }),
+    [input, separator, lowercase],
+  );
 
   return (
     <div className="grid gap-4">
@@ -33,35 +27,91 @@ export function SlugGenerator() {
         onChange={(e) => setInput(e.target.value)}
         rows={3}
         spellCheck={false}
-        placeholder="Any text"
-        aria-label="Text to slugify"
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+        aria-label={t("inputAria")}
+        placeholder={t("placeholder")}
+        className={cn(
+          "w-full resize-y rounded-md border border-border bg-background px-3 py-2 text-sm break-words",
+          FOCUS_RING_INSET,
+        )}
       />
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-          Separator
-        </span>
-        <div role="tablist" className="inline-flex rounded-md border border-border bg-card/40 p-0.5">
-          {(["-", "_"] as const).map((s) => (
+
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
+        <div
+          role="radiogroup"
+          aria-label={t("separatorLabel")}
+          className="inline-flex min-w-0 rounded-md border border-border bg-card/40 p-0.5"
+        >
+          {SEPARATORS.map((s) => (
             <button
               key={s}
-              role="tab"
+              role="radio"
               type="button"
-              aria-selected={separator === s}
+              aria-checked={separator === s}
+              aria-label={t(`separatorOption.${s === "-" ? "hyphen" : "underscore"}`)}
               onClick={() => setSeparator(s)}
-              className={`rounded-sm px-3 py-1 font-mono text-xs ${separator === s ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
+              className={cn(
+                "min-h-9 rounded-sm px-3 py-1 font-mono text-xs",
+                "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+                FOCUS_RING_INSET,
+                separator === s
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
               {s}
             </button>
           ))}
         </div>
-        <Button type="button" size="sm" variant="outline" onClick={copy} disabled={!slug} className="ml-auto">
-          <Copy className="size-3.5" aria-hidden="true" /> Copy
-        </Button>
+
+        <button
+          type="button"
+          role="switch"
+          aria-checked={lowercase}
+          onClick={() => setLowercase((v) => !v)}
+          className={cn(
+            "inline-flex min-h-9 min-w-0 items-center gap-2 rounded-md border border-border px-3 py-1 text-xs",
+            "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+            FOCUS_RING_INSET,
+            lowercase
+              ? "bg-background text-foreground shadow-sm"
+              : "bg-card/40 text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              "size-2 shrink-0 rounded-full",
+              lowercase ? "bg-ring" : "bg-muted-foreground/40",
+            )}
+          />
+          <span className="font-mono uppercase tracking-[0.15em]">
+            {t("lowercase")}
+          </span>
+        </button>
+
+        <CopyButton
+          value={slug}
+          label="slug"
+          disabled={empty}
+          className="ml-auto"
+        >
+          {tc("copy")}
+        </CopyButton>
       </div>
-      <code className="block overflow-x-auto rounded-md border border-border bg-card/40 px-3 py-3 font-mono text-sm">
-        {slug || "—"}
+
+      <code
+        aria-label={tc("output")}
+        aria-live="polite"
+        className={cn(
+          "block rounded-md border border-border bg-card/40 px-3 py-3 font-mono text-sm break-all",
+          empty && "text-muted-foreground",
+        )}
+      >
+        {empty ? tc("empty") : slug}
       </code>
+      {empty ? (
+        <p className="text-xs text-muted-foreground">{tc("emptyHint")}</p>
+      ) : null}
     </div>
   );
 }

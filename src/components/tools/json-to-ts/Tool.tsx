@@ -1,133 +1,176 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import {
+  isValidIdentifier,
+  jsonToTs,
+  sanitizeInterfaceName,
+} from "@/lib/tools/json-to-ts";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
-type TS =
-  | { kind: "primitive"; name: string }
-  | { kind: "array"; inner: TS }
-  | { kind: "object"; fields: { name: string; type: TS; optional?: boolean }[] }
-  | { kind: "union"; members: TS[] }
-  | { kind: "null" }
-  | { kind: "any" };
+const SAMPLE = `{"id": 1, "title": "Hello", "tags": ["x", "y"], "meta": {"draft": true}}`;
 
-function infer(value: unknown): TS {
-  if (value === null) return { kind: "null" };
-  if (Array.isArray(value)) {
-    if (value.length === 0) return { kind: "array", inner: { kind: "any" } };
-    const inferred = value.map(infer);
-    const merged = mergeAll(inferred);
-    return { kind: "array", inner: merged };
-  }
-  if (typeof value === "object") {
-    const fields = Object.entries(value as Record<string, unknown>).map(([name, v]) => ({
-      name,
-      type: infer(v),
-      optional: false,
-    }));
-    return { kind: "object", fields };
-  }
-  if (typeof value === "string") return { kind: "primitive", name: "string" };
-  if (typeof value === "number") return { kind: "primitive", name: "number" };
-  if (typeof value === "boolean") return { kind: "primitive", name: "boolean" };
-  return { kind: "any" };
-}
-
-function mergeAll(types: TS[]): TS {
-  let acc = types[0];
-  for (let i = 1; i < types.length; i++) acc = merge(acc, types[i]);
-  return acc;
-}
-
-function merge(a: TS, b: TS): TS {
-  if (a.kind === "any") return b;
-  if (b.kind === "any") return a;
-  if (a.kind === b.kind && a.kind === "primitive" && a.name === (b as typeof a).name) return a;
-  if (a.kind === "array" && b.kind === "array") return { kind: "array", inner: merge(a.inner, b.inner) };
-  if (a.kind === "object" && b.kind === "object") {
-    const names = new Set([...a.fields.map((f) => f.name), ...b.fields.map((f) => f.name)]);
-    const fields = Array.from(names).map((name) => {
-      const fa = a.fields.find((f) => f.name === name);
-      const fb = b.fields.find((f) => f.name === name);
-      const type = fa && fb ? merge(fa.type, fb.type) : (fa?.type ?? fb!.type);
-      const optional = !fa || !fb;
-      return { name, type, optional };
-    });
-    return { kind: "object", fields };
-  }
-  return { kind: "union", members: [a, b] };
-}
-
-function render(ts: TS, indent = 0): string {
-  const pad = "  ".repeat(indent);
-  switch (ts.kind) {
-    case "primitive":
-      return ts.name;
-    case "null":
-      return "null";
-    case "any":
-      return "unknown";
-    case "array":
-      return `${render(ts.inner, indent)}[]`;
-    case "union":
-      return ts.members.map((m) => render(m, indent)).join(" | ");
-    case "object": {
-      if (ts.fields.length === 0) return "Record<string, unknown>";
-      const lines = ts.fields.map((f) => `${pad}  ${safeName(f.name)}${f.optional ? "?" : ""}: ${render(f.type, indent + 1)};`);
-      return `{\n${lines.join("\n")}\n${pad}}`;
-    }
-  }
-}
-
-function safeName(name: string) {
-  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) ? name : JSON.stringify(name);
-}
+// Debounce window for the JSON textarea. Parsing + inference is keyed on the
+// debounced value so a 10KB blob isn't re-parsed on every keystroke.
+const DEBOUNCE_MS = 180;
 
 export function JsonToTs() {
+  const t = useTranslations("Tools.jsonToTs");
+  const tc = useTranslations("Tools.common");
+
   const [name, setName] = useState("Root");
-  const [input, setInput] = useState('{"id": 1, "title": "Hello", "tags": ["x", "y"], "meta": {"draft": true}}');
+  const [input, setInput] = useState(SAMPLE);
+  const [debouncedInput, setDebouncedInput] = useState(SAMPLE);
 
-  const ts = useMemo(() => {
-    try {
-      const value = JSON.parse(input);
-      const inferred = infer(value);
-      return { ok: true as const, code: `interface ${name || "Root"} ${render(inferred, 0)}` };
-    } catch (err) {
-      return { ok: false as const, error: (err as Error).message };
+  // Debounce the JSON input; the name field updates `debouncedInput` instantly
+  // through the separate memo below, so typing a name never waits on this.
+  useEffect(() => {
+    if (input === debouncedInput) return;
+    const id = setTimeout(() => setDebouncedInput(input), DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [input, debouncedInput]);
+
+  // Stage 1 — parse + infer, keyed ONLY on the (debounced) JSON. This is the
+  // expensive step and must not re-run when the interface name changes.
+  const parsed = useMemo(() => {
+    if (!debouncedInput.trim()) return { state: "empty" as const };
+    // Parse once with a throwaway name; we re-render the name cheaply below.
+    const result = jsonToTs(debouncedInput, "Root");
+    if (!result.ok) {
+      return result.error === "empty"
+        ? { state: "empty" as const }
+        : { state: "error" as const };
     }
-  }, [name, input]);
+    return { state: "ok" as const };
+  }, [debouncedInput]);
 
-  function copy() {
-    if (!ts.ok) return;
-    void navigator.clipboard.writeText(ts.code).then(() => toast.success("Copied"));
-  }
+  // Stage 2 — naming. Re-runs on every keystroke in the name field, but only
+  // re-parses the JSON it already validated. Cheap relative to inference, and
+  // the parse result is structurally cached by `debouncedInput` identity above.
+  const output = useMemo(() => {
+    if (parsed.state !== "ok") return "";
+    const result = jsonToTs(debouncedInput, name);
+    return result.ok ? result.output : "";
+  }, [parsed.state, debouncedInput, name]);
+
+  const nameInvalid = name.trim().length > 0 && !isValidIdentifier(name);
+  const sanitized = sanitizeInterfaceName(name);
+
+  const status =
+    parsed.state === "ok"
+      ? tc("valid")
+      : parsed.state === "empty"
+        ? tc("empty")
+        : tc("invalid");
+
+  const outputBody =
+    parsed.state === "ok"
+      ? output
+      : parsed.state === "empty"
+        ? ""
+        : t("syntaxError");
 
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-mono uppercase tracking-[0.18em]">Interface</span>
-          <Input value={name} onChange={(e) => setName(e.target.value)} className="w-40 font-mono" spellCheck={false} />
+        <label className="flex min-w-0 flex-1 items-center gap-2 text-xs text-muted-foreground sm:flex-none">
+          <span className="shrink-0 font-mono uppercase tracking-[0.18em]">
+            {t("interfaceLabel")}
+          </span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            spellCheck={false}
+            aria-label={t("interfaceAria")}
+            placeholder={t("interfacePlaceholder")}
+            className={cn(
+              "min-h-9 w-full min-w-0 rounded-md border border-border bg-background px-3 py-1 font-mono text-sm text-foreground sm:w-44",
+              FOCUS_RING_INSET,
+            )}
+          />
         </label>
-        <Button type="button" size="sm" variant="outline" onClick={copy} disabled={!ts.ok} className="ml-auto">
-          <Copy className="size-3.5" aria-hidden="true" /> Copy
-        </Button>
+
+        <button
+          type="button"
+          onClick={() => setInput("")}
+          disabled={input === ""}
+          className={cn(
+            "min-h-9 rounded-md border border-border bg-card/40 px-3 py-1 font-mono text-xs text-muted-foreground",
+            "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+            "hover:text-foreground disabled:pointer-events-none disabled:opacity-50",
+            FOCUS_RING_INSET,
+          )}
+        >
+          {tc("clear")}
+        </button>
+
+        <CopyButton
+          value={output}
+          label="TypeScript"
+          disabled={parsed.state !== "ok" || output === ""}
+          className="ml-auto"
+        >
+          {tc("copy")}
+        </CopyButton>
+
+        <span
+          className={cn(
+            "w-full font-mono text-xs sm:ml-0 sm:w-auto",
+            parsed.state === "error"
+              ? "text-destructive"
+              : "text-muted-foreground",
+          )}
+          aria-live="polite"
+        >
+          {status}
+        </span>
       </div>
+
+      {nameInvalid ? (
+        <p className="font-mono text-xs text-muted-foreground" aria-live="polite">
+          {t("nameHint", { name: sanitized })}
+        </p>
+      ) : null}
+
       <div className="grid gap-3 lg:grid-cols-2">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           rows={14}
           spellCheck={false}
-          aria-label="JSON input"
-          className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
+          aria-label={tc("input")}
+          placeholder={t("inputPlaceholder")}
+          className={cn(
+            "w-full resize-y rounded-md border border-border bg-background px-3 py-2 font-mono text-xs",
+            FOCUS_RING_INSET,
+          )}
         />
-        <pre className={`w-full overflow-auto rounded-md border bg-card/40 px-3 py-2 font-mono text-xs leading-5 ${ts.ok ? "border-border" : "border-destructive/40 text-destructive"}`}>
-{ts.ok ? ts.code : ts.error}
-        </pre>
+
+        {parsed.state === "empty" ? (
+          <div
+            className="grid place-content-center gap-1 rounded-md border border-dashed border-border bg-card/30 px-3 py-6 text-center"
+            aria-live="polite"
+          >
+            <p className="text-sm font-medium text-foreground">{tc("empty")}</p>
+            <p className="text-xs text-muted-foreground">{tc("emptyHint")}</p>
+          </div>
+        ) : (
+          <pre
+            aria-label={tc("output")}
+            aria-live="polite"
+            className={cn(
+              "w-full overflow-x-auto whitespace-pre rounded-md border bg-card/40 px-3 py-2 font-mono text-xs leading-5",
+              parsed.state === "error"
+                ? "border-destructive/40 text-destructive"
+                : "border-border",
+            )}
+          >
+            {outputBody}
+          </pre>
+        )}
       </div>
     </div>
   );

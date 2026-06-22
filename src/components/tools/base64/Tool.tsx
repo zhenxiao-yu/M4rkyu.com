@@ -1,89 +1,99 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { runBase64, type Base64Mode } from "@/lib/tools/base64";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
-function encodeUtf8(text: string) {
-  return btoa(String.fromCharCode(...new TextEncoder().encode(text)));
-}
-function decodeUtf8(text: string) {
-  return new TextDecoder().decode(
-    Uint8Array.from(atob(text), (c) => c.charCodeAt(0)),
-  );
-}
+const MODES = ["encode", "decode"] as const;
 
 export function Base64() {
-  const [mode, setMode] = useState<"encode" | "decode">("encode");
+  const t = useTranslations("Tools.base64");
+  const tc = useTranslations("Tools.common");
+  const [mode, setMode] = useState<Base64Mode>("encode");
   const [input, setInput] = useState("hello world");
 
-  const result = useMemo<
-    { ok: true; output: string } | { ok: false; error: string }
-  >(() => {
-    if (!input) return { ok: true, output: "" };
-    try {
-      return {
-        ok: true,
-        output: mode === "encode" ? encodeUtf8(input) : decodeUtf8(input.trim()),
-      };
-    } catch (err) {
-      return { ok: false, error: (err as Error).message };
-    }
-  }, [input, mode]);
+  const result = useMemo(() => runBase64(input, mode), [input, mode]);
 
-  function copy() {
-    if (!result.ok) return;
-    void navigator.clipboard
-      .writeText(result.output)
-      .then(() => toast.success("Copied"))
-      .catch(() => toast.error("Copy failed"));
-  }
+  const empty = result.ok && result.empty;
+  const outputValue = result.ok ? result.output : t("malformed");
+  const status = result.ok
+    ? result.empty
+      ? tc("empty")
+      : tc("valid")
+    : tc("invalid");
 
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <div role="tablist" className="inline-flex rounded-md border border-border bg-card/40 p-0.5">
-          {(["encode", "decode"] as const).map((m) => (
+        <div
+          role="tablist"
+          aria-label={t("modeLabel")}
+          className="inline-flex min-w-0 rounded-md border border-border bg-card/40 p-0.5"
+        >
+          {MODES.map((m) => (
             <button
               key={m}
               role="tab"
               type="button"
               aria-selected={mode === m}
               onClick={() => setMode(m)}
-              className={`rounded-sm px-3 py-1 text-xs font-medium uppercase tracking-[0.15em] transition-colors ${mode === m ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
+              className={cn(
+                "min-h-9 rounded-sm px-3 py-1 text-xs font-medium uppercase tracking-[0.15em]",
+                "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+                FOCUS_RING_INSET,
+                mode === m
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
-              {m}
+              {t(`mode.${m}`)}
             </button>
           ))}
         </div>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={copy}
-          disabled={!result.ok}
+        <CopyButton
+          value={result.ok ? result.output : ""}
+          label="base64"
+          disabled={!result.ok || result.empty}
           className="ml-auto"
         >
-          <Copy className="size-3.5" aria-hidden="true" /> Copy
-        </Button>
+          {t("copyOutput")}
+        </CopyButton>
+        <span
+          className={cn(
+            "w-full font-mono text-xs sm:w-auto",
+            result.ok ? "text-muted-foreground" : "text-destructive",
+          )}
+          aria-live="polite"
+        >
+          {status}
+        </span>
       </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
         rows={6}
         spellCheck={false}
-        placeholder={mode === "encode" ? "Plain text" : "Base64 string"}
-        aria-label={mode === "encode" ? "Plain text input" : "Base64 input"}
-        className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
+        aria-label={mode === "encode" ? t("inputAriaEncode") : t("inputAriaDecode")}
+        placeholder={mode === "encode" ? t("placeholderEncode") : t("placeholderDecode")}
+        className={cn(
+          "w-full resize-y rounded-md border border-border bg-background px-3 py-2 font-mono text-xs break-all",
+          FOCUS_RING_INSET,
+        )}
       />
       <textarea
         readOnly
-        value={result.ok ? result.output : result.error}
+        value={empty ? "" : outputValue}
         rows={6}
-        aria-label={mode === "encode" ? "Encoded output" : "Decoded output"}
+        aria-label={mode === "encode" ? t("outputAriaEncode") : t("outputAriaDecode")}
         aria-live="polite"
-        className={`w-full rounded-md border bg-card/40 px-3 py-2 font-mono text-xs ${result.ok ? "border-border" : "border-destructive/40 text-destructive"}`}
+        placeholder={tc("emptyHint")}
+        className={cn(
+          "w-full resize-y rounded-md border bg-card/40 px-3 py-2 font-mono text-xs break-all",
+          FOCUS_RING_INSET,
+          result.ok ? "border-border" : "border-destructive/40 text-destructive",
+        )}
       />
     </div>
   );
