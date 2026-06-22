@@ -73,32 +73,47 @@ test("theme toggle flips data-theme on click", async ({ page }) => {
   expect(["dark", "light"]).toContain(after);
 });
 
-test("command palette finds shop items and navigates", async ({ page }) => {
+test("command palette searches and navigates to a page", async ({ page }) => {
+  // The pill trigger ("Search…") only renders on the lg+ desktop rail; on
+  // narrower rails search lives inside the mobile sheet. Force a desktop
+  // viewport so this test exercises the pill regardless of the project width
+  // (mirrors the mobile-audio test below, which forces 390).
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/en");
-  const trigger = page.getByRole("button", { name: "Command palette" });
+  const trigger = page.getByRole("button", { name: "Search…" });
   await expect(trigger).toBeVisible();
   await trigger.click();
-  await expect(page.getByPlaceholder("Search pages, frames, settings…")).toBeVisible();
+  // The palette is a dynamic({ ssr: false }) import — its chunk loads on first
+  // open, so give the input a generous beat to appear under the dev server.
+  const input = page.getByPlaceholder("Search pages, frames, settings…");
+  await expect(input).toBeVisible({ timeout: 15_000 });
 
-  await page.getByPlaceholder("Search pages, frames, settings…").fill("wallpaper");
-  await page.getByRole("option", { name: /Desktop Wallpaper Pack/i }).click();
-  await expect(page).toHaveURL(/\/en\/shop\/wallpaper-pack$/);
+  // Assert against a page entry, not content: PAGES are code-defined and
+  // always present, so this stays green as src/content drifts. (Shop items
+  // are all status:"draft", so the old "wallpaper" query had nothing to find.)
+  await input.fill("colophon");
+  await page.getByRole("option", { name: "Colophon", exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/colophon$/);
 });
 
-test("command palette opens audio settings quick action", async ({ page }) => {
+test("command palette switches the color palette from settings", async ({ page }) => {
+  // Force a desktop viewport so the pill trigger is on the rail (see note above).
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/en");
-  const trigger = page.getByRole("button", { name: "Command palette" });
+  const trigger = page.getByRole("button", { name: "Search…" });
   await expect(trigger).toBeVisible();
   await trigger.click();
-  await expect(page.getByPlaceholder("Search pages, frames, settings…")).toBeVisible();
-  await page.getByPlaceholder("Search pages, frames, settings…").fill("audio");
-  await page.getByRole("option", { name: /Open audio settings/i }).click();
+  const input = page.getByPlaceholder("Search pages, frames, settings…");
+  await expect(input).toBeVisible({ timeout: 15_000 });
 
-  await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.getByRole("switch", { name: "Ambient player" })).toHaveAttribute(
-    "aria-checked",
-    "false",
-  );
+  // The settings group exposes the palette themes (risograph default →
+  // terminal). Selecting one flips the data-palette axis on <html> — a
+  // settings action with an observable effect, no auth or content needed.
+  // (The old "Open audio settings" quick action no longer exists in the
+  // palette; audio reachability is covered by the mobile test below.)
+  await input.fill("terminal");
+  await page.getByRole("option", { name: "Terminal", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-palette", "terminal");
 });
 
 test("audio settings are directly reachable on mobile", async ({ page }) => {
