@@ -124,8 +124,11 @@ export const metadata: Metadata = {
     "Next.js portfolio",
   ],
   manifest: "/manifest.webmanifest",
+  // Descriptive fallback for any route without its own title; the home
+  // route overrides this per-locale (absolute) via its generateMetadata.
+  // The "2027" brand stamp lives on in the boot loader, OG card, and hero.
   title: {
-    default: "M4rkyu.com 2027",
+    default: "ZhenXiao Mark Yu — Software, Games & Digital Art",
     template: "%s | ZhenXiao Mark Yu",
   },
   description:
@@ -181,15 +184,17 @@ export const metadata: Metadata = {
 
 // Next 16 takes viewport + theme-color via a dedicated `viewport`
 // export (not `metadata`). theme-color paints the mobile browser
-// chrome to match the active surface; values mirror `--background` in
-// globals.css (dark #050505 / light #f5f3ee).
+// chrome to match the active surface; values mirror the default
+// (risograph) `--background` in globals.css (dark #080705 / light
+// #f1ead9). It can't track the user's palette axis — head color is
+// static — so the default palette is the right anchor.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   colorScheme: "dark light",
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
-    { media: "(prefers-color-scheme: light)", color: "#f5f3ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#080705" },
+    { media: "(prefers-color-scheme: light)", color: "#f1ead9" },
   ],
 };
 

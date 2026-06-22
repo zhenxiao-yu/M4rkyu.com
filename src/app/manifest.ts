@@ -9,8 +9,11 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/en",
     scope: "/",
     display: "standalone",
-    background_color: "#050505",
-    theme_color: "#050505",
+    // Warm Risograph ink, not cold black: background_color matches the
+    // BrandMark ground (#0c0a06) so the install/splash screen blends with
+    // the M4 icon; theme_color matches the site's dark --background.
+    background_color: "#0c0a06",
+    theme_color: "#080705",
     categories: ["portfolio", "developer", "design"],
     icons: [
       {

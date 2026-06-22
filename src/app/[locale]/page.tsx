@@ -13,7 +13,7 @@ import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
 import { PageShell } from "@/components/layout/page-shell";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getProjectsSource } from "@/lib/projects/source";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
 
@@ -29,7 +29,12 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Meta" });
   return {
+    // `absolute` skips the "%s | ZhenXiao Mark Yu" template — the home
+    // title already carries the full name, so the template would double it.
+    title: { absolute: t("homeTitle") },
+    description: t("homeDescription"),
     alternates: buildAlternates(locale, ""),
   };
 }
