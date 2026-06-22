@@ -1,128 +1,168 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useId, useState } from "react";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { clampInt } from "@/components/tools/_shared/number";
 import { Input } from "@/components/ui/input";
-
-const VALUES: [number, string][] = [
-  [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
-  [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
-  [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
-];
-
-function toRoman(n: number): string | null {
-  if (!Number.isInteger(n) || n < 1 || n > 3999) return null;
-  let out = "";
-  for (const [v, sym] of VALUES) {
-    while (n >= v) {
-      out += sym;
-      n -= v;
-    }
-  }
-  return out;
-}
-
-function fromRoman(s: string): number | null {
-  const trimmed = s.trim().toUpperCase();
-  if (!/^[MDCLXVI]+$/.test(trimmed)) return null;
-  let total = 0;
-  let i = 0;
-  while (i < trimmed.length) {
-    const two = trimmed.slice(i, i + 2);
-    const matchTwo = VALUES.find(([, sym]) => sym === two);
-    if (matchTwo) {
-      total += matchTwo[0];
-      i += 2;
-      continue;
-    }
-    const one = trimmed[i];
-    const matchOne = VALUES.find(([, sym]) => sym === one);
-    if (!matchOne) return null;
-    total += matchOne[0];
-    i += 1;
-  }
-  if (toRoman(total) !== trimmed) return null;
-  return total;
-}
+import { fromRoman, toRoman, ROMAN_MAX, ROMAN_MIN } from "@/lib/tools/roman";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 export function RomanNumeral() {
-  const [num, setNum] = useState("2026");
-  const [roman, setRoman] = useState("MMXXVI");
+  const t = useTranslations("Tools.roman");
+  const tc = useTranslations("Tools.common");
+  const fieldId = useId();
 
-  function handleNum(value: string) {
-    setNum(value);
-    const parsed = Number(value);
-    const r = Number.isFinite(parsed) ? toRoman(parsed) : null;
-    if (r !== null) setRoman(r);
+  // Raw input strings so each field stays freely editable (transient empty /
+  // partial values). The converse field is only rewritten when the edited side
+  // parses cleanly, so a typo never silently corrupts the other input.
+  const [arabicDraft, setArabicDraft] = useState("2026");
+  const [romanDraft, setRomanDraft] = useState("MMXXVI");
+
+  function handleArabic(raw: string) {
+    setArabicDraft(raw);
+    if (raw.trim() === "") return;
+    const n = Number(raw);
+    const r = Number.isInteger(n) ? toRoman(n) : null;
+    if (r !== null) setRomanDraft(r);
   }
 
-  function handleRoman(value: string) {
-    setRoman(value);
-    const n = fromRoman(value);
-    if (n !== null) setNum(String(n));
+  function handleRoman(raw: string) {
+    setRomanDraft(raw);
+    if (raw.trim() === "") return;
+    const n = fromRoman(raw);
+    if (n !== null) setArabicDraft(String(n));
   }
 
-  const numericValid = useMemo(() => toRoman(Number(num)) !== null, [num]);
-  const romanValid = useMemo(() => fromRoman(roman) !== null, [roman]);
+  const arabicId = `${fieldId}-arabic`;
+  const romanId = `${fieldId}-roman`;
 
-  function copy(value: string, label: string) {
-    void navigator.clipboard.writeText(value).then(() => toast.success(`Copied ${label}`));
-  }
+  // Three distinct states per field: empty (valid-empty), valid, error.
+  const arabicEmpty = arabicDraft.trim() === "";
+  const romanEmpty = romanDraft.trim() === "";
+  // toRoman doubles as the range/integer guard for the numeric side.
+  const arabicError = !arabicEmpty && toRoman(Number(arabicDraft)) === null;
+  const romanError = !romanEmpty && fromRoman(romanDraft) === null;
 
   return (
     <div className="grid gap-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <Field
-          label="Number (1–3999)"
-          value={num}
-          valid={numericValid || num === ""}
-          onChange={handleNum}
-          onCopy={() => copy(num, "number")}
+          id={arabicId}
+          label={t("arabicLabel")}
+          ariaLabel={t("arabicAria")}
+          value={arabicDraft}
+          empty={arabicEmpty}
+          error={arabicError}
+          errorMessage={t("rangeHint", { min: ROMAN_MIN, max: ROMAN_MAX })}
+          inputMode="numeric"
+          copyLabel={t("arabicLabel")}
+          onChange={handleArabic}
+          onBlur={() => {
+            // Snap a stray / out-of-range whole number back into [1, 3999] on
+            // blur so the field self-heals instead of resting on an error.
+            if (arabicError && /^-?\d+$/.test(arabicDraft.trim())) {
+              handleArabic(
+                String(clampInt(arabicDraft, ROMAN_MIN, ROMAN_MAX, ROMAN_MIN)),
+              );
+            }
+          }}
         />
         <Field
-          label="Roman"
-          value={roman}
-          valid={romanValid || roman === ""}
+          id={romanId}
+          label={t("romanLabel")}
+          ariaLabel={t("romanAria")}
+          value={romanDraft}
+          empty={romanEmpty}
+          error={romanError}
+          errorMessage={t("invalidNumeral")}
+          copyLabel={t("romanLabel")}
           onChange={handleRoman}
-          onCopy={() => copy(roman, "roman")}
         />
       </div>
-      <p className="text-[0.65rem] text-muted-foreground/70">
-        Roman numerals are validated for canonical form (no double subtractive, no rank repetition over 3).
-      </p>
+
+      {arabicEmpty && romanEmpty ? (
+        <div className="grid place-items-center gap-1 rounded-md border border-dashed border-border bg-card/40 px-4 py-6 text-center">
+          <p className="text-sm text-muted-foreground">{tc("empty")}</p>
+          <p className="text-xs text-muted-foreground/70">{tc("emptyHint")}</p>
+        </div>
+      ) : null}
+
+      <p className="text-[0.65rem] text-muted-foreground/70">{t("note")}</p>
     </div>
   );
 }
 
 function Field({
+  id,
   label,
+  ariaLabel,
   value,
-  valid,
+  empty,
+  error,
+  errorMessage,
+  inputMode,
+  copyLabel,
   onChange,
-  onCopy,
+  onBlur,
 }: {
+  id: string;
   label: string;
+  ariaLabel: string;
   value: string;
-  valid: boolean;
+  empty: boolean;
+  error: boolean;
+  errorMessage: string;
+  inputMode?: "numeric";
+  copyLabel: string;
   onChange: (v: string) => void;
-  onCopy: () => void;
+  onBlur?: () => void;
 }) {
+  const errorId = `${id}-error`;
   return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
+    <div className="grid min-w-0 gap-1.5">
+      <label
+        htmlFor={id}
+        className="flex items-baseline justify-between gap-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+      >
+        <span className="min-w-0 truncate">{label}</span>
+        {error ? (
+          <span
+            id={errorId}
+            role="alert"
+            className="min-w-0 shrink truncate normal-case text-destructive"
+          >
+            {errorMessage}
+          </span>
+        ) : null}
+      </label>
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
         <Input
+          id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           spellCheck={false}
-          className={`font-mono text-lg ${valid ? "" : "border-destructive/50"}`}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          inputMode={inputMode}
+          aria-label={ariaLabel}
+          aria-invalid={error}
+          aria-describedby={error ? errorId : undefined}
+          className={cn(
+            "min-w-0 flex-1 break-all font-mono text-lg",
+            FOCUS_RING_INSET,
+            error && "border-destructive/50",
+          )}
         />
-        <Button type="button" size="sm" variant="outline" onClick={onCopy}>
-          <Copy className="size-3.5" aria-hidden="true" />
-        </Button>
+        <CopyButton
+          value={value}
+          label={copyLabel}
+          disabled={empty || error}
+          className="size-9 shrink-0 px-0"
+        />
       </div>
-    </label>
+    </div>
   );
 }

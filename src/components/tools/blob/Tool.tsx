@@ -1,144 +1,164 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy, RefreshCw } from "lucide-react";
-import { toast } from "sonner";
+import { useId, useMemo, useState } from "react";
+import { RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { clampInt } from "@/components/tools/_shared/number";
+import {
+  BLOB_LIMITS,
+  BLOB_SIZE,
+  buildBlobClipPath,
+  buildBlobSvg,
+  generateBlob,
+} from "@/lib/tools/blob";
+import { cn, FOCUS_RING } from "@/lib/utils";
 
-const SIZE = 200;
-
-// Tiny seeded PRNG so a given seed always renders the same blob — the
-// shape is reproducible and the seed is shown for sharing.
-function mulberry32(seed: number) {
-  return function () {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-const r2 = (n: number) => Math.round(n * 100) / 100;
-
-function buildPath(points: number, randomness: number, seed: number): string {
-  const rng = mulberry32(seed);
-  const cx = SIZE / 2;
-  const cy = SIZE / 2;
-  const base = SIZE * 0.38;
-  // Sample a radius per vertex, varied by `randomness`.
-  const pts = Array.from({ length: points }, (_, i) => {
-    const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
-    const rad = base * (1 - randomness / 2 + rng() * randomness);
-    return [cx + Math.cos(angle) * rad, cy + Math.sin(angle) * rad] as const;
-  });
-  // Closed Catmull-Rom → cubic-bezier for a smooth organic outline.
-  const n = pts.length;
-  let d = `M${r2(pts[0][0])},${r2(pts[0][1])}`;
-  for (let i = 0; i < n; i++) {
-    const p0 = pts[(i - 1 + n) % n];
-    const p1 = pts[i];
-    const p2 = pts[(i + 1) % n];
-    const p3 = pts[(i + 2) % n];
-    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
-    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
-    d += `C${r2(c1x)},${r2(c1y)} ${r2(c2x)},${r2(c2y)} ${r2(p2[0])},${r2(p2[1])}`;
+/**
+ * Draw a fresh 32-bit seed. Uses crypto.getRandomValues where available so
+ * "regenerate" doesn't lean on Math.random; falls back gracefully (SSR / old
+ * webviews). Each click changes the seed, which re-derives a new blob — the
+ * path itself is computed in a useMemo, never per render.
+ */
+function nextSeed(): number {
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    return buf[0];
   }
-  return d + "Z";
+  return Math.floor(Math.random() * 0xffffffff);
 }
 
 export function BlobGenerator() {
-  const [points, setPoints] = useState(6);
-  const [randomness, setRandomness] = useState(0.5);
+  const t = useTranslations("Tools.blob");
+  const tc = useTranslations("Tools.common");
+  const baseId = useId();
+
+  const [complexity, setComplexity] = useState(6);
+  const [contrast, setContrast] = useState(50);
   const [color, setColor] = useState("#0ea5b7");
   const [seed, setSeed] = useState(1337);
 
-  const d = useMemo(
-    () => buildPath(points, randomness, seed),
-    [points, randomness, seed],
+  // The blob path is the single derived value; everything else strings off it.
+  const { path } = useMemo(
+    () => generateBlob({ complexity, contrast, seed }),
+    [complexity, contrast, seed],
   );
 
-  const svg = `<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg">\n  <path fill="${color}" d="${d}" />\n</svg>`;
+  const svg = buildBlobSvg(path, color);
+  const clipPath = buildBlobClipPath(path);
 
-  function copy(text: string, label: string) {
-    void navigator.clipboard.writeText(text).then(() => toast.success(`Copied ${label}`));
-  }
+  const complexityId = `${baseId}-complexity`;
+  const contrastId = `${baseId}-contrast`;
+  const colorId = `${baseId}-color`;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      {/* Preview + output */}
       <div className="grid min-w-0 gap-3">
         <div className="flex justify-center rounded-lg border border-border bg-card/40 p-6">
           <svg
-            viewBox={`0 0 ${SIZE} ${SIZE}`}
-            width={SIZE}
-            height={SIZE}
-            className="block h-auto w-72 max-w-full drop-shadow-sm"
+            viewBox={`0 0 ${BLOB_SIZE} ${BLOB_SIZE}`}
+            className="block aspect-square w-full max-w-sm drop-shadow-sm"
             role="img"
-            aria-label="Generated blob"
+            aria-label={t("previewAlt")}
           >
-            <path fill={color} d={d} />
+            <path fill={color} d={path} />
           </svg>
         </div>
-        <CopyField label="SVG" value={svg} onCopy={() => copy(svg, "SVG")} block />
-        <CopyField label={`path d`} value={d} onCopy={() => copy(d, "path")} />
+
+        <div className="grid gap-3" role="group" aria-label={tc("output")}>
+          <OutputField label={t("svgLabel")} value={svg} block />
+          <OutputField label={t("pathLabel")} value={path} />
+          <OutputField label={t("clipPathLabel")} value={clipPath} />
+        </div>
       </div>
 
+      {/* Controls */}
       <div className="grid content-start gap-4">
         <Slider
-          label="Complexity"
-          value={points}
-          min={3}
-          max={12}
-          suffix=" pts"
-          onChange={setPoints}
+          id={complexityId}
+          label={t("complexity")}
+          value={complexity}
+          min={BLOB_LIMITS.complexity.min}
+          max={BLOB_LIMITS.complexity.max}
+          suffix={` ${t("ptsSuffix")}`}
+          onChange={setComplexity}
         />
         <Slider
-          label="Randomness"
-          value={Math.round(randomness * 100)}
-          min={0}
-          max={90}
+          id={contrastId}
+          label={t("contrast")}
+          value={contrast}
+          min={BLOB_LIMITS.contrast.min}
+          max={BLOB_LIMITS.contrast.max}
           suffix="%"
-          onChange={(n) => setRandomness(n / 100)}
+          onChange={setContrast}
         />
+
         <div className="grid gap-1.5">
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-            Fill
-          </span>
-          <div className="flex items-center gap-2">
+          <label
+            htmlFor={colorId}
+            className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+          >
+            {t("color")}
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
             <input
+              id={colorId}
               type="color"
               value={color}
               onChange={(e) => setColor(e.target.value)}
-              className="size-9 shrink-0 cursor-pointer rounded-md border border-border bg-transparent p-0.5"
-              aria-label="Fill color"
+              aria-label={t("color")}
+              className={cn(
+                "size-9 shrink-0 cursor-pointer rounded-md border border-border bg-transparent p-0.5",
+                FOCUS_RING,
+              )}
             />
-            <input
+            <Input
               type="text"
+              inputMode="text"
               spellCheck={false}
               value={color}
               onChange={(e) => setColor(e.target.value)}
-              aria-label="Fill color hex value"
-              className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-sm"
+              aria-label={t("colorHex")}
+              className="h-9 min-w-0 flex-1 font-mono text-xs"
             />
           </div>
         </div>
+
         <Button
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => setSeed(Math.floor(Math.random() * 1e9))}
+          onClick={() => setSeed(nextSeed())}
+          className="min-h-9"
         >
-          <RefreshCw className="size-3.5" aria-hidden="true" /> Regenerate
+          <RefreshCw
+            className="size-3.5 motion-safe:transition-transform"
+            aria-hidden="true"
+          />{" "}
+          {t("regenerate")}
         </Button>
-        <p className="font-mono text-[0.6rem] text-muted-foreground">seed · {seed}</p>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-mono text-[0.6rem] text-muted-foreground">
+            {t("seed")} · <span className="tabular-nums">{seed}</span>
+          </p>
+          <CopyButton
+            value={String(seed)}
+            label={t("seed")}
+            className="ml-auto"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 function Slider({
+  id,
   label,
   value,
   min,
@@ -146,6 +166,7 @@ function Slider({
   suffix,
   onChange,
 }: {
+  id: string;
   label: string;
   value: number;
   min: number;
@@ -155,7 +176,10 @@ function Slider({
 }) {
   return (
     <div className="grid gap-1.5">
-      <label className="flex items-baseline justify-between font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+      <label
+        htmlFor={id}
+        className="flex items-baseline justify-between font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+      >
         <span>{label}</span>
         <span className="tabular-nums">
           {value}
@@ -163,51 +187,45 @@ function Slider({
         </span>
       </label>
       <input
+        id={id}
         type="range"
         min={min}
         max={max}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        onChange={(e) => onChange(clampInt(e.target.value, min, max, min))}
         aria-label={label}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
+        className={cn(
+          "h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring",
+          FOCUS_RING,
+        )}
       />
     </div>
   );
 }
 
-function CopyField({
+function OutputField({
   label,
   value,
-  onCopy,
   block,
 }: {
   label: string;
   value: string;
-  onCopy: () => void;
   block?: boolean;
 }) {
   return (
     <div className="grid min-w-0 gap-1.5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </span>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={onCopy}
-          aria-label={`Copy ${label}`}
-        >
-          <Copy className="size-3.5" aria-hidden="true" />
-        </Button>
+        <CopyButton value={value} label={label} />
       </div>
       {block ? (
         <pre className="overflow-x-auto rounded-md border border-border bg-card/40 p-3 font-mono text-[0.7rem] leading-relaxed">
           {value}
         </pre>
       ) : (
-        <code className="block overflow-x-auto whitespace-nowrap rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-xs">
+        <code className="block overflow-x-auto rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-xs break-all">
           {value}
         </code>
       )}
