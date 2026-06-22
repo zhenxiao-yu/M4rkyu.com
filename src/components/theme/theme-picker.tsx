@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { usePalette, type PaletteMeta } from "./palette-provider";
+import { usePalette, type Palette, type PaletteMeta } from "./palette-provider";
 import { useTheme, type Theme } from "./theme-provider";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
@@ -144,30 +144,76 @@ function ModeControl() {
   );
 }
 
+/**
+ * Per-palette typographic character. Each tile becomes a type specimen in its
+ * theme's own voice — the editorial serif star for Risograph (with a riso
+ * misregistered overprint), a phosphor console for Terminal (glow + blinking
+ * block cursor over scanlines), and a bold grotesque for Editorial (with a
+ * hard red rule) — rather than three identical mini-pages. The specimen
+ * glyphs are language-neutral (like the existing hardcoded "M4RKYU" mark), so
+ * this adds no new translatable copy.
+ */
+type ThemeCharacter = {
+  font: string;
+  tag: string;
+  treatment: "overprint" | "phosphor" | "rule";
+};
+
+const THEME_CHARACTER: Record<Palette, ThemeCharacter> = {
+  risograph: { font: "font-display", tag: "press", treatment: "overprint" },
+  terminal: { font: "font-mono", tag: "sys", treatment: "phosphor" },
+  editorial: { font: "font-wordmark", tag: "01", treatment: "rule" },
+};
+
 function ThemeGrid() {
   const t = useTranslations("Theme");
   const { palette, setPalette, palettes } = usePalette();
   const { resolvedTheme } = useTheme();
+  const reduce = useReducedMotion();
 
   return (
     <div className="grid gap-2">
       <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
         {t("label")}
       </p>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <motion.div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+        initial={reduce ? undefined : "hidden"}
+        animate={reduce ? undefined : "show"}
+        variants={
+          reduce ? undefined : { show: { transition: { staggerChildren: 0.07 } } }
+        }
+      >
         {palettes.map((meta) => (
-          <ThemeTile
+          <motion.div
             key={meta.value}
-            meta={meta}
-            mode={resolvedTheme}
-            active={meta.value === palette}
-            onSelect={() => setPalette(meta.value)}
-            name={t(meta.key)}
-            description={t(`description.${meta.key}`)}
-            selectedLabel={t("selected")}
-          />
+            variants={
+              reduce
+                ? undefined
+                : {
+                    hidden: { opacity: 0, y: 10 },
+                    // Inline easing: motion can't read CSS vars in
+                    // `transition.ease`, so --ease-premium is mirrored by hand.
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.38, ease: [0.2, 0.7, 0.2, 1] },
+                    },
+                  }
+            }
+          >
+            <ThemeTile
+              meta={meta}
+              mode={resolvedTheme}
+              active={meta.value === palette}
+              onSelect={() => setPalette(meta.value)}
+              name={t(meta.key)}
+              description={t(`description.${meta.key}`)}
+              selectedLabel={t("selected")}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -190,6 +236,7 @@ function ThemeTile({
   selectedLabel: string;
 }) {
   const c = meta.preview[mode];
+  const character = THEME_CHARACTER[meta.value];
   const reduce = useReducedMotion();
   // One-shot accent bloom that confirms a palette switch. Fired only on a
   // real user selection (not on initial mount), and skipped under
@@ -250,23 +297,17 @@ function ThemeTile({
         />
       ) : null}
 
-      {/* Poster — a miniature page rendered in the theme's own colours. */}
+      {/* Poster — a type specimen rendered in the theme's own colours and
+       * voice. The signature texture is drawn last so it overlays the type
+       * (press grain / CRT scanlines) for the authentic look. */}
       <div
-        className="relative isolate aspect-[5/4] overflow-hidden p-3"
+        className="relative isolate aspect-[5/4] overflow-hidden p-3.5"
         style={{ backgroundColor: c.paper, color: c.ink }}
       >
-        {textureStyle ? (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={textureStyle}
-          />
-        ) : null}
-
         {/* mini HUD strip */}
         <div className="flex items-center justify-between">
           <span className="font-mono text-[0.5rem] uppercase tracking-[0.18em] opacity-70">
-            M4RKYU
+            {character.tag}
           </span>
           <span
             className="size-1.5 rounded-full"
@@ -274,13 +315,96 @@ function ThemeTile({
           />
         </div>
 
-        {/* mini headline */}
-        <div className="mt-2 font-display text-[1.7rem] font-bold leading-none tracking-tight">
-          Aa
+        {/* The specimen — the star of the tile, in each theme's own voice. */}
+        <div className="mt-1.5 flex min-h-[2.9rem] items-end">
+          {character.treatment === "overprint" ? (
+            // Risograph: a misregistered two-ink overprint — the coral ghost
+            // peeks out from behind the ink glyph, like a real riso pass.
+            <span className="relative inline-block leading-none">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  character.font,
+                  "absolute left-0.5 top-0.5 text-[2.9rem] font-bold leading-none",
+                )}
+                style={{
+                  color: c.accent,
+                  mixBlendMode: mode === "dark" ? "screen" : "multiply",
+                  opacity: 0.9,
+                }}
+              >
+                Aa
+              </span>
+              <span
+                className={cn(
+                  character.font,
+                  "relative text-[2.9rem] font-bold leading-none",
+                )}
+              >
+                Aa
+              </span>
+            </span>
+          ) : character.treatment === "phosphor" ? (
+            // Terminal: glowing phosphor type + a blinking block cursor.
+            <span className="inline-flex items-end leading-none">
+              <span
+                className={cn(
+                  character.font,
+                  "text-[2.55rem] font-bold leading-none",
+                )}
+                style={{ color: c.accent, textShadow: `0 0 10px ${c.accent}` }}
+              >
+                Aa
+              </span>
+              {reduce ? (
+                <span
+                  aria-hidden="true"
+                  className="mb-1 ml-1 inline-block h-6 w-2.5"
+                  style={{
+                    backgroundColor: c.accent,
+                    boxShadow: `0 0 8px ${c.accent}`,
+                  }}
+                />
+              ) : (
+                <motion.span
+                  aria-hidden="true"
+                  className="mb-1 ml-1 inline-block h-6 w-2.5"
+                  style={{
+                    backgroundColor: c.accent,
+                    boxShadow: `0 0 8px ${c.accent}`,
+                  }}
+                  animate={{ opacity: [1, 1, 0, 0] }}
+                  transition={{
+                    duration: 1.05,
+                    times: [0, 0.5, 0.5, 1],
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              )}
+            </span>
+          ) : (
+            // Editorial: a bold grotesque with a hard accent rule beneath.
+            <span className="inline-block leading-none">
+              <span
+                className={cn(
+                  character.font,
+                  "block text-[2.9rem] font-bold leading-none tracking-tight",
+                )}
+              >
+                Aa
+              </span>
+              <span
+                aria-hidden="true"
+                className="mt-1.5 block h-1 w-10 rounded-full"
+                style={{ backgroundColor: c.accent }}
+              />
+            </span>
+          )}
         </div>
 
         {/* faux body lines */}
-        <div className="mt-2 space-y-1">
+        <div className="mt-2.5 space-y-1">
           <span
             className="block h-1 w-3/4 rounded-full"
             style={{ backgroundColor: c.muted }}
@@ -308,6 +432,14 @@ function ThemeTile({
             style={{ backgroundColor: c.accent3 }}
           />
         </div>
+
+        {textureStyle ? (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={textureStyle}
+          />
+        ) : null}
       </div>
 
       {/* Footer label — on the dialog's own surface. */}
