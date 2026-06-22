@@ -2409,5 +2409,621 @@
     "listening": "listening…",
     "errorUnavailable": "// SYSTEM OFFLINE — the AI endpoint isn’t configured yet. Try the menu instead.",
     "errorGeneric": "// ERROR — something glitched. Try again."
+  },
+  "Tools": {
+    "common": {
+      "copy": "Copy",
+      "copyLabel": "Copy {label}",
+      "copied": "Copied",
+      "copiedLabel": "Copied {label}",
+      "copyFailed": "Copy failed",
+      "clear": "Clear",
+      "reset": "Reset",
+      "generate": "Generate",
+      "shuffle": "Shuffle",
+      "input": "Input",
+      "output": "Output",
+      "valid": "valid",
+      "invalid": "invalid",
+      "empty": "Nothing to show yet",
+      "emptyHint": "Enter something above to get started.",
+      "download": "Download",
+      "upload": "Upload",
+      "copyAll": "Copy all",
+      "tooLarge": "File too large — max {max}",
+      "wrongType": "Unsupported file type",
+      "readFailed": "Couldn’t read that file"
+    },
+    "jsonFormatter": {
+      "indent": "Indent",
+      "indentSpaces": "{count} spaces",
+      "indentNone": "none",
+      "minify": "Minify",
+      "copyOutput": "Copy output",
+      "inputAria": "JSON input",
+      "outputAria": "Formatted JSON output",
+      "inputPlaceholder": "Paste JSON here…"
+    },
+    "colorConverter": {
+      "preview": "Color preview",
+      "picker": "Picker",
+      "shade": "Use lightness {lightness}% shade {hex}"
+    },
+    "base64": {
+      "modeLabel": "Conversion mode",
+      "mode": { "encode": "Encode", "decode": "Decode" },
+      "copyOutput": "Copy output",
+      "malformed": "Not valid base64",
+      "inputAriaEncode": "Plain text to encode",
+      "inputAriaDecode": "Base64 to decode",
+      "outputAriaEncode": "Base64 output",
+      "outputAriaDecode": "Decoded text output",
+      "placeholderEncode": "Plain text…",
+      "placeholderDecode": "Base64 string…"
+    },
+    "urlCodec": {
+      "modeLabel": "Encode or decode",
+      "mode": { "encode": "Encode", "decode": "Decode" },
+      "scope": "Scope",
+      "scopeOption": { "component": "component", "uri": "full URI" },
+      "copyOutput": "Copy output",
+      "malformed": "Malformed input — check for stray % signs or incomplete escapes.",
+      "placeholderEncode": "Text to URL-encode",
+      "placeholderDecode": "URL-encoded text to decode",
+      "inputAriaEncode": "Text to URL-encode",
+      "inputAriaDecode": "Text to URL-decode",
+      "outputAriaEncode": "URL-encoded output",
+      "outputAriaDecode": "URL-decoded output"
+    },
+    "jwtDecoder": {
+      "placeholder": "Paste a JWT",
+      "token": "token",
+      "header": "Header",
+      "payload": "Payload",
+      "signatureNotice": "Decoded for inspection only — the signature is shown but never verified. Verifying needs the key and the right algorithm, server-side.",
+      "errorStructure": "Not a valid JWT — expected three dot-separated parts (header.payload.signature).",
+      "errorBase64": "Couldn’t decode this token — a segment isn’t valid base64url.",
+      "errorJson": "Couldn’t parse this token — a segment isn’t valid JSON.",
+      "active": "Active",
+      "expired": "Expired",
+      "issued": "Issued",
+      "expires": "Expires"
+    },
+    "uuid": {
+      "count": "Count",
+      "countAria": "How many UUIDs to generate ({min}–{max})",
+      "emptyHint": "Set a count and press Generate.",
+      "note": "v4 (random), generated locally with your browser’s crypto API."
+    },
+    "hashGenerator": {
+      "placeholder": "Text to hash",
+      "inputAria": "Text to hash",
+      "allLabel": "all hashes",
+      "hashFailed": "Some hashes couldn’t be computed. Try again.",
+      "unavailable": "Hashing needs a secure context (HTTPS). This page isn’t served over HTTPS, so the browser’s crypto isn’t available here.",
+      "note": "Computed in your browser via native SubtleCrypto — nothing leaves the page. MD5 is omitted: it’s broken for security use. Reach for SHA-256."
+    },
+    "passwordGenerator": {
+      "passwordAria": "Generated password",
+      "strengthLabel": "Strength",
+      "strengthMeterAria": "Password strength: {level}",
+      "strength": { "weak": "weak", "fair": "fair", "good": "good", "strong": "strong" },
+      "chars": "{count, plural, =0 {0 chars} one {# char} other {# chars}}",
+      "length": "Length",
+      "classesLegend": "Include",
+      "classLabel": { "lower": "a-z", "upper": "A-Z", "digits": "0-9", "symbols": "!@#$" },
+      "classHint": { "lower": "Lowercase letters", "upper": "Uppercase letters", "digits": "Digits", "symbols": "Symbols" },
+      "noAmbiguousLabel": "No 0/O/I/l",
+      "noAmbiguousHint": "Exclude easily confused characters",
+      "noClassHint": "Pick at least one character type to generate a password."
+    },
+    "timestamp": {
+      "now": "Now",
+      "useNow": "Use now",
+      "unixToDate": "Unix → date",
+      "dateToUnix": "Date → Unix",
+      "unixInput": "Unix (seconds or ms)",
+      "dateInput": "ISO 8601 / date string",
+      "utc": "UTC",
+      "local": "Local",
+      "iso": "ISO 8601",
+      "millis": "Milliseconds",
+      "seconds": "Unix (seconds)",
+      "relative": "Relative"
+    },
+    "caseConverter": {
+      "placeholder": "Any text",
+      "inputAria": "Text to convert"
+    },
+    "regexTester": {
+      "patternAria": "Regular expression pattern",
+      "testStringAria": "Test string",
+      "matchCount": "{count, plural, one {# match} other {# matches}}",
+      "atIndex": "at index {index}",
+      "flagAria": "Toggle the {flag} flag",
+      "groupEmpty": "—",
+      "matchesLabel": "matches"
+    },
+    "textDiff": {
+      "original": "Original",
+      "changed": "Changed",
+      "identical": "Both sides are identical — no differences.",
+      "truncated": "Input is too large to diff smoothly, so the comparison was skipped. Trim it to about 4,000 lines total to see the diff.",
+      "additions": "{count, plural, one {# addition} other {# additions}}",
+      "deletions": "{count, plural, one {# deletion} other {# deletions}}",
+      "summaryAria": "{additions, plural, one {# addition} other {# additions}}, {deletions, plural, one {# deletion} other {# deletions}}",
+      "diffAria": "Line-by-line diff",
+      "addedLine": "Added line",
+      "removedLine": "Removed line"
+    },
+    "wordCounter": {
+      "inputAria": "Text to count",
+      "emptyHint": "Type or paste text — the counts update live.",
+      "statsLabel": "stats",
+      "readMinutes": "{min, plural, =0 {under 1 min read} one {# min read} other {# min read}}",
+      "stat": {
+        "words": "Words",
+        "characters": "Characters",
+        "charactersNoSpaces": "Characters (no spaces)",
+        "sentences": "Sentences",
+        "paragraphs": "Paragraphs",
+        "lines": "Lines",
+        "readingTime": "Reading time"
+      }
+    },
+    "slug": {
+      "inputAria": "Text to turn into a slug",
+      "placeholder": "Any text…",
+      "separatorLabel": "Separator",
+      "separatorOption": {
+        "hyphen": "Hyphen separator",
+        "underscore": "Underscore separator"
+      },
+      "lowercase": "Lowercase"
+    },
+    "csvJson": {
+      "directionLabel": "Conversion direction",
+      "direction": {
+        "csv-to-json": "CSV → JSON",
+        "json-to-csv": "JSON → CSV"
+      },
+      "inputAriaCsv": "CSV input",
+      "inputAriaJson": "JSON input",
+      "outputAriaJson": "JSON output",
+      "outputAriaCsv": "CSV output",
+      "placeholderCsv": "name,role\nMark,engineer",
+      "placeholderJson": "[{ \"name\": \"Mark\", \"role\": \"engineer\" }]",
+      "error": {
+        "nonArray": "Expected a JSON array of objects.",
+        "malformedJson": "That isn’t valid JSON."
+      }
+    },
+    "jsonToTs": {
+      "interfaceLabel": "Interface",
+      "interfaceAria": "Root interface name",
+      "interfacePlaceholder": "Root",
+      "inputPlaceholder": "Paste a JSON sample…",
+      "syntaxError": "Invalid JSON — check for a trailing comma, missing quote, or stray bracket.",
+      "nameHint": "Name will be used as {name}."
+    },
+    "contrastChecker": {
+      "foreground": "Foreground",
+      "background": "Background",
+      "ratio": "Contrast ratio",
+      "normalText": "Normal text",
+      "largeText": "Large text",
+      "aa": "AA",
+      "aaa": "AAA",
+      "pass": "Pass",
+      "fail": "Fail",
+      "pickerLabel": "{label} color picker",
+      "hexLabel": "{label} hex value",
+      "invalidHint": "use a hex like #1a1a1a or #fafafa",
+      "emptyHint": "Enter two valid hex colors (e.g. #1a1a1a and #fafafa).",
+      "previewHeadline": "The quick brown fox",
+      "previewBody": "jumps over the lazy dog · 12pt body",
+      "previewCaption": "sample preview · adjust either side"
+    },
+    "colorMix": {
+      "colorA": "Color A",
+      "colorB": "Color B",
+      "colorAPicker": "Color A picker",
+      "colorBPicker": "Color B picker",
+      "colorAHex": "Color A hex value",
+      "colorBHex": "Color B hex value",
+      "ratioOfA": "Ratio of A",
+      "ratioAria": "Ratio of color A",
+      "space": "Interpolation space",
+      "result": "Result",
+      "resultAria": "Mixed color {hex}",
+      "stripAria": "Interpolation from 0% to 100%",
+      "css": "color-mix()"
+    },
+    "colorPalette": {
+      "countLabel": "Colors",
+      "decrease": "Fewer colors",
+      "increase": "More colors",
+      "hexLabel": "hex",
+      "chooseImage": "Choose image",
+      "dropPrompt": "Drop to extract colors",
+      "formats": "PNG · JPG · WEBP · GIF — stays on your device",
+      "previewAlt": "Uploaded image preview",
+      "extracting": "Extracting palette…",
+      "pixels": "{count, number} px"
+    },
+    "imageToDataUri": {
+      "dropPrompt": "Click or drop an image",
+      "dropActive": "Drop to encode",
+      "dropzoneLabel": "Choose or drop an image to encode",
+      "choose": "Choose image",
+      "formats": "PNG · JPG · SVG · WebP · GIF — stays on your device",
+      "fileSize": "file · {size}",
+      "uriSize": "data URI · {size}",
+      "sizeNote": "Over {max} encoded — inlining this bloats your CSS/HTML. Prefer a real asset URL.",
+      "dataUriLabel": "Data URI",
+      "imgLabel": "<img> tag",
+      "cssLabel": "CSS background"
+    },
+    "baseConverter": {
+      "name": {
+        "binary": "binary",
+        "octal": "octal",
+        "decimal": "decimal",
+        "hex": "hex"
+      },
+      "baseLabel": "base {base}",
+      "invalidChar": "invalid character",
+      "note": "Underscores (_) and prefixes (0b, 0o, 0x) are accepted. Uses BigInt so large values stay precise."
+    },
+    "gradient": {
+      "previewAlt": "Live gradient preview",
+      "cssLabel": "CSS",
+      "typeLabel": "Gradient type",
+      "type": {
+        "linear": "linear",
+        "radial": "radial",
+        "conic": "conic"
+      },
+      "angle": "Angle",
+      "stops": "Color stops",
+      "stopColor": "Stop {n} color",
+      "stopPosition": "Stop {n} position",
+      "addStop": "Add stop",
+      "removeStop": "Remove stop {n}",
+      "random": "Random"
+    },
+    "shadowGenerator": {
+      "preview": "Shadow preview",
+      "colorHint": "Any CSS color: hex, rgb(), rgba(), hsl(), var(--ring), …",
+      "fields": {
+        "x": "Offset X",
+        "y": "Offset Y",
+        "blur": "Blur",
+        "spread": "Spread",
+        "color": "Color",
+        "inset": "Inset"
+      }
+    },
+    "randomNumber": {
+      "min": "Min",
+      "minAria": "Minimum value",
+      "max": "Max",
+      "maxAria": "Maximum value",
+      "count": "Count",
+      "countAria": "How many numbers to draw, between {min} and {max}",
+      "unique": "Unique",
+      "copyResultsLabel": "results",
+      "swapHint": "Min is above max — drawing from {min} to {max} instead.",
+      "countExceedsRange": "Can't draw {count} unique numbers from a range of only {range}.",
+      "resultsAria": "Generated numbers",
+      "note": "Drawn from crypto.getRandomValues with rejection sampling — free of modulo bias."
+    },
+    "boxModel": {
+      "margin": "Margin",
+      "border": "Border",
+      "padding": "Padding",
+      "content": "Content",
+      "width": "Width",
+      "height": "Height",
+      "outer": "Outer · {width} × {height}px"
+    },
+    "borderRadius": {
+      "previewLabel": "Border radius preview: {value}",
+      "linked": "Linked",
+      "perCorner": "Per corner",
+      "unit": "Unit",
+      "corners": {
+        "all": "All corners",
+        "tl": "Top left",
+        "tr": "Top right",
+        "br": "Bottom right",
+        "bl": "Bottom left"
+      }
+    },
+    "cssTriangle": {
+      "direction": "Direction",
+      "directions": {
+        "up": "Up",
+        "down": "Down",
+        "left": "Left",
+        "right": "Right"
+      },
+      "size": "Size",
+      "color": "Color",
+      "previewAria": "Triangle preview, pointing {direction}"
+    },
+    "glassmorphism": {
+      "preview": "Glass preview",
+      "previewCaption": "Glass card · tune the sliders",
+      "fields": {
+        "blur": "Blur",
+        "saturation": "Saturation",
+        "transparency": "Transparency",
+        "border": "Border",
+        "radius": "Radius",
+        "color": "Tint"
+      }
+    },
+    "bezier": {
+      "curveLabel": "Easing curve preview, {value}",
+      "controlPoints": "Control points",
+      "p1x": "P1 x",
+      "p1y": "P1 y",
+      "p2x": "P2 x",
+      "p2y": "P2 y",
+      "presets": "Presets",
+      "presetNames": {
+        "linear": "linear",
+        "ease": "ease",
+        "easeIn": "ease-in",
+        "easeOut": "ease-out",
+        "easeInOut": "ease-in-out",
+        "premium": "premium"
+      },
+      "duration": "Duration",
+      "replay": "Replay",
+      "preview": "Preview",
+      "previewLabel": "Animated dot easing across the track"
+    },
+    "pxRem": {
+      "pixels": "Pixels",
+      "rem": "Rem",
+      "base": "Root font size",
+      "baseNote": "Most browsers default to a 16px root unless the user changes it.",
+      "baseFallback": "Root size must be a positive number — using {base}px.",
+      "ladderTitle": "Quick ladder (root {base}px)",
+      "ladderTailwind": "tailwind"
+    },
+    "fluidType": {
+      "preview": "Preview",
+      "specimen": "Ag fluid type",
+      "simulatedViewport": "Simulated viewport width",
+      "equalViewportsHint": "Min and max viewport are equal — the size can't scale. Set different widths to get a fluid clamp().",
+      "rootHint": "Assumes a 16px root. Scales linearly between the two viewports in rem + vw, locked flat outside them.",
+      "fields": {
+        "minFont": "Min font size",
+        "maxFont": "Max font size",
+        "minVw": "Min viewport",
+        "maxVw": "Max viewport"
+      }
+    },
+    "specificity": {
+      "inputLabel": "CSS selector",
+      "inputPlaceholder": "#nav .item a:hover",
+      "scoreLabel": "specificity =",
+      "scoreNoun": "specificity",
+      "breakdownLabel": "Selector breakdown by specificity column",
+      "tryLabel": "Try",
+      "explanation": ":is() / :not() / :has() take their most specific argument; :where() and the universal selector * contribute nothing. Combinators (> + ~ and the descendant space) never add specificity.",
+      "columns": {
+        "ids": "IDs",
+        "classes": "Classes · attrs · pseudo-class",
+        "elements": "Elements · pseudo-elements"
+      }
+    },
+    "htmlEntities": {
+      "modeLabel": "Encode or decode",
+      "mode": { "encode": "Encode", "decode": "Decode" },
+      "style": "Style",
+      "styleOption": { "named": "named (&amp;)", "numeric": "numeric (&#38;)" },
+      "placeholderEncode": "Text to convert into HTML entities",
+      "placeholderDecode": "HTML entities to convert back to text",
+      "inputAriaEncode": "Text to encode as HTML entities",
+      "inputAriaDecode": "HTML entities to decode",
+      "outputAriaEncode": "HTML-encoded output",
+      "outputAriaDecode": "Decoded text output"
+    },
+    "loremIpsum": {
+      "unitLabel": "Unit",
+      "unit": { "paragraphs": "Paragraphs", "sentences": "Sentences", "words": "Words" },
+      "count": "Count",
+      "countAria": "How many to generate, between {min} and {max}",
+      "startWithLorem": "Start with Lorem ipsum",
+      "copyLabel": "text",
+      "outputAria": "Generated lorem ipsum text",
+      "generatedStatus": "Generated {count} {unit}"
+    },
+    "keycode": {
+      "padLabel": "Press any key to inspect it",
+      "focusedHint": "press any key",
+      "blurredHint": "click here, then press a key",
+      "emptyHint": "Click the area above and press any key to read its event properties.",
+      "noModifiers": "no modifiers",
+      "copyNoun": "key details",
+      "deprecatedBadge": "deprecated",
+      "deprecatedNote": "keyCode and which are deprecated — use event.code or event.key instead.",
+      "fields": { "location": "location", "repeat": "repeat" },
+      "modifier": { "ctrl": "Ctrl", "alt": "Alt", "shift": "Shift", "meta": "Meta" },
+      "location": { "standard": "standard", "left": "left", "right": "right", "numpad": "numpad" },
+      "boolean": { "true": "true", "false": "false" }
+    },
+    "utmBuilder": {
+      "baseLabel": "Website URL",
+      "basePlaceholder": "https://example.com/page",
+      "invalidUrl": "That isn’t a valid http(s) link — you can still copy it, but campaign tags only work on a full URL.",
+      "resultLabel": "Campaign URL",
+      "fields": {
+        "utm_source": { "label": "Campaign source", "hint": "Where the traffic comes from — e.g. newsletter, twitter, google." },
+        "utm_medium": { "label": "Campaign medium", "hint": "The marketing channel — e.g. email, social, cpc, referral." },
+        "utm_campaign": { "label": "Campaign name", "hint": "The promotion or campaign — e.g. spring_launch, year_end." },
+        "utm_term": { "label": "Campaign term", "hint": "Paid-search keyword. Optional." },
+        "utm_content": { "label": "Campaign content", "hint": "Distinguishes variants of the same link — e.g. header_link vs footer_link. Optional." },
+        "utm_id": { "label": "Campaign ID", "hint": "An identifier to tie this to a specific campaign. Optional." }
+      }
+    },
+    "cronExplainer": {
+      "label": "Cron expression",
+      "placeholder": "min hr dom mon dow",
+      "explanationLabel": "In plain language",
+      "presetsLabel": "Examples",
+      "copyNoun": "explanation",
+      "runs": "Runs {body}.",
+      "clauseJoin": ", ",
+      "listJoin": ", ",
+      "units": {
+        "second": "second",
+        "minute": "minute",
+        "hour": "hour",
+        "dayOfMonth": "day of the month",
+        "month": "month",
+        "dayOfWeek": "day of the week"
+      },
+      "fields": {
+        "second": "second",
+        "minute": "minute",
+        "hour": "hour",
+        "dayOfMonth": "day of month",
+        "month": "month",
+        "dayOfWeek": "day of week"
+      },
+      "term": {
+        "every": "every {unit}",
+        "at": "at {unit} {value}",
+        "range": "every {unit} from {from} to {to}",
+        "everyN": "every {n} {unit}s",
+        "everyNFrom": "every {n} {unit}s starting at {from}",
+        "everyNBetween": "every {n} {unit}s from {from} to {to}"
+      },
+      "presets": {
+        "everyMinute": "Every minute",
+        "every5": "Every 5 minutes",
+        "hourly": "Hourly",
+        "midnight": "Daily at midnight",
+        "weekdays9": "Weekdays at 9am",
+        "firstOfMonth": "1st of month, 6am"
+      },
+      "error": {
+        "fieldCount": "{count, plural, =0 {Enter a cron expression.} one {Expected 5 or 6 fields, found #.} other {Expected 5 or 6 fields, found #.}}",
+        "outOfRange": "{value} is out of range for the {field} field.",
+        "badRange": "Invalid range in the {field} field.",
+        "badStep": "Invalid step in the {field} field.",
+        "badField": "Couldn’t read the {field} field."
+      },
+      "days": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      },
+      "months": {
+        "1": "January",
+        "2": "February",
+        "3": "March",
+        "4": "April",
+        "5": "May",
+        "6": "June",
+        "7": "July",
+        "8": "August",
+        "9": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+      }
+    },
+    "httpStatus": {
+      "searchLabel": "Search HTTP status codes",
+      "searchPlaceholder": "Search code, name, or description…",
+      "noResults": "No status code matches.",
+      "copyHint": "Tap a row's copy button to grab the status code.",
+      "classes": {
+        "1xx": "1xx Informational",
+        "2xx": "2xx Success",
+        "3xx": "3xx Redirection",
+        "4xx": "4xx Client Error",
+        "5xx": "5xx Server Error"
+      }
+    },
+    "mimeFinder": {
+      "searchPlaceholder": "Search by extension, MIME type, or name…",
+      "searchLabel": "Search MIME types",
+      "noResults": "No MIME type matches “{query}”.",
+      "extensionLabel": "Extension",
+      "mimeLabel": "MIME type",
+      "helper": "Type an extension (with or without the dot), a MIME type, or a format name. Tap the icon to copy the MIME type."
+    },
+    "sqlFormatter": {
+      "keywordCase": {
+        "label": "Keywords",
+        "upper": "UPPERCASE",
+        "lower": "lowercase",
+        "preserve": "Preserve"
+      },
+      "indent": "Indent",
+      "indentSpaces": "{count} spaces",
+      "copyOutput": "Copy output",
+      "fallbackNote": "Couldn’t fully parse — showing raw input",
+      "inputAria": "SQL input",
+      "outputAria": "Formatted SQL output",
+      "inputPlaceholder": "Paste SQL here…"
+    },
+    "morse": {
+      "modeLabel": "Conversion mode",
+      "mode": { "encode": "Text → Morse", "decode": "Morse → Text" },
+      "play": "Play",
+      "stop": "Stop",
+      "inputAriaEncode": "Text to encode",
+      "inputAriaDecode": "Morse code to decode",
+      "outputAriaEncode": "Morse code output",
+      "outputAriaDecode": "Decoded text output",
+      "placeholderEncode": "Type text to translate…",
+      "placeholderDecode": "Paste Morse code (· and −, / between words)…",
+      "hint": "Letters are separated by a single space; words by a slash (/). Unknown input shows as ?."
+    },
+    "asciiArt": {
+      "inputLabel": "Text",
+      "inputPlaceholder": "Type a word",
+      "fillLabel": "Fill",
+      "fillOption": "Fill with {glyph}",
+      "customFillLabel": "Custom",
+      "customFillAria": "Custom fill character",
+      "copyLabel": "ASCII art",
+      "outputAria": "ASCII art banner of the text {text}",
+      "lengthCap": "Capped at {max} characters to keep the banner readable."
+    },
+    "roman": {
+      "arabicLabel": "Number",
+      "arabicAria": "Arabic number (1–3999)",
+      "romanLabel": "Roman",
+      "romanAria": "Roman numeral",
+      "rangeHint": "Enter {min}–{max}",
+      "invalidNumeral": "Not a valid Roman numeral",
+      "note": "Classical Roman numerals span 1–3999. Numerals are validated for canonical form — no repeating a rank past three, no double-subtractive."
+    },
+    "blob": {
+      "previewAlt": "Generated organic blob shape",
+      "complexity": "Complexity",
+      "contrast": "Contrast",
+      "ptsSuffix": "pts",
+      "color": "Fill color",
+      "colorHex": "Fill color hex value",
+      "regenerate": "Regenerate",
+      "seed": "Seed",
+      "svgLabel": "SVG",
+      "pathLabel": "Path data",
+      "clipPathLabel": "CSS clip-path"
+    }
   }
 }

@@ -2403,5 +2403,621 @@
     "listening": "聆听中…",
     "errorUnavailable": "// 系统离线 —— AI 端点尚未配置。可改用菜单浏览。",
     "errorGeneric": "// 错误 —— 出了点问题，请重试。"
+  },
+  "Tools": {
+    "common": {
+      "copy": "复制",
+      "copyLabel": "复制{label}",
+      "copied": "已复制",
+      "copiedLabel": "已复制{label}",
+      "copyFailed": "复制失败",
+      "clear": "清空",
+      "reset": "重置",
+      "generate": "生成",
+      "shuffle": "随机",
+      "input": "输入",
+      "output": "输出",
+      "valid": "有效",
+      "invalid": "无效",
+      "empty": "暂无内容",
+      "emptyHint": "在上方输入内容即可开始。",
+      "download": "下载",
+      "upload": "上传",
+      "copyAll": "全部复制",
+      "tooLarge": "文件过大 —— 上限 {max}",
+      "wrongType": "不支持的文件类型",
+      "readFailed": "无法读取该文件"
+    },
+    "jsonFormatter": {
+      "indent": "缩进",
+      "indentSpaces": "{count} 个空格",
+      "indentNone": "无",
+      "minify": "压缩",
+      "copyOutput": "复制输出",
+      "inputAria": "JSON 输入",
+      "outputAria": "格式化后的 JSON 输出",
+      "inputPlaceholder": "在此粘贴 JSON……"
+    },
+    "colorConverter": {
+      "preview": "颜色预览",
+      "picker": "拾色器",
+      "shade": "使用亮度 {lightness}% 的色阶 {hex}"
+    },
+    "base64": {
+      "modeLabel": "转换模式",
+      "mode": { "encode": "编码", "decode": "解码" },
+      "copyOutput": "复制结果",
+      "malformed": "无效的 base64",
+      "inputAriaEncode": "待编码的纯文本",
+      "inputAriaDecode": "待解码的 base64",
+      "outputAriaEncode": "base64 输出",
+      "outputAriaDecode": "解码后的文本输出",
+      "placeholderEncode": "纯文本…",
+      "placeholderDecode": "base64 字符串…"
+    },
+    "urlCodec": {
+      "modeLabel": "编码或解码",
+      "mode": { "encode": "编码", "decode": "解码" },
+      "scope": "范围",
+      "scopeOption": { "component": "分量", "uri": "完整 URI" },
+      "copyOutput": "复制结果",
+      "malformed": "输入有误——请检查多余的 % 符号或不完整的转义序列。",
+      "placeholderEncode": "要进行 URL 编码的文本",
+      "placeholderDecode": "要解码的 URL 编码文本",
+      "inputAriaEncode": "要进行 URL 编码的文本",
+      "inputAriaDecode": "要进行 URL 解码的文本",
+      "outputAriaEncode": "URL 编码结果",
+      "outputAriaDecode": "URL 解码结果"
+    },
+    "jwtDecoder": {
+      "placeholder": "粘贴一个 JWT",
+      "token": "令牌",
+      "header": "Header",
+      "payload": "Payload",
+      "signatureNotice": "仅用于解码查看——签名会显示但绝不会被验证。验证需要在服务端使用密钥和正确的算法。",
+      "errorStructure": "不是有效的 JWT——应为三段以点号分隔的内容（header.payload.signature）。",
+      "errorBase64": "无法解码该令牌——某一段不是有效的 base64url。",
+      "errorJson": "无法解析该令牌——某一段不是有效的 JSON。",
+      "active": "有效",
+      "expired": "已过期",
+      "issued": "签发于",
+      "expires": "过期于"
+    },
+    "uuid": {
+      "count": "数量",
+      "countAria": "要生成的 UUID 数量（{min}–{max}）",
+      "emptyHint": "设置数量后点击“生成”。",
+      "note": "v4（随机），通过浏览器的 crypto API 在本地生成。"
+    },
+    "hashGenerator": {
+      "placeholder": "要哈希的文本",
+      "inputAria": "要哈希的文本",
+      "allLabel": "全部哈希值",
+      "hashFailed": "部分哈希值无法计算，请重试。",
+      "unavailable": "哈希计算需要安全上下文（HTTPS）。当前页面未通过 HTTPS 提供，因此浏览器的加密功能不可用。",
+      "note": "通过浏览器原生 SubtleCrypto 在本地计算，数据不会离开页面。已省略 MD5：它在安全场景下已不可靠，请改用 SHA-256。"
+    },
+    "passwordGenerator": {
+      "passwordAria": "生成的密码",
+      "strengthLabel": "强度",
+      "strengthMeterAria": "密码强度：{level}",
+      "strength": { "weak": "弱", "fair": "中等", "good": "良好", "strong": "强" },
+      "chars": "{count, plural, other {# 个字符}}",
+      "length": "长度",
+      "classesLegend": "包含",
+      "classLabel": { "lower": "a-z", "upper": "A-Z", "digits": "0-9", "symbols": "!@#$" },
+      "classHint": { "lower": "小写字母", "upper": "大写字母", "digits": "数字", "symbols": "符号" },
+      "noAmbiguousLabel": "排除 0/O/I/l",
+      "noAmbiguousHint": "排除易混淆的字符",
+      "noClassHint": "请至少选择一种字符类型以生成密码。"
+    },
+    "timestamp": {
+      "now": "当前",
+      "useNow": "使用当前时间",
+      "unixToDate": "时间戳 → 日期",
+      "dateToUnix": "日期 → 时间戳",
+      "unixInput": "Unix（秒或毫秒）",
+      "dateInput": "ISO 8601／日期字符串",
+      "utc": "UTC",
+      "local": "本地时间",
+      "iso": "ISO 8601",
+      "millis": "毫秒",
+      "seconds": "Unix（秒）",
+      "relative": "相对时间"
+    },
+    "caseConverter": {
+      "placeholder": "任意文本",
+      "inputAria": "待转换的文本"
+    },
+    "regexTester": {
+      "patternAria": "正则表达式模式",
+      "testStringAria": "测试字符串",
+      "matchCount": "{count, plural, other {# 处匹配}}",
+      "atIndex": "位于索引 {index}",
+      "flagAria": "切换 {flag} 标志",
+      "groupEmpty": "—",
+      "matchesLabel": "匹配项"
+    },
+    "textDiff": {
+      "original": "原文",
+      "changed": "修改后",
+      "identical": "两侧内容完全相同——没有差异。",
+      "truncated": "输入过大，无法流畅比较，已跳过本次对比。请将总行数控制在约 4,000 行以内以查看差异。",
+      "additions": "{count, plural, other {新增 # 处}}",
+      "deletions": "{count, plural, other {删除 # 处}}",
+      "summaryAria": "{additions, plural, other {新增 # 处}}，{deletions, plural, other {删除 # 处}}",
+      "diffAria": "逐行差异",
+      "addedLine": "新增行",
+      "removedLine": "删除行"
+    },
+    "wordCounter": {
+      "inputAria": "用于统计的文本",
+      "emptyHint": "输入或粘贴文本，统计会实时更新。",
+      "statsLabel": "统计",
+      "readMinutes": "{min, plural, =0 {不到 1 分钟阅读} other {阅读约 # 分钟}}",
+      "stat": {
+        "words": "词数",
+        "characters": "字符数",
+        "charactersNoSpaces": "字符数（不含空格）",
+        "sentences": "句子数",
+        "paragraphs": "段落数",
+        "lines": "行数",
+        "readingTime": "阅读时间"
+      }
+    },
+    "slug": {
+      "inputAria": "要转换为别名的文本",
+      "placeholder": "任意文本…",
+      "separatorLabel": "分隔符",
+      "separatorOption": {
+        "hyphen": "连字符分隔",
+        "underscore": "下划线分隔"
+      },
+      "lowercase": "小写"
+    },
+    "csvJson": {
+      "directionLabel": "转换方向",
+      "direction": {
+        "csv-to-json": "CSV → JSON",
+        "json-to-csv": "JSON → CSV"
+      },
+      "inputAriaCsv": "CSV 输入",
+      "inputAriaJson": "JSON 输入",
+      "outputAriaJson": "JSON 输出",
+      "outputAriaCsv": "CSV 输出",
+      "placeholderCsv": "name,role\nMark,engineer",
+      "placeholderJson": "[{ \"name\": \"Mark\", \"role\": \"engineer\" }]",
+      "error": {
+        "nonArray": "需要一个 JSON 数组（对象数组）。",
+        "malformedJson": "这不是有效的 JSON。"
+      }
+    },
+    "jsonToTs": {
+      "interfaceLabel": "Interface",
+      "interfaceAria": "根 interface 名称",
+      "interfacePlaceholder": "Root",
+      "inputPlaceholder": "粘贴一段 JSON 示例…",
+      "syntaxError": "JSON 无效 —— 请检查是否有多余的逗号、缺失的引号或多余的括号。",
+      "nameHint": "名称将使用 {name}。"
+    },
+    "contrastChecker": {
+      "foreground": "前景",
+      "background": "背景",
+      "ratio": "对比度",
+      "normalText": "普通文本",
+      "largeText": "大号文本",
+      "aa": "AA",
+      "aaa": "AAA",
+      "pass": "通过",
+      "fail": "未通过",
+      "pickerLabel": "{label}拾色器",
+      "hexLabel": "{label}十六进制值",
+      "invalidHint": "请输入十六进制颜色，如 #1a1a1a 或 #fafafa",
+      "emptyHint": "请输入两个有效的十六进制颜色（如 #1a1a1a 和 #fafafa）。",
+      "previewHeadline": "敏捷的棕色狐狸",
+      "previewBody": "跃过那只懒狗 · 12pt 正文",
+      "previewCaption": "示例预览 · 可调整任一侧"
+    },
+    "colorMix": {
+      "colorA": "颜色 A",
+      "colorB": "颜色 B",
+      "colorAPicker": "颜色 A 选择器",
+      "colorBPicker": "颜色 B 选择器",
+      "colorAHex": "颜色 A 十六进制值",
+      "colorBHex": "颜色 B 十六进制值",
+      "ratioOfA": "颜色 A 占比",
+      "ratioAria": "颜色 A 占比",
+      "space": "插值空间",
+      "result": "结果",
+      "resultAria": "混合颜色 {hex}",
+      "stripAria": "从 0% 到 100% 的插值",
+      "css": "color-mix()"
+    },
+    "colorPalette": {
+      "countLabel": "颜色数量",
+      "decrease": "减少颜色",
+      "increase": "增加颜色",
+      "hexLabel": "十六进制",
+      "chooseImage": "选择图片",
+      "dropPrompt": "拖放以提取颜色",
+      "formats": "PNG · JPG · WEBP · GIF — 仅保留在你的设备上",
+      "previewAlt": "已上传图片预览",
+      "extracting": "正在提取调色板…",
+      "pixels": "{count, number} 像素"
+    },
+    "imageToDataUri": {
+      "dropPrompt": "点击或拖入图片",
+      "dropActive": "松开即可编码",
+      "dropzoneLabel": "选择或拖入要编码的图片",
+      "choose": "选择图片",
+      "formats": "PNG · JPG · SVG · WebP · GIF —— 文件不会离开你的设备",
+      "fileSize": "文件 · {size}",
+      "uriSize": "data URI · {size}",
+      "sizeNote": "编码后超过 {max} —— 内联会让 CSS/HTML 体积膨胀，建议改用真实的资源链接。",
+      "dataUriLabel": "Data URI",
+      "imgLabel": "<img> 标签",
+      "cssLabel": "CSS 背景"
+    },
+    "baseConverter": {
+      "name": {
+        "binary": "二进制",
+        "octal": "八进制",
+        "decimal": "十进制",
+        "hex": "十六进制"
+      },
+      "baseLabel": "{base} 进制",
+      "invalidChar": "无效字符",
+      "note": "支持下划线（_）和前缀（0b、0o、0x）。使用 BigInt，大数值也能保持精确。"
+    },
+    "gradient": {
+      "previewAlt": "渐变实时预览",
+      "cssLabel": "CSS",
+      "typeLabel": "渐变类型",
+      "type": {
+        "linear": "线性 (linear)",
+        "radial": "径向 (radial)",
+        "conic": "锥形 (conic)"
+      },
+      "angle": "角度",
+      "stops": "色标",
+      "stopColor": "色标 {n} 颜色",
+      "stopPosition": "色标 {n} 位置",
+      "addStop": "添加色标",
+      "removeStop": "移除色标 {n}",
+      "random": "随机"
+    },
+    "shadowGenerator": {
+      "preview": "阴影预览",
+      "colorHint": "任意 CSS 颜色：hex、rgb()、rgba()、hsl()、var(--ring) …",
+      "fields": {
+        "x": "水平偏移",
+        "y": "垂直偏移",
+        "blur": "模糊",
+        "spread": "扩展",
+        "color": "颜色",
+        "inset": "内阴影"
+      }
+    },
+    "randomNumber": {
+      "min": "最小值",
+      "minAria": "最小值",
+      "max": "最大值",
+      "maxAria": "最大值",
+      "count": "数量",
+      "countAria": "要生成的数字个数，介于 {min} 到 {max} 之间",
+      "unique": "不重复",
+      "copyResultsLabel": "结果",
+      "swapHint": "最小值大于最大值，已改为从 {min} 到 {max} 生成。",
+      "countExceedsRange": "无法从仅有 {range} 个数的范围中抽取 {count} 个不重复的数字。",
+      "resultsAria": "生成的数字",
+      "note": "由 crypto.getRandomValues 配合拒绝采样生成，无取模偏差。"
+    },
+    "boxModel": {
+      "margin": "外边距",
+      "border": "边框",
+      "padding": "内边距",
+      "content": "内容",
+      "width": "宽度",
+      "height": "高度",
+      "outer": "外框 · {width} × {height}px"
+    },
+    "borderRadius": {
+      "previewLabel": "圆角预览：{value}",
+      "linked": "联动",
+      "perCorner": "分角设置",
+      "unit": "单位",
+      "corners": {
+        "all": "全部圆角",
+        "tl": "左上角",
+        "tr": "右上角",
+        "br": "右下角",
+        "bl": "左下角"
+      }
+    },
+    "cssTriangle": {
+      "direction": "方向",
+      "directions": {
+        "up": "上",
+        "down": "下",
+        "left": "左",
+        "right": "右"
+      },
+      "size": "尺寸",
+      "color": "颜色",
+      "previewAria": "三角形预览，朝向{direction}"
+    },
+    "glassmorphism": {
+      "preview": "毛玻璃预览",
+      "previewCaption": "毛玻璃卡片 · 拖动滑块调节",
+      "fields": {
+        "blur": "模糊",
+        "saturation": "饱和度",
+        "transparency": "透明度",
+        "border": "边框",
+        "radius": "圆角",
+        "color": "色调"
+      }
+    },
+    "bezier": {
+      "curveLabel": "缓动曲线预览，{value}",
+      "controlPoints": "控制点",
+      "p1x": "P1 x",
+      "p1y": "P1 y",
+      "p2x": "P2 x",
+      "p2y": "P2 y",
+      "presets": "预设",
+      "presetNames": {
+        "linear": "linear",
+        "ease": "ease",
+        "easeIn": "ease-in",
+        "easeOut": "ease-out",
+        "easeInOut": "ease-in-out",
+        "premium": "premium"
+      },
+      "duration": "时长",
+      "replay": "重播",
+      "preview": "预览",
+      "previewLabel": "圆点沿轨道缓动的动画"
+    },
+    "pxRem": {
+      "pixels": "像素",
+      "rem": "Rem",
+      "base": "根字号",
+      "baseNote": "除非用户自行更改，多数浏览器的根字号默认为 16px。",
+      "baseFallback": "根字号必须为正数 —— 已改用 {base}px。",
+      "ladderTitle": "快速换算表（根字号 {base}px）",
+      "ladderTailwind": "tailwind"
+    },
+    "fluidType": {
+      "preview": "预览",
+      "specimen": "Ag 流体字号",
+      "simulatedViewport": "模拟视口宽度",
+      "equalViewportsHint": "最小与最大视口相同——字号无法缩放。请设置不同的宽度以生成流体 clamp()。",
+      "rootHint": "默认根字号为 16px。在两个视口之间以 rem + vw 线性缩放，超出范围则固定不变。",
+      "fields": {
+        "minFont": "最小字号",
+        "maxFont": "最大字号",
+        "minVw": "最小视口",
+        "maxVw": "最大视口"
+      }
+    },
+    "specificity": {
+      "inputLabel": "CSS 选择器",
+      "inputPlaceholder": "#nav .item a:hover",
+      "scoreLabel": "优先级 =",
+      "scoreNoun": "优先级",
+      "breakdownLabel": "按优先级类别拆解的选择器",
+      "tryLabel": "示例",
+      "explanation": ":is() / :not() / :has() 取其参数中优先级最高的部分；:where() 与通用选择器 * 不增加任何优先级。关系选择符（> + ~ 及后代空格）从不增加优先级。",
+      "columns": {
+        "ids": "ID",
+        "classes": "类 · 属性 · 伪类",
+        "elements": "元素 · 伪元素"
+      }
+    },
+    "htmlEntities": {
+      "modeLabel": "编码或解码",
+      "mode": { "encode": "编码", "decode": "解码" },
+      "style": "样式",
+      "styleOption": { "named": "命名 (&amp;)", "numeric": "数字 (&#38;)" },
+      "placeholderEncode": "要转换为 HTML 实体的文本",
+      "placeholderDecode": "要还原为文本的 HTML 实体",
+      "inputAriaEncode": "要编码为 HTML 实体的文本",
+      "inputAriaDecode": "要解码的 HTML 实体",
+      "outputAriaEncode": "HTML 编码后的输出",
+      "outputAriaDecode": "解码后的文本输出"
+    },
+    "loremIpsum": {
+      "unitLabel": "单位",
+      "unit": { "paragraphs": "段落", "sentences": "句子", "words": "词" },
+      "count": "数量",
+      "countAria": "要生成的数量，介于 {min} 到 {max} 之间",
+      "startWithLorem": "以 Lorem ipsum 开头",
+      "copyLabel": "文本",
+      "outputAria": "生成的 Lorem ipsum 文本",
+      "generatedStatus": "已生成 {count} 个{unit}"
+    },
+    "keycode": {
+      "padLabel": "按任意键以查看其属性",
+      "focusedHint": "按任意键",
+      "blurredHint": "点击此处，然后按任意键",
+      "emptyHint": "点击上方区域并按任意键，即可读取其事件属性。",
+      "noModifiers": "无修饰键",
+      "copyNoun": "按键详情",
+      "deprecatedBadge": "已弃用",
+      "deprecatedNote": "keyCode 与 which 已弃用——请改用 event.code 或 event.key。",
+      "fields": { "location": "位置", "repeat": "重复" },
+      "modifier": { "ctrl": "Ctrl", "alt": "Alt", "shift": "Shift", "meta": "Meta" },
+      "location": { "standard": "标准", "left": "左侧", "right": "右侧", "numpad": "小键盘" },
+      "boolean": { "true": "true", "false": "false" }
+    },
+    "utmBuilder": {
+      "baseLabel": "网站链接",
+      "basePlaceholder": "https://example.com/page",
+      "invalidUrl": "这不是有效的 http(s) 链接——你仍然可以复制它，但广告系列参数只在完整的网址上生效。",
+      "resultLabel": "广告系列链接",
+      "fields": {
+        "utm_source": { "label": "来源", "hint": "流量的来源——例如 newsletter、twitter、google。" },
+        "utm_medium": { "label": "媒介", "hint": "营销渠道——例如 email、social、cpc、referral。" },
+        "utm_campaign": { "label": "广告系列名称", "hint": "推广活动或广告系列——例如 spring_launch、year_end。" },
+        "utm_term": { "label": "关键词", "hint": "付费搜索关键词。可选。" },
+        "utm_content": { "label": "内容", "hint": "区分同一链接的不同版本——例如 header_link 与 footer_link。可选。" },
+        "utm_id": { "label": "广告系列编号", "hint": "用于关联特定广告系列的标识符。可选。" }
+      }
+    },
+    "cronExplainer": {
+      "label": "cron 表达式",
+      "placeholder": "分 时 日 月 周",
+      "explanationLabel": "通俗说明",
+      "presetsLabel": "示例",
+      "copyNoun": "说明",
+      "runs": "在{body}运行。",
+      "clauseJoin": "、",
+      "listJoin": "、",
+      "units": {
+        "second": "秒",
+        "minute": "分钟",
+        "hour": "小时",
+        "dayOfMonth": "号",
+        "month": "月",
+        "dayOfWeek": "周"
+      },
+      "fields": {
+        "second": "秒",
+        "minute": "分钟",
+        "hour": "小时",
+        "dayOfMonth": "日",
+        "month": "月",
+        "dayOfWeek": "星期"
+      },
+      "term": {
+        "every": "每{unit}",
+        "at": "第 {value} {unit}",
+        "range": "{unit} {from} 到 {to} 之间的每一个",
+        "everyN": "每 {n} {unit}",
+        "everyNFrom": "从第 {from} {unit}起每 {n} {unit}",
+        "everyNBetween": "在 {from} 到 {to} {unit}之间每 {n} {unit}"
+      },
+      "presets": {
+        "everyMinute": "每分钟",
+        "every5": "每 5 分钟",
+        "hourly": "每小时",
+        "midnight": "每天午夜",
+        "weekdays9": "工作日上午 9 点",
+        "firstOfMonth": "每月 1 号上午 6 点"
+      },
+      "error": {
+        "fieldCount": "{count, plural, other {应为 5 或 6 个字段，实际为 # 个。}}",
+        "outOfRange": "{value} 超出了「{field}」字段的取值范围。",
+        "badRange": "「{field}」字段的范围无效。",
+        "badStep": "「{field}」字段的步长无效。",
+        "badField": "无法解析「{field}」字段。"
+      },
+      "days": {
+        "0": "周日",
+        "1": "周一",
+        "2": "周二",
+        "3": "周三",
+        "4": "周四",
+        "5": "周五",
+        "6": "周六"
+      },
+      "months": {
+        "1": "1 月",
+        "2": "2 月",
+        "3": "3 月",
+        "4": "4 月",
+        "5": "5 月",
+        "6": "6 月",
+        "7": "7 月",
+        "8": "8 月",
+        "9": "9 月",
+        "10": "10 月",
+        "11": "11 月",
+        "12": "12 月"
+      }
+    },
+    "httpStatus": {
+      "searchLabel": "搜索 HTTP 状态码",
+      "searchPlaceholder": "搜索状态码、名称或描述…",
+      "noResults": "没有匹配的状态码。",
+      "copyHint": "点击某一行的复制按钮即可复制状态码。",
+      "classes": {
+        "1xx": "1xx 信息",
+        "2xx": "2xx 成功",
+        "3xx": "3xx 重定向",
+        "4xx": "4xx 客户端错误",
+        "5xx": "5xx 服务器错误"
+      }
+    },
+    "mimeFinder": {
+      "searchPlaceholder": "按扩展名、MIME 类型或名称搜索…",
+      "searchLabel": "搜索 MIME 类型",
+      "noResults": "没有匹配“{query}”的 MIME 类型。",
+      "extensionLabel": "扩展名",
+      "mimeLabel": "MIME 类型",
+      "helper": "输入扩展名（带不带点都可以）、MIME 类型或格式名称。点击图标即可复制 MIME 类型。"
+    },
+    "sqlFormatter": {
+      "keywordCase": {
+        "label": "关键字",
+        "upper": "大写",
+        "lower": "小写",
+        "preserve": "保留原样"
+      },
+      "indent": "缩进",
+      "indentSpaces": "{count} 个空格",
+      "copyOutput": "复制结果",
+      "fallbackNote": "无法完全解析，已显示原始输入",
+      "inputAria": "SQL 输入",
+      "outputAria": "格式化后的 SQL 输出",
+      "inputPlaceholder": "在此粘贴 SQL…"
+    },
+    "morse": {
+      "modeLabel": "转换模式",
+      "mode": { "encode": "文本 → 摩尔斯", "decode": "摩尔斯 → 文本" },
+      "play": "播放",
+      "stop": "停止",
+      "inputAriaEncode": "待编码的文本",
+      "inputAriaDecode": "待解码的摩尔斯电码",
+      "outputAriaEncode": "摩尔斯电码输出",
+      "outputAriaDecode": "解码后的文本输出",
+      "placeholderEncode": "输入要翻译的文本……",
+      "placeholderDecode": "粘贴摩尔斯电码（· 和 −，单词之间用 / 分隔）……",
+      "hint": "字母之间用一个空格分隔，单词之间用斜杠（/）分隔。无法识别的内容会显示为 ?。"
+    },
+    "asciiArt": {
+      "inputLabel": "文本",
+      "inputPlaceholder": "输入一个词",
+      "fillLabel": "填充",
+      "fillOption": "使用 {glyph} 填充",
+      "customFillLabel": "自定义",
+      "customFillAria": "自定义填充字符",
+      "copyLabel": "ASCII 字符画",
+      "outputAria": "文本“{text}”的 ASCII 字符画横幅",
+      "lengthCap": "已限制为 {max} 个字符，以保持横幅清晰可读。"
+    },
+    "roman": {
+      "arabicLabel": "数字",
+      "arabicAria": "阿拉伯数字（1–3999）",
+      "romanLabel": "罗马数字",
+      "romanAria": "罗马数字",
+      "rangeHint": "请输入 {min}–{max}",
+      "invalidNumeral": "不是有效的罗马数字",
+      "note": "经典罗马数字范围为 1–3999。会按标准写法校验——同一字符不重复超过三次，且不允许双重减法记法。"
+    },
+    "blob": {
+      "previewAlt": "生成的有机不规则形状",
+      "complexity": "复杂度",
+      "contrast": "对比度",
+      "ptsSuffix": "点",
+      "color": "填充色",
+      "colorHex": "填充色十六进制值",
+      "regenerate": "重新生成",
+      "seed": "种子",
+      "svgLabel": "SVG",
+      "pathLabel": "路径数据",
+      "clipPathLabel": "CSS clip-path"
+    }
   }
 }
