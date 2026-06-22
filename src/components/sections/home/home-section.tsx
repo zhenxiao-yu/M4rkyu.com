@@ -14,6 +14,17 @@ interface HomeSectionProps {
   /** Tint variant for visual rhythm between sections. */
   tone?: "default" | "muted";
   /**
+   * Header + content alignment.
+   *
+   * `"left"` (default) — the editorial spine: eyebrow → heading → lede
+   *   flush-left, optional action pinned right. Every body section uses this
+   *   so headings share one left edge as you scroll.
+   * `"center"` — a deliberate centerpiece (the Ask terminal). Heading is
+   *   centered above centered content so the title sits over its console
+   *   instead of drifting to the side. `action` is ignored in this mode.
+   */
+  align?: "left" | "center";
+  /**
    * Whether the section is a full-height stage in the home spine.
    *
    * `true` (default) — forces `min-h-dvh` and vertically centers content.
@@ -61,12 +72,14 @@ export function HomeSection({
   lede,
   action,
   tone = "default",
+  align = "left",
   snap = true,
   children,
   background,
   className,
   dataSection,
 }: HomeSectionProps) {
+  const centered = align === "center";
   return (
     <section
       data-section={dataSection}
@@ -87,8 +100,14 @@ export function HomeSection({
       {background}
       <div className="relative mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
         {(eyebrow || heading || lede || action) && (
-          <header className="grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6">
-            <div className="max-w-2xl">
+          <header
+            className={cn(
+              centered
+                ? "flex flex-col items-center text-center"
+                : "grid gap-5 md:grid-cols-[1fr_auto] md:items-end md:gap-6",
+            )}
+          >
+            <div className={cn("max-w-2xl", centered && "mx-auto")}>
               {eyebrow ? <SectionEyebrow>{eyebrow}</SectionEyebrow> : null}
               {heading ? (
                 <h2 className="mt-3 font-heading text-balance text-[2rem] font-semibold leading-[1.04] tracking-normal sm:mt-4 sm:text-5xl sm:leading-[1.02] lg:text-6xl">
@@ -96,12 +115,17 @@ export function HomeSection({
                 </h2>
               ) : null}
               {lede ? (
-                <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+                <p
+                  className={cn(
+                    "mt-4 max-w-xl text-base leading-7 text-muted-foreground",
+                    centered && "mx-auto",
+                  )}
+                >
                   {lede}
                 </p>
               ) : null}
             </div>
-            {action ? (
+            {action && !centered ? (
               <div className="md:justify-self-end">{action}</div>
             ) : null}
           </header>

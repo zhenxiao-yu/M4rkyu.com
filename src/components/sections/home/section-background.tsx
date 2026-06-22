@@ -4,21 +4,26 @@ import { Particles } from "@/components/ui/magic/particles";
 import { cn } from "@/lib/utils";
 
 /**
- * Full-bleed atmospheric backdrop for a home-spine stage. One bold,
- * theme-aware identity per section so each screen reads as a designed
- * stage rather than a band on the global page background.
+ * Full-bleed atmospheric backdrop for a home-spine stage. Every section
+ * shares one quiet floor + softened seams so the spine reads as a single
+ * piece; a dimmed, theme-aware motif gives each band a hint of its own
+ * character without making it feel like a different website.
  *
  * Doctrine fit (M4RKYU.SYS — premium cyber-pixel command center):
+ *   - `<SharedBase />` is the unifying layer: a faint grain floor + a
+ *     centre vignette, identical on every section, painted first.
+ *   - The per-variant motif sits on top, deliberately dimmed (~35%) so it
+ *     accents the shared floor instead of shouting over it.
+ *   - `<SeamFade />` dissolves each band's top + bottom edge into the page
+ *     background, so neighbouring sections blend rather than hard-cut as
+ *     you scroll (the "snapping" feel was abrupt motif swaps, not snap).
  *   - Single accent only (`--ring`; `--game-accent` for the arcade slide,
  *     with a `--ring` fallback when that token isn't in scope).
- *   - Every motif is built from token-driven `color-mix` so it tracks the
- *     light/dark theme without JS.
- *   - Each variant fades toward the centre (vignette / soft mask) so the
- *     content sitting on top stays legible.
+ *   - Every motif is token-driven `color-mix` so it tracks light/dark.
  *   - "Mix" performance budget: two variants carry a signature animated
  *     layer (`terminal` → AnimatedGridPattern, `blueprint` → Particles);
- *     the scanline drift is CSS-only and motion-safe; everything else is
- *     static gradients. Reduced motion degrades to the static rest state.
+ *     the scanline drift is CSS-only and motion-safe; SharedBase + SeamFade
+ *     are static. Reduced motion degrades to the static rest state.
  *
  * Layers are `pointer-events-none`, `aria-hidden`, and pinned to `-z-10`
  * inside the section's own stacking context (HomeSection is `isolate`).
@@ -48,8 +53,45 @@ export function SectionBackground({
         className,
       )}
     >
+      <SharedBase />
       {VARIANTS[variant]()}
+      <SeamFade />
     </div>
+  );
+}
+
+/**
+ * The unifying floor every section shares: a faint grain texture plus a
+ * centre vignette toward the page background. Painted first, behind the
+ * variant motif, so every band starts from the same calm base.
+ */
+function SharedBase() {
+  return (
+    <>
+      <Layer className="noise-layer opacity-[0.3]" />
+      <Layer
+        style={{
+          background:
+            "radial-gradient(120% 90% at 50% 50%, transparent 42%, color-mix(in srgb, var(--background) 55%, transparent))",
+        }}
+      />
+    </>
+  );
+}
+
+/**
+ * Dissolves the band's top + bottom edge into the page background so
+ * adjacent sections blend as the spine scrolls, instead of hard-cutting
+ * between two different motifs.
+ */
+function SeamFade() {
+  return (
+    <Layer
+      style={{
+        background:
+          "linear-gradient(to bottom, var(--background), transparent 12%, transparent 88%, var(--background))",
+      }}
+    />
   );
 }
 
@@ -82,7 +124,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
         className="inset-[-1px] h-[calc(100%+2px)] w-[calc(100%+2px)] text-foreground/[0.1] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"
       />
       <Layer
-        className="opacity-70 motion-safe:animate-[section-scan_22s_linear_infinite]"
+        className="opacity-40 motion-safe:animate-[section-scan_22s_linear_infinite]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(to bottom, transparent 0 3px, color-mix(in srgb, var(--foreground) 8%, transparent) 4px)",
@@ -91,7 +133,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           background:
-            "radial-gradient(62% 50% at 50% 16%, color-mix(in srgb, var(--ring) 22%, transparent), transparent 70%)",
+            "radial-gradient(62% 50% at 50% 16%, color-mix(in srgb, var(--ring) 14%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -107,23 +149,23 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
   // rings, a crosshair, and a focal bloom dead-centre.
   radar: () => (
     <>
-      <Layer className="bg-cyber-grid opacity-40" />
+      <Layer className="bg-cyber-grid opacity-25" />
       <Layer
         style={{
           backgroundImage:
-            "repeating-radial-gradient(circle at 50% 50%, transparent 0 38px, color-mix(in srgb, var(--foreground) 12%, transparent) 38px 39.5px)",
+            "repeating-radial-gradient(circle at 50% 50%, transparent 0 38px, color-mix(in srgb, var(--foreground) 8%, transparent) 38px 39.5px)",
         }}
       />
       <Layer
         style={{
           backgroundImage:
-            "linear-gradient(to right, transparent calc(50% - 0.5px), color-mix(in srgb, var(--foreground) 14%, transparent) 50%, transparent calc(50% + 0.5px)), linear-gradient(to bottom, transparent calc(50% - 0.5px), color-mix(in srgb, var(--foreground) 14%, transparent) 50%, transparent calc(50% + 0.5px))",
+            "linear-gradient(to right, transparent calc(50% - 0.5px), color-mix(in srgb, var(--foreground) 9%, transparent) 50%, transparent calc(50% + 0.5px)), linear-gradient(to bottom, transparent calc(50% - 0.5px), color-mix(in srgb, var(--foreground) 9%, transparent) 50%, transparent calc(50% + 0.5px))",
         }}
       />
       <Layer
         style={{
           background:
-            "radial-gradient(42% 42% at 50% 50%, color-mix(in srgb, var(--ring) 19%, transparent), transparent 70%)",
+            "radial-gradient(42% 42% at 50% 50%, color-mix(in srgb, var(--ring) 13%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -154,11 +196,11 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
           backgroundSize: "128px 128px",
         }}
       />
-      <Particles quantity={24} maxOpacity={0.4} speed={0.08} size={1.3} />
+      <Particles quantity={24} maxOpacity={0.26} speed={0.08} size={1.3} />
       <Layer
         style={{
           background:
-            "radial-gradient(70% 60% at 72% 28%, color-mix(in srgb, var(--ring) 13%, transparent), transparent 70%)",
+            "radial-gradient(70% 60% at 72% 28%, color-mix(in srgb, var(--ring) 9%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -177,12 +219,12 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           backgroundImage:
-            "radial-gradient(color-mix(in srgb, var(--foreground) 14%, transparent) 1.4px, transparent 1.6px)",
+            "radial-gradient(color-mix(in srgb, var(--foreground) 9%, transparent) 1.4px, transparent 1.6px)",
           backgroundSize: "18px 18px",
         }}
       />
       <Layer
-        className="opacity-90 motion-safe:animate-[section-scan_18s_linear_infinite]"
+        className="opacity-50 motion-safe:animate-[section-scan_18s_linear_infinite]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in srgb, var(--foreground) 7%, transparent) 3px)",
@@ -191,7 +233,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           background:
-            "radial-gradient(62% 58% at 50% 78%, color-mix(in srgb, var(--game-accent, var(--ring)) 24%, transparent), transparent 70%)",
+            "radial-gradient(62% 58% at 50% 78%, color-mix(in srgb, var(--game-accent, var(--ring)) 16%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -217,7 +259,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           backgroundImage:
-            "radial-gradient(circle, color-mix(in srgb, var(--ring) 34%, transparent) 1.5px, transparent 2px)",
+            "radial-gradient(circle, color-mix(in srgb, var(--ring) 22%, transparent) 1.5px, transparent 2px)",
           backgroundSize: "25% 33.333%",
           backgroundPosition: "0 0",
         }}
@@ -225,7 +267,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           background:
-            "radial-gradient(55% 55% at 50% 44%, color-mix(in srgb, var(--ring) 10%, transparent), transparent 70%)",
+            "radial-gradient(55% 55% at 50% 44%, color-mix(in srgb, var(--ring) 8%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -250,10 +292,9 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           backgroundImage:
-            "linear-gradient(to right, transparent calc(12% - 1px), color-mix(in srgb, var(--ring) 26%, transparent) 12%, transparent calc(12% + 1px))",
+            "linear-gradient(to right, transparent calc(12% - 1px), color-mix(in srgb, var(--ring) 18%, transparent) 12%, transparent calc(12% + 1px))",
         }}
       />
-      <Layer className="noise-layer opacity-50" />
       <Layer
         style={{
           background:
@@ -277,14 +318,14 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           backgroundImage:
-            "radial-gradient(circle, color-mix(in srgb, var(--ring) 40%, transparent) 1.5px, transparent 2px)",
+            "radial-gradient(circle, color-mix(in srgb, var(--ring) 24%, transparent) 1.5px, transparent 2px)",
           backgroundSize: "96px 96px",
         }}
       />
       <Layer
         style={{
           background:
-            "radial-gradient(62% 60% at 28% 30%, color-mix(in srgb, var(--ring) 12%, transparent), transparent 70%)",
+            "radial-gradient(62% 60% at 28% 30%, color-mix(in srgb, var(--ring) 9%, transparent), transparent 70%)",
         }}
       />
       <Layer
@@ -315,7 +356,7 @@ const VARIANTS: Record<SectionBackgroundVariant, () => ReactNode> = {
       <Layer
         style={{
           background:
-            "radial-gradient(60% 50% at 76% 24%, color-mix(in srgb, var(--ring) 14%, transparent), transparent 70%)",
+            "radial-gradient(60% 50% at 76% 24%, color-mix(in srgb, var(--ring) 10%, transparent), transparent 70%)",
         }}
       />
       <Layer

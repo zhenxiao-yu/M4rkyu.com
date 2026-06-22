@@ -26,34 +26,30 @@ interface Route {
   id: string;
   href: string;
   icon: LucideIcon;
-  /** Decorative compass bearing — a wayfinding motif, not a metric. */
-  bearing: string;
 }
 
-// Each destination reads as a heading on the manifest. Bearings are an
-// ornamental compass detail (evenly spaced around the rose), never a
-// claimed statistic.
+// Each destination reads as a heading on the manifest; the catalog index
+// (01…06) carries the departure-board rhythm.
 const ROUTES: Route[] = [
-  { id: "work", href: "/work", icon: Briefcase, bearing: "000" },
-  { id: "games", href: "/games", icon: Gamepad2, bearing: "060" },
-  { id: "archive", href: "/archive", icon: ImageIcon, bearing: "120" },
-  { id: "logs", href: "/logs", icon: BookOpen, bearing: "180" },
-  { id: "resources", href: "/resources", icon: Wrench, bearing: "240" },
-  { id: "about", href: "/about", icon: User, bearing: "300" },
+  { id: "work", href: "/work", icon: Briefcase },
+  { id: "games", href: "/games", icon: Gamepad2 },
+  { id: "archive", href: "/archive", icon: ImageIcon },
+  { id: "logs", href: "/logs", icon: BookOpen },
+  { id: "resources", href: "/resources", icon: Wrench },
+  { id: "about", href: "/about", icon: User },
 ];
 
 /**
  * Compass — the site's orientation map, redrawn as a wayfinding
- * console. The left rail carries the editorial intro plus a live
- * compass-rose instrument (a slow radar sweep that echoes the section's
- * radar backdrop); the right is a single frosted "manifest" panel whose
- * rows are uniform-height route entries.
+ * console. The left rail is a tight editorial intro (eyebrow → heading →
+ * body → one prompt line); the right is a single frosted "manifest"
+ * panel whose rows are uniform-height route entries.
  *
  * Why a manifest, not a tile grid: the old 2-up tiles sized to their
  * copy and came out ragged, and read as generic cards. A console of
  * equal rows guarantees rhythm, scans like a departure board, and the
- * hover language (accent bar grows, label slides, coordinates ignite)
- * is pure CSS — no client JS, reduced-motion + touch safe.
+ * hover language (accent bar grows, label slides) is pure CSS — no
+ * client JS, reduced-motion + touch safe.
  */
 export async function CompassSection({ locale }: CompassSectionProps) {
   const t = await getTranslations({ locale, namespace: "Home.compass" });
@@ -64,8 +60,8 @@ export async function CompassSection({ locale }: CompassSectionProps) {
       dataSection="compass"
       background={<SectionBackground variant="radar" />}
     >
-      <div className="grid gap-8 lg:grid-cols-[4fr_7fr] lg:gap-14">
-        {/* Left rail — editorial intro + compass instrument. */}
+      <div className="grid gap-8 lg:grid-cols-[2fr_3fr] lg:items-start lg:gap-14">
+        {/* Left rail — tight editorial intro. */}
         <FadeIn className="flex flex-col">
           <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-heading text-balance text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl">
@@ -75,22 +71,11 @@ export async function CompassSection({ locale }: CompassSectionProps) {
             {t("body")}
           </p>
 
-          {/* Compass instrument — desktop only; keeps the mobile rail
-            * compact so the manifest stays within one viewport. */}
-          <div className="mt-auto hidden items-center gap-5 pt-10 lg:flex">
-            <CompassRose />
-            <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-              <span aria-hidden="true" className="text-ring">
-                →
-              </span>
-              {t("cta")}
+          {/* One quiet prompt line — same at every breakpoint. */}
+          <p className="mt-7 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
+            <span aria-hidden="true" className="text-ring">
+              →
             </span>
-          </div>
-
-          {/* Mobile cta — instrument hidden, so the prompt rides under
-            * the intro instead. */}
-          <p className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground lg:hidden">
-            <span aria-hidden="true">↓</span>
             {t("cta")}
           </p>
         </FadeIn>
@@ -147,17 +132,9 @@ export async function CompassSection({ locale }: CompassSectionProps) {
 
                 {/* Destination + descriptor. Slides right on hover. */}
                 <div className="min-w-0 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:translate-x-1">
-                  <div className="flex items-baseline gap-2.5">
-                    <h3 className="font-heading text-base font-semibold leading-tight sm:text-lg">
-                      {t(`tiles.${route.id}.label`)}
-                    </h3>
-                    <span
-                      aria-hidden="true"
-                      className="hidden font-mono text-[0.6rem] tabular-nums tracking-[0.2em] text-muted-foreground/45 transition-colors duration-(--motion-fast) group-hover:text-ring/70 sm:inline"
-                    >
-                      {route.bearing}°
-                    </span>
-                  </div>
+                  <h3 className="font-heading text-base font-semibold leading-tight sm:text-lg">
+                    {t(`tiles.${route.id}.label`)}
+                  </h3>
                   <p className="mt-0.5 line-clamp-1 text-[0.8rem] leading-snug text-muted-foreground">
                     {t(`tiles.${route.id}.description`)}
                   </p>
@@ -173,74 +150,5 @@ export async function CompassSection({ locale }: CompassSectionProps) {
         </Stagger>
       </div>
     </HomeSection>
-  );
-}
-
-/**
- * Compass-rose instrument. Static bezel + ticks + cardinal ticks with a
- * single accent needle, plus a slow radar sweep that ties the rose to
- * the section's radar backdrop. Sweep is motion-safe only; the rose is
- * fully decorative (aria-hidden).
- */
-function CompassRose() {
-  return (
-    <div aria-hidden="true" className="relative size-24 shrink-0">
-      <svg
-        viewBox="0 0 100 100"
-        className="size-full text-muted-foreground/35"
-        fill="none"
-      >
-        {/* Bezel rings. */}
-        <circle cx="50" cy="50" r="47" stroke="currentColor" strokeWidth="1" />
-        <circle
-          cx="50"
-          cy="50"
-          r="33"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          strokeDasharray="2 3"
-        />
-
-        {/* Minute ticks every 30°, cardinals longer. */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <line
-            key={i}
-            x1="50"
-            y1="5"
-            x2="50"
-            y2={i % 3 === 0 ? "13" : "9"}
-            stroke="currentColor"
-            strokeWidth={i % 3 === 0 ? "1.4" : "0.7"}
-            transform={`rotate(${i * 30} 50 50)`}
-          />
-        ))}
-
-        {/* Radar sweep — a fading radius that orbits the rose. */}
-        <g
-          className="text-ring motion-safe:animate-[spin_7s_linear_infinite]"
-          style={{ transformOrigin: "50px 50px", transformBox: "view-box" }}
-        >
-          <defs>
-            <linearGradient id="compass-sweep" x1="50" y1="50" x2="50" y2="8" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="currentColor" stopOpacity="0.55" />
-              <stop offset="1" stopColor="currentColor" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <line
-            x1="50"
-            y1="50"
-            x2="50"
-            y2="8"
-            stroke="url(#compass-sweep)"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </g>
-
-        {/* North needle + hub. */}
-        <path d="M50 14 L53.5 50 L50 46 L46.5 50 Z" className="text-ring" fill="currentColor" />
-        <circle cx="50" cy="50" r="2.4" className="text-foreground/70" fill="currentColor" />
-      </svg>
-    </div>
   );
 }

@@ -4,8 +4,11 @@ import {
   Children,
   useCallback,
   useEffect,
+  useRef,
   useState,
   type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -49,6 +52,7 @@ export function Carousel({
 
   const [index, setIndex] = useState(0);
   const [isHover, setHover] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [tabHidden, setTabHidden] = useState(() =>
     typeof document === "undefined" ? false : document.hidden,
   );
@@ -63,7 +67,7 @@ export function Carousel({
   useEffect(() => {
     if (!autoplay || reduced || count < 2) return;
     if (pauseOnHover && isHover) return;
-    if (tabHidden) return;
+    if (tabHidden || dragging) return;
     const id = window.setInterval(() => {
       setIndex((i) => (loop ? (i + 1) % count : Math.min(i + 1, count - 1)));
     }, autoplayDelay);
@@ -75,6 +79,7 @@ export function Carousel({
     pauseOnHover,
     isHover,
     tabHidden,
+    dragging,
     loop,
     autoplayDelay,
   ]);
@@ -103,6 +108,77 @@ export function Carousel({
     [go],
   );
 
+  // Pointer-swipe — the discrete carousel has no scrollable track, so we
+  // detect a horizontal flick and commit go(±1). Axis-locked so a vertical
+  // drag is handed back to the page (Lenis) and never hijacked; the click
+  // that completes a swipe is swallowed so it can't open the slide's link.
+  const swipe = useRef({
+    active: false,
+    startX: 0,
+    startY: 0,
+    dx: 0,
+    axis: null as null | "x" | "y",
+    moved: false,
+  });
+
+  const SWIPE_COMMIT = 48;
+
+  function onPointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    if (count < 2) return;
+    swipe.current = {
+      active: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      dx: 0,
+      axis: null,
+      moved: false,
+    };
+  }
+
+  function onPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    const s = swipe.current;
+    if (!s.active) return;
+    const dx = e.clientX - s.startX;
+    const dy = e.clientY - s.startY;
+    if (s.axis === null) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      s.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (s.axis === "x") {
+        setDragging(true);
+        // Capture so a fast flick still delivers its pointerup even if the
+        // pointer leaves the viewport.
+        e.currentTarget.setPointerCapture(e.pointerId);
+      }
+    }
+    if (s.axis === "y") return; // vertical → let the page scroll
+    s.dx = dx;
+    if (Math.abs(dx) > 8) s.moved = true;
+  }
+
+  function endSwipe(e: ReactPointerEvent<HTMLDivElement>) {
+    const s = swipe.current;
+    if (!s.active) return;
+    const committed = s.axis === "x";
+    const dx = s.dx;
+    s.active = false;
+    s.axis = null;
+    setDragging(false);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    if (committed && Math.abs(dx) > SWIPE_COMMIT) go(dx < 0 ? 1 : -1);
+  }
+
+  // Capture-phase: a click that completes a swipe is swallowed before it
+  // reaches the slide's link/button, so a drag never navigates.
+  function onClickCapture(e: ReactMouseEvent<HTMLDivElement>) {
+    if (swipe.current.moved) {
+      e.preventDefault();
+      e.stopPropagation();
+      swipe.current.moved = false;
+    }
+  }
+
   const prevLabel = controlLabels?.prev ?? "Previous slide";
   const nextLabel = controlLabels?.next ?? "Next slide";
 
@@ -116,7 +192,20 @@ export function Carousel({
       onKeyDown={onKeyDown}
       className={cn("relative", className)}
     >
-      <div className="relative overflow-hidden">
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          // Keep vertical page scroll native; we only own horizontal swipes.
+          count > 1 && "touch-pan-y",
+          count > 1 &&
+            "pointer-fine:cursor-grab pointer-fine:active:cursor-grabbing",
+        )}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endSwipe}
+        onPointerCancel={endSwipe}
+        onClickCapture={onClickCapture}
+      >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={index}

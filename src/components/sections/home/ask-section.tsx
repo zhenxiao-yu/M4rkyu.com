@@ -16,6 +16,7 @@ export async function AskSection() {
       eyebrow={t("eyebrow")}
       heading={t("heading")}
       lede={t("lede")}
+      align="center"
       dataSection="ask"
       background={<SectionBackground variant="terminal" />}
     >
