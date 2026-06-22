@@ -119,6 +119,7 @@ export function ItemForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`gallery-item:${collectionId}:${item?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}

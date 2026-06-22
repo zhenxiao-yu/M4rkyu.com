@@ -77,6 +77,7 @@ export function ProfileForm({
   return (
     <AdminForm
       action={action}
+      draftKey="profile"
       submitLabel={labels.save}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}

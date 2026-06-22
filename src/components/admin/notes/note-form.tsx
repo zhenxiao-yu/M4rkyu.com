@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import { TagField } from "@/components/admin/tag-field";
 import { SlugField } from "@/components/admin/slug-field";
 import { tiersToText } from "@/lib/notes/tiers";
 import type { Note } from "@/content/schemas";
@@ -118,6 +119,7 @@ export function NoteForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`notes:${note?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}
@@ -178,12 +180,10 @@ export function NoteForm({
           rows={8}
           hint={labels.bodyHint}
         />
-        <Field
+        <TagField
           label={labels.tagsLabel}
           name="tags"
           defaultValue={d.tags}
-          multiline
-          rows={3}
           hint={labels.tagsHint}
         />
       </Section>

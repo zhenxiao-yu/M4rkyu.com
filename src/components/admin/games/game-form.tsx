@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import { TagField } from "@/components/admin/tag-field";
 import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import { SlugField } from "@/components/admin/slug-field";
 import type { Game } from "@/content/schemas";
@@ -95,6 +96,7 @@ export function GameForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`games:${game?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}
@@ -158,8 +160,8 @@ export function GameForm({
           rows={5}
         />
         <Row cols={2}>
-          <Field label={labels.platformsLabel} name="platforms" defaultValue={d.platforms} multiline rows={4} />
-          <Field label={labels.pillarsLabel} name="pillars" defaultValue={d.pillars} multiline rows={4} />
+          <TagField label={labels.platformsLabel} name="platforms" defaultValue={d.platforms} />
+          <TagField label={labels.pillarsLabel} name="pillars" defaultValue={d.pillars} />
         </Row>
         <Field label={labels.postmortemLabel} name="postmortem" defaultValue={d.postmortem} multiline rows={4} />
         <Field label={labels.outcomeLabel} name="outcome" defaultValue={d.outcome} multiline rows={3} />

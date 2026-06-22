@@ -1702,6 +1702,9 @@
   },
   "Admin": {
     "eyebrow": "admin",
+    "draftFound": "You have unsaved changes from a previous visit.",
+    "draftRestore": "Restore",
+    "draftDiscard": "Discard",
     "dropzone": {
       "prompt": "Drag an image here, or click to browse",
       "replacePrompt": "Drag a new image to replace",
@@ -1726,6 +1729,8 @@
     "attentionAllClear": "All clear — nothing needs attention right now.",
     "attentionPending": "{count, plural, one {# comment awaiting review} other {# comments awaiting review}}",
     "attentionDrafts": "{section} — {count, plural, one {# draft} other {# drafts}}",
+    "attentionAlt": "{count, plural, one {# photo needs alt text} other {# photos need alt text}}",
+    "attentionPoster": "{count, plural, one {# media item needs a poster} other {# media items need a poster}}",
     "assist": {
       "generate": "Draft with AI",
       "success": "Drafted — review before saving.",
@@ -1938,13 +1943,18 @@
     },
     "batch": {
       "heading": "Batch upload",
-      "prompt": "Drag photos here, or click to browse",
+      "prompt": "Drag photos or a folder here",
       "hint": "Optimized to WebP in your browser before upload",
+      "browse": "Browse files",
+      "browseFolder": "Choose folder",
       "remove": "Remove",
       "add": "{count, plural, one {Upload # photo} other {Upload # photos}}",
       "clear": "Clear",
       "preparing": "Preparing…",
       "uploading": "Uploading…",
+      "progress": "{done} of {total} uploaded",
+      "retry": "Retry {count} failed",
+      "failedBadge": "Failed",
       "failed": "Some photos couldn't be uploaded.",
       "done": "{count, plural, one {# photo added as draft} other {# photos added as drafts}}"
     },
@@ -2231,6 +2241,7 @@
     "imageReplaceHint": "Upload a new file to replace the current poster.",
     "posterAltLabel": "Poster alt text",
     "posterAltHint": "Describe the poster for screen readers.",
+    "removePoster": "Remove the current poster on save",
     "currentImage": "Current poster",
     "format": {
       "video": "Video",

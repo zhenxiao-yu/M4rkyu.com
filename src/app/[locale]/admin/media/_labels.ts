@@ -32,6 +32,7 @@ export async function buildMediaFormLabels(locale: Locale) {
     imageReplaceHint: t("imageReplaceHint"),
     posterAltLabel: t("posterAltLabel"),
     posterAltHint: t("posterAltHint"),
+    removePoster: t("removePoster"),
     currentImage: t("currentImage"),
     submit: t("save"),
     cancel: t("cancel"),

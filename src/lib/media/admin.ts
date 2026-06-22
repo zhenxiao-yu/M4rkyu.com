@@ -147,12 +147,18 @@ export async function updateMediaAction(
     return adminError(dbErrorToMessage("upload failed"), { image: " " });
   }
 
+  // A new upload always wins; otherwise an explicit "Remove poster" nulls it.
+  const removePoster = !upload.path && formData.get("removePoster") === "on";
+
   const patch = upload.path
     ? { ...toRow(parsed), poster_path: upload.path }
-    : toRow(parsed);
+    : removePoster
+      ? { ...toRow(parsed), poster_path: null }
+      : toRow(parsed);
 
+  // Capture the existing object so a replace OR a remove can clean it up.
   let oldPath: string | null = null;
-  if (upload.path) {
+  if (upload.path || removePoster) {
     const { data } = await supabase
       .from("media_items")
       .select("poster_path")
@@ -167,7 +173,8 @@ export async function updateMediaAction(
     return adminError(dbErrorToMessage(error.message), { slug: " " });
   }
 
-  if (upload.path && oldPath && oldPath !== upload.path) {
+  // Delete the previous object on both replace and remove.
+  if (oldPath && oldPath !== upload.path && (upload.path || removePoster)) {
     await deleteContentImage(oldPath);
   }
 

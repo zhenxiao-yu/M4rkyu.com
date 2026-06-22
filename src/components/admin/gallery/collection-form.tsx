@@ -72,6 +72,7 @@ export function CollectionForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`gallery-collection:${collection?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}

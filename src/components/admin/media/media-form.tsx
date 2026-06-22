@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
-import { Section, Row, Field, Select } from "@/components/admin/form-kit";
+import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
 import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import {
   ImageDropzone,
@@ -35,6 +35,7 @@ interface Labels {
   dropzone: DropzoneLabels;
   posterAltLabel: string;
   posterAltHint: string;
+  removePoster: string;
   currentImage: string;
   submit: string;
   cancel: string;
@@ -99,6 +100,7 @@ export function MediaForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`media:${item?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}
@@ -170,6 +172,10 @@ export function MediaForm({
           labels={labels.dropzone}
           currentImageUrl={posterUrl}
         />
+        {/* Only meaningful when a poster exists; a new upload supersedes it. */}
+        {posterUrl ? (
+          <Checkbox name="removePoster" label={labels.removePoster} />
+        ) : null}
         <Field
           label={labels.posterAltLabel}
           name="posterAlt"

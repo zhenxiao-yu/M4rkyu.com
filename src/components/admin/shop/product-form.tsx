@@ -105,6 +105,7 @@ export function ProductForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`shop:${item?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}

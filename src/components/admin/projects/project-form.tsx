@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AdminActionState } from "@/lib/admin/action-state";
 import { AdminForm } from "@/components/admin/admin-form";
 import { Section, Row, Field, Select, Checkbox } from "@/components/admin/form-kit";
+import { TagField } from "@/components/admin/tag-field";
 import { AiAssistButton } from "@/components/admin/ai-assist-button";
 import {
   ImageDropzone,
@@ -171,6 +172,7 @@ export function ProjectForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`projects:${project?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}
@@ -244,13 +246,11 @@ export function ProjectForm({
           <Field label={labels.outcomeLabel} name="outcome" defaultValue={d.outcome} multiline rows={3} />
         </Row>
         <Row cols={2}>
-          <Field
+          <TagField
             label={labels.stackLabel}
             name="stack"
             defaultValue={d.stack}
             hint={labels.stackHint}
-            multiline
-            rows={4}
           />
           <Field
             label={labels.tagsLabel}
@@ -317,13 +317,11 @@ export function ProjectForm({
             defaultValue={d.timeline}
             hint={labels.timelineHint}
           />
-          <Field
+          <TagField
             label={labels.platformsLabel}
             name="platforms"
             defaultValue={d.platforms}
             hint={labels.platformsHint}
-            multiline
-            rows={3}
           />
         </Row>
         <Field

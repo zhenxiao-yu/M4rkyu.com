@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { AlertCircle, ArrowUpRight, CheckCircle2, FilePen, Plus } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle2, FilePen, ImageOff, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -65,11 +65,23 @@ export default async function AdminOverviewPage({
       .select("user_id", { count: "exact", head: true }),
     ...sectionCountQueries,
     ...draftCountQueries,
+    // Publish-blockers — photos with no alt text, media with no poster — so
+    // the desk surfaces what to finish, not just what's still a draft.
+    supabase
+      .from("gallery_items")
+      .select("id", { count: "exact", head: true })
+      .or("alt.is.null,alt.eq."),
+    supabase
+      .from("media_items")
+      .select("id", { count: "exact", head: true })
+      .is("poster_path", null),
   ]);
 
   const [usersResult, pendingResult, approvedResult, savesResult] = results;
   const sectionCounts = results.slice(4, 4 + sectionLen);
   const draftCounts = results.slice(4 + sectionLen, 4 + sectionLen * 2);
+  const altGap = results[4 + sectionLen * 2]?.count ?? 0;
+  const posterGap = results[4 + sectionLen * 2 + 1]?.count ?? 0;
 
   const stats = [
     { label: t("statUsers"), value: usersResult.count ?? 0 },
@@ -95,7 +107,8 @@ export default async function AdminOverviewPage({
     href: section.href,
     count: draftCounts[index]?.count ?? 0,
   })).filter((item) => item.count > 0);
-  const hasAttention = pendingCount > 0 || draftItems.length > 0;
+  const hasAttention =
+    pendingCount > 0 || draftItems.length > 0 || altGap > 0 || posterGap > 0;
 
   return (
     <>
@@ -191,6 +204,46 @@ export default async function AdminOverviewPage({
                   </Link>
                 </li>
               ))}
+              {altGap > 0 ? (
+                <li>
+                  <Link
+                    href="/admin/gallery/library"
+                    locale={locale}
+                    className="group glass-surface glass-interactive flex items-center gap-3 rounded-xl p-4"
+                  >
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">
+                      <ImageOff aria-hidden="true" className="size-4" />
+                    </span>
+                    <span className="min-w-0 flex-1 text-sm text-foreground">
+                      {t("attentionAlt", { count: altGap })}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
+                    />
+                  </Link>
+                </li>
+              ) : null}
+              {posterGap > 0 ? (
+                <li>
+                  <Link
+                    href="/admin/media"
+                    locale={locale}
+                    className="group glass-surface glass-interactive flex items-center gap-3 rounded-xl p-4"
+                  >
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">
+                      <ImageOff aria-hidden="true" className="size-4" />
+                    </span>
+                    <span className="min-w-0 flex-1 text-sm text-foreground">
+                      {t("attentionPoster", { count: posterGap })}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-foreground"
+                    />
+                  </Link>
+                </li>
+              ) : null}
             </ul>
           ) : (
             <div className="glass-surface flex items-center gap-3 rounded-xl p-4 text-sm text-muted-foreground">

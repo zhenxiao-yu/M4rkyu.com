@@ -96,6 +96,7 @@ export function ResourceForm({
   return (
     <AdminForm
       action={action}
+      draftKey={`resources:${resource?.slug ?? "new"}`}
       submitLabel={labels.submit}
       cancelLabel={labels.cancel}
       cancelHref={cancelHref}
