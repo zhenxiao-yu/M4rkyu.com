@@ -57,7 +57,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
         {/* Subtle masthead — one quiet line, not a nav. */}
         <div
           data-hero-intro
-          className="absolute inset-x-4 top-[calc(var(--dock-h)+1.1rem)] z-10 flex items-center justify-between font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/45 sm:inset-x-6"
+          className="absolute inset-x-4 top-[calc(var(--dock-h)+1.1rem)] z-10 flex items-center justify-between font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/60 sm:inset-x-6"
         >
           <span>M4RKYU.SYS</span>
           <span className="inline-flex items-center gap-1.5">

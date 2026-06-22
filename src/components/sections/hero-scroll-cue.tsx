@@ -17,7 +17,9 @@ export function HeroScrollCue({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => scrollSpine(1)}
-      aria-label={t("scrollNextAria")}
+      // No aria-label: the visible "Scroll to explore" label is the accessible
+      // name, so it matches what voice-control users say (WCAG 2.5.3). The
+      // chevron is aria-hidden, so the name stays clean.
       className={cn(
         "group inline-flex flex-col items-center gap-1.5 rounded-full p-1",
         FOCUS_RING,
