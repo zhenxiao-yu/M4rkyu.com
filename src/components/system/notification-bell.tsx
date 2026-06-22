@@ -184,7 +184,7 @@ export function NotificationBell({ items, locale }: NotificationBellProps) {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground hover:-translate-y-px active:translate-y-0",
+          "relative inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground hover:-translate-y-px active:translate-y-0",
           FOCUS_RING,
           open && "border-ring/60 text-foreground",
         )}

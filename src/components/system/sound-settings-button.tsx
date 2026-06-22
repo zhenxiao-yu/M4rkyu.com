@@ -25,7 +25,7 @@ export function SoundSettingsButton() {
           aria-haspopup="dialog"
           onClick={() => setDialogOpen(true)}
           className={cn(
-            "relative inline-flex size-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
+            "relative inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,transform] duration-(--motion-fast) ease-(--ease-premium)",
             "hover:-translate-y-px hover:border-ring/50 hover:text-foreground active:translate-y-0",
             FOCUS_RING,
             isPlaying && "border-ring/60 text-foreground",
