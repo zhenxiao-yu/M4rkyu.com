@@ -121,7 +121,11 @@ function Section({
           </a>
         </div>
       </BlurFade>
-      <div className="mt-6">{children}</div>
+      {/* Content lags the heading by a beat so each numbered section reveals
+          header → body, the same two-step cascade the home sections use. */}
+      <BlurFade delay={0.1} className="mt-6">
+        {children}
+      </BlurFade>
     </section>
   );
 }
