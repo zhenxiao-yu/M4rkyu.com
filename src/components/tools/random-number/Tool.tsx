@@ -1,128 +1,218 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, RefreshCw } from "lucide-react";
-import { toast } from "sonner";
+import { RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { clampInt } from "@/components/tools/_shared/number";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  cryptoRandomInt,
+  randomNumbers,
+  RANDOM_NUMBER_MAX_COUNT,
+  RANDOM_NUMBER_MIN_COUNT,
+  type RandomNumberResult,
+} from "@/lib/tools/random-number";
+import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
-function rng(min: number, max: number): number {
-  // crypto.getRandomValues for uniform unbiased sampling in [min, max].
-  const range = max - min + 1;
-  const buf = new Uint32Array(1);
-  // Rejection sample to remove modulo bias.
-  const limit = Math.floor(0x100000000 / range) * range;
-  let value: number;
-  do {
-    crypto.getRandomValues(buf);
-    value = buf[0];
-  } while (value >= limit);
-  return min + (value % range);
-}
+// Bounds are intentionally wide but finite so the number inputs can't overflow
+// into Infinity / lose integer precision. Count is capped by the generator
+// (RANDOM_NUMBER_MAX_COUNT) to keep a stray request from freezing the tab.
+const BOUND = 1_000_000;
+const DEFAULT_MIN = 1;
+const DEFAULT_MAX = 100;
+const DEFAULT_COUNT = 5;
+
+// Browser-backed unbiased RNG, created once. The tool is mounted client-only
+// (dynamic ssr:false in tool-renderer), so crypto.getRandomValues is always
+// available — no hydration concern for the lazy initial draw below.
+const randomInt = cryptoRandomInt((array) => crypto.getRandomValues(array));
 
 export function RandomNumber() {
-  const [min, setMin] = useState(1);
-  const [max, setMax] = useState(100);
-  const [count, setCount] = useState(1);
+  const t = useTranslations("Tools.randomNumber");
+  const tc = useTranslations("Tools.common");
+
+  // Raw input strings so each field stays editable (allows transient empty /
+  // partial / "-" values); clamped numbers are derived on demand.
+  const [minDraft, setMinDraft] = useState(String(DEFAULT_MIN));
+  const [maxDraft, setMaxDraft] = useState(String(DEFAULT_MAX));
+  const [countDraft, setCountDraft] = useState(String(DEFAULT_COUNT));
   const [unique, setUnique] = useState(false);
-  const [values, setValues] = useState<number[]>(() => [rng(1, 100)]);
-  const [error, setError] = useState<string | null>(null);
 
-  function regenerate() {
-    setError(null);
-    const lo = Math.min(min, max);
-    const hi = Math.max(min, max);
-    const range = hi - lo + 1;
-    if (unique && count > range) {
-      setError("Cannot draw more unique values than the range contains.");
-      return;
-    }
-    const out: number[] = [];
-    if (unique) {
-      const seen = new Set<number>();
-      while (seen.size < count) {
-        const v = rng(lo, hi);
-        if (!seen.has(v)) {
-          seen.add(v);
-          out.push(v);
-        }
-      }
-    } else {
-      for (let i = 0; i < count; i++) out.push(rng(lo, hi));
-    }
-    setValues(out);
+  const min = clampInt(minDraft, -BOUND, BOUND, DEFAULT_MIN);
+  const max = clampInt(maxDraft, -BOUND, BOUND, DEFAULT_MAX);
+  const count = clampInt(
+    countDraft,
+    RANDOM_NUMBER_MIN_COUNT,
+    RANDOM_NUMBER_MAX_COUNT,
+    DEFAULT_COUNT,
+  );
+
+  // null = the "press generate" empty state; a result = generated (success or a
+  // count-exceeds-range failure). These are deliberately distinct surfaces.
+  const [result, setResult] = useState<RandomNumberResult | null>(null);
+
+  const swapped = min > max;
+
+  function generate() {
+    setResult(randomNumbers({ min, max, count, unique }, randomInt));
   }
 
-  function copy() {
-    void navigator.clipboard.writeText(values.join(", ")).then(() => toast.success("Copied"));
-  }
+  const values = result?.ok ? result.values : [];
+  const all = values.join(", ");
 
   return (
     <div className="grid gap-4">
-      <div className="grid gap-3 sm:grid-cols-4">
-        <Number label="Min" value={min} onChange={setMin} />
-        <Number label="Max" value={max} onChange={setMax} />
-        <Number label="Count" value={count} min={1} max={500} onChange={setCount} />
-        <label className="flex items-center gap-2 self-end rounded-md border border-border bg-background/40 px-3 py-2 text-sm">
+      {/* Controls */}
+      <div className="flex flex-wrap items-end gap-2 min-w-0">
+        <NumberField
+          id="rn-min"
+          label={t("min")}
+          ariaLabel={t("minAria")}
+          value={minDraft}
+          fallback={DEFAULT_MIN}
+          onChange={setMinDraft}
+        />
+        <NumberField
+          id="rn-max"
+          label={t("max")}
+          ariaLabel={t("maxAria")}
+          value={maxDraft}
+          fallback={DEFAULT_MAX}
+          onChange={setMaxDraft}
+        />
+        <NumberField
+          id="rn-count"
+          label={t("count")}
+          ariaLabel={t("countAria", {
+            min: RANDOM_NUMBER_MIN_COUNT,
+            max: RANDOM_NUMBER_MAX_COUNT,
+          })}
+          value={countDraft}
+          min={RANDOM_NUMBER_MIN_COUNT}
+          max={RANDOM_NUMBER_MAX_COUNT}
+          fallback={DEFAULT_COUNT}
+          onChange={setCountDraft}
+        />
+        <label
+          htmlFor="rn-unique"
+          className={cn(
+            "flex min-h-9 cursor-pointer items-center gap-2 self-end rounded-md border border-border bg-background/40 px-3 py-2 text-sm",
+            "motion-safe:transition-colors motion-safe:duration-(--motion-fast) motion-safe:ease-(--ease-premium)",
+            "hover:bg-background/70 has-focus-visible:ring-2 has-focus-visible:ring-ring",
+          )}
+        >
           <input
+            id="rn-unique"
             type="checkbox"
             checked={unique}
             onChange={(e) => setUnique(e.target.checked)}
-            className="size-4 rounded border-border accent-ring"
+            className="size-4 shrink-0 rounded border-border accent-ring focus-visible:outline-none"
           />
-          <span>Unique</span>
+          <span className="font-mono text-xs">{t("unique")}</span>
         </label>
       </div>
-      <div className="flex gap-2">
-        <Button type="button" size="sm" onClick={regenerate}>
-          <RefreshCw className="size-3.5" aria-hidden="true" /> Generate
+
+      {/* Actions */}
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
+        <Button type="button" size="sm" onClick={generate} className="min-h-9">
+          <RefreshCw className="size-3.5" aria-hidden="true" />
+          {tc("generate")}
         </Button>
-        <Button type="button" size="sm" variant="outline" onClick={copy} disabled={values.length === 0}>
-          <Copy className="size-3.5" aria-hidden="true" /> Copy
-        </Button>
+        <CopyButton
+          value={all}
+          label={t("copyResultsLabel")}
+          size="sm"
+          disabled={values.length === 0}
+          className="ml-auto min-h-9"
+        >
+          {tc("copyAll")}
+        </CopyButton>
       </div>
-      {error ? (
-        <p className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
-          {error}
+
+      {swapped ? (
+        <p role="status" className="font-mono text-xs text-muted-foreground">
+          {t("swapHint", { min, max })}
         </p>
       ) : null}
-      <ul className="flex flex-wrap gap-2 rounded-md border border-border bg-card/40 p-3">
-        {values.map((v, i) => (
-          <li key={i} className="rounded-md border border-border bg-background/60 px-3 py-1 font-mono text-sm tabular-nums">
-            {v}
-          </li>
-        ))}
-      </ul>
-      <p className="text-[0.65rem] text-muted-foreground/70">
-        Drawn from <code>crypto.getRandomValues</code> with rejection sampling — modulo-bias free.
-      </p>
+
+      {/* Results / error / empty — three distinct surfaces */}
+      {result && !result.ok ? (
+        <p
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive"
+        >
+          {t("countExceedsRange", {
+            count: result.count,
+            range: result.rangeSize,
+          })}
+        </p>
+      ) : result === null ? (
+        <div className="grid place-items-center gap-1 rounded-md border border-dashed border-border bg-card/40 px-4 py-8 text-center">
+          <p className="text-sm text-muted-foreground">{tc("empty")}</p>
+          <p className="text-xs text-muted-foreground/70">{tc("emptyHint")}</p>
+        </div>
+      ) : (
+        <ul
+          aria-label={t("resultsAria")}
+          className="flex flex-wrap gap-2 rounded-md border border-border bg-card/40 p-3"
+        >
+          {values.map((v, i) => (
+            <li
+              key={`${i}-${v}`}
+              className="rounded-md border border-border bg-background/60 px-3 py-1 font-mono text-sm tabular-nums"
+            >
+              {v}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p className="text-[0.65rem] text-muted-foreground/70">{t("note")}</p>
     </div>
   );
 }
 
-function Number({
+function NumberField({
+  id,
   label,
+  ariaLabel,
   value,
-  onChange,
   min,
   max,
+  fallback,
+  onChange,
 }: {
+  id: string;
   label: string;
-  value: number;
-  onChange: (v: number) => void;
+  ariaLabel: string;
+  value: string;
   min?: number;
   max?: number;
+  fallback: number;
+  onChange: (v: string) => void;
 }) {
   return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">{label}</span>
+    <label htmlFor={id} className="grid min-w-0 gap-1.5 text-sm">
+      <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+        {label}
+      </span>
       <Input
+        id={id}
         type="number"
+        inputMode="numeric"
         value={value}
         min={min}
         max={max}
-        onChange={(e) => onChange(Math.trunc(globalThis.Number(e.target.value) || 0))}
-        className="font-mono"
+        aria-label={ariaLabel}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={(e) => {
+          const lo = min ?? -BOUND;
+          const hi = max ?? BOUND;
+          onChange(String(clampInt(e.target.value, lo, hi, fallback)));
+        }}
+        className={cn("w-24 min-w-0 font-mono", FOCUS_RING_INSET)}
       />
     </label>
   );

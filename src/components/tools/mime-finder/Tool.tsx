@@ -1,18 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { findMime, type MimeEntry } from "@/lib/tools/mime-finder";
 
-interface Mime {
-  ext: string;
-  mime: string;
-  description: string;
-}
-
-const TYPES: Mime[] = [
+// DATA is verbatim and never localized — extensions and MIME strings are
+// identifiers, not prose. Only the UI chrome around them is translated.
+const TYPES: MimeEntry[] = [
   { ext: ".aac", mime: "audio/aac", description: "AAC audio" },
   { ext: ".avif", mime: "image/avif", description: "AVIF image" },
   { ext: ".bin", mime: "application/octet-stream", description: "Any kind of binary data" },
@@ -61,47 +57,63 @@ const TYPES: Mime[] = [
 ];
 
 export function MimeFinder() {
+  const t = useTranslations("Tools.mimeFinder");
+
   const [query, setQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase().replace(/^\./, "");
-    if (!q) return TYPES;
-    return TYPES.filter(
-      (t) =>
-        t.ext.toLowerCase().includes(q) || t.mime.toLowerCase().includes(q) || t.description.toLowerCase().includes(q),
-    );
-  }, [query]);
-
-  function copy(value: string, label: string) {
-    void navigator.clipboard.writeText(value).then(() => toast.success(`Copied ${label}`));
-  }
+  const trimmed = query.trim();
+  const filtered = useMemo(() => findMime(TYPES, query), [query]);
+  const noMatch = trimmed.length > 0 && filtered.length === 0;
 
   return (
     <div className="grid gap-4">
       <Input
+        type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search by extension, MIME, or name…"
-        aria-label="Search MIME types"
+        placeholder={t("searchPlaceholder")}
+        aria-label={t("searchLabel")}
+        autoComplete="off"
+        autoCapitalize="off"
+        spellCheck={false}
         className="font-mono"
       />
-      <ul className="grid gap-1.5">
-        {filtered.map((t) => (
-          <li key={`${t.ext}-${t.mime}`} className="grid grid-cols-[5rem_1fr_auto] items-center gap-3 rounded-md border border-border bg-card/40 px-3 py-2">
-            <code className="font-mono text-xs text-foreground">{t.ext}</code>
-            <div className="min-w-0">
-              <code className="block truncate font-mono text-xs">{t.mime}</code>
-              <span className="block truncate text-[0.65rem] text-muted-foreground">{t.description}</span>
-            </div>
-            <Button type="button" size="sm" variant="outline" onClick={() => copy(t.mime, t.mime)} aria-label={`Copy ${t.mime}`}>
-              <Copy className="size-3" aria-hidden="true" />
-            </Button>
-          </li>
-        ))}
-        {filtered.length === 0 ? (
-          <li className="rounded-md border border-dashed border-border/60 px-3 py-3 text-xs text-muted-foreground">No matches.</li>
-        ) : null}
-      </ul>
+
+      {noMatch ? (
+        <p
+          role="status"
+          className="rounded-md border border-dashed border-border/60 px-3 py-3 text-center text-xs text-muted-foreground"
+        >
+          {t("noResults", { query: trimmed })}
+        </p>
+      ) : (
+        <ul className="grid gap-1.5">
+          {filtered.map((entry) => (
+            <li
+              key={`${entry.ext}-${entry.mime}`}
+              className="grid grid-cols-[minmax(0,4.5rem)_1fr_auto] items-center gap-2 rounded-md border border-border bg-card/40 px-3 py-2 sm:gap-3"
+            >
+              <code
+                className="min-w-0 wrap-break-word font-mono text-xs text-foreground"
+                title={t("extensionLabel")}
+              >
+                {entry.ext}
+              </code>
+              <div className="min-w-0">
+                <code className="block wrap-break-word font-mono text-xs" title={t("mimeLabel")}>
+                  {entry.mime}
+                </code>
+                <span className="block wrap-break-word text-[0.65rem] text-muted-foreground">
+                  {entry.description}
+                </span>
+              </div>
+              <CopyButton value={entry.mime} label={entry.mime} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p className="text-[0.65rem] leading-relaxed text-muted-foreground">{t("helper")}</p>
     </div>
   );
 }

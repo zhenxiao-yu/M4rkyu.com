@@ -1,151 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { Input } from "@/components/ui/input";
+import {
+  analyzeSelector,
+  formatSpecificity,
+  type TokenColumn,
+} from "@/lib/tools/specificity";
+import { cn } from "@/lib/utils";
 
-type Triple = [number, number, number];
-
-interface Part {
-  text: string;
-  col: 0 | 1 | 2 | 3 | -1; // 0 = none, 1/2/3 = a/b/c, -1 = nested (:is/:not/:has)
-}
-
-const LEGACY_PSEUDO_ELEMENTS = new Set([
-  "before",
-  "after",
-  "first-line",
-  "first-letter",
-]);
-
-function readIdent(s: string, start: number): { text: string; end: number } {
-  let i = start;
-  while (i < s.length && /[\w-]/.test(s[i])) i++;
-  return { text: s.slice(start, i), end: i };
-}
-
-function matchParen(s: string, openIdx: number): number {
-  let depth = 0;
-  for (let i = openIdx; i < s.length; i++) {
-    if (s[i] === "(") depth++;
-    else if (s[i] === ")") {
-      depth--;
-      if (depth === 0) return i;
-    }
-  }
-  return s.length;
-}
-
-function add(t: Triple, o: Triple): Triple {
-  return [t[0] + o[0], t[1] + o[1], t[2] + o[2]];
-}
-function gt(x: Triple, y: Triple): boolean {
-  return x[0] !== y[0] ? x[0] > y[0] : x[1] !== y[1] ? x[1] > y[1] : x[2] > y[2];
-}
-
-// Specificity of the most specific selector in a comma list — the rule
-// for the argument of :is() / :not() / :has().
-function maxOfList(list: string): Triple {
-  let best: Triple = [0, 0, 0];
-  for (const sel of splitTopLevel(list)) {
-    const t = computeTriple(sel);
-    if (gt(t, best)) best = t;
-  }
-  return best;
-}
-
-function splitTopLevel(s: string): string[] {
-  const out: string[] = [];
-  let depth = 0;
-  let last = 0;
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] === "(") depth++;
-    else if (s[i] === ")") depth--;
-    else if (s[i] === "," && depth === 0) {
-      out.push(s.slice(last, i));
-      last = i + 1;
-    }
-  }
-  out.push(s.slice(last));
-  return out.filter((p) => p.trim().length > 0);
-}
-
-function tokenize(selector: string): { triple: Triple; parts: Part[] } {
-  const s = selector;
-  const parts: Part[] = [];
-  let t: Triple = [0, 0, 0];
-  let i = 0;
-
-  while (i < s.length) {
-    const ch = s[i];
-    if (ch === "#") {
-      const m = readIdent(s, i + 1);
-      t = add(t, [1, 0, 0]);
-      parts.push({ text: "#" + m.text, col: 1 });
-      i = m.end;
-    } else if (ch === ".") {
-      const m = readIdent(s, i + 1);
-      t = add(t, [0, 1, 0]);
-      parts.push({ text: "." + m.text, col: 2 });
-      i = m.end;
-    } else if (ch === "[") {
-      const end = s.indexOf("]", i);
-      const stop = end >= 0 ? end + 1 : s.length;
-      t = add(t, [0, 1, 0]);
-      parts.push({ text: s.slice(i, stop), col: 2 });
-      i = stop;
-    } else if (ch === ":") {
-      const isDouble = s[i + 1] === ":";
-      const start = i;
-      let j = i + (isDouble ? 2 : 1);
-      const m = readIdent(s, j);
-      const name = m.text.toLowerCase();
-      j = m.end;
-      let args: string | null = null;
-      if (s[j] === "(") {
-        const close = matchParen(s, j);
-        args = s.slice(j + 1, close);
-        j = close + 1;
-      }
-      const full = s.slice(start, j);
-      if (isDouble || (!isDouble && LEGACY_PSEUDO_ELEMENTS.has(name))) {
-        t = add(t, [0, 0, 1]);
-        parts.push({ text: full, col: 3 });
-      } else if (name === "where") {
-        parts.push({ text: full, col: 0 });
-      } else if (name === "is" || name === "not" || name === "has") {
-        t = add(t, maxOfList(args ?? ""));
-        parts.push({ text: full, col: -1 });
-      } else {
-        t = add(t, [0, 1, 0]);
-        parts.push({ text: full, col: 2 });
-      }
-      i = j;
-    } else if (ch === "*") {
-      parts.push({ text: "*", col: 0 });
-      i++;
-    } else if (/[a-zA-Z\\]/.test(ch)) {
-      const m = readIdent(s, i);
-      const text = m.text || ch;
-      t = add(t, [0, 0, 1]);
-      parts.push({ text, col: 3 });
-      i = m.end > i ? m.end : i + 1;
-    } else {
-      // combinator / whitespace / comma — zero specificity
-      i++;
-    }
-  }
-  return { triple: t, parts };
-}
-
-function computeTriple(selector: string): Triple {
-  return tokenize(selector).triple;
-}
-
-const COL_STYLE: Record<number, string> = {
-  1: "border-signal/40 bg-signal/10 text-signal",
-  2: "border-ring/40 bg-ring/10 text-ring",
-  3: "border-success/40 bg-success/10 text-success",
-  0: "border-border bg-muted/30 text-muted-foreground",
-  [-1]: "border-warning/40 bg-warning/10 text-warning",
+// Per-column surface treatment. Three inks max per theme — IDs ride the signal
+// ink, classes the primary ring, elements the success ink; neutral + functional
+// stay muted/warning so the breakdown reads without a fourth accent.
+const COLUMN_STYLE: Record<TokenColumn, string> = {
+  a: "border-signal/40 bg-signal/10 text-signal",
+  b: "border-ring/40 bg-ring/10 text-ring",
+  c: "border-success/40 bg-success/10 text-success",
+  zero: "border-border bg-muted/30 text-muted-foreground",
+  functional: "border-warning/40 bg-warning/10 text-warning",
 };
 
 const EXAMPLES = [
@@ -157,95 +31,123 @@ const EXAMPLES = [
 ];
 
 export function Specificity() {
+  const t = useTranslations("Tools.specificity");
+  const tc = useTranslations("Tools.common");
+  const inputId = useId();
+
   const [input, setInput] = useState("#nav .item a:hover");
 
-  const { triple, parts } = useMemo(() => {
-    const trimmed = input.trim();
-    if (!trimmed) return { triple: [0, 0, 0] as Triple, parts: [] as Part[] };
-    // Score the most specific selector when a list is pasted.
-    const selectors = splitTopLevel(trimmed);
-    let best = tokenize(selectors[0] ?? "");
-    for (const sel of selectors.slice(1)) {
-      const next = tokenize(sel);
-      if (gt(next.triple, best.triple)) best = next;
-    }
-    return best;
-  }, [input]);
+  const { score, tokens } = useMemo(() => analyzeSelector(input), [input]);
+
+  const trimmed = input.trim();
+  const triple = formatSpecificity(score);
+
+  const columns = [
+    { key: "a" as const, count: score.a, label: t("columns.ids") },
+    { key: "b" as const, count: score.b, label: t("columns.classes") },
+    { key: "c" as const, count: score.c, label: t("columns.elements") },
+  ];
+
+  // A spoken-word equivalent of (a, b, c) for screen readers + the copy value.
+  const spoken = columns
+    .map((col) => `${col.count} ${col.label}`)
+    .join(", ");
 
   return (
     <div className="grid gap-5">
-      <input
-        type="text"
-        spellCheck={false}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="#nav .item a:hover"
-        aria-label="CSS selector"
-        className="w-full rounded-md border border-border bg-background px-3 py-2.5 font-mono text-sm"
-      />
+      <div className="grid gap-1.5">
+        <label
+          htmlFor={inputId}
+          className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+        >
+          {t("inputLabel")}
+        </label>
+        <Input
+          id={inputId}
+          type="text"
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={t("inputPlaceholder")}
+          className="min-w-0 font-mono"
+        />
+      </div>
 
-      {/* Big (a, b, c) readout. */}
+      {/* Big (a, b, c) readout — stacks 1-col on the narrowest screens. */}
       <div className="grid grid-cols-3 gap-2">
-        {(
-          [
-            { label: "IDs", v: triple[0], col: 1 },
-            { label: "Classes · attrs · pseudo-class", v: triple[1], col: 2 },
-            { label: "Elements · pseudo-elements", v: triple[2], col: 3 },
-          ] as const
-        ).map((c) => (
+        {columns.map((col) => (
           <div
-            key={c.label}
-            className={`grid place-items-center gap-1 rounded-lg border p-4 text-center ${COL_STYLE[c.col]}`}
+            key={col.key}
+            className={cn(
+              "grid min-w-0 place-items-center gap-1 rounded-lg border p-3 text-center sm:p-4",
+              COLUMN_STYLE[col.key],
+            )}
           >
-            <span className="font-display text-4xl font-black tabular-nums leading-none">
-              {c.v}
+            <span className="font-display text-3xl font-black leading-none tabular-nums sm:text-4xl">
+              {col.count}
             </span>
             <span className="font-mono text-[0.55rem] uppercase leading-tight tracking-[0.12em] opacity-80">
-              {c.label}
+              {col.label}
             </span>
           </div>
         ))}
       </div>
-      <p className="text-center font-mono text-sm text-muted-foreground">
-        specificity ={" "}
-        <span className="text-foreground">
-          ({triple[0]}, {triple[1]}, {triple[2]})
-        </span>
-      </p>
 
-      {/* Token breakdown. */}
-      {parts.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5">
-          {parts.map((p, i) => (
-            <span
-              key={i}
-              className={`rounded-md border px-2 py-1 font-mono text-xs ${COL_STYLE[p.col]}`}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <p className="text-center font-mono text-sm text-muted-foreground">
+          {t("scoreLabel")}{" "}
+          <span className="break-all text-foreground">{triple}</span>
+        </p>
+        <CopyButton value={triple} label={t("scoreNoun")} />
+        {/* Spoken score for assistive tech, mirrored from the visual triple. */}
+        <span className="sr-only" role="status" aria-live="polite">
+          {t("scoreLabel")} {spoken}
+        </span>
+      </div>
+
+      {/* Token breakdown — wraps freely, each chip break-all so long
+          attribute/:is() args never overflow at 360px. */}
+      {tokens.length > 0 ? (
+        <ul className="flex flex-wrap gap-1.5" aria-label={t("breakdownLabel")}>
+          {tokens.map((tok, i) => (
+            <li
+              key={`${tok.text}-${i}`}
+              className={cn(
+                "break-all rounded-md border px-2 py-1 font-mono text-xs",
+                COLUMN_STYLE[tok.column],
+              )}
             >
-              {p.text}
-            </span>
+              {tok.text}
+            </li>
           ))}
-        </div>
+        </ul>
+      ) : trimmed.length === 0 ? (
+        <p className="rounded-md border border-dashed border-border bg-muted/20 px-3 py-2 text-center text-xs text-muted-foreground">
+          {tc("emptyHint")}
+        </p>
       ) : null}
 
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-          Try
+          {t("tryLabel")}
         </span>
         {EXAMPLES.map((ex) => (
           <button
             key={ex}
             type="button"
             onClick={() => setInput(ex)}
-            className="rounded-md border border-border px-2 py-1 font-mono text-[0.7rem] text-muted-foreground transition-colors duration-(--motion-fast) hover:border-foreground/40 hover:text-foreground"
+            className="min-h-9 break-all rounded-md border border-border px-2 py-1 font-mono text-[0.7rem] text-muted-foreground motion-safe:transition-colors motion-safe:duration-(--motion-fast) hover:border-foreground/40 hover:text-foreground"
           >
             {ex}
           </button>
         ))}
       </div>
+
       <p className="font-mono text-[0.6rem] leading-relaxed text-muted-foreground">
-        :is() / :not() / :has() take their most specific argument; :where()
-        and the universal selector contribute nothing. Combinators never add
-        specificity.
+        {t("explanation")}
       </p>
     </div>
   );

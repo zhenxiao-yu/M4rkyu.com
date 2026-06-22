@@ -1,78 +1,150 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy, Link2, Link2Off } from "lucide-react";
-import { toast } from "sonner";
+import { useId, useState } from "react";
+import { Link2, Link2Off } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { clampInt } from "@/components/tools/_shared/number";
+import {
+  buildBorderRadiusCss,
+  type CornerRadii,
+  type RadiusUnit,
+} from "@/lib/tools/border-radius";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
+
+// CSS border-radius generator. Native range + number inputs (no shadcn slider
+// needed); the shorthand is assembled by the pure, unit-tested
+// buildBorderRadius in @/lib/tools/border-radius so the preview and copy value
+// never drift. Numeric fields are NaN-safe (clampInt) and clamp to the active
+// unit's range, so the output is always a valid border-radius.
+
+const INITIAL: CornerRadii = { tl: 24, tr: 24, br: 24, bl: 24 };
+const UNITS: readonly RadiusUnit[] = ["px", "%"] as const;
+const MAX_BY_UNIT: Record<RadiusUnit, number> = { px: 200, "%": 50 };
+
+const CORNERS = ["tl", "tr", "br", "bl"] as const;
+type CornerKey = (typeof CORNERS)[number];
 
 export function BorderRadius() {
-  const [tl, setTl] = useState(24);
-  const [tr, setTr] = useState(24);
-  const [br, setBr] = useState(24);
-  const [bl, setBl] = useState(24);
+  const t = useTranslations("Tools.borderRadius");
+  const tc = useTranslations("Tools.common");
+
+  const [radii, setRadii] = useState<CornerRadii>(INITIAL);
+  const [unit, setUnit] = useState<RadiusUnit>("px");
   const [linked, setLinked] = useState(true);
 
-  function setAll(value: number) {
-    setTl(value);
-    setTr(value);
-    setBr(value);
-    setBl(value);
+  const max = MAX_BY_UNIT[unit];
+  const css = buildBorderRadiusCss(radii, unit);
+  const preview = `${radii.tl}${unit} ${radii.tr}${unit} ${radii.br}${unit} ${radii.bl}${unit}`;
+
+  function setCorner(key: CornerKey, value: number) {
+    setRadii((prev) =>
+      linked ? { tl: value, tr: value, br: value, bl: value } : { ...prev, [key]: value },
+    );
   }
 
-  const css = useMemo(() => {
-    if (tl === tr && tr === br && br === bl) return `border-radius: ${tl}px;`;
-    return `border-radius: ${tl}px ${tr}px ${br}px ${bl}px;`;
-  }, [tl, tr, br, bl]);
-
-  const tw = useMemo(() => {
-    if (tl === tr && tr === br && br === bl) {
-      return `rounded-[${tl}px]`;
-    }
-    return `rounded-tl-[${tl}px] rounded-tr-[${tr}px] rounded-br-[${br}px] rounded-bl-[${bl}px]`;
-  }, [tl, tr, br, bl]);
-
-  const style: React.CSSProperties = {
-    borderRadius: `${tl}px ${tr}px ${br}px ${bl}px`,
-  };
-
-  function copy(text: string, label: string) {
-    void navigator.clipboard.writeText(text).then(() => toast.success(`Copied ${label}`));
+  function changeUnit(next: RadiusUnit) {
+    if (next === unit) return;
+    const nextMax = MAX_BY_UNIT[next];
+    setUnit(next);
+    // Re-clamp so a px value above the % ceiling can't escape the slider.
+    setRadii((prev) => ({
+      tl: Math.min(prev.tl, nextMax),
+      tr: Math.min(prev.tr, nextMax),
+      br: Math.min(prev.br, nextMax),
+      bl: Math.min(prev.bl, nextMax),
+    }));
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_18rem]">
-      <div className="grid place-items-center rounded-md border border-border bg-background/40 p-10">
-        <div
-          className="size-48 border-2 border-ring bg-ring/15 transition-[border-radius]"
-          style={style}
-        />
+    <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid min-w-0 gap-5 rounded-md border border-border/60 bg-background/40 p-5 sm:p-8">
+        <div className="grid place-items-center">
+          <div
+            role="img"
+            aria-label={t("previewLabel", { value: preview })}
+            className="aspect-square w-full max-w-52 border-2 border-ring bg-ring/15 motion-safe:transition-[border-radius] motion-safe:duration-200"
+            style={{ borderRadius: preview }}
+          />
+        </div>
+        <div className="grid gap-1.5">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+            {tc("output")}
+          </span>
+          <div className="flex items-start gap-2">
+            <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre-wrap break-all rounded-md border border-border/60 bg-card/80 px-3 py-2 font-mono text-xs">
+              {css}
+            </code>
+            <CopyButton value={css} label="CSS" className="shrink-0" />
+          </div>
+        </div>
       </div>
-      <div className="grid gap-3">
-        <Button
-          type="button"
-          size="sm"
-          variant={linked ? "default" : "outline"}
-          onClick={() => setLinked((v) => !v)}
-        >
-          {linked ? (
-            <Link2 className="size-3.5" aria-hidden="true" />
-          ) : (
-            <Link2Off className="size-3.5" aria-hidden="true" />
-          )}
-          {linked ? "Linked" : "Per corner"}
-        </Button>
+
+      <div className="grid min-w-0 gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={linked ? "default" : "outline"}
+            aria-pressed={linked}
+            onClick={() => setLinked((v) => !v)}
+            className="min-h-9"
+          >
+            {linked ? (
+              <Link2 className="size-3.5" aria-hidden="true" />
+            ) : (
+              <Link2Off className="size-3.5" aria-hidden="true" />
+            )}
+            {linked ? t("linked") : t("perCorner")}
+          </Button>
+
+          <div
+            role="radiogroup"
+            aria-label={t("unit")}
+            className="inline-flex rounded-md border border-border bg-card/40 p-0.5"
+          >
+            {UNITS.map((u) => (
+              <button
+                key={u}
+                type="button"
+                role="radio"
+                aria-checked={unit === u}
+                onClick={() => changeUnit(u)}
+                className={cn(
+                  "min-h-9 rounded-sm px-3 font-mono text-xs tabular-nums",
+                  FOCUS_RING_INSET,
+                  unit === u
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground motion-safe:transition-colors hover:text-foreground",
+                )}
+              >
+                {u}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {linked ? (
-          <CornerRow label="All corners" value={tl} onChange={setAll} />
+          <CornerRow
+            label={t("corners.all")}
+            value={radii.tl}
+            max={max}
+            unit={unit}
+            onChange={(value) => setCorner("tl", value)}
+          />
         ) : (
-          <>
-            <CornerRow label="Top left" value={tl} onChange={setTl} />
-            <CornerRow label="Top right" value={tr} onChange={setTr} />
-            <CornerRow label="Bottom right" value={br} onChange={setBr} />
-            <CornerRow label="Bottom left" value={bl} onChange={setBl} />
-          </>
+          CORNERS.map((key) => (
+            <CornerRow
+              key={key}
+              label={t(`corners.${key}`)}
+              value={radii[key]}
+              max={max}
+              unit={unit}
+              onChange={(value) => setCorner(key, value)}
+            />
+          ))
         )}
-        <CopyField label="CSS" value={css} onCopy={() => copy(css, "CSS")} />
-        <CopyField label="Tailwind" value={tw} onCopy={() => copy(tw, "class")} />
       </div>
     </div>
   );
@@ -81,41 +153,67 @@ export function BorderRadius() {
 function CornerRow({
   label,
   value,
+  max,
+  unit,
   onChange,
 }: {
   label: string;
   value: number;
-  onChange: (v: number) => void;
+  max: number;
+  unit: RadiusUnit;
+  onChange: (value: number) => void;
 }) {
+  const id = useId();
+  // Local draft so a half-typed value (e.g. "" mid-edit) doesn't snap to the
+  // clamped number; commit + clamp on change/blur only.
+  const [draft, setDraft] = useState<string | null>(null);
+
+  function commit(raw: string) {
+    onChange(clampInt(raw, 0, max, value));
+    setDraft(null);
+  }
+
   return (
     <div className="grid gap-1.5">
-      <div className="flex items-baseline justify-between font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-        <span>{label}</span>
-        <span className="tabular-nums">{value}px</span>
+      <div className="flex items-baseline justify-between gap-2">
+        <label
+          htmlFor={id}
+          className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+        >
+          {label}
+        </label>
+        <div className="flex items-baseline gap-1">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={draft ?? String(value)}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={(event) => commit(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.currentTarget.blur();
+            }}
+            aria-label={label}
+            className={cn(
+              "w-12 rounded-sm bg-transparent text-right font-mono text-xs tabular-nums",
+              FOCUS_RING_INSET,
+            )}
+          />
+          <span className="font-mono text-xs text-muted-foreground">{unit}</span>
+        </div>
       </div>
       <input
+        id={id}
         type="range"
         min={0}
-        max={96}
+        max={max}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        onChange={(event) => onChange(clampInt(event.target.value, 0, max, value))}
         aria-label={label}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
+        className={cn(
+          "h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring",
+          FOCUS_RING,
+        )}
       />
-    </div>
-  );
-}
-
-function CopyField({ label, value, onCopy }: { label: string; value: string; onCopy: () => void }) {
-  return (
-    <div className="grid gap-1.5">
-      <label className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">{label}</label>
-      <div className="flex items-center gap-2">
-        <code className="flex-1 truncate rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-xs">{value}</code>
-        <Button type="button" size="sm" variant="outline" onClick={onCopy}>
-          <Copy className="size-3.5" aria-hidden="true" />
-        </Button>
-      </div>
     </div>
   );
 }

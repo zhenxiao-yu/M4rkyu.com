@@ -1,112 +1,225 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useId, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Input } from "@/components/ui/input";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import { clampInt } from "@/components/tools/_shared/number";
+import {
+  buildTriangle,
+  TRIANGLE_DIRECTIONS,
+  type TriangleDirection,
+} from "@/lib/tools/css-triangle";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 
-type Direction = "up" | "down" | "left" | "right";
-const DIRECTIONS: Direction[] = ["up", "down", "left", "right"];
+// CSS triangle (border-trick) generator. The declarations are assembled by the
+// pure, unit-tested buildTriangle in @/lib/tools/css-triangle so the preview
+// and copy value never drift. Size is NaN-safe (clampInt) and the color falls
+// back to currentColor, so the output is always a valid rule.
 
-function build(direction: Direction, size: number, color: string) {
-  const s = `${size}px`;
-  switch (direction) {
-    case "up":
-      return `width: 0; height: 0; border-left: ${s} solid transparent; border-right: ${s} solid transparent; border-bottom: ${s} solid ${color};`;
-    case "down":
-      return `width: 0; height: 0; border-left: ${s} solid transparent; border-right: ${s} solid transparent; border-top: ${s} solid ${color};`;
-    case "left":
-      return `width: 0; height: 0; border-top: ${s} solid transparent; border-bottom: ${s} solid transparent; border-right: ${s} solid ${color};`;
-    case "right":
-      return `width: 0; height: 0; border-top: ${s} solid transparent; border-bottom: ${s} solid transparent; border-left: ${s} solid ${color};`;
-  }
-}
-
-function styleFromCss(css: string): React.CSSProperties {
-  const out: Record<string, string> = {};
-  css.split(";").forEach((decl) => {
-    const [k, v] = decl.split(":");
-    if (!k || !v) return;
-    const key = k.trim().replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
-    out[key] = v.trim();
-  });
-  return out as React.CSSProperties;
-}
+const SIZE = { min: 8, max: 200 } as const;
+const INITIAL_SIZE = 48;
+const INITIAL_COLOR = "#7c3aed";
 
 export function CssTriangle() {
-  const [direction, setDirection] = useState<Direction>("up");
-  const [size, setSize] = useState(48);
-  const [color, setColor] = useState("#7c3aed");
+  const t = useTranslations("Tools.cssTriangle");
+  const tc = useTranslations("Tools.common");
+  const sizeId = useId();
 
-  const css = useMemo(() => build(direction, size, color), [direction, size, color]);
-  const inline = useMemo(() => styleFromCss(css), [css]);
+  const [direction, setDirection] = useState<TriangleDirection>("up");
+  const [size, setSize] = useState(INITIAL_SIZE);
+  const [color, setColor] = useState(INITIAL_COLOR);
+  // Local draft so a half-typed size (e.g. "" mid-edit) doesn't snap to the
+  // clamped number on every keystroke; commit + clamp on change/blur only.
+  const [sizeDraft, setSizeDraft] = useState<string | null>(null);
 
-  function copy() {
-    void navigator.clipboard.writeText(css).then(() => toast.success("Copied CSS"));
+  const css = buildTriangle(direction, size, color);
+  const rule = `.triangle {\n  ${css.replaceAll("; ", ";\n  ")}\n}`;
+
+  const hexForPicker = /^#[0-9a-f]{6}$/i.test(color.trim())
+    ? color.trim()
+    : "#000000";
+
+  function commitSize(raw: string) {
+    setSize(clampInt(raw, SIZE.min, SIZE.max, size));
+    setSizeDraft(null);
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_16rem]">
-      <div className="grid place-items-center rounded-lg border border-border bg-background/40 p-12">
-        <div style={inline} />
-      </div>
-      <div className="grid gap-3">
-        <div className="grid gap-1.5">
-          <label className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-            Direction
-          </label>
-          <div role="tablist" className="inline-flex rounded-md border border-border bg-card/40 p-0.5">
-            {DIRECTIONS.map((d) => (
-              <button
-                key={d}
-                type="button"
-                role="tab"
-                aria-selected={direction === d}
-                onClick={() => setDirection(d)}
-                className={`rounded-sm px-2.5 py-1 font-mono text-xs uppercase ${direction === d ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="grid gap-1.5">
-          <label className="flex items-baseline justify-between font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-            <span>Size</span>
-            <span className="tabular-nums">{size}px</span>
-          </label>
-          <input
-            type="range"
-            min={8}
-            max={200}
-            value={size}
-            onChange={(e) => setSize(Number(e.target.value))}
-            aria-label="Triangle size"
-            className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring"
+    <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid min-w-0 gap-5 rounded-md border border-border/60 bg-background/40 p-5 sm:p-8">
+        <div
+          role="img"
+          aria-label={t("previewAria", { direction: t(`directions.${direction}`) })}
+          className="grid min-h-40 place-items-center"
+        >
+          <span
+            style={{
+              width: 0,
+              height: 0,
+              borderStyle: "solid",
+              ...inlineFromCss(css),
+            }}
           />
         </div>
         <div className="grid gap-1.5">
-          <label className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">Color</label>
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            aria-label="Triangle color"
-            className="h-10 w-full cursor-pointer rounded-md border border-border bg-transparent p-1"
-          />
-        </div>
-        <div className="grid gap-1.5">
-          <label className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">CSS</label>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 break-all rounded-md border border-border bg-card/40 px-3 py-2 font-mono text-[0.7rem]">
-              {css}
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+            {tc("output")}
+          </span>
+          <div className="flex items-start gap-2">
+            <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre-wrap break-all rounded-md border border-border/60 bg-card/80 px-3 py-2 font-mono text-xs">
+              {rule}
             </code>
-            <Button type="button" size="sm" variant="outline" onClick={copy} aria-label="Copy CSS">
-              <Copy className="size-3.5" aria-hidden="true" />
-            </Button>
+            <CopyButton value={rule} label="CSS" className="shrink-0" />
           </div>
         </div>
+      </div>
+
+      <div className="grid min-w-0 content-start gap-4">
+        <fieldset className="grid min-w-0 gap-1.5">
+          <legend className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+            {t("direction")}
+          </legend>
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 md:grid-cols-2">
+            {TRIANGLE_DIRECTIONS.map((d) => {
+              const active = direction === d;
+              return (
+                <button
+                  key={d}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setDirection(d)}
+                  className={cn(
+                    "flex min-h-9 items-center justify-center rounded-md border px-2.5 py-1 font-mono text-xs uppercase tracking-[0.12em] motion-safe:transition-colors",
+                    active
+                      ? "border-ring bg-card text-foreground"
+                      : "border-border/60 bg-background/40 text-muted-foreground motion-safe:hover:text-foreground",
+                    FOCUS_RING_INSET,
+                  )}
+                >
+                  {t(`directions.${d}`)}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        <div className="grid gap-1.5">
+          <div className="flex items-baseline justify-between gap-2">
+            <label
+              htmlFor={sizeId}
+              className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+            >
+              {t("size")}
+            </label>
+            <div className="flex items-baseline gap-1">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={sizeDraft ?? String(size)}
+                onChange={(event) => setSizeDraft(event.target.value)}
+                onBlur={(event) => commitSize(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") event.currentTarget.blur();
+                }}
+                aria-label={t("size")}
+                className={cn(
+                  "w-12 rounded-sm bg-transparent text-right font-mono text-xs tabular-nums",
+                  FOCUS_RING_INSET,
+                )}
+              />
+              <span className="font-mono text-xs text-muted-foreground">px</span>
+            </div>
+          </div>
+          <input
+            id={sizeId}
+            type="range"
+            min={SIZE.min}
+            max={SIZE.max}
+            value={size}
+            onChange={(event) =>
+              setSize(clampInt(event.target.value, SIZE.min, SIZE.max, size))
+            }
+            aria-label={t("size")}
+            className={cn(
+              "h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-ring",
+              FOCUS_RING,
+            )}
+          />
+        </div>
+
+        <ColorField
+          label={t("color")}
+          value={color}
+          hexForPicker={hexForPicker}
+          onChange={setColor}
+        />
       </div>
     </div>
   );
+}
+
+function ColorField({
+  label,
+  value,
+  hexForPicker,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  hexForPicker: string;
+  onChange: (value: string) => void;
+}) {
+  const id = useId();
+  return (
+    <div className="grid gap-1.5">
+      <label
+        htmlFor={id}
+        className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+      >
+        {label}
+      </label>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={hexForPicker}
+          onChange={(event) => onChange(event.target.value)}
+          aria-label={label}
+          className={cn(
+            "size-9 shrink-0 cursor-pointer rounded-md border border-border bg-transparent p-1",
+            FOCUS_RING_INSET,
+          )}
+        />
+        <Input
+          id={id}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          spellCheck={false}
+          autoComplete="off"
+          aria-label={label}
+          className="min-w-0 font-mono text-xs"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Map the builder's CSS string into a React inline-style object for the live
+ * preview. Same source as the copy value, so the two can't drift; only the
+ * border longhands the builder emits are read.
+ */
+function inlineFromCss(css: string): React.CSSProperties {
+  const out: Record<string, string> = {};
+  for (const decl of css.split(";")) {
+    const idx = decl.indexOf(":");
+    if (idx === -1) continue;
+    const key = decl.slice(0, idx).trim();
+    const val = decl.slice(idx + 1).trim();
+    if (!key || !val) continue;
+    if (key === "width" || key === "height") continue;
+    const camel = key.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+    out[camel] = val;
+  }
+  return out as React.CSSProperties;
 }

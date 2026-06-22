@@ -1,183 +1,342 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Copy, Upload } from "lucide-react";
-import { toast } from "sonner";
+import { useEffect, useRef, useState } from "react";
+import { ImageUp, Loader2, Minus, Plus, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
+import { CopyButton } from "@/components/tools/_shared/copy-button";
+import {
+  DEFAULT_MAX_IMAGE_BYTES,
+  formatBytes,
+  validateFile,
+} from "@/components/tools/_shared/file-input";
+import { quantizePalette, type PaletteSwatch } from "@/lib/tools/color-palette";
 
-interface Swatch {
-  hex: string;
-  count: number;
-}
-
-// Median-cut color quantization — small (~80 LOC), runs entirely in the
-// browser on a canvas-downsampled copy of the upload. Returns the N
-// most-prominent colors as hex strings + their pixel counts.
-function quantize(pixels: Uint8ClampedArray, target: number): Swatch[] {
-  type Box = { pixels: number[][]; channel: 0 | 1 | 2 };
-  const buckets: Box[] = [];
-  const initial: number[][] = [];
-  for (let i = 0; i < pixels.length; i += 4) {
-    if (pixels[i + 3] < 128) continue; // skip transparent
-    initial.push([pixels[i], pixels[i + 1], pixels[i + 2]]);
-  }
-  if (initial.length === 0) return [];
-  buckets.push({ pixels: initial, channel: 0 });
-
-  while (buckets.length < target) {
-    let toSplit = -1;
-    let largest = 0;
-    for (let i = 0; i < buckets.length; i++) {
-      if (buckets[i].pixels.length > largest) {
-        largest = buckets[i].pixels.length;
-        toSplit = i;
-      }
-    }
-    if (toSplit < 0) break;
-    const box = buckets[toSplit];
-    if (box.pixels.length < 2) break;
-    const widest = widestChannel(box.pixels);
-    box.pixels.sort((a, b) => a[widest] - b[widest]);
-    const mid = box.pixels.length >> 1;
-    const left = box.pixels.slice(0, mid);
-    const right = box.pixels.slice(mid);
-    buckets.splice(toSplit, 1, { pixels: left, channel: widest }, { pixels: right, channel: widest });
-  }
-
-  return buckets.map((box) => {
-    let r = 0, g = 0, b = 0;
-    for (const p of box.pixels) {
-      r += p[0];
-      g += p[1];
-      b += p[2];
-    }
-    const n = Math.max(1, box.pixels.length);
-    return {
-      hex: rgbToHex(Math.round(r / n), Math.round(g / n), Math.round(b / n)),
-      count: box.pixels.length,
-    };
-  }).sort((a, b) => b.count - a.count);
-}
-
-function widestChannel(pixels: number[][]): 0 | 1 | 2 {
-  let minR = 255, maxR = 0, minG = 255, maxG = 0, minB = 255, maxB = 0;
-  for (const p of pixels) {
-    if (p[0] < minR) minR = p[0]; if (p[0] > maxR) maxR = p[0];
-    if (p[1] < minG) minG = p[1]; if (p[1] > maxG) maxG = p[1];
-    if (p[2] < minB) minB = p[2]; if (p[2] > maxB) maxB = p[2];
-  }
-  const rR = maxR - minR, rG = maxG - minG, rB = maxB - minB;
-  if (rR >= rG && rR >= rB) return 0;
-  if (rG >= rB) return 1;
-  return 2;
-}
-
-function rgbToHex(r: number, g: number, b: number) {
-  return "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("");
-}
-
-const MAX_DIM = 200;
+const MAX_DIM = 100; // downscale longest edge before sampling pixels
+const MIN_COUNT = 2;
+const MAX_COUNT = 12;
 
 export function ColorPalette() {
-  const [swatches, setSwatches] = useState<Swatch[]>([]);
+  const t = useTranslations("Tools.colorPalette");
+  const tc = useTranslations("Tools.common");
+
+  const [swatches, setSwatches] = useState<PaletteSwatch[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [count, setCount] = useState(6);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const lastFileRef = useRef<File | null>(null);
 
-  async function handleFile(file: File) {
-    setPreview(URL.createObjectURL(file));
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height));
-    const w = Math.max(1, Math.round(bitmap.width * scale));
-    const h = Math.max(1, Math.round(bitmap.height * scale));
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    ctx.drawImage(bitmap, 0, 0, w, h);
-    const pixels = ctx.getImageData(0, 0, w, h).data;
-    const result = quantize(pixels, count);
-    setSwatches(result);
+  function revokePreview() {
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+      previewUrlRef.current = null;
+    }
   }
 
-  function copyAll() {
-    if (swatches.length === 0) return;
-    const text = swatches.map((s) => s.hex).join("\n");
-    void navigator.clipboard.writeText(text).then(() => toast.success(`Copied ${swatches.length} colors`));
+  // Release the object URL when the tool unmounts.
+  useEffect(
+    () => () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    },
+    [],
+  );
+
+  async function handleFile(file: File | undefined | null, nextCount = count) {
+    if (!file) return;
+
+    // UPLOAD SAFETY: validate size + MIME *before* decoding so a huge or
+    // non-image drop can't hang the tab.
+    const reason = validateFile(file, {
+      accept: ["image/"],
+      maxBytes: DEFAULT_MAX_IMAGE_BYTES,
+    });
+    if (reason === "too-large") {
+      setError(tc("tooLarge", { max: formatBytes(DEFAULT_MAX_IMAGE_BYTES) }));
+      return;
+    }
+    if (reason === "wrong-type") {
+      setError(tc("wrongType"));
+      return;
+    }
+
+    setBusy(true);
+    setError(null);
+    try {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height));
+      const w = Math.max(1, Math.round(bitmap.width * scale));
+      const h = Math.max(1, Math.round(bitmap.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) throw new Error("no 2d context");
+      ctx.drawImage(bitmap, 0, 0, w, h);
+      bitmap.close?.();
+      const pixels = ctx.getImageData(0, 0, w, h).data;
+      const result = quantizePalette(pixels, nextCount);
+
+      // Reuse the preview URL when re-sampling the same file (count change),
+      // otherwise revoke the old one and make a fresh object URL.
+      if (file !== lastFileRef.current) {
+        revokePreview();
+        const url = URL.createObjectURL(file);
+        previewUrlRef.current = url;
+        setPreview(url);
+      }
+      lastFileRef.current = file;
+      setSwatches(result);
+    } catch {
+      setError(tc("readFailed"));
+    } finally {
+      setBusy(false);
+    }
   }
+
+  function setCountAndResample(next: number) {
+    const clamped = Math.max(MIN_COUNT, Math.min(MAX_COUNT, next));
+    setCount(clamped);
+    // Re-quantize the original file for accurate buckets (works for both
+    // file-input and drag-drop, since we keep the last File in a ref).
+    const file = lastFileRef.current;
+    if (file) void handleFile(file, clamped);
+  }
+
+  function reset() {
+    revokePreview();
+    lastFileRef.current = null;
+    setPreview(null);
+    setSwatches([]);
+    setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  const allHex = swatches.map((s) => s.hex).join("\n");
 
   return (
-    <div className="grid gap-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-mono uppercase tracking-[0.18em]">Colors</span>
-          <input
-            type="number"
-            min={2}
-            max={16}
-            value={count}
-            onChange={(e) => setCount(Math.max(2, Math.min(16, Number(e.target.value) || 6)))}
-            className="w-16 rounded-md border border-border bg-background px-2 py-1 font-mono text-xs"
-          />
-        </label>
-        <Button type="button" size="sm" onClick={() => fileInputRef.current?.click()}>
-          <Upload className="size-3.5" aria-hidden="true" /> Pick image
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void handleFile(file);
-          }}
-          className="hidden"
-        />
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={copyAll}
+    <div className="grid min-w-0 gap-4">
+      {/* Controls */}
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <span
+            id="color-count-label"
+            className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"
+          >
+            {t("countLabel")}
+          </span>
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="size-9 px-0"
+              onClick={() => setCountAndResample(count - 1)}
+              disabled={busy || count <= MIN_COUNT}
+              aria-label={t("decrease")}
+            >
+              <Minus className="size-3.5" aria-hidden="true" />
+            </Button>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={MIN_COUNT}
+              max={MAX_COUNT}
+              value={count}
+              aria-labelledby="color-count-label"
+              onChange={(e) =>
+                setCountAndResample(Number(e.target.value) || MIN_COUNT)
+              }
+              className={cn(
+                "h-9 w-14 rounded-md border border-border bg-background px-2 text-center font-mono text-sm tabular-nums",
+                FOCUS_RING_INSET,
+              )}
+            />
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="size-9 px-0"
+              onClick={() => setCountAndResample(count + 1)}
+              disabled={busy || count >= MAX_COUNT}
+              aria-label={t("increase")}
+            >
+              <Plus className="size-3.5" aria-hidden="true" />
+            </Button>
+          </div>
+        </div>
+
+        {preview ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={reset}
+            className="min-h-9"
+          >
+            <X className="size-3.5" aria-hidden="true" /> {tc("clear")}
+          </Button>
+        ) : null}
+
+        <CopyButton
+          value={allHex}
+          label={t("hexLabel")}
           disabled={swatches.length === 0}
-          className="ml-auto"
+          className="ml-auto min-h-9"
         >
-          <Copy className="size-3.5" aria-hidden="true" /> Copy hex
-        </Button>
+          {tc("copyAll")}
+        </CopyButton>
       </div>
+
+      {error ? (
+        <p
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 font-mono text-[0.7rem] text-destructive"
+        >
+          {error}
+        </p>
+      ) : null}
+
       {preview ? (
-        <div className="grid gap-3 lg:grid-cols-[1fr_1fr]">
-          {/* eslint-disable-next-line @next/next/no-img-element -- local blob: URL, optimization not applicable */}
-          <img src={preview} alt="" className="max-h-72 w-full rounded-md border border-border object-contain bg-card/40" />
-          <ul className="grid gap-2">
+        <div className="grid min-w-0 gap-3 lg:grid-cols-2">
+          <div className="relative min-w-0">
+            {/* eslint-disable-next-line @next/next/no-img-element -- local blob: URL, no optimization applicable */}
+            <img
+              src={preview}
+              alt={t("previewAlt")}
+              className="max-h-72 w-full rounded-md border border-border bg-card/40 object-contain"
+            />
+            {busy ? (
+              <div className="absolute inset-0 grid place-items-center rounded-md bg-background/60">
+                <Loader2
+                  className="size-5 motion-safe:animate-spin text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">{t("extracting")}</span>
+              </div>
+            ) : null}
+          </div>
+
+          <ul className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {swatches.map((s) => (
               <li
                 key={s.hex}
-                className="flex items-center gap-3 rounded-md border border-border bg-card/40 p-2"
+                className="flex min-w-0 items-center gap-3 rounded-md border border-border bg-card/40 p-2"
               >
-                <span className="size-10 shrink-0 rounded-md border border-border/60" style={{ background: s.hex }} />
-                <code className="font-mono text-sm">{s.hex}</code>
-                <span className="ml-auto font-mono text-[0.65rem] text-muted-foreground">{s.count.toLocaleString()}px</span>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    void navigator.clipboard.writeText(s.hex).then(() => toast.success(`Copied ${s.hex}`));
-                  }}
-                  aria-label={`Copy ${s.hex}`}
-                >
-                  <Copy className="size-3" aria-hidden="true" />
-                </Button>
+                <span
+                  className="size-9 shrink-0 rounded-md border border-border/60"
+                  style={{ background: s.hex }}
+                  aria-hidden="true"
+                />
+                <code className="font-mono text-sm uppercase">{s.hex}</code>
+                <span className="ml-auto truncate font-mono text-[0.65rem] text-muted-foreground">
+                  {t("pixels", { count: s.count })}
+                </span>
+                <CopyButton value={s.hex} label={s.hex} className="shrink-0" />
               </li>
             ))}
           </ul>
         </div>
       ) : (
-        <div className="grid place-items-center rounded-md border border-dashed border-border bg-card/40 p-10 text-center text-sm text-muted-foreground">
-          Drop or pick an image to extract its dominant colors. Nothing leaves the browser.
-        </div>
+        <Dropzone
+          dragging={dragging}
+          busy={busy}
+          onActivate={() => fileInputRef.current?.click()}
+          onDragState={setDragging}
+          onDrop={(file) => void handleFile(file)}
+          prompt={dragging ? t("dropPrompt") : tc("empty")}
+          hint={tc("emptyHint")}
+          choose={t("chooseImage")}
+          formats={t("formats")}
+        />
       )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        aria-label={t("chooseImage")}
+        className="sr-only"
+        onChange={(e) => void handleFile(e.target.files?.[0])}
+      />
+    </div>
+  );
+}
+
+function Dropzone({
+  dragging,
+  busy,
+  onActivate,
+  onDragState,
+  onDrop,
+  prompt,
+  hint,
+  choose,
+  formats,
+}: {
+  dragging: boolean;
+  busy: boolean;
+  onActivate: () => void;
+  onDragState: (v: boolean) => void;
+  onDrop: (file: File | undefined) => void;
+  prompt: string;
+  hint: string;
+  choose: string;
+  formats: string;
+}) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={choose}
+      onClick={onActivate}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onActivate();
+        }
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        onDragState(true);
+      }}
+      onDragLeave={() => onDragState(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        onDragState(false);
+        onDrop(e.dataTransfer.files?.[0]);
+      }}
+      className={cn(
+        "grid min-h-44 cursor-pointer place-items-center gap-2 rounded-lg border border-dashed bg-card/40 p-6 text-center",
+        "motion-safe:transition-colors motion-safe:duration-(--motion-fast)",
+        dragging
+          ? "border-ring bg-ring/5"
+          : "border-border hover:border-foreground/40",
+        FOCUS_RING,
+      )}
+    >
+      {busy ? (
+        <Loader2
+          className="size-6 motion-safe:animate-spin text-muted-foreground"
+          aria-hidden="true"
+        />
+      ) : (
+        <ImageUp className="size-6 text-muted-foreground" aria-hidden="true" />
+      )}
+      <span className="font-mono text-sm text-foreground">{prompt}</span>
+      <span className="max-w-prose font-mono text-[0.7rem] text-muted-foreground">
+        {hint}
+      </span>
+      <span className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+        {formats}
+      </span>
+      <Button type="button" size="sm" variant="outline" className="mt-1 min-h-9" tabIndex={-1}>
+        <ImageUp className="size-3.5" aria-hidden="true" /> {choose}
+      </Button>
     </div>
   );
 }
