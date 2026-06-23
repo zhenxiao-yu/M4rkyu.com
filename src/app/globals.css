@@ -1208,6 +1208,159 @@ button,
     );
 }
 
+/* ── Intro boot sequence (IntroLoader) ──────────────────────────────────
+ * The triumphant power-on counterpart to the phosphor fault console
+ * (app/global-error.tsx). Token-driven so glow + chromatic split adapt
+ * across every palette; all motion is gated behind prefers-reduced-motion,
+ * so reduced-motion visitors (who never see the overlay anyway) get inert
+ * styles. Inks stay within the theme's --ring / --ring-2 / --ring-3 set
+ * (the glitch lock-in reuses the site-wide .glitch-text utility). */
+.boot-wordmark {
+  text-shadow:
+    0 0 28px color-mix(in srgb, var(--ring) 34%, transparent),
+    1.6px 0 color-mix(in srgb, var(--ring-3) 52%, transparent),
+    -1.6px 0 color-mix(in srgb, var(--ring-2) 48%, transparent);
+}
+.boot-counter {
+  text-shadow:
+    0 0 40px color-mix(in srgb, var(--ring) 28%, transparent),
+    0 0 8px color-mix(in srgb, var(--ring) 38%, transparent);
+}
+.boot-bar-fill {
+  background: var(--ring);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--ring) 70%, transparent),
+    0 0 4px color-mix(in srgb, var(--ring) 90%, transparent);
+}
+.boot-bar-spark {
+  background: color-mix(in srgb, var(--ring) 88%, white);
+  box-shadow: 0 0 16px 2px color-mix(in srgb, var(--ring) 80%, transparent);
+}
+.boot-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1em;
+  vertical-align: -0.12em;
+  background: var(--ring);
+}
+/* Power surge — a radial accent burst over the scene; inert (opacity 0)
+ * until the one-shot flash animation drives it. */
+.boot-surge {
+  opacity: 0;
+  background: radial-gradient(
+    circle at 50% 46%,
+    color-mix(in srgb, var(--ring) 50%, transparent),
+    transparent 60%
+  );
+}
+.boot-canvas {
+  opacity: 0.85;
+}
+/* Pre-paint boot cover. `#boot-cover` is SSR'd as the first node of the home
+ * page, so it paints opaque at the very first frame (globals.css is
+ * render-blocking) — the page never flashes its content before the (ssr:false)
+ * boot overlay mounts. The IntroLoader sets html[data-booted] the instant its
+ * overlay paints (z-160, above this z-150 cover), hiding it. Reduced motion
+ * hides it outright (the boot does not play there); a failsafe fade plus the
+ * page's <noscript> rule cover the no-JS / chunk-error cases so it can never
+ * get stuck on screen. */
+#boot-cover {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      color-mix(in srgb, var(--ring) 7%, transparent),
+      transparent 60%
+    ),
+    var(--background);
+  animation: boot-cover-failsafe 0.5s linear 12s forwards;
+}
+html[data-booted] #boot-cover {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #boot-cover {
+    display: none;
+  }
+}
+@keyframes boot-cover-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The content stack unfolds from a bright CRT hairline. */
+  .boot-crt {
+    animation: boot-crt-on 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .boot-surge {
+    animation: boot-flash 420ms ease-out both;
+  }
+  /* Scanlines roll one period (the .scanline-layer gradient is a 4px band). */
+  .boot-scanlines {
+    animation: boot-scan-drift 320ms linear infinite;
+  }
+  .boot-cursor {
+    animation: boot-blink 1.05s steps(1) infinite;
+  }
+}
+
+@keyframes boot-crt-on {
+  0% {
+    transform: scaleY(0.006);
+    filter: brightness(2.6);
+    opacity: 0.85;
+  }
+  40% {
+    transform: scaleY(0.006);
+    filter: brightness(2.6);
+    opacity: 1;
+  }
+  72% {
+    transform: scaleY(1);
+    filter: brightness(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+}
+@keyframes boot-flash {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes boot-scan-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 4px;
+  }
+}
+@keyframes boot-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Editorial drop cap on the opening paragraph of a long-form post body,
  * scoped to the reading template via the `.prose-dropcap` wrapper. Uses the
  * display face; post bodies are English (dev.to) so no CJK guard needed. */

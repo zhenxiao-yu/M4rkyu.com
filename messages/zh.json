@@ -86,6 +86,18 @@
     "archive": "归档",
     "info": "信息"
   },
+  "Boot": {
+    "stampLeft": "M4RKYU.SYS · 在线",
+    "stampRight": "会话 · {year}",
+    "label": "正在启动 · m4rkyu.com",
+    "feed1": "正在校准档案…",
+    "feed2": "正在加载 创意 + 开发…",
+    "feed3": "安大略 · 加拿大 — 用心打造",
+    "feed4": "就绪。",
+    "feed5": "正在同步字体 + 媒体…",
+    "feed6": "正在预热路由…",
+    "skip": "点按或按任意键跳过"
+  },
   "Home": {
     "scrollNext": "继续探索",
     "title": "Compile + Compose",

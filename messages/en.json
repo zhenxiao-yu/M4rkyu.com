@@ -86,6 +86,18 @@
     "archive": "Archive",
     "info": "Info"
   },
+  "Boot": {
+    "stampLeft": "M4RKYU.SYS · ONLINE",
+    "stampRight": "SESSION · {year}",
+    "label": "booting · m4rkyu.com",
+    "feed1": "calibrating archive…",
+    "feed2": "loading creative + developer…",
+    "feed3": "ontario · canada — built deliberately",
+    "feed4": "ready.",
+    "feed5": "syncing fonts + media…",
+    "feed6": "warming routes…",
+    "skip": "tap or press any key to skip"
+  },
   "Home": {
     "scrollNext": "Scroll to explore",
     "title": "Compile + Compose",

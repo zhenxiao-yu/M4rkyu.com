@@ -63,7 +63,10 @@ export async function Header({ locale }: { locale: Locale }) {
           locale={locale}
           className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 rounded-md px-1.5 py-1 font-mono text-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:justify-self-start"
         >
-          <span className="relative grid size-8 shrink-0 place-items-center rounded-md border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100">
+          <span
+            data-boot-target
+            className="relative grid size-8 shrink-0 place-items-center rounded-md border bg-foreground text-background text-xs font-bold tracking-tight shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) motion-safe:group-hover:scale-105 motion-safe:group-active:scale-100"
+          >
             M4
             {/* Coral underscore — mirrors the favicon/PWA monogram and the
              * M4RK_YU wordmark; theme-scoped via the accent --ring. */}

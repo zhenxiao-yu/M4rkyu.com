@@ -10,6 +10,11 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:3000",
     trace: "on-first-retry",
+    // The home route now always plays a CRT boot overlay on fresh load.
+    // Run the smoke matrix under reduced motion so the overlay self-skips
+    // (it honors prefers-reduced-motion) — keeps the route + interaction
+    // checks deterministic instead of waiting out / clicking through the intro.
+    reducedMotion: "reduce",
   },
   webServer: {
     command: "npm run dev -- --hostname 127.0.0.1 --port 3000",

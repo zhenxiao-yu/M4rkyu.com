@@ -55,20 +55,31 @@ export default async function HomePage({
   const allProjects = await getProjectsSource();
 
   return (
-    <PageShell locale={locale}>
-      <HomeSmoothScroll>
-        <IntroLoaderIsland />
-        <HeroSection locale={locale} />
-        <AskSection />
-        <CompassSection locale={locale} />
-        <SelectedWork locale={locale} projects={allProjects} />
-        <GamesPreview locale={locale} />
-        <VisualPreview locale={locale} />
-        <WritingPulseSection locale={locale} />
-        <ResourcesPreview locale={locale} />
-        <AboutPreview locale={locale} />
-        <LetsBuildCta locale={locale} />
-      </HomeSmoothScroll>
-    </PageShell>
+    <>
+      {/* Pre-paint boot cover — an opaque, SSR'd overlay so a fresh home load
+       * never flashes the page before the (ssr:false) boot mounts. The boot
+       * island hides it (html[data-booted]) the instant its overlay paints;
+       * CSS hides it for reduced motion, and the <noscript> rule + a failsafe
+       * fade (globals.css) cover the no-JS / chunk-error cases. */}
+      <div id="boot-cover" aria-hidden="true" />
+      <noscript>
+        <style>{`#boot-cover{display:none}`}</style>
+      </noscript>
+      <PageShell locale={locale}>
+        <HomeSmoothScroll>
+          <IntroLoaderIsland />
+          <HeroSection locale={locale} />
+          <AskSection />
+          <CompassSection locale={locale} />
+          <SelectedWork locale={locale} projects={allProjects} />
+          <GamesPreview locale={locale} />
+          <VisualPreview locale={locale} />
+          <WritingPulseSection locale={locale} />
+          <ResourcesPreview locale={locale} />
+          <AboutPreview locale={locale} />
+          <LetsBuildCta locale={locale} />
+        </HomeSmoothScroll>
+      </PageShell>
+    </>
   );
 }
