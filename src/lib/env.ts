@@ -1,13 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-const requiredInProduction = (schema: z.ZodString) =>
-  process.env.NODE_ENV === "production" ? schema : schema.optional();
-
 /**
- * Typed environment variables. Validated at module load — a missing
- * required key fails the build instead of producing a silent 500 the
- * first time a server action runs in production.
+ * Typed environment variables. Provider-backed features keep their secrets
+ * optional at module load so preview deploys and static generation can run
+ * without production-only credentials. Each runtime entry point must fail
+ * closed when its complete provider configuration is unavailable.
  *
  * - `server` keys are only accessible in server contexts.
  * - `client` keys must be prefixed `NEXT_PUBLIC_` and are bundled.
@@ -20,17 +18,15 @@ const requiredInProduction = (schema: z.ZodString) =>
  */
 export const env = createEnv({
   server: {
-    RESEND_API_KEY: requiredInProduction(
-      z.string().min(1, "RESEND_API_KEY is required"),
-    ),
-    INQUIRY_TO_EMAIL: requiredInProduction(
-      z.string().email("INQUIRY_TO_EMAIL must be a valid email"),
-    ),
-    INQUIRY_FROM_EMAIL: requiredInProduction(
-      z
-        .string()
-        .email("INQUIRY_FROM_EMAIL must be a valid sender (e.g. inquiry@m4rkyu.com)"),
-    ),
+    RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required").optional(),
+    INQUIRY_TO_EMAIL: z
+      .string()
+      .email("INQUIRY_TO_EMAIL must be a valid email")
+      .optional(),
+    INQUIRY_FROM_EMAIL: z
+      .string()
+      .email("INQUIRY_FROM_EMAIL must be a valid sender (e.g. inquiry@m4rkyu.com)")
+      .optional(),
     TURNSTILE_SECRET_KEY: z.string().optional(),
     // Resend webhook signing secret. Required only by the webhook
     // route. Optional at module load so other server entry points

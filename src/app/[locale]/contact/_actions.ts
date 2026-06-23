@@ -78,8 +78,12 @@ export async function submitInquiryAction(
   const receivedAt = new Date().toUTCString();
 
   try {
-    if (!env.INQUIRY_FROM_EMAIL || !env.INQUIRY_TO_EMAIL) {
-      console.error("[inquiry] email sender/recipient env is not configured");
+    if (
+      !env.RESEND_API_KEY ||
+      !env.INQUIRY_FROM_EMAIL ||
+      !env.INQUIRY_TO_EMAIL
+    ) {
+      console.error("[inquiry] email delivery env is not configured");
       return { status: "error", kind: "send", messageKey: "sendError" };
     }
 
