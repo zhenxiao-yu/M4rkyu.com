@@ -25,9 +25,14 @@ export const getProjectsSource = cache(async (): Promise<Project[]> => {
   const shotsByProject = await getPublicScreenshotsByProject(
     rows.map((row) => row.id),
   );
-  return rows.map((row) =>
+  const dbProjects = rows.map((row) =>
     dbProjectRowToProject(row, shotsByProject.get(row.id) ?? []),
   );
+  const dbSlugs = new Set(dbProjects.map((project) => project.slug));
+  return [
+    ...dbProjects,
+    ...allProjects.filter((project) => !dbSlugs.has(project.slug)),
+  ];
 });
 
 export const getProjectFromSource = cache(

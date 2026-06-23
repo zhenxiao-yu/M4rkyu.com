@@ -15,10 +15,19 @@ import type { Game } from "@/content/schemas";
 
 export const getGamesSource = cache(async (): Promise<Game[]> => {
   const rows = await getDbGames();
-  const all = rows.length === 0 ? games : rows.map(dbGameRowToGame);
-  // Public surfaces show only finished games — drafts/placeholders/coming-soon
-  // stay out of /games (mirrors shop + gallery sources). Until a real game
-  // ships, /games renders its empty state instead of internal placeholder copy.
+  const dbGames = rows.map(dbGameRowToGame);
+  const publishedDbSlugs = new Set(
+    dbGames.filter((game) => game.status === "ready").map((game) => game.slug),
+  );
+  const all = [
+    ...dbGames,
+    ...games.filter((game) => !publishedDbSlugs.has(game.slug)),
+  ];
+  // Public surfaces show only finished case-study records. A `ready` record may
+  // describe a shipped game, an archived prototype, or an active production
+  // build; the page copy owns that distinction. Draft/placeholder/coming-soon
+  // DB records remain private to the admin workflow and do not erase a curated
+  // static case study until a published DB version replaces the same slug.
   return all.filter((game) => game.status === "ready");
 });
 

@@ -233,6 +233,122 @@ const projects = [
     },
   },
   {
+    title: "PolitiLens",
+    slug: "politilens",
+    shortPitch:
+      "A political news intelligence dashboard for comparing how outlets across the spectrum frame the same story.",
+    why: "I wanted a way to read political coverage without pretending a single score could tell me who was right. The useful question was narrower: what changes when the same event moves across different editorial lenses?",
+    category: "web-app",
+    year: "2026",
+    status: "ready",
+    contentStatus: "ready",
+    featured: true,
+    problem:
+      "Political news is abundant but comparison is expensive. Readers have to find parallel coverage manually, infer editorial positioning, and separate factual overlap from framing differences.",
+    solution:
+      "PolitiLens aggregates coverage from dozens of international outlets, clusters articles about the same event, and presents divergence, sentiment, source health, political-compass placement, and AI-assisted framing analysis with its methodology and limitations kept visible.",
+    role: "Solo product engineer: research model, data pipeline, dashboard architecture, information design, internationalization, and deployment.",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "TanStack Query",
+      "Zustand",
+      "Vercel AI SDK",
+      "OpenRouter",
+      "Tailwind CSS",
+      "Recharts",
+      "Zod",
+    ],
+    stackGroups: [
+      {
+        group: "Product",
+        items: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS"],
+      },
+      {
+        group: "Data",
+        items: ["TanStack Query", "Zustand", "RSS", "GDELT", "Congress.gov"],
+      },
+      {
+        group: "Analysis",
+        items: ["Vercel AI SDK", "OpenRouter", "AFINN", "compromise"],
+      },
+      { group: "Visualization", items: ["Recharts", "react-simple-maps"] },
+    ],
+    tags: ["news", "media-literacy", "research-tool", "data-visualization"],
+    timeline: "May 2026 · v1.1.0",
+    platforms: ["Web", "Responsive dashboard"],
+    features: [
+      "Story clustering across politically diverse outlets",
+      "Two-axis political compass with regional filtering",
+      "Divergence and sentiment signals with confidence context",
+      "AI-assisted framing comparison and consensus extraction",
+      "Congress, fact-check, source-health, and world-coverage views",
+      "Complete English and Simplified Chinese interface",
+    ],
+    architectureNotes: [
+      "RSS and API articles normalize into one model before URL deduplication and similarity clustering.",
+      "Divergence is a transparent heuristic based on source breadth, spectrum coverage, and region rather than a claim about truth.",
+      "Expensive news aggregation routes use bounded concurrency, caching, and stale-while-revalidate behavior.",
+      "AI analysis is downstream of deterministic clustering and presents framing differences without assigning factual authority.",
+    ],
+    challenges: [
+      "Keeping politically sensitive scores explainable enough that users can challenge the method.",
+      "Handling unreliable feeds and uneven source coverage without hiding degraded data.",
+      "Making a dense research interface scan quickly on both desktop and mobile.",
+    ],
+    screenshots: [
+      {
+        src: "/project-covers/politilens-dashboard.webp",
+        alt: "PolitiLens political compass dashboard comparing news outlets and story clusters",
+        width: 1600,
+        height: 1000,
+        label: "Compass",
+        caption:
+          "The primary research view maps outlets across economic and social axes while keeping the active story clusters visible.",
+      },
+      {
+        src: "/project-covers/politilens-stories.webp",
+        alt: "PolitiLens story explorer with divergence filters and clustered political news",
+        width: 1600,
+        height: 1000,
+        label: "Story explorer",
+        caption:
+          "Clustered stories expose source breadth, political lean coverage, sentiment, and divergence before the reader opens a comparison.",
+      },
+    ],
+    liveUrl: "https://politilens-plum.vercel.app",
+    outcome:
+      "A deployed v1.1 research product that turns a noisy news stream into a transparent comparison workflow without presenting its heuristics as objective truth.",
+    lessonsLearned: [
+      "Trust comes from showing how a score was produced, not polishing away its uncertainty.",
+      "Dense dashboards need progressive disclosure so methodology remains available without blocking the first scan.",
+      "AI is more credible when it describes differences after deterministic grouping instead of deciding the groups itself.",
+    ],
+    nextSteps: [
+      "Ground framing summaries in cited article excerpts",
+      "Improve entity-aware story clustering",
+      "Add timeline views for how coverage changes across a news cycle",
+    ],
+    seo: {
+      title: "PolitiLens political news intelligence case study",
+      description:
+        "PolitiLens compares political news framing across the spectrum with transparent clustering, divergence, and methodology.",
+    },
+    translations: {
+      zh: {
+        shortPitch: "政治新闻情报面板，用来比较不同立场媒体如何报道同一事件。",
+        why: "我想做一个不靠单一分数替读者判断对错的政治新闻工具。更有价值的问题其实更窄：同一件事经过不同编辑视角时，哪些部分发生了变化？",
+        problem:
+          "政治新闻数量庞大，但横向比较成本很高。读者需要手动寻找平行报道、判断媒体位置，并区分共同事实与叙事差异。",
+        solution:
+          "PolitiLens 汇集不同政治光谱与地区的媒体报道，将同一事件聚类，并展示分歧度、语气、来源健康度、政治罗盘位置与 AI 辅助的叙事分析，同时公开方法与局限。",
+        outcome:
+          "一个已部署的 v1.1 研究产品，把嘈杂的新闻流整理成透明的比较流程，同时明确说明启发式指标并不等同于客观真相。",
+      },
+    },
+  },
+  {
     title: "Purecreate",
     slug: "purecreate",
     shortPitch:
