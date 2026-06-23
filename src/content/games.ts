@@ -8,28 +8,30 @@ export const games = [
     year: "2024",
     status: "ready",
     pitch:
-      "A playable 2D pixel-art roguelike shooter built around escalating runs, compact combat arenas, and the pressure to descend one room further.",
-    role: "Solo developer: gameplay systems, C# scripting, pixel-art integration, balancing, and itch.io release.",
+      "A published university team project with procedural dungeons, three classes, sanity pressure, bosses, loot, and a playable WebGL build.",
+    role: "Four-person university game-development project; contributor to the shared Unity/C# implementation, integration, testing, and published build.",
     notes: [
-      "Encounter and spawn logic is data-driven so run pacing can change without rewriting combat code.",
-      "Movement, combat, encounter flow, and HUD responsibilities stay separated across focused Unity systems.",
-      "The public itch.io build turned internal tuning assumptions into concrete player-facing finish work.",
+      "Roughly 150 C# scripts divide procedural generation, movement, combat, enemies, UI, audio, and interactive props.",
+      "Five escalating levels combine class-based combat, loot, bosses, sanity, minimap fast travel, and A*-based enemy line of sight.",
+      "The v1.0.2 itch.io build is an educational prototype using third-party art and audio, not a commercial release.",
     ],
     cover: {
-      src: "/project-covers/descent-into-madness.svg",
-      alt: "Descent Into Madness pixel dungeon promotional cover",
+      src: "/project-covers/descent-gameplay.webp",
+      alt: "Descent Into Madness gameplay in a procedural pixel-art dungeon",
+      width: 1090,
+      height: 573,
     },
-    platforms: ["Windows", "itch.io"],
+    platforms: ["WebGL", "Windows", "itch.io"],
     pillars: [
-      "Run-based progression with escalating combat pressure",
-      "Pixel-art enemies, rooms, and effects",
-      "Responsive twin-stick-style shooting",
-      "A downloadable public build",
+      "Procedural progression across five dungeon levels",
+      "Three classes, ranged combat, loot, and bosses",
+      "Sanity pressure and fast-travel exploration",
+      "A playable v1.0.2 WebGL release",
     ],
     postmortem:
-      "The prototype proved that roguelike tension comes from encounter pacing and readable threat escalation, not simply adding more enemies. Publishing early also exposed the difference between a working Unity scene and a build another person can actually understand and play.",
+      "The project taught the less glamorous half of team game development: integrating many shared systems, balancing procedural pressure, and preserving a build that another person can understand. Its scope and asset licenses are documented plainly because it is a student prototype, not a solo commercial title.",
     outcome:
-      "A shipped itch.io prototype and a practical study in combat feel, run pacing, and the unglamorous finish work required to release a game.",
+      "A shipped four-person university prototype with a public WebGL build and complete Unity source.",
     buildLinks: [
       {
         label: "Play on itch.io",
@@ -44,9 +46,9 @@ export const games = [
       zh: {
         pitch:
           "一款已发布的 2D 像素风 Roguelike 射击游戏，围绕逐步升级的关卡、紧凑战斗场景，以及再深入一层的压力展开。",
-        role: "独立开发：玩法系统、C# 脚本、像素美术整合、平衡与 itch.io 发布。",
+        role: "四人大学游戏开发项目；参与共享的 Unity/C# 实现、整合、测试与发布。",
         outcome:
-          "一个已在 itch.io 发布的原型，也是一次关于战斗手感、局内节奏与游戏发布收尾工作的实践。",
+          "一个由四人团队完成并发布的大学项目原型，包含公开的 WebGL 版本与完整 Unity 源码。",
       },
     },
   },
@@ -57,23 +59,25 @@ export const games = [
     year: "2021",
     status: "ready",
     pitch:
-      "A Blueprint-driven battle-royale systems prototype covering inventory, pickups, weapon handling, player state, and match scaffolding.",
+      "A single-player Blueprint systems prototype covering stance, pickups, drag-and-drop inventory, equipment, weapons, and scopes.",
     role: "Solo developer: gameplay architecture, Blueprint scripting, systems integration, and technical documentation.",
     notes: [
       "Inventory and weapon systems are componentized so pickups, equipment, and player state do not collapse into one Blueprint graph.",
-      "Blueprints keep iteration fast while C++ remains available for systems that need stronger performance or boundaries.",
+      "The prototype was built in Unreal Engine 4.26.2 and does not implement multiplayer, replication, or a complete battle-royale match.",
       "The repository has become a useful public reference, with 11 stars and 11 forks at the time of this case-study update.",
     ],
     cover: {
-      src: "/project-covers/unreal-battle-royale.svg",
-      alt: "Unreal battle-royale safe-zone map promotional cover",
+      src: "/project-covers/unreal-inventory.webp",
+      alt: "Unreal Engine prototype inventory, equipment, and weapon interface",
+      width: 1600,
+      height: 928,
     },
     platforms: ["Windows", "Unreal Editor"],
     pillars: [
       "Inventory and pickup flow",
-      "Weapon handling and switching",
+      "Equipment, weapon handling, and scoped aiming",
       "Blueprint-first gameplay architecture",
-      "Battle-royale match-system exploration",
+      "Single-player PUBG-like systems study",
     ],
     postmortem:
       "The biggest lesson was architectural: visual scripting is excellent for iteration, but large systems still need clear ownership, reusable components, and disciplined graph boundaries.",
@@ -89,7 +93,7 @@ export const games = [
       zh: {
         title: "虚幻引擎大逃杀原型",
         pitch:
-          "一个以蓝图驱动的大逃杀系统原型，涵盖背包、拾取、武器操作、玩家状态与对局框架。",
+          "一个单人蓝图系统原型，涵盖姿态、拾取、拖放背包、装备、武器与瞄准镜。",
         role: "独立开发：玩法架构、蓝图脚本、系统整合与技术文档。",
         outcome:
           "一个已归档但内容扎实的虚幻引擎系统研究项目，其公开仓库仍在帮助探索蓝图大逃杀机制的开发者。",
