@@ -12,6 +12,9 @@ import { profile } from "@/content/profile";
 
 interface LetsBuildCtaProps {
   locale: Locale;
+  /** Render inside the grouped "Connect" act — content + its own Waves
+      backdrop, but no `<section>`/min-h-dvh shell (the act owns that). */
+  embedded?: boolean;
 }
 
 /**
@@ -28,7 +31,7 @@ interface LetsBuildCtaProps {
  *     - 3 inline buttons (email, GitHub, send-a-brief)
  *     - Decorative floating stars in the background
  */
-export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
+export function LetsBuildCta({ locale, embedded = false }: LetsBuildCtaProps) {
   const t = useTranslations("Home.letsBuild");
   const githubHref =
     profile.socials?.github ?? "https://github.com/zhenxiao-yu";
@@ -38,23 +41,17 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
     ...(devtoHref ? [{ label: "dev.to", href: devtoHref }] : []),
   ];
 
-  return (
-    <section
-      data-home-section="stage"
-      className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden border-y bg-background py-20 sm:py-28 lg:py-36"
-    >
-      {/* Waves backdrop — ReactBits port. Perlin-noise field of
-       * curved lines with mouse repulsion, theme-reactive line color
-       * (re-reads --foreground on theme flip). Sits at -z-20 so the
-       * spotlight gradient + decorative stars layer over it. */}
+  // Backdrop + slab are shared by the standalone section and the embedded
+  // (Connect act) form, so the closing Waves drama survives either way.
+  const backdrop = (
+    <>
+      {/* Waves backdrop — ReactBits port. Perlin-noise field of curved lines
+       * with mouse repulsion, theme-reactive line color (re-reads --foreground
+       * on theme flip). Sits at -z-20 so spotlight + stars layer over it. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-20 opacity-60 dark:opacity-45"
       >
-        {/* xGap/yGap widened from 16/42 → ~2× fewer grid points per frame.
-         * Waves runs a Perlin eval + physics + path segment per point every
-         * frame, so density is the dominant cost; at this faint opacity the
-         * wider spacing reads the same. (Static on touch via the lite gate.) */}
         <Waves
           xGap={26}
           yGap={52}
@@ -70,73 +67,99 @@ export function LetsBuildCta({ locale }: LetsBuildCtaProps) {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(circle_at_50%_40%,color-mix(in_srgb,var(--ring)_18%,transparent),transparent_60%)]"
       />
+    </>
+  );
 
-      <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
-        {/* Frosted slab floats the closing copy over the Waves field.
-         * Mobile padding eases so the slab doesn't dominate a short
-         * phone viewport when stacked with the section's outer py. */}
-        <div className="glass-surface rounded-2xl px-5 py-10 text-center sm:px-10 sm:py-16">
-          <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
-          <h2 className="mt-6 font-heading text-balance text-5xl font-semibold leading-[0.95] sm:text-6xl lg:text-7xl">
-            <span className="inline-block">
-              {t("letsLabel")}{" "}
-              <RotatingText
-                words={[t("verb1"), t("verb2"), t("verb3"), t("verb4")]}
-                className="text-ring"
-              />
-            </span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-lg text-base leading-7 text-muted-foreground">
-            {t("body")}
-          </p>
+  const slab = (
+    <div className="glass-surface rounded-2xl px-5 py-10 text-center sm:px-10 sm:py-16">
+      <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
+      <h2 className="mt-6 font-heading text-balance text-5xl font-semibold leading-[0.95] sm:text-6xl lg:text-7xl">
+        <span className="inline-block">
+          {t("letsLabel")}{" "}
+          <RotatingText
+            words={[t("verb1"), t("verb2"), t("verb3"), t("verb4")]}
+            className="text-ring"
+          />
+        </span>
+      </h2>
+      <p className="mx-auto mt-6 max-w-lg text-base leading-7 text-muted-foreground">
+        {t("body")}
+      </p>
 
-          {/* Contact cluster — primary "start a project" into /contact,
-           * email as the lighter alternative. Below sm the buttons stack
-           * full-width so each is a comfortable tap target on phones. */}
-          <div className="mt-10 flex flex-col items-stretch justify-center gap-2.5 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-            <Button
-              asChild
-              variant="default"
-              size="lg"
-              className="w-full sm:w-auto"
-            >
-              <Link href="/contact" locale={locale}>
-                {t("sendBrief")}
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto"
-            >
-              <a href={`mailto:${profile.email}`}>
-                <Mail className="size-4" aria-hidden="true" />
-                {t("emailDirect")}
-              </a>
-            </Button>
-          </div>
+      {/* Contact cluster — primary "start a project" into /contact, email as
+       * the lighter alternative. Below sm the buttons stack full-width. */}
+      <div className="mt-10 flex flex-col items-stretch justify-center gap-2.5 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <Button asChild variant="default" size="lg" className="w-full sm:w-auto">
+          <Link href="/contact" locale={locale}>
+            {t("sendBrief")}
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </Button>
+        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+          <a href={`mailto:${profile.email}`}>
+            <Mail className="size-4" aria-hidden="true" />
+            {t("emailDirect")}
+          </a>
+        </Button>
+      </div>
 
-          {/* Follow row — passive "keep up with the work" links. */}
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
-              {t("followLabel")}
-            </span>
-            {followLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring hover:underline"
-              >
-                <Code2 className="size-3.5" aria-hidden="true" />
-                {social.label}
-              </a>
-            ))}
-          </div>
+      {/* Follow row — passive "keep up with the work" links. */}
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+          {t("followLabel")}
+        </span>
+        {followLinks.map((social) => (
+          <a
+            key={social.label}
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-ring hover:underline"
+          >
+            <Code2 className="size-3.5" aria-hidden="true" />
+            {social.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Embedded (Connect act) — a slim, calm closing strip. No Waves / stars /
+  // slab (they clashed with the act's contour backdrop); just the eyebrow, one
+  // closing line, and the two contact actions over the shared backdrop.
+  if (embedded) {
+    return (
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-6 rounded-2xl glass-surface px-6 py-10 text-center sm:px-10 sm:py-12">
+        <SectionEyebrow>{t("eyebrow")}</SectionEyebrow>
+        <p className="max-w-lg text-balance text-xl font-semibold leading-snug text-foreground sm:text-2xl">
+          {t("body")}
+        </p>
+        <div className="flex w-full flex-col items-stretch justify-center gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+          <Button asChild variant="default" size="lg" className="w-full sm:w-auto">
+            <Link href="/contact" locale={locale}>
+              {t("sendBrief")}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+            <a href={`mailto:${profile.email}`}>
+              <Mail className="size-4" aria-hidden="true" />
+              {t("emailDirect")}
+            </a>
+          </Button>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <section
+      data-home-section="stage"
+      className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden border-y bg-background py-20 sm:py-28 lg:py-36"
+    >
+      {backdrop}
+      <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+        {slab}
       </div>
     </section>
   );

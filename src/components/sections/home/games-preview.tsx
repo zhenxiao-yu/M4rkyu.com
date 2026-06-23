@@ -30,7 +30,13 @@ const scanlines =
  * horizontal scroll); the arcade flavour lives in the backdrop, the
  * status tone, and the scanlined screen.
  */
-export async function GamesPreview({ locale }: { locale: Locale }) {
+export async function GamesPreview({
+  locale,
+  embedded = false,
+}: {
+  locale: Locale;
+  embedded?: boolean;
+}) {
   const t = await getTranslations({ locale, namespace: "Home.games" });
   const tStatus = await getTranslations({ locale, namespace: "Status" });
 
@@ -39,6 +45,7 @@ export async function GamesPreview({ locale }: { locale: Locale }) {
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       dataSection="games"
       background={<SectionBackground variant="arcade" />}

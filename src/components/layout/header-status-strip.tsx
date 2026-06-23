@@ -52,7 +52,9 @@ function CornerTick({ side }: { side: "left" | "right" }) {
 }
 
 function Equalizer({ active }: { active: boolean }) {
+  const mounted = useMounted();
   const reduceMotion = useReducedMotion();
+  const shouldReduceMotion = mounted && reduceMotion;
   const bars = [0, 1, 2];
   return (
     <span aria-hidden="true" className="inline-flex h-2.5 items-end gap-[2px]">
@@ -66,12 +68,12 @@ function Equalizer({ active }: { active: boolean }) {
           style={{ height: "100%" }}
           initial={false}
           animate={
-            active && !reduceMotion
+            active && !shouldReduceMotion
               ? { scaleY: [0.3, 1, 0.45, 0.85, 0.3] }
               : { scaleY: active ? 0.7 : 0.3 }
           }
           transition={
-            active && !reduceMotion
+            active && !shouldReduceMotion
               ? {
                   duration: 0.9 + i * 0.15,
                   repeat: Infinity,
@@ -206,11 +208,13 @@ function Clock() {
 }
 
 function SystemDot() {
+  const mounted = useMounted();
   const reduceMotion = useReducedMotion();
+  const shouldReduceMotion = mounted && reduceMotion;
   return (
     <span aria-hidden="true" className="relative grid size-1.5 place-items-center">
       <span className="size-1.5 rounded-full bg-success shadow-[0_0_6px_var(--terminal-glow)]" />
-      {!reduceMotion ? (
+      {!shouldReduceMotion ? (
         <motion.span
           className="absolute inset-0 rounded-full bg-success"
           initial={{ opacity: 0.6, scale: 1 }}
@@ -231,7 +235,9 @@ function SystemDot() {
  * so navigating feels like the instrument re-locking onto a position.
  */
 function NavCoordinate() {
+  const mounted = useMounted();
   const reduceMotion = useReducedMotion();
+  const shouldReduceMotion = mounted && reduceMotion;
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(0, 2);
   const label = segments.length
@@ -244,7 +250,7 @@ function NavCoordinate() {
       </span>
       <motion.span
         key={label}
-        initial={reduceMotion ? false : { opacity: 0, y: 3 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 3 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}
         className="truncate text-foreground/70"

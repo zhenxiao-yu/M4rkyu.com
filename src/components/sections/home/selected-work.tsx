@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 interface SelectedWorkProps {
   locale: Locale;
   projects: Project[];
+  /** Render inside a grouped "act" stage — see HomeSection `embedded`. */
+  embedded?: boolean;
 }
 
 /**
@@ -34,7 +36,11 @@ interface SelectedWorkProps {
  *   - N ready: numbered 01…N, the first wearing the section's lone beam.
  *   - Drafts cap at 6 dimmed, non-linked frames behind the divider.
  */
-export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
+export async function SelectedWork({
+  locale,
+  projects,
+  embedded = false,
+}: SelectedWorkProps) {
   const t = await getTranslations({ locale, namespace: "Home.selectedWork" });
 
   const ready = projects.filter((p) => p.contentStatus === "ready");
@@ -44,6 +50,7 @@ export async function SelectedWork({ locale, projects }: SelectedWorkProps) {
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       background={<SectionBackground variant="blueprint" />}
       eyebrow={t("eyebrow")}

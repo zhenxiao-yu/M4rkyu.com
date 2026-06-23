@@ -247,13 +247,30 @@ purposeful. It should never be the reason a section exists.
 
 - Parallax that moves more than 24px.
 - Continuous looping animations outside the hero marquee.
-- Scroll-jacked sections (no full-page snap on the marketing pages).
+- Scroll-jacked sections (no full-page snap on the marketing pages) — **except
+  the home hero scroll-cinema (see note below)**.
 - 3D card tilts on hover.
 - Sparkle / particle systems on body content.
 - Any animation longer than 800ms on user-initiated interaction.
 
 `prefers-reduced-motion` is honored globally already — every new motion must
 respect it.
+
+> **Update (2026-06-23) — Home spine condense + cinematic entrances.** The home
+> is being re-pointed from a long row of full-height sections into a shorter,
+> denser set of **acts** — Hero · Ask · **Build** (Work + Games) · **Field**
+> (Visual + Writing + Resources) · **Connect** (About + CTA) — with Compass
+> folded into the nav. Each combined act is one `<section>` stage with one
+> shared backdrop (members render via `HomeSection`'s new `embedded` mode), and
+> its content lands with a bolder **deep-blur → scale-up** scroll entrance
+> (`src/components/motion/cinematic-reveal.tsx`); the hero wordmark blurs and
+> lifts away on exit. This relaxes "Reading speed over spectacle" for the home
+> spine on the owner's call. **Guardrails still honored:** `motion/react`
+> (`useInView` reveals; the hero exit keeps its existing GSAP scrub), every
+> entrance is `prefers-reduced-motion`-safe (renders the resting state), real
+> bilingual SSR copy, three-ink + token-driven. The relaxation is scoped to the
+> home spine — every other surface keeps the no-scroll-jack rule. (Rolling out
+> act-by-act; `BuildStage` is the first landed.)
 
 ---
 

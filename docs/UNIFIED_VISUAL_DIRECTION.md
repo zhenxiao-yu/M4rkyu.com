@@ -712,10 +712,24 @@ Inherited from [REDESIGN_DIRECTION.md §7](./REDESIGN_DIRECTION.md#7-motion-dire
 
 - Parallax > 24px.
 - Continuous looping animations outside the hero marquee + live `StatusPulse`.
-- Scroll-jacked sections.
+- Scroll-jacked sections — **except the home hero scroll-cinema (see below)**.
 - 3D card tilts on hover.
 - Sparkle / particle systems on body content.
 - Any user-initiated animation longer than 800ms.
+
+> **Update (2026-06-23) — Home spine condense + cinematic entrances (scoped).**
+> The home spine is being condensed into denser **acts** — Hero · Ask · Build
+> (Work+Games) · Field (Visual+Writing+Resources) · Connect (About+CTA), Compass
+> folded into nav. Each combined act is one `<section>` + one backdrop (members
+> use `HomeSection`'s new `embedded` mode) and reveals with a bolder
+> **deep-blur → scale-up** entrance (`src/components/motion/cinematic-reveal.tsx`,
+> `useInView`); the hero wordmark blurs away on exit. This relaxes the
+> "Reading speed over spectacle" budget for the **home spine only**, on the
+> owner's call. It stays inside the rest of the system: `motion/react` (the hero
+> exit keeps its existing GSAP scrub — no new pin), every entrance is
+> `prefers-reduced-motion`-safe (resting state), three inks, token-driven, real
+> bilingual SSR copy. Every non-home surface keeps the ban. (Rolling out
+> act-by-act; `BuildStage` landed first.)
 
 ---
 

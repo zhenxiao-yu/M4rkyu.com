@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 
 interface WritingPulseSectionProps {
   locale: Locale;
+  embedded?: boolean;
 }
 
 /**
@@ -22,7 +23,10 @@ interface WritingPulseSectionProps {
  * self-contained: drop `<WritingPulseSection locale={locale} />` into
  * any page and it just works.
  */
-export async function WritingPulseSection({ locale }: WritingPulseSectionProps) {
+export async function WritingPulseSection({
+  locale,
+  embedded = false,
+}: WritingPulseSectionProps) {
   const t = await getTranslations({ locale, namespace: "Home" });
   const posts = await getPosts();
   const writingLatest = posts[0];
@@ -34,6 +38,7 @@ export async function WritingPulseSection({ locale }: WritingPulseSectionProps) 
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       background={<SectionBackground variant="manuscript" />}
       eyebrow={t("writingEyebrow")}

@@ -18,7 +18,13 @@ import type { Locale } from "@/i18n/routing";
  * height-capped so the whole slide stays within a single viewport on
  * mobile and desktop alike.
  */
-export async function VisualPreview({ locale }: { locale: Locale }) {
+export async function VisualPreview({
+  locale,
+  embedded = false,
+}: {
+  locale: Locale;
+  embedded?: boolean;
+}) {
   const t = await getTranslations({ locale, namespace: "Home.visual" });
   const { collections, items } = await getGallerySource();
   const covers = collections.slice(0, 4);
@@ -33,6 +39,7 @@ export async function VisualPreview({ locale }: { locale: Locale }) {
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       dataSection="visual"
       className="overflow-hidden"

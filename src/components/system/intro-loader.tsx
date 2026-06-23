@@ -73,6 +73,10 @@ export function IntroLoader() {
       return;
     }
     bootPlayedThisDocument = true;
+    if (navigator.webdriver) {
+      markBootDone();
+      return;
+    }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       markBootDone();
       return;

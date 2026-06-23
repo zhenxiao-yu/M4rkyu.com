@@ -1,8 +1,9 @@
 import type { ComponentType, ReactNode } from "react";
-import { ArrowUpRight, FileText } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Badge } from "@/components/ui/badge";
+import { FooterLinkIcon } from "./footer-link-icon";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 export interface FooterSocial {
@@ -32,6 +33,8 @@ export interface FooterLink {
   href: string;
   external?: boolean;
   pending?: boolean;
+  /** Resolves to a lucide icon via the static map in footer-link-icon.tsx. */
+  iconKey?: string;
 }
 
 export function SitemapColumn({
@@ -41,6 +44,7 @@ export function SitemapColumn({
   locale,
   pendingLabel,
   note,
+  feedLinks,
 }: {
   title: string;
   blurb: string;
@@ -49,9 +53,17 @@ export function SitemapColumn({
   pendingLabel: string;
   /** Optional muted line under the list — e.g. a "more soon" roadmap. */
   note?: ReactNode;
+  /** Optional external feed links rendered as a compact chip row under the
+      list — keeps the primary list short instead of a deep waterfall. */
+  feedLinks?: FooterLink[];
 }) {
   return (
-    <nav aria-label={title}>
+    // Swiss section rule: a hairline left border separates the columns at lg,
+    // zeroed on the first column. Below lg the grid gap does the separating.
+    <nav
+      aria-label={title}
+      className="lg:border-l lg:border-border/60 lg:pl-8 lg:[&:first-child]:border-l-0 lg:[&:first-child]:pl-0"
+    >
       <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-foreground/80">
         {title}
       </p>
@@ -65,6 +77,26 @@ export function SitemapColumn({
           </li>
         ))}
       </ul>
+      {feedLinks?.length ? (
+        <div className="mt-4 flex flex-wrap gap-2 lg:justify-start">
+          {feedLinks.map((feed) => (
+            <a
+              key={`${feed.label}-${feed.href}`}
+              href={feed.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/40 hover:text-foreground",
+                FOCUS_RING,
+              )}
+            >
+              <FooterLinkIcon iconKey={feed.iconKey} className="size-3" />
+              {feed.label}
+              <ArrowUpRight className="size-2.5 opacity-60" aria-hidden="true" />
+            </a>
+          ))}
+        </div>
+      ) : null}
       {note ? (
         <p className="mt-4 flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground/55">
           <span aria-hidden="true" className="size-1 rounded-full bg-muted-foreground/40" />
@@ -91,6 +123,10 @@ export function FooterLinkRow({
 
   const inner: ReactNode = (
     <>
+      <FooterLinkIcon
+        iconKey={link.iconKey}
+        className="size-3.5 shrink-0 text-muted-foreground/55 transition-colors duration-(--motion-fast) ease-(--ease-premium) group-hover:text-ring"
+      />
       <span className="relative">
         {link.label}
         <span
@@ -122,10 +158,7 @@ export function FooterLinkRow({
   if (link.pending) {
     return (
       <span className={cn(className, "cursor-default text-muted-foreground/70 hover:text-muted-foreground/80")}>
-        <span className="inline-flex items-center gap-2">
-          <FileText className="size-3.5 opacity-60" aria-hidden="true" />
-          {inner}
-        </span>
+        {inner}
       </span>
     );
   }

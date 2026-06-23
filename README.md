@@ -54,6 +54,9 @@ won't 500.
 
 ## Local Development
 
+Use Node.js 24.x with the npm 11.x version bundled with it. If you use `nvm`,
+run `nvm use` from the repo root.
+
 ```bash
 npm install
 npm run dev

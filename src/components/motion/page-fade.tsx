@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 /**
  * Wraps page content in a 150ms opacity + 8px y-offset entry
@@ -16,9 +16,14 @@ import type { ReactNode } from "react";
  */
 export function PageFade({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const reduceMotion = useReducedMotion();
 
-  if (reduceMotion) {
+  if (mounted && reduceMotion) {
     return <>{children}</>;
   }
 

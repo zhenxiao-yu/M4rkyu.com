@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 const routes = [
   "/en",
@@ -28,10 +29,19 @@ const routes = [
   "/en/contact",
 ];
 
+async function waitForStableLayout(page: Page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  });
+}
+
 for (const route of routes) {
   test(`${route} renders without horizontal overflow`, async ({ page }) => {
     await page.goto(route);
     await expect(page.locator("body")).toBeVisible();
+    await waitForStableLayout(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
     expect(overflow).toBe(false);
   });

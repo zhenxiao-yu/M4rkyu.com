@@ -36,7 +36,13 @@ function host(url: string): string {
  * Counts in each rack header are the honest catalog totals; the section
  * CTA opens the full /resources index.
  */
-export async function ResourcesPreview({ locale }: { locale: Locale }) {
+export async function ResourcesPreview({
+  locale,
+  embedded = false,
+}: {
+  locale: Locale;
+  embedded?: boolean;
+}) {
   const t = await getTranslations({ locale, namespace: "Home.resources" });
   const resources = await getResourcesSource();
 
@@ -46,6 +52,7 @@ export async function ResourcesPreview({ locale }: { locale: Locale }) {
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       dataSection="resources"
       background={<SectionBackground variant="circuit" />}

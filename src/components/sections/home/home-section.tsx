@@ -47,6 +47,15 @@ interface HomeSectionProps {
   className?: string;
   /** Optional data attribute used by tests / debugging. */
   dataSection?: string;
+  /**
+   * Embedded mode — renders the inner content only (no `<section>`, no
+   * `min-h-dvh`, no own backdrop, a smaller `h3` heading, compact padding),
+   * so a parent "act" stage can group several sections under one shared
+   * `<section>` + backdrop. The act owns the `max-w-page` container, so
+   * embedded sections don't re-wrap it. `snap`, `tone`, `background`, and
+   * `dataSection` are ignored in this mode.
+   */
+  embedded?: boolean;
 }
 
 /**
@@ -78,8 +87,54 @@ export function HomeSection({
   background,
   className,
   dataSection,
+  embedded = false,
 }: HomeSectionProps) {
   const centered = align === "center";
+
+  // Embedded — inner content only, for an "act" stage that groups several
+  // sections under one shared <section> + backdrop. No section shell, no
+  // max-w-page container (the act provides it), a quieter h3 heading.
+  if (embedded) {
+    return (
+      <div data-section={dataSection} className={cn("flex flex-col", className)}>
+        {(eyebrow || heading || lede || action) && (
+          <header
+            className={cn(
+              centered
+                ? "flex flex-col items-center text-center"
+                : "grid gap-4 md:grid-cols-[1fr_auto] md:items-end md:gap-6",
+            )}
+          >
+            <div className={cn("max-w-2xl", centered && "mx-auto")}>
+              {eyebrow ? <SectionEyebrow>{eyebrow}</SectionEyebrow> : null}
+              {heading ? (
+                <h3 className="mt-2 font-heading text-balance text-2xl font-semibold leading-[1.08] tracking-normal sm:mt-3 sm:text-3xl lg:text-4xl">
+                  {heading}
+                </h3>
+              ) : null}
+              {lede ? (
+                <p
+                  className={cn(
+                    "mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7",
+                    centered && "mx-auto",
+                  )}
+                >
+                  {lede}
+                </p>
+              ) : null}
+            </div>
+            {action && !centered ? (
+              <div className="md:justify-self-end">{action}</div>
+            ) : null}
+          </header>
+        )}
+        <div className={cn((eyebrow || heading || lede) && "mt-6 sm:mt-8")}>
+          {children}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section
       data-section={dataSection}

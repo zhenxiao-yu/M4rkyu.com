@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { Locale } from "@/i18n/routing";
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { FooterReveal } from "./footer-reveal";
 import { PageFade } from "@/components/motion/page-fade";
 import { RouteAttribute } from "@/components/system/route-attribute";
 import { ScrollProgress } from "@/components/system/scroll-progress";
@@ -49,7 +50,9 @@ export async function PageShell({
       >
         <PageFade>{children}</PageFade>
       </main>
-      <Footer locale={locale} />
+      <FooterReveal>
+        <Footer locale={locale} />
+      </FooterReveal>
     </div>
   );
 }

@@ -2,14 +2,9 @@ import { HeroSection } from "@/components/sections/hero-section";
 import { IntroLoaderIsland } from "@/components/system/intro-loader-island";
 import { HomeSmoothScroll } from "@/providers/home-smooth-scroll";
 import { AskSection } from "@/components/sections/home/ask-section";
-import { CompassSection } from "@/components/sections/home/compass-section";
-import { SelectedWork } from "@/components/sections/home/selected-work";
-import { GamesPreview } from "@/components/sections/home/games-preview";
-import { VisualPreview } from "@/components/sections/home/visual-preview";
-import { WritingPulseSection } from "@/components/sections/home/writing-pulse-section";
-import { ResourcesPreview } from "@/components/sections/home/resources-preview";
-import { AboutPreview } from "@/components/sections/home/about-preview";
-import { LetsBuildCta } from "@/components/sections/home/lets-build-cta";
+import { BuildStage } from "@/components/sections/home/build-stage";
+import { FieldStage } from "@/components/sections/home/field-stage";
+import { ConnectStage } from "@/components/sections/home/connect-stage";
 import { PageShell } from "@/components/layout/page-shell";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { getProjectsSource } from "@/lib/projects/source";
@@ -39,10 +34,10 @@ export async function generateMetadata({
   };
 }
 
-// Home spine — a storybook of continuous scroll stages, each an
-// entry-point dashboard into one area of the site:
-//   Hero (identity) → Compass (orientation map) → Work → Games →
-//   Visual (archive + media) → Writing → Resources → About → CTA.
+// Home spine — condensed into five acts, each a denser scroll stage with a
+// cinematic deep-blur → scale-up entrance on its members:
+//   Hero (identity) → Ask (console) → Build (Work + Games) →
+//   Field (Visual + Writing + Resources) → Connect (About + CTA).
 // HomeSmoothScroll owns Lenis + GSAP ScrollTrigger for smooth, scrubbed
 // movement; sections are explicit scroll targets, not snap points.
 export default async function HomePage({
@@ -68,18 +63,13 @@ export default async function HomePage({
       <PageShell locale={locale}>
         <HomeSmoothScroll>
           <IntroLoaderIsland />
-          <HeroSection locale={locale} />
-          <AskSection />
-          <CompassSection locale={locale} />
-          <SelectedWork locale={locale} projects={allProjects} />
-          <GamesPreview locale={locale} />
-          <VisualPreview locale={locale} />
-          <WritingPulseSection locale={locale} />
-          <ResourcesPreview locale={locale} />
-          <AboutPreview locale={locale} />
-          <LetsBuildCta locale={locale} />
-        </HomeSmoothScroll>
-      </PageShell>
+        <HeroSection locale={locale} />
+        <AskSection />
+        <BuildStage locale={locale} projects={allProjects} />
+        <FieldStage locale={locale} />
+        <ConnectStage locale={locale} />
+      </HomeSmoothScroll>
+    </PageShell>
     </>
   );
 }

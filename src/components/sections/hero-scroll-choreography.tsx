@@ -9,11 +9,11 @@ import { setHeroExitProgress } from "@/lib/hero-scroll-progress";
  * Hero exit choreography — the one scrubbed timeline the home's
  * Lenis→`gsap.ticker` bridge (`home-smooth-scroll.tsx`) was built for.
  *
- * As the stage scrolls away the wordmark lifts, eases back and fades; the
- * scroll cue retires within the first slice of the descent. Both tweens
- * touch only `transform`/`opacity` (GPU-composited, no blur, no pin, no
- * layout shift), so the cost is bounded to the brief exit window and the
- * R3F/Waves perf budget upstream is untouched.
+ * As the stage scrolls away the wordmark lifts, eases back, blurs and fades
+ * into the scroll-cinema act below; the scroll cue retires within the first
+ * slice of the descent. The exit blur is the deliberate hand-off into
+ * `HeroCinema` (the documented scroll-cinema direction) — scoped to the brief
+ * exit window only, so the R3F/Waves perf budget upstream is untouched.
  *
  * The island renders an inert anchor span and reads the hero section via
  * `closest(...)`, so the server-rendered `HeroSection` markup stays put and
@@ -64,6 +64,7 @@ export function HeroScrollChoreography() {
             yPercent: -20,
             scale: 0.97,
             opacity: 0,
+            filter: "blur(7px)",
             ease: "none",
             scrollTrigger: {
               trigger: section,

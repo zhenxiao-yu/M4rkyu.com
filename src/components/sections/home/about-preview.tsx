@@ -23,12 +23,19 @@ const FOCAL: Record<string, string> = {
  * or stats — everything here is stable content. Stacks to one snap
  * viewport on mobile with the face leading.
  */
-export async function AboutPreview({ locale }: { locale: Locale }) {
+export async function AboutPreview({
+  locale,
+  embedded = false,
+}: {
+  locale: Locale;
+  embedded?: boolean;
+}) {
   const t = await getTranslations({ locale, namespace: "Home.aboutPreview" });
   const portrait = profile.portrait;
 
   return (
     <HomeSection
+      embedded={embedded}
       tone="default"
       dataSection="about-preview"
       background={<SectionBackground variant="contour" />}
