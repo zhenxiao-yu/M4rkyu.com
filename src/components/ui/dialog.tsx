@@ -2,6 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 
 export const Dialog = DialogPrimitive.Root;
@@ -19,6 +20,7 @@ export function DialogContent({
   hideCloseButton,
   ...props
 }: DialogContentProps) {
+  const t = useTranslations("Common");
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="m4-dialog-overlay fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" />
@@ -38,7 +40,7 @@ export function DialogContent({
             )}
           >
             <X className="size-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t("close")}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>

@@ -1241,7 +1241,12 @@
     "replaceFinalContent": "正式内容替换中",
     "copyCitation": "复制引用",
     "citationCopied": "引用已复制",
-    "citationCopyFailed": "无法复制引用"
+    "citationCopyFailed": "无法复制引用",
+    "close": "关闭",
+    "playMusic": "播放音乐",
+    "pauseMusic": "暂停音乐",
+    "openArchive": "打开档案",
+    "removeItem": "移除 {item}"
   },
   "Footer": {
     "statusOpen": "频道开放",

@@ -157,7 +157,7 @@ export function ScreenshotGallery({ shots, labels }: ScreenshotGalleryProps) {
                     onClick={() => go(-1)}
                     aria-label={labels.previous}
                     className={cn(
-                      "inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+                      "inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 pointer-coarse:size-11",
                       FOCUS_RING,
                     )}
                   >
@@ -168,7 +168,7 @@ export function ScreenshotGallery({ shots, labels }: ScreenshotGalleryProps) {
                     onClick={() => go(1)}
                     aria-label={labels.next}
                     className={cn(
-                      "inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+                      "inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 pointer-coarse:size-11",
                       FOCUS_RING,
                     )}
                   >

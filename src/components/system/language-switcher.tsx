@@ -31,7 +31,7 @@ import { cn, FOCUS_RING } from "@/lib/utils";
  * cohesive with the trio it sits beside in GameHud.
  */
 const HUD_CONTROL =
-  "group inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-border bg-background/70 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-[color,border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0";
+  "group inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-border bg-background/70 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-[color,border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 pointer-coarse:h-11";
 
 /** The igniting accent edge — a 2px channel tick that blooms in --ring on hover. */
 function ChannelEdge() {

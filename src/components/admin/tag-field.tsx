@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useFieldError } from "./form-errors";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +42,7 @@ export function TagField({
   placeholder?: string;
   error?: string;
 }) {
+  const t = useTranslations("Common");
   const [tags, setTags] = useState<string[]>(() => splitValue(defaultValue));
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +98,7 @@ export function TagField({
             <button
               type="button"
               onClick={() => removeTag(index)}
-              aria-label={`Remove ${tag}`}
+              aria-label={t("removeItem", { item: tag })}
               className="grid size-3.5 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
             >
               <X aria-hidden="true" className="size-3" />

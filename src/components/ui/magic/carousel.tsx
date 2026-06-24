@@ -268,7 +268,7 @@ export function Carousel({
               onClick={() => go(-1)}
               disabled={!loop && index === 0}
               className={cn(
-                "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent",
+                "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent pointer-coarse:size-11",
                 FOCUS_RING_INSET,
               )}
             >
@@ -280,7 +280,7 @@ export function Carousel({
               onClick={() => go(1)}
               disabled={!loop && index === count - 1}
               className={cn(
-                "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent",
+                "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent pointer-coarse:size-11",
                 FOCUS_RING_INSET,
               )}
             >

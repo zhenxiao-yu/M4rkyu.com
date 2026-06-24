@@ -2,6 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react"
 import { motion } from "motion/react"
+import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DraftBadge } from "@/components/placeholders/draft-badge"
@@ -28,6 +29,7 @@ export function ArchiveCard({
   locale?: Locale
   mediaLabel?: string
 }) {
+  const t = useTranslations("Common")
   const content = (
     <Card className="group h-full overflow-hidden bg-card/80 transition duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/60 hover:shadow-md hover:shadow-ring/5">
       <PlaceholderImage
@@ -46,7 +48,7 @@ export function ArchiveCard({
         <p className="text-sm leading-6 text-muted-foreground">{description}</p>
         {href && locale ? (
           <span className="inline-flex items-center gap-2 text-sm font-medium">
-            Open archive
+            {t("openArchive")}
             <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </span>
         ) : null}

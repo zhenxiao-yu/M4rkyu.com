@@ -454,7 +454,7 @@ function BentoWideTile({
                 <Badge
                   key={tag}
                   variant="outline"
-                  className="font-mono text-[0.5rem]"
+                  className="font-mono text-[0.62rem]"
                 >
                   {tag}
                 </Badge>

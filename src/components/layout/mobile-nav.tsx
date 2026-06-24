@@ -95,7 +95,7 @@ export function MobileNav({
         aria-label={t("menu")}
         onClick={() => setSheetOpen(true)}
         className={cn(
-          "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground",
+          "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground pointer-coarse:size-11",
           FOCUS_RING,
         )}
       >

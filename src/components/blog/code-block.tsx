@@ -85,7 +85,7 @@ export function CodeBlock({ children, className, preProps }: CodeBlockProps) {
         onClick={copy}
         aria-label={t("codeCopyAria")}
         className={cn(
-          "absolute right-2 top-2 z-10 inline-flex size-8 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground opacity-0 backdrop-blur-sm transition-[opacity,color,border-color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/60 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:opacity-100",
+          "absolute right-2 top-2 z-10 inline-flex size-8 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground opacity-0 backdrop-blur-sm transition-[opacity,color,border-color] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/60 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 pointer-coarse:opacity-100 pointer-coarse:size-11",
           FOCUS_RING,
         )}
       >

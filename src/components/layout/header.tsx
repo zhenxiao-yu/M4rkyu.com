@@ -116,7 +116,7 @@ export async function Header({ locale }: { locale: Locale }) {
          * menu trigger. Search, language, sound, QR and account all live
          * inside the full-screen sheet, so the dock stays uncramped and
          * legible on 360px screens instead of clamping the desktop rail. */}
-        <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
           <LazyNotificationBell locale={locale} />
           <ThemeSwitcher />
           <SoundSettingsButton />

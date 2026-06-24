@@ -71,7 +71,7 @@ export default async function GamesPage({
         }
         meta={
           <p className="inline-flex flex-wrap items-center gap-x-3 gap-y-1 font-pixel text-xl uppercase tracking-[0.08em] text-game-accent">
-            <span style={{ animation: "workspace-caret 1.2s steps(1) infinite" }}>
+            <span className="motion-safe:animate-[workspace-caret_1.2s_steps(1)_infinite]">
               ▶ {t("insertCoin")}
             </span>
             <span aria-hidden="true" className="text-border">

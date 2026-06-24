@@ -154,9 +154,9 @@ function BinaryMarquee({
       className="relative overflow-hidden border-y border-border/60 py-1.5"
       style={{
         maskImage:
-          "linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)",
+          "linear-gradient(90deg, transparent, var(--background) 10%, var(--background) 90%, transparent)",
         WebkitMaskImage:
-          "linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)",
+          "linear-gradient(90deg, transparent, var(--background) 10%, var(--background) 90%, transparent)",
       }}
     >
       <div

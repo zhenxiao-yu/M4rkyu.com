@@ -321,7 +321,7 @@ export async function Footer({ locale }: { locale: Locale }) {
               {t("locationLine")}
             </span>
             <ul
-              className="flex flex-wrap items-center gap-1 lg:mt-auto lg:justify-end"
+              className="flex flex-wrap items-center gap-1.5 lg:mt-auto lg:justify-end"
               aria-label={t("sectionSocials")}
             >
               {socialEntries.map((entry) => (

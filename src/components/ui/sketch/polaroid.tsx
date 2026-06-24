@@ -46,7 +46,7 @@ export function Polaroid({
     <figure
       style={{ ["--tilt"]: `${tilt}deg` } as CSSProperties}
       className={cn(
-        "group relative inline-block rotate-[var(--tilt)] bg-[#f6f4ee] p-2.5 pb-3 text-[#1b1b1b] shadow-[0_18px_40px_-22px_rgba(0,0,0,0.55)]",
+        "group relative inline-block rotate-[var(--tilt)] bg-card p-2.5 pb-3 text-card-foreground shadow-[0_18px_40px_-22px_rgba(0,0,0,0.55)]",
         "transition-[rotate,translate,box-shadow] duration-(--motion-medium) ease-(--ease-premium)",
         "motion-safe:group-hover:-translate-y-1 motion-safe:group-hover:rotate-0 group-hover:shadow-[0_28px_60px_-26px_rgba(0,0,0,0.6)]",
         className,
@@ -63,7 +63,7 @@ export function Polaroid({
       {/* Photo window — dark when empty; grayscale → color on hover. */}
       <div
         className={cn(
-          "relative overflow-hidden bg-[#0b0b0b]",
+          "relative overflow-hidden bg-media-well",
           aspect,
         )}
       >
@@ -94,7 +94,7 @@ export function Polaroid({
       {/* Caption — handwritten in the bottom frame. */}
       {caption ? (
         <figcaption className="px-1 pt-2.5">
-          <HandCaption className="text-[#2a2a2a]">{caption}</HandCaption>
+          <HandCaption className="text-muted-foreground">{caption}</HandCaption>
         </figcaption>
       ) : (
         <div aria-hidden="true" className="pt-2.5" />

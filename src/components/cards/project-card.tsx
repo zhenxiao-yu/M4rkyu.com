@@ -175,7 +175,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
               {t("caseStudy")}
             </span>
             {hasLinks ? (
-              <div className="relative z-20 -mr-1 flex items-center gap-0.5">
+              <div className="relative z-20 -mr-1 flex items-center gap-1.5 pointer-coarse:gap-2">
                 {project.liveUrl ? (
                   <a
                     href={project.liveUrl}
@@ -184,7 +184,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
                     aria-label={`${t("live")} — ${project.title}`}
                     title={t("live")}
                     className={cn(
-                      "inline-grid size-8 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
+                      "inline-grid size-8 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground pointer-coarse:size-11",
                       FOCUS_RING_INSET,
                     )}
                   >
@@ -199,7 +199,7 @@ export function ProjectCard({ project, locale, highlighted = false }: ProjectCar
                     aria-label={`${t("source")} — ${project.title}`}
                     title={t("source")}
                     className={cn(
-                      "inline-grid size-8 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground",
+                      "inline-grid size-8 place-items-center rounded-md text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted hover:text-foreground pointer-coarse:size-11",
                       FOCUS_RING_INSET,
                     )}
                   >

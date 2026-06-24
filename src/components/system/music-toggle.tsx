@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Music2, Pause } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 /**
@@ -17,11 +18,12 @@ import { cn, FOCUS_RING } from "@/lib/utils";
  */
 export function MusicToggle() {
   const [playing, setPlaying] = useState(false);
+  const t = useTranslations("Common");
   return (
     <button
       type="button"
       data-state={playing ? "playing" : "paused"}
-      aria-label={playing ? "Pause music" : "Play music"}
+      aria-label={playing ? t("pauseMusic") : t("playMusic")}
       aria-pressed={playing}
       onClick={() => setPlaying((v) => !v)}
       className={cn(

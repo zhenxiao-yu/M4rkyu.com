@@ -339,7 +339,7 @@ function SocialChip({
       >
         <Icon className="size-4 shrink-0" aria-hidden="true" />
         <span className="truncate">{label}</span>
-        <Badge variant="outline" className="ml-auto text-[0.5rem] uppercase tracking-[0.18em]">
+        <Badge variant="outline" className="ml-auto text-[0.6rem] uppercase tracking-[0.18em]">
           {pendingLabel}
         </Badge>
       </span>
@@ -390,7 +390,7 @@ function SupportButton({
         <Icon className="size-4" aria-hidden="true" />
         {label}
         {pendingLabel ? (
-          <Badge variant="outline" className="text-[0.5rem] uppercase tracking-[0.18em]">
+          <Badge variant="outline" className="text-[0.6rem] uppercase tracking-[0.18em]">
             {pendingLabel}
           </Badge>
         ) : null}

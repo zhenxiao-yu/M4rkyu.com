@@ -157,7 +157,7 @@ export function GalleryLightbox({
                   onClick={() => onChange(null)}
                   aria-label={tGallery("closeDetail")}
                   className={cn(
-                    "mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-full",
+                    "mt-0.5 inline-flex size-11 shrink-0 items-center justify-center rounded-full sm:size-10",
                     FAST_GLASS_BUTTON,
                     FOCUS_RING,
                   )}

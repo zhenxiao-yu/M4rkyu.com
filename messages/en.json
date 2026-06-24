@@ -1247,7 +1247,12 @@
     "replaceFinalContent": "Replace with final content",
     "copyCitation": "Copy citation",
     "citationCopied": "Citation copied",
-    "citationCopyFailed": "Could not copy citation"
+    "citationCopyFailed": "Could not copy citation",
+    "close": "Close",
+    "playMusic": "Play music",
+    "pauseMusic": "Pause music",
+    "openArchive": "Open archive",
+    "removeItem": "Remove {item}"
   },
   "Footer": {
     "statusOpen": "open channel",

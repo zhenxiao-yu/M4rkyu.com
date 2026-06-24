@@ -192,7 +192,7 @@ export function SocialIcon({
 }) {
   const { label, href, icon: Icon, pending } = entry;
   const baseClass = cn(
-    "group relative grid size-10 place-items-center rounded-full text-muted-foreground transition-[color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground motion-safe:hover:-translate-y-0.5",
+    "group relative grid size-11 place-items-center rounded-full text-muted-foreground transition-[color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:bg-muted/50 hover:text-foreground motion-safe:hover:-translate-y-0.5",
     FOCUS_RING,
   );
 
