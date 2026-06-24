@@ -12,6 +12,11 @@ import {
 } from "@/components/case-study/case-study-section";
 import { PullQuoteBlock } from "@/components/case-study/pull-quote-block";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
+import { DecisionLedger } from "@/components/case-study/decision-ledger";
+import {
+  ScreenshotGallery,
+  type GalleryShot,
+} from "@/components/case-study/screenshot-gallery";
 import { games } from "@/content/games";
 import { getGameFromSource, getGamesSource } from "@/lib/games/source";
 import type { Locale } from "@/i18n/routing";
@@ -66,6 +71,14 @@ export default async function GameDetailPage({
   const tGame = await getTranslations({ locale, namespace: "Game" });
   const tCase = await getTranslations({ locale, namespace: "CaseStudy" });
   const localized = localize(game, locale);
+  const galleryShots: GalleryShot[] = game.screenshots.map((shot) => ({
+    src: shot.src,
+    alt: shot.alt,
+    label: shot.label,
+    caption: shot.caption,
+    width: shot.width,
+    height: shot.height,
+  }));
 
   // Adjacent navigation in archive order — predictable, no clever sort.
   const gameIndex = allGames.findIndex((g) => g.slug === game.slug);
@@ -126,6 +139,30 @@ export default async function GameDetailPage({
           </BlurFade>
         </section>
 
+        {galleryShots.length > 0 ? (
+          <section className="border-y bg-muted/20">
+            <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
+              <BlurFade>
+                <CaseStudySection
+                  eyebrow={tCase("screenshots")}
+                  title={tCase("screenshots")}
+                  className="max-w-none"
+                >
+                  <ScreenshotGallery
+                    shots={galleryShots}
+                    labels={{
+                      viewLarger: tCase("viewLarger"),
+                      close: tCase("closeGallery"),
+                      previous: tCase("previous"),
+                      next: tCase("next"),
+                    }}
+                  />
+                </CaseStudySection>
+              </BlurFade>
+            </div>
+          </section>
+        ) : null}
+
         {game.pillars.length > 0 ? (
           <section className="border-y bg-muted/20">
             <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
@@ -141,12 +178,36 @@ export default async function GameDetailPage({
           </section>
         ) : null}
 
+        {game.decisions.length > 0 ? (
+          <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
+            <BlurFade>
+              <CaseStudySection
+                eyebrow={tCase("engineering")}
+                title={tCase("engineering")}
+                className="max-w-none"
+              >
+                <DecisionLedger
+                  decisions={game.decisions}
+                  labels={{
+                    decision: tCase("process"),
+                    context: tCase("context"),
+                    choice: tCase("approach"),
+                    consequence: tCase("outcomeEyebrow"),
+                  }}
+                />
+              </CaseStudySection>
+            </BlurFade>
+          </section>
+        ) : null}
+
         {game.outcome ? (
           <section className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
             <BlurFade>
               <PullQuoteBlock
                 eyebrow={tCase("outcomeEyebrow")}
-                quote={(localized.outcome as string | undefined) ?? game.outcome}
+                quote={
+                  (localized.outcome as string | undefined) ?? game.outcome
+                }
               />
             </BlurFade>
           </section>
@@ -159,7 +220,10 @@ export default async function GameDetailPage({
                 eyebrow={tGame("postmortemEyebrow")}
                 title={tGame("postmortemTitle")}
               >
-                <p>{(localized.postmortem as string | undefined) ?? game.postmortem}</p>
+                <p>
+                  {(localized.postmortem as string | undefined) ??
+                    game.postmortem}
+                </p>
               </CaseStudySection>
             </BlurFade>
           </section>

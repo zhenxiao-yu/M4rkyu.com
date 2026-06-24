@@ -94,6 +94,7 @@ describe("projectSchema", () => {
       expect(parsed.data.tags).toEqual([]);
       expect(parsed.data.challenges).toEqual([]);
       expect(parsed.data.screenshots).toEqual([]);
+      expect(parsed.data.decisions).toEqual([]);
     }
   });
 
@@ -272,6 +273,8 @@ describe("gameSchema", () => {
     if (parsed.success) {
       expect(parsed.data.platforms).toEqual([]);
       expect(parsed.data.buildLinks).toEqual([]);
+      expect(parsed.data.screenshots).toEqual([]);
+      expect(parsed.data.decisions).toEqual([]);
     }
   });
 

@@ -21,6 +21,46 @@ export const games = [
       width: 1090,
       height: 573,
     },
+    screenshots: [
+      {
+        src: "/project-covers/descent-class-select.webp",
+        alt: "Descent Into Madness class selection screen",
+        width: 1600,
+        height: 897,
+        label: "Class selection",
+        caption:
+          "Three starting classes change the player's combat profile before the five-floor run begins.",
+      },
+      {
+        src: "/project-covers/descent-dungeon.webp",
+        alt: "Descent Into Madness dungeon gameplay with enemies, loot, and interface elements",
+        width: 1600,
+        height: 895,
+        label: "Dungeon run",
+        caption:
+          "The released build combines procedural rooms, ranged combat, sanity pressure, loot, and minimap navigation.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Give a procedural run a fixed dramatic arc",
+        context:
+          "Random rooms alone did not create a readable beginning, escalation, and finish.",
+        choice:
+          "Structure generation, difficulty, loot, and bosses across five increasingly demanding floors.",
+        consequence:
+          "Runs have a clear shape, while each floor must be balanced across three starting classes.",
+      },
+      {
+        title: "Use sanity as pressure, not decoration",
+        context:
+          "Health represented combat danger but did not support the psychological-horror premise between encounters.",
+        choice:
+          "Track sanity as a second survival pressure tied to exploration and progression.",
+        consequence:
+          "The theme affects play, but the compact HUD has to communicate two failure systems clearly.",
+      },
+    ],
     platforms: ["WebGL", "Windows", "itch.io"],
     pillars: [
       "Procedural progression across five dungeon levels",
@@ -72,6 +112,46 @@ export const games = [
       width: 1600,
       height: 928,
     },
+    screenshots: [
+      {
+        src: "/project-covers/unreal-blueprint.webp",
+        alt: "Blueprint graph from the Unreal battle royale systems prototype",
+        width: 1600,
+        height: 1163,
+        label: "Blueprint logic",
+        caption:
+          "The public repository exposes the visual scripting behind item, inventory, and character behavior.",
+      },
+      {
+        src: "/project-covers/unreal-command-center.webp",
+        alt: "Third-person gameplay scene inside the Unreal Engine prototype",
+        width: 1600,
+        height: 928,
+        label: "Integration scene",
+        caption:
+          "A playable editor scene connects locomotion, world pickups, equipment, and weapon handling.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Optimize for learning speed with Blueprints",
+        context:
+          "The project needed rapid iteration across inventory, stance, animation, and weapons more than production-scale runtime boundaries.",
+        choice:
+          "Build the systems primarily as documented Blueprint components.",
+        consequence:
+          "Behavior stays visible and editable, but graph ownership and readability become the scaling constraint.",
+      },
+      {
+        title: "Exclude multiplayer before it diluted the study",
+        context:
+          "Replication and authoritative match state would multiply scope before the single-player interactions were understood.",
+        choice:
+          "Stop at a PUBG-like inventory and weapon systems prototype and state that boundary explicitly.",
+        consequence:
+          "The result is a focused technical reference rather than a misleading claim of a complete battle royale.",
+      },
+    ],
     platforms: ["Windows", "Unreal Editor"],
     pillars: [
       "Inventory and pickup flow",
@@ -121,6 +201,37 @@ export const games = [
       width: 1586,
       height: 992,
     },
+    screenshots: [
+      {
+        src: "/project-covers/last-kernel-board-ui.webp",
+        alt: "Work-in-progress LAST KERNEL card board interface in Unity",
+        width: 1280,
+        height: 720,
+        label: "Development build",
+        caption:
+          "An honest in-engine snapshot of the card grid and pack interface. It shows current implementation progress, not final art.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Make preparation the player's primary skill",
+        context:
+          "Direct unit control would turn the night phase into a conventional tactics game and weaken the system-building premise.",
+        choice:
+          "Keep day planning interactive and make night combat deterministic and hands-off.",
+        consequence:
+          "Success reflects the colony the player built, but weak feedback would make losses feel arbitrary, so combat explanation is essential.",
+      },
+      {
+        title: "Separate game data, rules, and presentation",
+        context:
+          "Cards, recipes, quests, packs, and encounters need frequent content iteration without coupling every change to scene objects.",
+        choice:
+          "Store definitions in ScriptableObjects, run rules in plain C# services, and reserve MonoBehaviours for views and input.",
+        consequence:
+          "Content becomes easier to validate and test, while the project needs explicit IDs, event contracts, and editor tooling.",
+      },
+    ],
     platforms: ["Windows", "Mobile target"],
     pillars: [
       "Card-stacking colony simulation during the day phase",

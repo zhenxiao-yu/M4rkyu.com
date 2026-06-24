@@ -28,7 +28,19 @@ export const imageSchema = z.object({
   caption: z.string().optional(),
 });
 
-export const contentStatusSchema = z.enum(["ready", "draft", "placeholder", "coming-soon"]);
+export const caseStudyDecisionSchema = z.object({
+  title: z.string().min(1),
+  context: z.string().min(1),
+  choice: z.string().min(1),
+  consequence: z.string().min(1),
+});
+
+export const contentStatusSchema = z.enum([
+  "ready",
+  "draft",
+  "placeholder",
+  "coming-soon",
+]);
 
 export const projectSchema = z.object({
   title: z.string().min(1),
@@ -61,6 +73,7 @@ export const projectSchema = z.object({
   tags: z.array(z.string()).default([]),
   features: z.array(z.string()),
   architectureNotes: z.array(z.string()),
+  decisions: z.array(caseStudyDecisionSchema).default([]),
   // No "TBD…" default — an empty array reads as "no challenges yet"
   // and the page section collapses cleanly. Inventing placeholder
   // copy here would inject fake content into every project that
@@ -299,6 +312,8 @@ export const gameSchema = z.object({
   notes: z.array(z.string()),
   // Phase 1.3 additions — all optional / defaulted so existing content validates.
   cover: imageSchema.optional(),
+  screenshots: z.array(imageSchema).default([]),
+  decisions: z.array(caseStudyDecisionSchema).default([]),
   trailerUrl: z.string().url().optional(),
   platforms: z.array(z.string()).default([]),
   pillars: z.array(z.string()).default([]),

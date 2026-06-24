@@ -18,6 +18,7 @@ import {
   type GalleryShot,
 } from "@/components/case-study/screenshot-gallery";
 import { TechStackPanel } from "@/components/case-study/tech-stack-panel";
+import { DecisionLedger } from "@/components/case-study/decision-ledger";
 import type { Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { localize } from "@/lib/content/localize";
@@ -164,6 +165,7 @@ export default async function ProjectDetailPage({
   const hasFeatures = project.features.length > 0;
   const hasBuild =
     project.architectureNotes.length > 0 || project.challenges.length > 0;
+  const hasDecisions = project.decisions.length > 0;
   const hasRoadmap =
     project.lessonsLearned.length > 0 || project.nextSteps.length > 0;
   const hasGallery = galleryShots.length > 0;
@@ -174,6 +176,7 @@ export default async function ProjectDetailPage({
     ...(hasGallery ? [{ id: "screens", label: tCase("screenshots") }] : []),
     { id: "stack", label: tCase("builtWith") },
     ...(hasFeatures ? [{ id: "highlights", label: tCase("highlights") }] : []),
+    ...(hasDecisions ? [{ id: "decisions", label: tCase("engineering") }] : []),
     ...(hasBuild ? [{ id: "build", label: tCase("underTheHood") }] : []),
     ...(project.outcome ? [{ id: "outcome", label: tCase("outcomeEyebrow") }] : []),
     ...(hasRoadmap ? [{ id: "roadmap", label: tCase("roadmap") }] : []),
@@ -360,6 +363,24 @@ export default async function ProjectDetailPage({
                     </li>
                   ))}
                 </ul>
+              </Section>
+            ) : null}
+
+            {hasDecisions ? (
+              <Section
+                id="decisions"
+                index={indexOf("decisions")}
+                title={tCase("engineering")}
+              >
+                <DecisionLedger
+                  decisions={project.decisions}
+                  labels={{
+                    decision: tCase("process"),
+                    context: tCase("context"),
+                    choice: tCase("approach"),
+                    consequence: tCase("outcomeEyebrow"),
+                  }}
+                />
               </Section>
             ) : null}
 

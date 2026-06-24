@@ -223,6 +223,7 @@ export function dbProjectRowToProject(
     tags: row.tags ?? [],
     features: row.features,
     architectureNotes: row.architecture_notes,
+    decisions: [],
     challenges: row.challenges,
     // screenshots[0] is the hero cover (uploaded wins over external URL);
     // the remaining entries are the labeled gallery rows. /work reads only

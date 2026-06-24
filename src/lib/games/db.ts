@@ -91,6 +91,8 @@ export function dbGameRowToGame(row: DbGameRow): Game {
     cover: row.cover_src
       ? { src: row.cover_src, alt: row.cover_alt || row.title }
       : undefined,
+    screenshots: [],
+    decisions: [],
     trailerUrl: row.trailer_url ?? undefined,
     platforms: row.platforms ?? [],
     pillars: row.pillars ?? [],

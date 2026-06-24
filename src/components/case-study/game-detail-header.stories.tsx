@@ -89,6 +89,8 @@ const defaultGame: Game = {
     "A short atmospheric prototype exploring traversal, ambient signal cues, and minimal UI in a quiet cyber-grid.",
   role: "Solo design, programming, and audio direction.",
   notes: [],
+  screenshots: [],
+  decisions: [],
   platforms: ["WebGL", "Windows"],
   pillars: [],
   buildLinks: [
@@ -106,6 +108,8 @@ const minimalGame: Game = {
   pitch: "Placeholder: replace with the final pitch once the prototype lands.",
   role: "TBD: scope and ownership pending.",
   notes: [],
+  screenshots: [],
+  decisions: [],
   platforms: [],
   pillars: [],
   buildLinks: [],

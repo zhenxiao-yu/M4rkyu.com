@@ -12,6 +12,7 @@ describe("published project case studies", () => {
       expect(project.timeline, project.slug).toBeTruthy();
       expect(project.platforms.length, project.slug).toBeGreaterThan(0);
       expect(project.challenges.length, project.slug).toBeGreaterThan(0);
+      expect(project.decisions.length, project.slug).toBeGreaterThanOrEqual(2);
     }
   });
 

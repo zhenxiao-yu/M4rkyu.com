@@ -56,6 +56,26 @@ const projects = [
       "The AI workspace is capability-gated and disappears when no provider key is configured.",
       "Security headers, structured data, dynamic social images, analytics, and performance monitoring are part of the deployment surface.",
     ],
+    decisions: [
+      {
+        title: "Transfer files without becoming the transfer server",
+        context:
+          "Large peer-to-peer transfers would consume storage and bandwidth while making Nimbus responsible for another copy of the file.",
+        choice:
+          "Use a four-digit pairing flow to establish a WebRTC connection and send bytes directly between browsers.",
+        consequence:
+          "Transfers avoid Nimbus storage, but pairing, NAT traversal, and reconnect states become visible product concerns.",
+      },
+      {
+        title: "Keep AI optional instead of foundational",
+        context:
+          "File upload, organization, and sharing must remain dependable when no model key is configured or a provider is unavailable.",
+        choice:
+          "Capability-gate the AI workspace and keep the storage model independent from summaries and file Q&A.",
+        consequence:
+          "The core product degrades cleanly; AI feels additive, though it cannot simplify the underlying file workflows.",
+      },
+    ],
     challenges: [
       "Keeping upload, share, transfer, and AI states legible without turning the dashboard into an operations console.",
       "Designing WebRTC pairing and failure recovery around short-lived sessions and browser networking constraints.",
@@ -156,6 +176,26 @@ const projects = [
       "The Vercel AI SDK streams schema-shaped results rather than unvalidated prose blobs.",
       "Provider selection and fallback are separated from the prompt surface, allowing the same UX to span eight models.",
       "History and preferences remain local through Zustand persistence; the core tool requires no account.",
+    ],
+    decisions: [
+      {
+        title: "Constrain generation before asking for prose",
+        context:
+          "A single open prompt produces bios that vary unpredictably in tone, length, and platform fit.",
+        choice:
+          "Collect platform, audience, tone, focus, length, temperature, and emoji preferences before generation.",
+        consequence:
+          "Output is more repeatable and editable, at the cost of a longer form than a one-click generator.",
+      },
+      {
+        title: "Stream structured options, not one text blob",
+        context:
+          "Users need alternatives they can compare, score, and revise rather than a single answer they must accept or discard.",
+        choice:
+          "Use schema-shaped streaming to return four bios and route provider fallback behind the same result contract.",
+        consequence:
+          "The review experience becomes useful across models, while schema adherence and partial-stream handling add implementation complexity.",
+      },
     ],
     challenges: [
       "Making model choice useful without forcing non-technical users to understand provider differences.",
@@ -260,6 +300,26 @@ const projects = [
       "Portfolio and watchlist data never leave localStorage; there is no backend, account system, or private API key.",
       "Data adapters normalize provider differences before values reach tables and charts.",
     ],
+    decisions: [
+      {
+        title: "Treat API failure as normal operating state",
+        context:
+          "Free crypto providers disagree on schemas, rate limits, coverage, and availability.",
+        choice:
+          "Normalize providers behind adapters, add explicit fallbacks, and persist a 24-hour TanStack Query cache.",
+        consequence:
+          "The dashboard remains useful during partial outages, but freshness must be communicated instead of assuming every number is live.",
+      },
+      {
+        title: "Keep personal finance data in the browser",
+        context:
+          "Watchlists and sample portfolios do not justify accounts, a database, or custody of user financial data.",
+        choice:
+          "Store portfolios, alerts, watchlists, and preferences locally with no backend identity layer.",
+        consequence:
+          "The app is private and frictionless, but cross-device sync and server-side alert delivery are deliberately absent.",
+      },
+    ],
     challenges: [
       "Public market APIs have different schemas, quotas, and outage behavior, so graceful degradation is a product requirement.",
       "Dense financial screens need visible freshness and error states without adding more visual noise.",
@@ -358,6 +418,26 @@ const projects = [
       "The deterministic engine owns the truth; AI and live data only enrich, never override.",
       "Local-first by design — the plan never waits on the network; cloud sync sits behind the local layer.",
       "Every live fact carries a source, a confidence tag, and a 'last checked' time.",
+    ],
+    decisions: [
+      {
+        title: "Make the planner deterministic before adding AI",
+        context:
+          "Material quantities, sequencing, and regional suitability cannot depend on a model improvising plausible advice.",
+        choice:
+          "Let a rules-based engine own the plan and restrict Claude to rephrasing facts that are already set.",
+        consequence:
+          "Plans remain inspectable and work without AI, while expanding capability requires catalog and rule work rather than prompt changes.",
+      },
+      {
+        title: "Represent uncertainty instead of hiding it",
+        context:
+          "Users may not have measurements, retailer inventory changes, and Ontario-first data does not generalize everywhere.",
+        choice:
+          "Return ranges, confidence labels, sources, last-checked dates, and explicit verify-before-buying notes.",
+        consequence:
+          "The output is less magically precise but more trustworthy and actionable.",
+      },
     ],
     challenges: [
       "Producing useful material ranges when users have not measured their yard without disguising uncertainty as precision.",
@@ -471,6 +551,26 @@ const projects = [
       "Expensive news aggregation routes use bounded concurrency, caching, and stale-while-revalidate behavior.",
       "AI analysis is downstream of deterministic clustering and presents framing differences without assigning factual authority.",
     ],
+    decisions: [
+      {
+        title: "Measure divergence without calling it truth",
+        context:
+          "Political framing is multidimensional, and a single bias score can imply certainty the system does not possess.",
+        choice:
+          "Compute a documented heuristic from source breadth, spectrum coverage, and region, then show its method and confidence context.",
+        consequence:
+          "The signal supports comparison without judging factual correctness, but readers must still inspect the underlying coverage.",
+      },
+      {
+        title: "Cluster deterministically before invoking AI",
+        context:
+          "Letting a model decide which articles belong together would make the core research unit difficult to reproduce or challenge.",
+        choice:
+          "Normalize, deduplicate, and similarity-cluster articles first; use AI only to describe framing and consensus inside an established cluster.",
+        consequence:
+          "The pipeline stays inspectable and cheaper, while deterministic clustering errors remain visible instead of being hidden by fluent summaries.",
+      },
+    ],
     challenges: [
       "Keeping politically sensitive scores explainable enough that users can challenge the method.",
       "Handling unreliable feeds and uneven source coverage without hiding degraded data.",
@@ -578,6 +678,26 @@ const projects = [
       "Valtio holds reactive design state shared between the UI and the 3D scene.",
       "Moving the API and canvas under one origin removed the old Express server and its CORS boundary.",
     ],
+    decisions: [
+      {
+        title: "Collapse two deployments into one application",
+        context:
+          "The original Vite frontend and Express image API required separate hosting, environment wiring, and CORS configuration.",
+        choice:
+          "Move the image endpoint into a Next.js Node Route Handler and keep the OpenAI key server-side.",
+        consequence:
+          "Deployment and same-origin requests are simpler, but the image route inherits serverless duration and provider-latency limits.",
+      },
+      {
+        title: "Keep WebGL outside server rendering",
+        context:
+          "Three.js and its renderer depend on browser globals and add substantial client work.",
+        choice:
+          "Dynamically import the canvas with server rendering disabled while the rest of the application uses the App Router.",
+        consequence:
+          "The page shell can render independently, but the current renderer compatibility regression still has to be repaired before the demo is healthy.",
+      },
+    ],
     challenges: [
       "three.js touches browser globals, so the canvas must stay outside server rendering.",
       "The current public deployment is behind a Vercel security checkpoint, and a clean local install exposes a React renderer compatibility regression; the source is available, but the demo should not be presented as healthy.",
@@ -662,6 +782,26 @@ const projects = [
       "Item definitions and inventory behavior are separated so world pickups can move into equipment and weapon slots without one monolithic graph.",
       "Pose-state logic coordinates locomotion and animation changes across standing, crouched, and prone modes.",
       "The repository documents both Blueprint graphs and in-engine results, making the learning process inspectable.",
+    ],
+    decisions: [
+      {
+        title: "Prototype systems in Blueprints first",
+        context:
+          "The learning goal was rapid iteration across inventory, equipment, stance, animation, and weapons rather than shipping a production multiplayer game.",
+        choice:
+          "Build the gameplay loop primarily with Blueprint components and document the graphs alongside in-engine results.",
+        consequence:
+          "Iteration stayed visual and fast, but graph ownership and readability became the scaling limit.",
+      },
+      {
+        title: "Stop at a single-player systems study",
+        context:
+          "Replication and authoritative multiplayer would multiply the scope before the core inventory and weapon interactions were understood.",
+        choice:
+          "Exclude networking, match flow, and safe-zone systems and describe the prototype accurately.",
+        consequence:
+          "The repository is useful as a focused reference, not a claim of a complete battle-royale implementation.",
+      },
     ],
     challenges: [
       "Keeping Blueprint ownership readable as inventory, equipment, animation, and weapon state begin to overlap.",
@@ -761,6 +901,26 @@ const projects = [
       "Roughly 150 C# scripts divide movement, combat, dungeon generation, enemies, UI, audio, and interactive props.",
       "Procedural rooms and difficulty scaling build a repeatable five-floor run structure.",
       "Navigation combines a minimap travel layer for players with A* and visibility checks for enemies.",
+    ],
+    decisions: [
+      {
+        title: "Use five escalating floors as the run spine",
+        context:
+          "Procedural rooms need a readable sense of progression rather than endless random encounters.",
+        choice:
+          "Organize generation, difficulty, loot, and bosses into a fixed five-level escalation.",
+        consequence:
+          "Runs gain a clear arc, while balancing each floor across three classes becomes a larger tuning problem.",
+      },
+      {
+        title: "Add sanity as a second pressure system",
+        context:
+          "Health alone did not express the psychological-horror theme or create enough pressure between fights.",
+        choice:
+          "Track sanity alongside combat state and connect it to exploration and survival.",
+        consequence:
+          "The game gains thematic tension, but players must understand two failure pressures through a compact HUD.",
+      },
     ],
     challenges: [
       "Integrating many shared Unity systems across a four-person student team without losing a playable build.",
@@ -874,6 +1034,26 @@ const projects = [
       "Shared history keeps undo/redo collaborative instead of treating every browser as an isolated editor.",
       "Unique room identifiers make collaboration link-first and remove an authentication step from the prototype.",
     ],
+    decisions: [
+      {
+        title: "Separate durable objects from ephemeral presence",
+        context:
+          "Canvas objects and comments must persist, while cursors, selection, and active-user state update too frequently for the same storage path.",
+        choice:
+          "Use Liveblocks storage for durable room data and presence for transient collaboration signals.",
+        consequence:
+          "Cursor feedback stays responsive, but synchronization code must coordinate two kinds of shared state.",
+      },
+      {
+        title: "Make rooms link-first and account-free",
+        context:
+          "Authentication would add friction before the multiplayer canvas proved useful.",
+        choice:
+          "Generate a unique room URL and let collaborators enter directly.",
+        consequence:
+          "Sharing is immediate, but ownership, discovery, and access control remain intentionally limited.",
+      },
+    ],
     challenges: [
       "Synchronizing Fabric object mutations with durable multiplayer storage without creating feedback loops.",
       "The mobile experience is intentionally read-only; the full editor is designed for pointer-and-keyboard input.",
@@ -975,6 +1155,26 @@ const projects = [
       "The repo worker delegates edits to Aider but wraps it in preflight checks, isolated branches, validation, risk scanning, and reports.",
       "The six-role pipeline is advisory: it passes repository context through Product, Tech Lead, Developer, QA, Reviewer, and DevOps prompts without changing files.",
       "The dashboard is split into config, data, services, pages, and UI modules rather than one Streamlit script.",
+    ],
+    decisions: [
+      {
+        title: "Wrap model automation in a conservative worker",
+        context:
+          "A local model can edit quickly, but unattended commits, dirty worktrees, and sensitive-file changes create unacceptable risk.",
+        choice:
+          "Require a clean repo, create an isolated branch, run one task, validate, flag risky files, report, and stop without committing or pushing.",
+        consequence:
+          "Automation is slower and deliberately human-gated, but its output remains reviewable and recoverable.",
+      },
+      {
+        title: "Keep the six-role pipeline advisory",
+        context:
+          "Multiple role prompts are useful for planning and review but can compound mistakes if each is allowed to mutate the repo.",
+        choice:
+          "Pass repository context through six sequential roles that only write a combined report.",
+        consequence:
+          "The pipeline improves perspective without edit conflicts, though a human still has to turn advice into code.",
+      },
     ],
     challenges: [
       "This is a personal toolkit shaped around one machine, not a general-purpose agent platform.",
@@ -1080,6 +1280,26 @@ const projects = [
       "Workbox caches the application shell so core writing remains available offline.",
       "PartyKit separates room-based collaboration and typing-arena state from local document persistence.",
       "Markdown extensions for math, diagrams, callouts, footnotes, and syntax rendering are composed into the preview pipeline.",
+    ],
+    decisions: [
+      {
+        title: "Separate local documents from realtime rooms",
+        context:
+          "Offline writing and multiplayer sessions have different ownership, persistence, and recovery semantics.",
+        choice:
+          "Keep tabbed documents in local storage and use PartyKit only for room-based collaboration and battles.",
+        consequence:
+          "Offline writing stays dependable, while moving content between local and shared contexts remains an explicit action.",
+      },
+      {
+        title: "Use one product shell for work and play",
+        context:
+          "A typing arena could have become a disconnected side project with separate navigation and state.",
+        choice:
+          "Present Writer and Battle as first-class modes inside the same Preact application.",
+        consequence:
+          "The utility becomes memorable and reuses realtime infrastructure, but the product must maintain two very different interaction densities.",
+      },
     ],
     challenges: [
       "Offline local documents and realtime rooms have different ownership and recovery rules.",
