@@ -11,7 +11,7 @@ import {
 export type BlogViewMode = "list" | "grid";
 
 const STORAGE_KEY = "m4rkyu:logs:view-mode";
-const DEFAULT_MODE: BlogViewMode = "grid";
+const DEFAULT_MODE: BlogViewMode = "list";
 const STORAGE_EVENT = "m4rkyu:view-mode-changed";
 
 function subscribe(callback: () => void) {
@@ -30,7 +30,7 @@ function getServerSnapshot(): BlogViewMode {
 
 /**
  * Persisted view-mode preference for `/logs`. SSR renders the default
- * (`grid`); on hydration `useSyncExternalStore` swaps to the value
+ * (`list`); on hydration `useSyncExternalStore` swaps to the value
  * read from localStorage. Setter writes to storage and broadcasts a
  * synthetic event so other consumers in the same tab re-snapshot.
  */

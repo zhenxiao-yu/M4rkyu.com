@@ -24,13 +24,7 @@ interface PostHeaderProps {
   shareUrl: string;
 }
 
-/**
- * Editorial header for a syndicated dev.to post. Same atmospheric
- * stack as case-study and game detail headers (cyber-grid + archive
- * vignette), with a meta ribbon that surfaces date, reading time,
- * reactions, and comments. Renders a ring-color reading-progress
- * bar fixed to the bottom edge of the sticky site header.
- */
+/** Editorial header for a syndicated dev.to post. */
 export async function PostHeader({
   title,
   description,
@@ -46,21 +40,9 @@ export async function PostHeader({
   const t = await getTranslations("Blog");
   const citation = `${title} — M4rkyu.com. ${canonicalUrl}`;
   return (
-    <header className="relative overflow-hidden border-b">
+    <header className="border-b border-border/70 bg-background">
       <ReadingProgress />
-      {/* Atmosphere constrained to the content frame (max-w-page) so the
-        * grid + vignette stop smearing full-bleed into the wide-desktop
-        * gutters past the editorial margins. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="relative mx-auto h-full max-w-page">
-          <div className="absolute inset-0 bg-cyber-grid opacity-30" />
-          <div className="archive-vignette absolute inset-0" />
-        </div>
-      </div>
-      <div className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+      <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
           {t("syndicatedHeader", { username })}
         </p>
@@ -68,7 +50,7 @@ export async function PostHeader({
         <SplitReveal
           as="h1"
           splitBy="lines"
-          className="serif-morph mt-6 font-display text-3xl font-semibold leading-tight tracking-[-0.01em] text-balance sm:text-4xl lg:text-5xl"
+          className="mt-5 font-display text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-5xl"
         >
           {title}
         </SplitReveal>
@@ -77,9 +59,6 @@ export async function PostHeader({
           {description}
         </p>
 
-        {/* Meta ribbon. On <sm we drop the inline `·` separators in
-         * favor of a wrap-friendly chip stack so a long reading time
-         * never orphans the reactions count on the next line. */}
         <dl className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-5 sm:gap-y-2 sm:text-[0.65rem] sm:tracking-[0.2em]">
           <div className="flex items-center gap-2">
             <dt className="sr-only">{t("metaPublished")}</dt>
@@ -165,11 +144,7 @@ export async function PostHeader({
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild variant="outline" size="sm">
-            <a
-              href={canonicalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={canonicalUrl} target="_blank" rel="noopener noreferrer">
               {t("viewOnDevto")}
               <ArrowUpRight aria-hidden="true" className="size-3.5" />
             </a>
@@ -183,16 +158,12 @@ export async function PostHeader({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageSquare
-                  aria-hidden="true"
-                  className="size-3.5"
-                />
+                <MessageSquare aria-hidden="true" className="size-3.5" />
                 {t("discuss")}
               </a>
             </Button>
           ) : null}
         </div>
-
       </div>
     </header>
   );

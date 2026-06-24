@@ -100,7 +100,7 @@ export function BlogToolbar({
     <section
       aria-label={t("filterPanelLabel")}
       aria-busy={isPending}
-      className="rounded-lg border border-border bg-card/85 p-3 shadow-sm backdrop-blur-xl transition-[border-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) sm:p-4"
+      className="border-y border-border/70 py-4"
     >
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center">
         <label htmlFor={searchId} className="block min-w-0">
@@ -117,7 +117,7 @@ export function BlogToolbar({
               placeholder={t("searchPlaceholder")}
               value={query}
               onChange={(event) => onQueryChange(event.target.value)}
-              className="h-11 rounded-lg border-border/80 bg-background/70 pl-9 pr-10 text-base shadow-inner shadow-black/0 transition-shadow focus-visible:shadow-black/5 sm:text-sm"
+              className="h-11 rounded-md border-border/80 bg-background pl-9 pr-10 text-base sm:text-sm"
             />
             {query ? (
               <Button
@@ -143,7 +143,7 @@ export function BlogToolbar({
           >
             <SelectTrigger
               aria-label={t("categoryLabel")}
-              className="h-11 rounded-lg bg-background/70"
+              className="h-11 rounded-md bg-background"
             >
               <SelectValue />
             </SelectTrigger>
@@ -169,7 +169,7 @@ export function BlogToolbar({
           >
             <SelectTrigger
               aria-label={t("sortLabel")}
-              className="h-11 rounded-lg bg-background/70"
+              className="h-11 rounded-md bg-background"
             >
               <SelectValue />
             </SelectTrigger>
@@ -216,7 +216,7 @@ export function BlogToolbar({
 
         <div className="flex shrink-0 items-center gap-2 text-left lg:justify-end">
           <span
-            className="rounded-full border border-border bg-background/70 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground"
+            className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground"
             aria-live="polite"
           >
             {t("resultsSummary", {

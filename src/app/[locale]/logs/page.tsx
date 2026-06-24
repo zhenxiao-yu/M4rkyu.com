@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
-import { FeaturedPostsRotator } from "@/components/blog/featured-posts-rotator";
-import { FadeIn } from "@/components/motion/fade-in";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
 import { cn, FOCUS_RING } from "@/lib/utils";
 import { getPosts, DEVTO_USERNAME } from "@/lib/blog/get-posts";
-import { selectFeaturedPosts } from "@/lib/blog/filter-posts";
 import { BlogTimeline } from "./_client";
-
-// Pull enough featured posts for a full rotator page. `selectFeaturedPosts`
-// only respects `BLOG_PAGE_SETTINGS.featuredPostCount`, so we widen the
-// candidate pool ourselves: a pinned post plus the highest-scoring 6
-// candidates. Fewer dev.to posts → the rotator falls back to its static
-// mode automatically.
-const ROTATOR_PAGE_SIZE = 7;
 
 export async function generateMetadata({
   params,
@@ -42,79 +29,54 @@ export default async function BlogPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Blog" });
   const posts = await getPosts();
-  const pinned = posts.find((post) => post.pinned);
-  // Widen the candidate pool just for the rotator (one full mosaic
-  // page = 7 tiles). The global BLOG_PAGE_SETTINGS stays at 3 so the
-  // legacy /logs surfaces that read it keep their previous behaviour.
-  const featuredPosts = selectFeaturedPosts(posts, pinned, ROTATOR_PAGE_SIZE);
-  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug));
-  // Keep featured posts out of the archive timeline so readers do not see duplicates.
-  const archivePosts = posts.filter((post) => !featuredSlugs.has(post.slug));
 
   return (
     <PageShell locale={locale}>
-      <PageHero
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-        decorativeWord="LOGS"
-      >
-        <Card glass>
-          <CardHeader>
-            <CardTitle as="h2">{t("archiveStatus")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-3 text-sm text-muted-foreground">
-            <p>
-              <span className="font-mono text-foreground">{posts.length}</span>{" "}
-              {t("postsPublished")}
-            </p>
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em]">
-              {t("syndicatedFrom")}{" "}
-              <a
-                href={`https://dev.to/${DEVTO_USERNAME}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "rounded-sm text-foreground underline-offset-4 transition-colors hover:text-ring hover:underline",
-                  FOCUS_RING,
-                )}
-              >
-                dev.to / @{DEVTO_USERNAME}
-              </a>
-            </p>
-            <p>{t("syndicatedNote")}</p>
-          </CardContent>
-        </Card>
-      </PageHero>
+      <header className="border-b border-border/70 bg-background">
+        <div className="mx-auto w-full max-w-page px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+            {t("eyebrow")}
+          </p>
+          <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,44rem)_1fr] lg:items-end lg:gap-16">
+            <div>
+              <h1 className="font-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+                {t("title")}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+                {t("description")}
+              </p>
+            </div>
+            <div className="border-l border-border/70 pl-4 text-sm leading-6 text-muted-foreground">
+              <p>
+                <span className="font-mono text-foreground">
+                  {posts.length}
+                </span>{" "}
+                {t("postsPublished")}
+              </p>
+              <p className="mt-1">
+                {t("syndicatedFrom")}{" "}
+                <a
+                  href={`https://dev.to/${DEVTO_USERNAME}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-ring",
+                    FOCUS_RING,
+                  )}
+                >
+                  dev.to / @{DEVTO_USERNAME}
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
 
-      <PageSection innerClassName="pt-6 pb-4 sm:pt-8 sm:pb-6 lg:pt-10">
-        <FadeIn>
-          <FeaturedPostsRotator
-            posts={featuredPosts}
-            locale={locale}
-            labels={{
-              eyebrow: t("featuredRotatorEyebrow"),
-              heading: t("featuredHeading"),
-              regionLabel: t("featuredRotatorLabel"),
-              prev: t("featuredRotatorPrev"),
-              next: t("featuredRotatorNext"),
-              pause: t("featuredRotatorPause"),
-              play: t("featuredRotatorPlay"),
-              collapse: t("featuredRotatorCollapse"),
-              expand: t("featuredRotatorExpand"),
-              gotoPage: t("featuredRotatorGoto", { index: "{index}" }),
-              openAria: t("openPostAria", { name: "{name}" }),
-              ctaLabel: t("featuredCta"),
-            }}
-          />
-        </FadeIn>
-      </PageSection>
-
-      <PageSection innerClassName="pt-10">
-        <FadeIn>
-          <BlogTimeline posts={archivePosts} />
-        </FadeIn>
-      </PageSection>
+      <main className="bg-background">
+        <div className="mx-auto w-full max-w-page px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          <BlogTimeline posts={posts} />
+        </div>
+      </main>
     </PageShell>
   );
 }

@@ -51,7 +51,7 @@ export function BlogResults({
       ) : (
         <motion.ol
           layout={!reduceMotion}
-          className="overflow-hidden rounded-lg border border-border/80 bg-card/45 shadow-sm divide-y divide-border/70"
+          className="divide-y divide-border/70 border-y border-border/70"
         >
           <AnimatePresence initial={false}>
             {posts.map((post, i) => (
@@ -111,7 +111,7 @@ function ResultMotionItem({
 function BlogEmptyState({ onClear }: { onClear: () => void }) {
   const t = useTranslations("Blog");
   return (
-    <div className="rounded-lg border border-dashed border-border bg-muted/20 px-5 py-14 text-center">
+    <div className="border-y border-dashed border-border px-5 py-14 text-center">
       <div className="mx-auto grid size-12 place-items-center rounded-full border border-border bg-background text-muted-foreground">
         <FileSearch aria-hidden="true" className="size-5" />
       </div>

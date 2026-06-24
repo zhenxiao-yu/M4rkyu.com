@@ -51,12 +51,7 @@ function pickRelated(
   return [...overlapping, ...filler];
 }
 
-/**
- * "Related" stack rendered after the post body. Reads directly off
- * the dev.to article listing (not the schema-parsed `Post[]`) so it
- * survives any per-row Zod parse failure that might drop posts from
- * the timeline. Mirrors the project-detail "Related work" card grid.
- */
+/** Related reading selected from the dev.to article listing. */
 export async function RelatedPosts({
   currentSlug,
   currentTags,
@@ -68,26 +63,28 @@ export async function RelatedPosts({
   if (related.length === 0) return null;
 
   return (
-    <section className="mx-auto w-full max-w-3xl border-t px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section className="mx-auto w-full max-w-3xl border-t border-border/70 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <h2 className={eyebrowMono}>{t("relatedHeading")}</h2>
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-5 divide-y divide-border/70 border-y border-border/70">
         {related.map((article) => (
           <Link
             key={article.slug}
             href={`/logs/${article.slug}`}
             className={cn(
-              "group rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50",
+              "group grid gap-2 py-5 transition-colors duration-(--motion-fast) ease-(--ease-premium) sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-8",
               FOCUS_RING,
             )}
           >
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground">
+            <div>
+              <h3 className="text-base font-semibold leading-snug text-foreground decoration-ring/60 underline-offset-4 group-hover:underline">
+                {article.title}
+              </h3>
+              <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                {article.description}
+              </p>
+            </div>
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground sm:text-right">
               {article.tag_list[0] ?? "post"}
-            </p>
-            <h3 className="mt-3 text-base font-semibold leading-snug text-foreground">
-              {article.title}
-            </h3>
-            <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
-              {article.description}
             </p>
           </Link>
         ))}

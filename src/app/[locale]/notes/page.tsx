@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/layout/page-shell";
-import { PageHero } from "@/components/layout/page-hero";
-import { PageSection } from "@/components/layout/page-section";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
 import { Link } from "@/i18n/navigation";
 import {
@@ -90,51 +88,65 @@ export default async function NotesPage({
           { name: tNav("notes"), path: "/notes" },
         ])}
       />
-      <PageHero
-        eyebrow={tNotes("eyebrow")}
-        title={tMeta("notesTitle")}
-        description={tMeta("notesDescription")}
-        decorativeWord="NOTES"
-      />
-      <PageSection innerClassName="py-10 sm:py-12 lg:py-14">
-        {notes.length === 0 ? (
-          <EmptyArchiveState
-            title={tNotes("pendingTitle")}
-            description={tNotes("pendingDescription")}
-          />
-        ) : (
-          <div className="grid gap-8">
-            <nav
-              aria-label={tNotes("tagFilterLabel")}
-              className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2"
-            >
-              <TagLink
-                href="/notes"
-                locale={locale}
-                active={!activeTag}
-                label={tNotes("allTags")}
-              />
-              {allTags.map((noteTag) => (
+      <header className="border-b border-border/70 bg-background">
+        <div className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+            {tNotes("eyebrow")}
+          </p>
+          <h1 className="mt-5 font-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+            {tMeta("notesTitle")}
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+            {tMeta("notesDescription")}
+          </p>
+        </div>
+      </header>
+
+      <main className="bg-background">
+        <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+          {notes.length === 0 ? (
+            <EmptyArchiveState
+              title={tNotes("pendingTitle")}
+              description={tNotes("pendingDescription")}
+            />
+          ) : (
+            <div className="grid gap-10">
+              <nav
+                aria-label={tNotes("tagFilterLabel")}
+                className="flex flex-wrap gap-x-5 gap-y-2 border-b border-border/70 pb-4"
+              >
                 <TagLink
-                  key={noteTag}
-                  href={`/notes?tag=${encodeURIComponent(noteTag)}`}
+                  href="/notes"
                   locale={locale}
-                  active={noteTag === activeTag}
-                  label={`#${noteTag}`}
+                  active={!activeTag}
+                  label={tNotes("allTags")}
                 />
-              ))}
-            </nav>
-            {visibleNotes.length === 0 ? (
-              <EmptyArchiveState
-                title={tNotes("noTagResultsTitle")}
-                description={tNotes("noTagResultsDescription")}
-              />
-            ) : (
-              <NotesTimeline notes={visibleNotes} locale={locale} labels={labels} />
-            )}
-          </div>
-        )}
-      </PageSection>
+                {allTags.map((noteTag) => (
+                  <TagLink
+                    key={noteTag}
+                    href={`/notes?tag=${encodeURIComponent(noteTag)}`}
+                    locale={locale}
+                    active={noteTag === activeTag}
+                    label={`#${noteTag}`}
+                  />
+                ))}
+              </nav>
+              {visibleNotes.length === 0 ? (
+                <EmptyArchiveState
+                  title={tNotes("noTagResultsTitle")}
+                  description={tNotes("noTagResultsDescription")}
+                />
+              ) : (
+                <NotesTimeline
+                  notes={visibleNotes}
+                  locale={locale}
+                  labels={labels}
+                />
+              )}
+            </div>
+          )}
+        </div>
+      </main>
     </PageShell>
   );
 }
@@ -156,10 +168,10 @@ function TagLink({
       locale={locale}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "rounded-full border px-3 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+        "border-b py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] transition-colors duration-(--motion-fast) ease-(--ease-premium)",
         active
-          ? "border-ring/60 bg-ring/15 text-foreground"
-          : "border-border bg-background/60 text-muted-foreground hover:border-ring/45 hover:text-foreground",
+          ? "border-ring text-foreground"
+          : "border-transparent text-muted-foreground hover:border-ring/50 hover:text-foreground",
         FOCUS_RING,
       )}
     >

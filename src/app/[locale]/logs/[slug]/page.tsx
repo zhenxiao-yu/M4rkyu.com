@@ -6,7 +6,6 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PostHeader } from "@/components/blog/post-header";
 import { PostBody, extractHeadings } from "@/components/blog/post-body";
 import { PostToc } from "@/components/blog/post-toc";
-import { SectionBackground } from "@/components/sections/home/section-background";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import { BlurFade } from "@/components/ui/magic/blur-fade";
@@ -108,7 +107,7 @@ export default async function BlogPostPage({
           { name: meta.title, path: `/logs/${meta.slug}` },
         ])}
       />
-      <article>
+      <article className="bg-background">
         <PostHeader
           title={meta.title}
           description={meta.description}
@@ -122,7 +121,7 @@ export default async function BlogPostPage({
           shareUrl={`${SITE_URL}/${locale}/logs/${meta.slug}`}
         />
 
-        <section className="relative mx-auto w-full max-w-page px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <section className="relative mx-auto w-full max-w-page px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           {/* Reading outline — floats in the left gutter on wide screens
            * (xl+) without shifting the centred prose, and sticks while the
            * body scrolls. Renders nothing when the post has no h2/h3. */}
@@ -131,11 +130,7 @@ export default async function BlogPostPage({
               <PostToc headings={headings} label={t("tocLabel")} />
             </div>
           </aside>
-          {/* Prose column — centred so it aligns with the header + meta; the
-           * manuscript ruled-paper field sits behind it for editorial texture
-           * in place of the old flat tint. */}
-          <div className="relative mx-auto max-w-3xl">
-            <SectionBackground variant="manuscript" className="rounded-lg" />
+          <div className="mx-auto max-w-3xl">
             <BlurFade delay={0.05}>
               <div className="prose-dropcap">
                 <PostBody markdown={full.body_markdown} />
@@ -156,7 +151,7 @@ export default async function BlogPostPage({
         </BlurFade>
 
         <BlurFade delay={0.12}>
-          <section className="mx-auto w-full max-w-3xl border-t px-4 py-10 sm:px-6 lg:px-8">
+          <section className="mx-auto w-full max-w-3xl border-t border-border/70 px-4 py-10 sm:px-6 lg:px-8">
             <p className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
               {t("originallyPublished")}
             </p>

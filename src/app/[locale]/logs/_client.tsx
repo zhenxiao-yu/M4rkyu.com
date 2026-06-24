@@ -30,8 +30,7 @@ interface BlogTimelineProps {
   posts: Post[];
 }
 
-// Archive timeline page size. Featured posts live in the rotator above,
-// so this paginates only the long-tail archive.
+// Keep each archive page scannable without turning the page into a dashboard.
 const ARCHIVE_PAGE_SIZE = 9;
 
 /**
@@ -174,7 +173,7 @@ export function BlogTimeline({ posts }: BlogTimelineProps) {
     sortMode !== DEFAULT_BLOG_SORT;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
           <h2 className="font-heading text-2xl font-semibold tracking-normal text-foreground sm:text-3xl">

@@ -70,9 +70,9 @@ function TierRows({ tiers }: { tiers: Note["tiers"] }) {
       {tiers.map((tier) => (
         <div
           key={tier.label}
-          className="flex items-start gap-3 rounded-sm border border-border/60 bg-muted/20 p-2"
+          className="flex items-start gap-3 border-t border-border/60 py-2.5"
         >
-          <span className="min-w-8 rounded-xs bg-ring/15 px-1.5 py-0.5 text-center font-pixel text-sm uppercase text-foreground">
+          <span className="min-w-8 text-center font-pixel text-sm uppercase text-ring">
             {tier.label}
           </span>
           <span className="pt-0.5 text-sm leading-6 text-foreground/90">
@@ -88,19 +88,14 @@ function NoteRow({
   note,
   labels,
   isLatest,
-  entryNumber,
 }: {
   note: Note;
   labels: NotesTimelineLabels;
   isLatest: boolean;
-  /** Descending dispatch number — latest entry has the highest. */
-  entryNumber: number;
 }) {
   const { y, m, d } = parts(note.publishedAt);
   const showLink =
     note.link && (note.kind === "repost" || note.kind === "review");
-  const entryLabel = `№ ${String(entryNumber).padStart(3, "0")}`;
-
   return (
     <li
       id={note.slug}
@@ -139,9 +134,7 @@ function NoteRow({
         </span>
       </a>
 
-      {/* Rail — continuous hairline with a node aligned to the
-       * entry-number eyebrow. Latest entry earns the live "now" pulse;
-       * older entries get a neutral dot. */}
+      {/* Rail — a continuous hairline keeps the chronology easy to scan. */}
       <div className="relative flex justify-center">
         <span
           aria-hidden="true"
@@ -161,17 +154,7 @@ function NoteRow({
 
       {/* Content column. */}
       <div className="min-w-0 pb-10">
-        {/* Eyebrow row — entry numero, kind, "latest" flag. The numero
-         * sign is language-neutral typographic shorthand for "number"
-         * and pairs with the existing pixel-font idioms elsewhere on
-         * the site (PLATE in lightbox, channel in admin). */}
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span
-            aria-hidden="true"
-            className="font-pixel text-sm leading-none text-muted-foreground/65 tabular-nums"
-          >
-            {entryLabel}
-          </span>
           <span className="font-mono text-[0.6rem] uppercase leading-none tracking-[0.22em] text-ring">
             {labels.kind[note.kind]}
           </span>
@@ -205,25 +188,16 @@ function NoteRow({
           <TierRows tiers={note.tiers} />
         ) : null}
 
-        {/* Outbound link — reshaped as a wall-label with a vertical
-         * ring-tinted hairline rule on the left. Same idiom used in
-         * the lightbox sidebar / auth modal header / saved-items
-         * empty-state, so the timeline reads as part of the same
-         * visual grammar instead of a one-off chip. */}
         {showLink && note.link ? (
           <a
             href={note.link.url}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "group/cite relative mt-4 inline-flex max-w-full items-center gap-2 rounded-[0.85rem] border border-border/70 bg-card/55 py-2 pl-4 pr-3 text-sm text-foreground/90 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/55 hover:text-foreground",
+              "group/cite mt-4 inline-flex max-w-full items-center gap-2 border-l border-ring/60 py-1 pl-3 text-sm text-foreground/90 transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
               FOCUS_RING,
             )}
           >
-            <span
-              aria-hidden="true"
-              className="absolute left-1.5 top-2 bottom-2 w-px bg-linear-to-b from-ring/60 via-ring/25 to-transparent"
-            />
             <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-muted-foreground">
               {hostnameOf(note.link.url)}
             </span>
@@ -287,24 +261,10 @@ export function NotesTimeline({
     }
   }
 
-  // Descending dispatch number — the latest entry holds the largest
-  // number (sorted[0]). Stable across re-renders because the slug+date
-  // sort is deterministic.
-  const total = sorted.length;
-  const numberBySlug = new Map<string, number>();
-  sorted.forEach((note, index) => {
-    numberBySlug.set(note.slug, total - index);
-  });
-
   return (
     <div className="mx-auto max-w-2xl">
       {groups.map((group) => (
         <section key={group.key} className="mb-2">
-          {/* Editorial month header — mono label on the left, pixel-font
-           * entry count on the right ("MAY 2026  ·  04"), hairline rule
-           * connecting them. Same beat as the admin "manage content"
-           * header so the typographic grammar stays consistent across
-           * surfaces. */}
           <div className="mb-5 flex items-baseline gap-3">
             <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
               {group.label}
@@ -324,7 +284,6 @@ export function NotesTimeline({
                 note={note}
                 labels={labels}
                 isLatest={note.slug === latestSlug}
-                entryNumber={numberBySlug.get(note.slug) ?? 0}
               />
             ))}
           </ol>

@@ -125,7 +125,10 @@ function createPostComponents() {
     p: ({ className, ...props }: ComponentPropsWithoutRef<"p">) => (
       <p
         {...props}
-        className={cn("mt-5 text-base leading-7 text-foreground/90", className)}
+        className={cn(
+          "mt-5 text-[1.03rem] leading-8 text-foreground/90",
+          className,
+        )}
       />
     ),
     a: ({
@@ -154,7 +157,7 @@ function createPostComponents() {
       <ul
         {...props}
         className={cn(
-          "mt-5 ml-6 list-disc space-y-2 text-base leading-7 text-foreground/90 marker:text-muted-foreground",
+          "mt-5 ml-6 list-disc space-y-2 text-[1.03rem] leading-8 text-foreground/90 marker:text-muted-foreground",
           className,
         )}
       />
@@ -163,7 +166,7 @@ function createPostComponents() {
       <ol
         {...props}
         className={cn(
-          "mt-5 ml-6 list-decimal space-y-2 text-base leading-7 text-foreground/90 marker:font-mono marker:text-xs marker:text-muted-foreground",
+          "mt-5 ml-6 list-decimal space-y-2 text-[1.03rem] leading-8 text-foreground/90 marker:font-mono marker:text-xs marker:text-muted-foreground",
           className,
         )}
       />
@@ -178,7 +181,7 @@ function createPostComponents() {
       <blockquote
         {...props}
         className={cn(
-          "mt-6 border-l-2 border-ring/60 pl-5 text-base italic leading-7 text-muted-foreground",
+          "mt-6 border-l-2 border-ring/60 pl-5 text-[1.03rem] italic leading-8 text-muted-foreground",
           className,
         )}
       />
@@ -349,8 +352,8 @@ export async function PostBody({ markdown, className }: PostBodyProps) {
     // every theme except Terminal (which reverts to sans — a console reads
     // wrong in serif). Headings/code/tables set their own font-* so they stay
     // put; only the running prose (p, li, blockquote) picks up the serif.
-    // max-w-[68ch] holds the line length near the ~70ch editorial measure.
-    <div className={cn("max-w-[68ch] font-prose", className)}>
+    // max-w-[65ch] keeps long-form lines comfortably readable.
+    <div className={cn("max-w-[65ch] font-prose", className)}>
       {file.result as React.ReactNode}
     </div>
   );
