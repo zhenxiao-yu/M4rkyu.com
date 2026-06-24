@@ -8,6 +8,7 @@ import { PageShell } from "@/components/layout/page-shell";
 import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { GalleryMasonry } from "@/components/gallery/gallery-masonry";
+import { GalleryShowpieceMount } from "@/components/gallery/gallery-showpiece-mount";
 import { getGallerySource } from "@/lib/gallery/source";
 import type { GalleryCollection } from "@/content/schemas";
 import type { Locale } from "@/i18n/routing";
@@ -97,6 +98,12 @@ export default async function GalleryCollectionPage({
       </PageHero>
 
       <PageSection>
+        {/* Guarded CSS-3D frame-orbit showpiece above the masonry — desktop +
+         * motion-OK only (returns null otherwise), opens the same ?frame=
+         * lightbox the masonry owns. */}
+        <Suspense fallback={null}>
+          <GalleryShowpieceMount items={frames} />
+        </Suspense>
         {/* GalleryMasonry reads ?frame= via useSearchParams; Suspense is
          * required under static rendering. */}
         <Suspense fallback={null}>

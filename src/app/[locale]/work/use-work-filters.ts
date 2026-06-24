@@ -33,9 +33,10 @@ export type SortMode = (typeof SORT_MODES)[number];
 export const DEFAULT_SORT: SortMode = "newest";
 
 // GRID = the mission-dossier card deck (cover-led browsing). INDEX = the
-// numbered accession-register ledger (data-led scanning). Persisted to
-// the URL like every other view setting so a shared link restores it.
-export const VIEW_MODES = ["grid", "index"] as const;
+// numbered accession-register ledger (data-led scanning). STRIP = the
+// draggable depth film-strip (cinematic horizontal browse). Persisted to the
+// URL like every other view setting so a shared link restores it.
+export const VIEW_MODES = ["grid", "index", "strip"] as const;
 export type ViewMode = (typeof VIEW_MODES)[number];
 const DEFAULT_VIEW: ViewMode = "grid";
 

@@ -52,7 +52,9 @@ describe("scrollSpine", () => {
     scrollSpine(1);
 
     expect(window.scrollTo).toHaveBeenCalledWith({
-      top: 640,
+      // 640 (section top) minus the dock offset; jsdom has no --dock-h, so the
+      // helper falls back to 56 → 584.
+      top: 584,
       behavior: "smooth",
     });
   });

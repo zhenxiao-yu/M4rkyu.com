@@ -18,7 +18,6 @@ const widthClass: Record<PageSectionWidth, string> = {
 
 export function PageSection({
   children,
-  tone = "default",
   width = "default",
   className,
   innerClassName,
@@ -26,20 +25,19 @@ export function PageSection({
   return (
     <section
       className={cn(
-        // Soft vertical wash for the "muted" rhythm instead of a hard
-        // `border-y` + flat tint — the old treatment drew a visible
-        // horizontal contrast seam where the band met the sections above and
-        // below (most obvious on wide screens). The tint now fades from
-        // transparent at both edges, so the section still reads as its own
-        // stage without an edge line.
-        tone === "muted" &&
-          "bg-linear-to-b from-transparent via-muted/15 to-transparent",
+        // No per-section background tint: the page background stays uniform
+        // all the way down. The `tone` prop is kept on the interface for
+        // callers but intentionally draws nothing now — the old "muted" wash
+        // read as a horizontal divider band on tall pages.
         className,
       )}
     >
       <div
         className={cn(
-          "mx-auto w-full px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20",
+          // Vertical rhythm + gutters keep scaling past `lg` so sections
+          // breathe on 1920/2560 displays instead of stalling at py-14 while
+          // the content measure sprawls. max-w-page itself is untouched.
+          "mx-auto w-full px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14 xl:px-10 xl:py-16 2xl:px-12 2xl:py-20",
           widthClass[width],
           innerClassName,
         )}

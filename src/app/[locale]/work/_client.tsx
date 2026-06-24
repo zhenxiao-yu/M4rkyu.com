@@ -3,6 +3,7 @@
 import {
   ChevronDown,
   FilterX,
+  GalleryHorizontal,
   LayoutGrid,
   List,
   Search,
@@ -10,8 +11,10 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ProjectCard } from "@/components/cards/project-card";
 import { WorkIndexLedger } from "@/components/work/work-index-ledger";
+import { WorkFilmStrip } from "@/components/work/work-film-strip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -65,6 +68,7 @@ export function ProjectsClient({
     updateUrl,
     clearAllFilters,
   } = useWorkFilters(projects);
+  const reduce = useReducedMotion();
 
   return (
     <>
@@ -103,7 +107,18 @@ export function ProjectsClient({
             >
               {VIEW_MODES.map((mode) => {
                 const active = activeView === mode;
-                const Icon = mode === "grid" ? LayoutGrid : List;
+                const Icon =
+                  mode === "grid"
+                    ? LayoutGrid
+                    : mode === "index"
+                      ? List
+                      : GalleryHorizontal;
+                const label =
+                  mode === "grid"
+                    ? t("viewGrid")
+                    : mode === "index"
+                      ? t("viewIndex")
+                      : t("viewStrip");
                 return (
                   <button
                     key={mode}
@@ -111,15 +126,34 @@ export function ProjectsClient({
                     onClick={() => updateUrl({ view: mode })}
                     aria-pressed={active}
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em] transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+                      "relative inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[0.62rem] uppercase tracking-[0.16em] transition-colors duration-(--motion-fast) ease-(--ease-premium)",
                       active
-                        ? "bg-foreground text-background"
+                        ? "text-background"
                         : "text-muted-foreground hover:text-foreground",
                       FOCUS_RING,
                     )}
                   >
-                    <Icon aria-hidden="true" className="size-3.5" />
-                    {t(mode === "grid" ? "viewGrid" : "viewIndex")}
+                    {/* Sliding fill — the pill glides between modes (shared
+                      * layout). Reduced motion drops the layoutId so it snaps. */}
+                    {active ? (
+                      reduce ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0 rounded-full bg-foreground"
+                        />
+                      ) : (
+                        <motion.span
+                          aria-hidden="true"
+                          layoutId="work-view-pill"
+                          className="absolute inset-0 rounded-full bg-foreground"
+                          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                        />
+                      )
+                    ) : null}
+                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                      <Icon aria-hidden="true" className="size-3.5" />
+                      {label}
+                    </span>
                   </button>
                 );
               })}
@@ -337,13 +371,34 @@ export function ProjectsClient({
       ) : null}
 
       {production.length > 0 ? (
-        activeView === "index" ? (
-          // Re-key on chip / year / sort so the ledger restages cleanly.
-          // Search query is excluded for the same reason as the deck.
-          <WorkIndexLedger
+        // Crossfade only on the grid/index/strip swap — keyed on activeView,
+        // NOT the filter keys (those re-mount the inner view in place).
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeView}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 1 } : { opacity: 0, y: -8 }}
+            transition={
+              reduce ? { duration: 0 } : { duration: 0.18, ease: [0.2, 0.7, 0.2, 1] }
+            }
+          >
+            {activeView === "index" ? (
+              // Re-key on chip / year / sort so the ledger restages cleanly.
+              // Search query is excluded for the same reason as the deck.
+              <WorkIndexLedger
             key={`ledger-${activeCategory ?? "all"}-${activeYear}-${featuredOnly ? "f" : "n"}-${activeSort}`}
             projects={production}
             locale={locale}
+          />
+        ) : activeView === "strip" ? (
+          <WorkFilmStrip
+            key={`strip-${activeCategory ?? "all"}-${activeYear}-${featuredOnly ? "f" : "n"}-${activeSort}`}
+            projects={production}
+            locale={locale}
+            prevLabel={t("stripPrev")}
+            nextLabel={t("stripNext")}
+            railLabel={t("stripLabel")}
           />
         ) : (
           // Re-key on chip / year changes so the deck restages cleanly.
@@ -360,7 +415,9 @@ export function ProjectsClient({
               ))}
             </div>
           </WorkDeckReveal>
-        )
+            )}
+          </motion.div>
+        </AnimatePresence>
       ) : null}
 
       {production.length === 0 && drafts.length > 0 ? (

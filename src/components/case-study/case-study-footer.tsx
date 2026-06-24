@@ -38,7 +38,7 @@ export async function CaseStudyFooter({
       : t("backToWork");
 
   return (
-    <footer className="border-t bg-linear-to-b from-transparent via-muted/12 to-transparent">
+    <footer className="border-t">
       <div className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr]">
           <CaseStudyAdjacent

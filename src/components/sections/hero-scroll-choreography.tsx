@@ -61,10 +61,10 @@ export function HeroScrollChoreography() {
         // departs through motion instead of merely clipping at the edge.
         if (wordmark) {
           gsap.to(wordmark, {
-            yPercent: -20,
-            scale: 0.97,
+            yPercent: -30,
+            scale: 0.94,
             opacity: 0,
-            filter: "blur(7px)",
+            filter: "blur(11px)",
             ease: "none",
             scrollTrigger: {
               trigger: section,

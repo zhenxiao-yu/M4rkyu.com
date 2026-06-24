@@ -180,7 +180,7 @@ function ModeControl() {
               aria-checked={active}
               onClick={() => setTheme(value)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-(--motion-fast) ease-(--ease-premium)",
+                "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-(--motion-fast) ease-(--ease-premium) pointer-coarse:min-h-11",
                 FOCUS_RING,
                 active
                   ? "bg-background text-foreground shadow-sm"

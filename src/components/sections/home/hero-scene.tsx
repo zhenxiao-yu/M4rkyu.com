@@ -93,7 +93,7 @@ void main() {
   // Soft mound that lifts under the cursor (plane-space gaussian).
   vec2 m = uMouse * 3.4;
   float d = distance(p.xy, m);
-  h += exp(-d * d * 0.22) * 0.7 * uAmp;
+  h += exp(-d * d * 0.22) * 0.85 * uAmp;
   p.z += h;
   vHeight = h;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
@@ -117,7 +117,7 @@ varying float vFade;
 void main() {
   // Near wires: ink base, crests glowing toward the accent.
   float crest = smoothstep(0.04, 0.55, vHeight);
-  vec3 col = mix(uForeground, uRing, crest * 0.9);
+  vec3 col = mix(uForeground, uRing, crest * 1.0);
   // Layered depth so the field reads as printed on the active palette:
   // mid distance hazes through the tertiary ink, deep distance dissolves
   // into the palette's own ground (paper on riso, phosphor-black on
@@ -216,7 +216,7 @@ function ContourField({
     const mesh = meshRef.current;
     if (mesh) {
       mesh.rotation.x = -0.66 - e * 0.55;
-      mesh.position.y = -0.15 - e * 1.4;
+      mesh.position.y = -0.15 - e * 1.7;
     }
     u.uOpacity.value = 0.6 * (1 - e * 0.9);
   });
@@ -294,7 +294,7 @@ export function HeroScene({
       >
         {/* reduced-motion shouldn't reach here (the backdrop gates it), but
           * if it ever does, flatten the field to a still surface. */}
-        <ContourField inksRef={inksRef} amp={reduced ? 0 : 0.64} />
+        <ContourField inksRef={inksRef} amp={reduced ? 0 : 0.8} />
       </Canvas>
     </div>
   );

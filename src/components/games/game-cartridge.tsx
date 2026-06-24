@@ -98,8 +98,7 @@ export async function GameCartridge({ game, locale, index }: GameCartridgeProps)
               {t("coverTbd")}
               <span
                 aria-hidden="true"
-                className="ml-0.5 inline-block w-[0.5ch] bg-game-accent/70"
-                style={{ animation: "workspace-caret 1.05s steps(1) infinite" }}
+                className="ml-0.5 inline-block w-[0.5ch] bg-game-accent/70 motion-safe:animate-[workspace-caret_1.05s_steps(1)_infinite]"
               >
                 &nbsp;
               </span>
@@ -132,6 +131,26 @@ export async function GameCartridge({ game, locale, index }: GameCartridgeProps)
           className="pointer-events-none absolute inset-0"
           style={{
             boxShadow: "inset 0 0 48px 8px rgba(0,0,0,0.55)",
+          }}
+        />
+        {/* Idle rim-light — a faint accent inset edge so the CRT reads
+            powered-on at rest and on touch (where the grayscale never lifts). */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            boxShadow:
+              "inset 0 0 0 1px color-mix(in srgb, var(--game-accent) 10%, transparent)",
+          }}
+        />
+        {/* One-shot CRT power-on flash when the screen lights up on hover
+            (desktop + motion only; opacity-only keyframe, no scanline roll). */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-0 motion-safe:pointer-fine:group-hover:animate-[boot-flash_420ms_ease-out]"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--game-accent) 45%, transparent), transparent 60%)",
           }}
         />
 

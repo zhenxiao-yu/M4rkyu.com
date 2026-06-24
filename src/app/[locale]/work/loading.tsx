@@ -32,7 +32,10 @@ export default function WorkLoading() {
         </div>
 
         <div className="mt-8">
-          <SkeletonGrid count={6} />
+          <SkeletonGrid
+            count={6}
+            className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4"
+          />
         </div>
       </section>
     </article>

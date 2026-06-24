@@ -107,8 +107,8 @@ export function IntroLoader() {
     if (phase !== "boot") return;
 
     const start = performance.now();
-    const RAMP = 3300; // counter climb
-    const HOLD = 360; // dwell at 100 before the handoff
+    const RAMP = 2900; // counter climb — tightened so the POST reads deliberate, not draggy
+    const HOLD = 300; // dwell at 100 before the handoff
     let done = false;
     let progressTimer = 0;
     let holdTimer = 0;
@@ -202,7 +202,7 @@ export function IntroLoader() {
       .to(
         curtain,
         { opacity: 0, scale: 1.03, duration: 0.66, ease: "power2.inOut" },
-        0.14,
+        0.08,
       )
       .fromTo(
         target,
@@ -341,7 +341,7 @@ export function IntroLoader() {
                     sequential
                     speed={18}
                     animateOn="mount"
-                    delay={200 + i * 460}
+                    delay={160 + i * 380}
                   />
                   {i === feed.length - 1 ? (
                     <span className="boot-cursor" aria-hidden="true" />
@@ -352,8 +352,16 @@ export function IntroLoader() {
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/50">
-          {t("skip")}
+        {/* Skip affordance — framed as a deliberate control (bordered chip +
+         * blinking phosphor dot) rather than a stray line of text. */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <div className="flex items-center gap-2 rounded-full border border-foreground/12 bg-foreground/4 px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-foreground/55 backdrop-blur-sm">
+            <span
+              aria-hidden="true"
+              className="size-1.5 rounded-full bg-ring [animation:boot-blink_1.05s_steps(1)_infinite]"
+            />
+            {t("skip")}
+          </div>
         </div>
       </div>
 

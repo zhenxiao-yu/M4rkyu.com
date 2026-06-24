@@ -52,12 +52,9 @@ export function PageHero({
         className="absolute inset-0 bg-cyber-grid opacity-25"
         aria-hidden="true"
       />
-      {/* Tri-ink aurora — the theme's full ink trio washes the header field,
-        * fading out before the content baseline so type stays crisp. */}
-      <div
-        className="aurora-mesh pointer-events-none absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,black,transparent_86%)]"
-        aria-hidden="true"
-      />
+      {/* Aurora colour wash removed — the soft tri-ink glow bled into the page
+        * margins and read as a stray gradient. The structural grid + accent
+        * baseline carry the header now; the background stays clean. */}
       <div className="archive-vignette absolute inset-0" aria-hidden="true" />
       <DotGrid
         className="pointer-events-none absolute inset-0 opacity-35 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]"
@@ -117,13 +114,17 @@ export function PageHero({
 
       <div
         className={cn(
-          "relative mx-auto grid w-full max-w-page gap-8 px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-8",
+          "relative mx-auto grid w-full max-w-page gap-6 px-4 pb-10 pt-24 sm:px-6 sm:pb-12 sm:pt-28 lg:px-8 lg:pb-14 xl:px-10 2xl:px-12 2xl:pb-16",
           hasSidecar &&
             "lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)] lg:items-end lg:gap-12",
           contentClassName,
         )}
       >
-        <BlurFade>
+        <div>
+          {/* SectionHeading → HeadingReveal owns the eyebrow/title/description
+            * entrance choreography, so the heading is no longer wrapped in a
+            * BlurFade (that would double-animate). The meta/actions strip keeps
+            * its own delayed fade so it settles in after the title lands. */}
           <SectionHeading
             as="h1"
             eyebrow={eyebrow}
@@ -132,16 +133,18 @@ export function PageHero({
             disableGlitch={disableGlitch}
           />
           {meta || actions ? (
-            <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-              {meta ? <div className="min-w-0 flex-1">{meta}</div> : null}
-              {actions ? (
-                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                  {actions}
-                </div>
-              ) : null}
-            </div>
+            <BlurFade delay={0.3}>
+              <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+                {meta ? <div className="min-w-0 flex-1">{meta}</div> : null}
+                {actions ? (
+                  <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                    {actions}
+                  </div>
+                ) : null}
+              </div>
+            </BlurFade>
           ) : null}
-        </BlurFade>
+        </div>
 
         {hasSidecar ? (
           <BlurFade

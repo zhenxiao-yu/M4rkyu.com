@@ -39,7 +39,7 @@ export function DossierFile({
       </span>
 
       {/* Content rides above the texture (positioned + later in DOM). */}
-      <div className="relative flex flex-col gap-7 sm:gap-9">{children}</div>
+      <div className="relative flex flex-col gap-6 sm:gap-8">{children}</div>
     </div>
   );
 }

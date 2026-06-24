@@ -61,7 +61,7 @@ export async function HeroSection({ locale }: { locale: Locale }) {
         >
           <span>M4RKYU.SYS</span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="size-1.5 rounded-full bg-ring shadow-[0_0_8px_var(--ring)]" />
+            <span className="size-1.5 rounded-full bg-ring shadow-[0_0_8px_var(--ring)] motion-safe:[animation:hero-standby-pulse_3.2s_ease-in-out_infinite]" />
             Ontario
           </span>
         </div>
@@ -127,8 +127,8 @@ function HeadlineShuffle({ text }: { text: string }) {
   return (
     <Shuffle
       text={text}
-      duration={0.45}
-      density={0.22}
+      duration={0.55}
+      density={0.3}
       triggerOnHover
       shuffleDirection="up"
     />
@@ -160,8 +160,13 @@ function BinaryMarquee({
       }}
     >
       <div
-        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/40 motion-safe:animate-[marquee_42s_linear_infinite]"
-        style={reverse ? { animationDirection: "reverse" } : undefined}
+        className="flex w-max gap-12 whitespace-nowrap font-mono text-[0.55rem] uppercase tracking-[0.3em] text-foreground/50 motion-safe:animate-[marquee_42s_linear_infinite]"
+        style={{
+          // The two bands drift at different speeds — a faint parallax in the
+          // terminal feed that the eye reads as depth, not decoration.
+          animationDuration: reverse ? "48s" : "42s",
+          animationDirection: reverse ? "reverse" : undefined,
+        }}
       >
         {[0, 1, 2, 3].map((i) => (
           <span key={i}>{feed}</span>

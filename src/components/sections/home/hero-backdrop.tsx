@@ -64,8 +64,8 @@ export function HeroBackdrop() {
         className={cn(
           "transition-opacity duration-(--motion-cinematic) ease-(--ease-premium) motion-reduce:transition-none",
           enable3d && sceneReady
-            ? "opacity-[0.18] dark:opacity-[0.16]"
-            : "opacity-[0.55] dark:opacity-[0.5]",
+            ? "opacity-[0.22] dark:opacity-[0.2]"
+            : "opacity-[0.62] dark:opacity-[0.56]",
         )}
         xGap={30}
         yGap={38}

@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { HomeSection } from "./home-section";
 import { SectionBackground } from "./section-background";
 import { AskConsole } from "./ask-console";
-import { FadeIn } from "@/components/motion/fade-in";
+import { CinematicReveal } from "@/components/motion/cinematic-reveal";
 
 /**
  * Home spine slide #2 — the M4RKYU.SYS terminal. A ChatGPT-style console,
@@ -20,11 +20,13 @@ export async function AskSection() {
       dataSection="ask"
       background={<SectionBackground variant="terminal" />}
     >
-      {/* The first handoff after the hero — let the console rise to meet
-        * the descent instead of being revealed by occlusion. */}
-      <FadeIn direction="up" duration={0.6}>
+      {/* The first handoff after the hero — the console resolves out of the
+        * same deep-blur the hero exits into, so every post-hero act now shares
+        * one reveal signature (a softer blur than the default so it sits
+        * lightly over the console's focusable inputs). */}
+      <CinematicReveal blur={12}>
         <AskConsole />
-      </FadeIn>
+      </CinematicReveal>
     </HomeSection>
   );
 }

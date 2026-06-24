@@ -28,17 +28,31 @@ function reduceMotion() {
   );
 }
 
+// The sticky glass dock reserves `--dock-h` at the top of the viewport. Paging
+// computes a raw numeric scroll position, which `scroll-margin-top` (used by
+// the anchor/scrollIntoView path) does NOT apply to — so without this offset
+// the cue parks each section flush under the dock, clipping its eyebrow.
+function dockOffset() {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(
+    "--dock-h",
+  );
+  return parseInt(v, 10) || 56;
+}
+
 function scrollToHomeTarget(target: HTMLElement | number, duration = 0.7) {
   if (typeof window === "undefined") return;
   const reduce = reduceMotion();
   if (lenis) {
     lenis.scrollTo(target, {
-      offset: 0,
+      offset: -dockOffset(),
       immediate: reduce,
       duration: reduce ? 0 : duration,
     });
   } else if (typeof target === "number") {
-    window.scrollTo({ top: target, behavior: reduce ? "auto" : "smooth" });
+    window.scrollTo({
+      top: target - dockOffset(),
+      behavior: reduce ? "auto" : "smooth",
+    });
   } else {
     target.scrollIntoView({
       behavior: reduce ? "auto" : "smooth",

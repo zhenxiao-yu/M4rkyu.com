@@ -11,7 +11,6 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { CommandPaletteProvider } from "@/components/system/command-palette-provider";
 import { NavigationProgress } from "@/components/system/navigation-progress";
 import { InkCurtain } from "@/components/system/ink-curtain";
-import { CursorTrail } from "@/components/ui/magic/cursor-trail";
 import { AudioPlayerProvider } from "@/lib/audio/audio-player-context";
 import { AudioPlayerDialogHost } from "@/components/system/audio-player-dialog-host";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -72,7 +71,6 @@ export default async function LocaleLayout({
                 <div lang={locale} className="contents">
                   {children}
                 </div>
-                <CursorTrail />
                 <CookieConsentBanner />
                 <ConsentAwareAnalytics />
                 <WebVitalsReporter />

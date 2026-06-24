@@ -309,6 +309,10 @@
     "collectionsTitle": "{count, plural, =0 {No collections yet} one {# collection} other {# collections}}",
     "collectionsDescription": "Each collection is its own set of photos, added at a slower pace.",
     "hoverHint": "Click for the lightbox · arrow-keys to move through",
+    "showpieceHint": "Drag to spin · click a frame to open",
+    "locateOnMap": "Locate {name} on the map (opens in a new tab)",
+    "showMore": "Show {count, plural, one {# more collection} other {# more collections}}",
+    "showingCount": "Showing {shown} of {total}",
     "previousFrame": "Previous photo",
     "nextFrame": "Next photo",
     "fromCollection": "From this collection",
@@ -438,6 +442,10 @@
     "viewLabel": "View",
     "viewGrid": "Grid",
     "viewIndex": "Index",
+    "viewStrip": "Strip",
+    "stripLabel": "Project film-strip — scroll horizontally",
+    "stripPrev": "Previous projects",
+    "stripNext": "More projects",
     "ledger": {
       "colProject": "Project",
       "colType": "Type",
@@ -594,6 +602,43 @@
   "About": {
     "title": "About",
     "intro": "A quiet profile of Mark Yu: software, games, images, and the archive in progress.",
+    "bento": {
+      "role": "Full-stack software engineer",
+      "focus": "Games · interfaces · digital art",
+      "liveTag": "Live",
+      "currentlyLabel": "Currently",
+      "transitLabel": "Transit",
+      "transitSpan": "2001 → now",
+      "kind": {
+        "building": "Building",
+        "reading": "Reading",
+        "listening": "Listening",
+        "watching": "Watching"
+      },
+      "stackGroups": {
+        "code": "Code",
+        "data": "Data",
+        "creative": "Creative",
+        "workflow": "Workflow"
+      },
+      "rack": {
+        "eyebrow": "Loadout",
+        "heading": "The stack, by domain",
+        "regionLabel": "Skill groups",
+        "systems": "systems",
+        "prev": "Previous group",
+        "next": "Next group",
+        "pause": "Pause rotation",
+        "play": "Resume rotation",
+        "collapse": "Collapse",
+        "expand": "Expand",
+        "gotoPage": "Go to group {index}"
+      }
+    },
+    "hero": {
+      "portraitLabel": "View portrait {index}",
+      "scroll": "Scroll"
+    },
     "refined": {
       "heroTitle": "Mark Yu",
       "heroBody": "Ontario, by way of China. I make small digital things: interfaces, game-feel experiments, tools, images, notes. The rest is intentionally left quiet.",
@@ -645,6 +690,8 @@
     "dossier": {
       "subjectEyebrow": "SUBJECT FILE",
       "fileTag": "M4//YU",
+      "nameZh": "于震潇",
+      "namePrimary": "Mark Yu",
       "statusLabel": "Open to good conversations",
       "statusAria": "Current status: open to good conversations",
       "designation": "Software · interfaces · game feel · images",
@@ -1299,6 +1346,8 @@
     "locationLine": "Ontario, Canada",
     "backToTop": "Top",
     "techStack": "Built with Next.js 16 · React 19 · Tailwind 4",
+    "footerExpand": "Site map & contact",
+    "footerCollapse": "Hide site map",
     "socialEmail": "Email",
     "socialGithub": "GitHub",
     "socialDevto": "dev.to",

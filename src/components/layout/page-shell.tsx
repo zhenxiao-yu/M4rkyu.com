@@ -7,6 +7,7 @@ import { PageFade } from "@/components/motion/page-fade";
 import { RouteAttribute } from "@/components/system/route-attribute";
 import { ScrollProgress } from "@/components/system/scroll-progress";
 import { ClickSpark } from "@/components/ui/magic/click-spark";
+import { CursorReticle } from "@/components/ui/magic/cursor-reticle";
 import { EditorialFrame } from "./editorial-frame";
 
 export async function PageShell({
@@ -20,13 +21,16 @@ export async function PageShell({
     <div className="flex min-h-dvh flex-col">
       <RouteAttribute />
       <ScrollProgress />
-      {/* Site-wide click sparks only. The MouseFollower ring was
-        * removed in the polish pass — its mix-blend-difference circle
-        * read as a random floating artifact against typographic
-        * content rather than a deliberate cursor cue. DotGrid +
-        * TiltedCard already carry the "cursor responds to you"
-        * feeling at the element level. */}
+      {/* Site-wide pointer chrome. ClickSpark owns the press ripple + the
+        * soft hover ink-halo at the cursor point. CursorReticle adds the
+        * targeting-computer lock-on: a faint four-corner reticle that blooms
+        * to enclose interactive elements (echoing the CRT boot sequence).
+        * It is ADDITIVE — the native cursor stays — and replaces the old
+        * mix-blend-difference CursorTrail that read as a floating artifact.
+        * The two read as distinct layers (halo = soft fill at the cursor;
+        * brackets = hairline corners outside the element), never a blob. */}
       <ClickSpark />
+      <CursorReticle />
       <EditorialFrame />
       <a
         href="#main-content"

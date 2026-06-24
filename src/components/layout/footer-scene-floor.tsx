@@ -44,7 +44,7 @@ export function FooterSceneFloor({
   return (
     <div
       ref={ref}
-      className="relative isolate grid place-items-center gap-5 overflow-hidden border-t py-14 sm:py-20"
+      className="relative isolate grid place-items-center gap-5 overflow-hidden py-14 sm:py-20"
     >
       {/* Back layer — moon + orbital-plane rings behind the glyphs */}
       <FooterMoonScene layer="back" className="-z-10" />

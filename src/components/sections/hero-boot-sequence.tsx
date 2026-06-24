@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { useReducedMotion } from "motion/react";
-import { gsap, motionTokens } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { onBootDone } from "@/lib/system/boot-signal";
 
 interface HeroBootSequenceProps {
@@ -20,7 +20,7 @@ interface HeroBootSequenceProps {
  * SSR- and reduced-motion-safe: reduced-motion users skip straight to the
  * already-visible server markup.
  */
-const HERO_SETTLE_DELAY = 0.05;
+const HERO_SETTLE_DELAY = 0;
 const BOOT_FALLBACK_MS = 6000;
 
 export function HeroBootSequence({ children }: HeroBootSequenceProps) {
@@ -37,7 +37,7 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
     if (introItems.length === 0) return;
 
     // Hold hidden until the boot hands off.
-    gsap.set(introItems, { opacity: 0, y: 16 });
+    gsap.set(introItems, { opacity: 0, y: 24 });
 
     let ctx: ReturnType<typeof gsap.context> | null = null;
     let fired = false;
@@ -49,9 +49,9 @@ export function HeroBootSequence({ children }: HeroBootSequenceProps) {
           opacity: 1,
           y: 0,
           delay: HERO_SETTLE_DELAY,
-          duration: motionTokens.base,
+          duration: 0.5,
           ease: "power3.out",
-          stagger: 0.08,
+          stagger: 0.12,
           clearProps: "opacity,transform",
         });
       }, scope);

@@ -65,17 +65,23 @@ export const getGallerySource = cache(async (): Promise<GallerySource> => {
   return { collections, items };
 });
 
+// Trim DB-authored display strings — admin input occasionally carries trailing
+// whitespace (e.g. "Chengdu ") that would otherwise surface in titles, map
+// labels, and ARIA. Applied at the read boundary so every consumer is clean.
+const clean = (value: string | null | undefined): string => (value ?? "").trim();
+
 function dbCollectionToGalleryCollection(
   row: DbCollection,
   itemCount: number,
 ): GalleryCollection {
+  const title = clean(row.title);
   return {
-    title: row.title,
+    title,
     slug: row.slug,
-    description: row.description || row.title,
+    description: clean(row.description) || title,
     cover: {
       src: storageUrlFor(row.coverPath) ?? `/gallery/${row.slug}.svg`,
-      alt: row.coverAlt || `${row.title} cover`,
+      alt: clean(row.coverAlt) || `${title} cover`,
       focal: "center",
     },
     count: itemCount,
@@ -87,17 +93,18 @@ function dbCollectionToGalleryCollection(
 
 function dbItemToGalleryItem(row: DbItem): GalleryItem {
   const src = storageUrlFor(row.storagePath);
+  const title = clean(row.title);
   return {
-    title: row.title,
+    title,
     slug: row.slug,
     collection: row.collectionSlug,
     type: row.type,
     status: row.status,
-    caption: row.caption || row.title,
+    caption: clean(row.caption) || title,
     src: src
       ? {
           src,
-          alt: row.alt || row.title,
+          alt: clean(row.alt) || title,
           width: row.width ?? undefined,
           height: row.height ?? undefined,
           blurDataURL: row.blurDataUrl ?? undefined,
@@ -105,7 +112,7 @@ function dbItemToGalleryItem(row: DbItem): GalleryItem {
       : undefined,
     aspect: row.aspect,
     capturedAt: row.capturedAt ?? undefined,
-    location: row.location ?? undefined,
+    location: clean(row.location) || undefined,
     tags: row.tags,
     mood: row.mood,
     featured: row.featured,

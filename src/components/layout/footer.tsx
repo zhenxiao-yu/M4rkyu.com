@@ -26,6 +26,7 @@ import { StatusPulse } from "@/components/ui/pixel/status-pulse";
 import { FooterClock } from "./footer-clock";
 import { FooterBackToTop } from "./footer-back-to-top";
 import { FooterCopyEmail } from "./footer-copy-email";
+import { FooterExpander } from "./footer-expander";
 import { FooterSceneFloor } from "./footer-scene-floor";
 import {
   SitemapColumn,
@@ -254,6 +255,20 @@ export async function Footer({ locale }: { locale: Locale }) {
       />
 
       <div className="relative mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
+        {/* Scene-floor wordmark leads — it's the page's closing wow, so it
+            stays OUT of the collapse: everyone sees it without expanding. */}
+        <FooterSceneFloor
+          locale={locale}
+          name={profile.name}
+          sinceLabel={t("wordmarkSince")}
+        />
+
+        {/* The link directory (invitation · newsletter · sitemap) is the bulk
+            that ate vertical space — it collapses behind one toggle. */}
+        <FooterExpander
+          expandLabel={t("footerExpand")}
+          collapseLabel={t("footerCollapse")}
+        >
         {/* 1. Contact cluster — invitation left (7), a load-bearing hairline
             divider (1) that turns the dead center gutter into a deliberate
             Swiss column rule, "currently" card right (4). items-stretch +
@@ -392,57 +407,70 @@ export async function Footer({ locale }: { locale: Locale }) {
           />
         </div>
 
-        {/* 4. Scene floor — oversized wordmark + orbiting moon, lifts on scroll */}
-        <FooterSceneFloor
-          locale={locale}
-          name={profile.name}
-          sinceLabel={t("wordmarkSince")}
-        />
+        </FooterExpander>
 
-        {/* 5. Baseline rail — copyright, legal, tech, back-to-top. Status +
-            channels now live up in the contact cluster, so this stays slim. */}
+        {/* Compact baseline — the always-visible resting footer: identity,
+            contact, live channels, legal, back-to-top. The invitation, sitemap,
+            and newsletter sit behind the expander above; the wordmark wow stays
+            visible, so the page ends on a slim band, not a screen of credits. */}
         <div className="border-t py-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-col gap-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground sm:flex-row sm:items-center sm:gap-3">
-              <span className="text-foreground/80">
-                © {year} {profile.name}
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+              <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-foreground/80">
+                <StarGlyph className="size-2.5 text-ring" />© {year}{" "}
+                {profile.name}
               </span>
-              <span aria-hidden="true" className="hidden sm:inline">
-                ·
-              </span>
-              <span className="flex items-center gap-3">
-                <Link
-                  href="/privacy"
-                  locale={locale}
-                  className={cn(
-                    "rounded-sm transition-colors hover:text-foreground",
-                    FOCUS_RING,
-                  )}
-                >
-                  {t("linkPrivacy")}
-                </Link>
-                <Link
-                  href="/terms"
-                  locale={locale}
-                  className={cn(
-                    "rounded-sm transition-colors hover:text-foreground",
-                    FOCUS_RING,
-                  )}
-                >
-                  {t("linkTerms")}
-                </Link>
-              </span>
+              <a
+                href={`mailto:${profile.email}`}
+                className={cn(
+                  "inline-flex items-center gap-1.5 font-mono text-[0.65rem] lowercase tracking-[0.12em] text-muted-foreground transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+                  FOCUS_RING,
+                )}
+              >
+                <Mail className="size-3 opacity-70" aria-hidden="true" />
+                {profile.email}
+              </a>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/80 sm:justify-end sm:gap-5">
-              <span className="hidden lg:inline">{t("techStack")}</span>
+            <div className="flex items-center gap-3">
+              <ul
+                className="flex flex-wrap items-center gap-1.5"
+                aria-label={t("sectionSocials")}
+              >
+                {socialEntries.map((entry) => (
+                  <li key={entry.key}>
+                    <SocialIcon entry={entry} pendingLabel={t("socialPending")} />
+                  </li>
+                ))}
+              </ul>
+              <span aria-hidden="true" className="h-4 w-px bg-border" />
               <FooterBackToTop label={t("backToTop")} />
             </div>
           </div>
-          {/* Tech stack drops below on narrow viewports. */}
-          <p className="mt-4 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/70 lg:hidden">
-            {t("techStack")}
-          </p>
+
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground/80">
+            <Link
+              href="/privacy"
+              locale={locale}
+              className={cn(
+                "rounded-sm transition-colors hover:text-foreground",
+                FOCUS_RING,
+              )}
+            >
+              {t("linkPrivacy")}
+            </Link>
+            <Link
+              href="/terms"
+              locale={locale}
+              className={cn(
+                "rounded-sm transition-colors hover:text-foreground",
+                FOCUS_RING,
+              )}
+            >
+              {t("linkTerms")}
+            </Link>
+            <span className="text-muted-foreground/70">{t("techStack")}</span>
+          </div>
         </div>
       </div>
     </footer>

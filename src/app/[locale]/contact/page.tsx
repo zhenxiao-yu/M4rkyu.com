@@ -23,8 +23,6 @@ import { PageSection } from "@/components/layout/page-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StatusPulse } from "@/components/ui/pixel/status-pulse";
-import { ShineBorder } from "@/components/ui/magic/shine-border";
-import { WorkspaceScene } from "@/components/sections/contact/workspace-scene";
 import { profile } from "@/content/profile";
 import type { Locale } from "@/i18n/routing";
 import { buildAlternates } from "@/lib/seo/alternates";
@@ -228,30 +226,7 @@ export default async function ContactPage({
                 </div>
               </SidebarBlock>
 
-              <SidebarBlock label={t("workspaceLabel")} className="flex-1">
-                {/* Workspace display — 3D battlestation in its framed
-                    panel with the contact-sheet bleed + ring glow.
-                    Unchanged behaviourally; just sits under the labeled
-                    section header now. */}
-                <div className="relative flex h-full min-h-56 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-background/30">
-                  <div
-                    aria-hidden="true"
-                    className="contact-sheet absolute inset-0 opacity-[0.22] mask-[radial-gradient(circle_at_50%_58%,black,transparent_70%)]"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 56%, color-mix(in srgb, var(--ring) 15%, transparent), transparent 62%)",
-                    }}
-                  />
-                  <WorkspaceScene className="relative" />
-                  <ShineBorder borderRadius={8} duration={16} />
-                </div>
-              </SidebarBlock>
-
-              <SidebarBlock label={t("qrTitle")}>
+              <SidebarBlock label={t("qrTitle")} className="flex-1">
                 {/* Signal anchor — scannable link to the live site. The
                     QR holds the host + handle to its right as a single
                     "signal" block, tighter than the previous chip card. */}

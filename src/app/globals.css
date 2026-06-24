@@ -729,7 +729,10 @@ body::after {
  * instead of the old grey fractal veil that washed everything out. Multiply
  * on paper, screen on ink. Kept ≤12% so text stays sharp. */
 :root[data-palette="risograph"] body::before {
-  display: block;
+  /* Grain disabled — the page background stays flat + consistent no matter how
+     far you scroll (per owner). Hero/header backdrops keep their own atmosphere
+     via their section classes. Flip back to `block` to restore the dot screen. */
+  display: none;
   opacity: 0.12;
   mix-blend-mode: multiply;
   background-image: radial-gradient(
@@ -747,7 +750,9 @@ body::after {
 /* TERMINAL — CRT scanlines (theme-toned), + phosphor vignette/bloom in
  * the dark (CRT) mode only; daylight mode keeps just the fine lines. */
 :root[data-palette="terminal"] body::after {
-  display: block;
+  /* Scanlines/vignette disabled — flat, consistent page background on scroll
+     (per owner). Flip back to `block` to restore the CRT texture. */
+  display: none;
   background-image: repeating-linear-gradient(
     0deg,
     transparent 0 2px,
@@ -761,10 +766,13 @@ body::after {
       transparent 0 2px,
       color-mix(in srgb, var(--foreground) 8%, transparent) 2px 3px
     ),
+    /* Phosphor vignette — softened so it reads as a faint corner darkening,
+     * not a shadowy band that surfaces in the page's empty margins as you
+     * scroll. Clear out to 74% radius, then only ~15% black into the corners. */
     radial-gradient(
-      130% 130% at 50% 50%,
-      transparent 58%,
-      color-mix(in srgb, #000000 38%, transparent) 100%
+      140% 140% at 50% 50%,
+      transparent 74%,
+      color-mix(in srgb, #000000 15%, transparent) 100%
     ),
     radial-gradient(
       80% 45% at 50% 0%,
@@ -1134,7 +1142,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     color-mix(in srgb, var(--ring) 55%, transparent),
     transparent
   );
-  animation: m4-tile-sweep 600ms var(--ease-premium);
+  animation: m4-tile-sweep 450ms var(--ease-premium);
 }
 @media (prefers-reduced-motion: reduce) {
   .m4-tile-sweep {
@@ -1411,6 +1419,22 @@ html[data-booted] #boot-cover {
   to {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+/* Hero masthead live-dot — a slow phosphor "standby" breathe that echoes the
+ * CRT boot vocabulary on the one always-on accent up top. Shallow + slow so it
+ * reads ambient, not an alarm; one ink (--ring). Motion-safe-gated at the call
+ * site, so reduced-motion holds a still dot. */
+@keyframes hero-standby-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--ring) 70%, transparent);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--ring) 92%, transparent);
   }
 }
 
@@ -1692,8 +1716,10 @@ html {
   transition: font-variation-settings var(--motion-medium) var(--ease-premium);
 }
 @media (pointer: fine) {
+  /* SOFT/WONK only on hover — the weight is held at 600 so the glyph metrics
+     don't change and a long headline never reflows onto a second line. */
   .serif-morph:hover {
-    font-variation-settings: "opsz" 144, "wght" 760, "SOFT" 80, "WONK" 1;
+    font-variation-settings: "opsz" 144, "wght" 600, "SOFT" 80, "WONK" 1;
   }
 }
 @media (prefers-reduced-motion: reduce) {

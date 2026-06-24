@@ -1,5 +1,4 @@
-import { GlitchText } from "@/components/motion/glitch-text";
-import { cn } from "@/lib/utils";
+import { HeadingReveal } from "@/components/motion/heading-reveal";
 
 interface SectionHeadingProps {
   eyebrow?: string;
@@ -7,10 +6,12 @@ interface SectionHeadingProps {
   description?: string;
   /** Heading level; `h2` default. Use `h1` on archive pages; detail pages own their own h1. */
   as?: "h1" | "h2";
-  /** Disable the single-shot glitch reveal on the h1. */
+  /** Disable the single-shot glitch reveal on the h1 (falls back to the editorial word reveal). */
   disableGlitch?: boolean;
 }
 
+// Typographic scale for the two heading levels. The reveal choreography itself
+// lives in `HeadingReveal`; this component owns the type + the variant policy.
 const headingClass = {
   h1: "mt-4 text-[2.6rem] font-[700] leading-[0.98] tracking-[-0.02em] text-balance sm:text-6xl lg:text-7xl",
   h2: "mt-3 text-3xl font-[700] leading-[1.02] tracking-[-0.015em] text-balance sm:text-4xl lg:text-5xl",
@@ -23,40 +24,22 @@ export function SectionHeading({
   as = "h2",
   disableGlitch = false,
 }: SectionHeadingProps) {
-  const Heading = as;
-  const useGlitch = as === "h1" && !disableGlitch;
-  // The Risograph theme slips a two-ink misregistration behind h1 hero
-  // titles (the `m4-overprint` CSS is gated to `[data-palette="risograph"]`,
-  // so every other theme renders this untouched). `data-text` carries the
-  // glyphs the ::before/::after ghosts duplicate.
-  const overprint = as === "h1";
+  // h1 hero titles keep the single-shot glitch (unless disabled); every h2
+  // section heading now gets the editorial per-word reveal that used to be
+  // missing — so titles deeper in the page animate in on scroll, not just the
+  // hero. The Risograph two-ink overprint stays scoped to the h1.
+  const variant =
+    as === "h1" ? (disableGlitch ? "editorial" : "glitch") : "editorial";
+
   return (
-    <div className="max-w-3xl">
-      {eyebrow ? (
-        <div className="flex items-center gap-3">
-          {/* Kinetic three-ink tick — the theme's full ink trio drifts
-            * through this rule, the editorial signature on every header.
-            * Decorative; the eyebrow text carries the meaning. */}
-          <span
-            aria-hidden="true"
-            className="kinetic-rule h-0.75 w-9 shrink-0 rounded-full"
-          />
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            {eyebrow}
-          </p>
-        </div>
-      ) : null}
-      <Heading
-        className={cn(headingClass[as], overprint && "m4-overprint")}
-        data-text={overprint ? title : undefined}
-      >
-        {useGlitch ? <GlitchText>{title}</GlitchText> : title}
-      </Heading>
-      {description ? (
-        <p className="mt-4 max-w-2xl font-prose text-base leading-7 text-muted-foreground">
-          {description}
-        </p>
-      ) : null}
-    </div>
+    <HeadingReveal
+      as={as}
+      variant={variant}
+      eyebrow={eyebrow}
+      title={title}
+      description={description}
+      titleClassName={headingClass[as]}
+      overprint={as === "h1"}
+    />
   );
 }

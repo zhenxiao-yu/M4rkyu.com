@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "motion/react"
+import { motion, useInView, useReducedMotion } from "motion/react"
 import type { Variants } from "motion/react"
 import { useRef } from "react"
 import { cn } from "@/lib/utils"
@@ -52,6 +52,17 @@ export function Stagger({
   const ref = useRef<HTMLElement | null>(null)
   const isInView = useInView(ref, { once, margin: "-80px 0px" })
   const Comp = motion[as] as typeof motion.div
+  const reduce = useReducedMotion()
+
+  // Reduced motion: render the settled state — no variants/initial/animate, so
+  // children sit at their natural opacity:1 / y:0 (mirrors CinematicReveal).
+  if (reduce) {
+    return (
+      <Comp ref={ref as React.Ref<HTMLDivElement>} className={cn(className)}>
+        {children}
+      </Comp>
+    )
+  }
 
   return (
     <Comp
@@ -79,6 +90,10 @@ export function StaggerItem({
   as?: StaggerItemTag
 }) {
   const Comp = motion[as] as typeof motion.div
+  const reduce = useReducedMotion()
+  if (reduce) {
+    return <Comp className={cn(className)}>{children}</Comp>
+  }
   return (
     <Comp variants={item} className={cn(className)}>
       {children}

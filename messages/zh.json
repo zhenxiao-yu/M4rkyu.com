@@ -309,6 +309,10 @@
     "collectionsTitle": "{count, plural, =0 {还没有合集} other {# 个合集}}",
     "collectionsDescription": "每个合集都是一组照片，按更慢的节奏添加。",
     "hoverHint": "点开灯箱 · 方向键翻动",
+    "showpieceHint": "拖动旋转 · 点击查看大图",
+    "locateOnMap": "在地图上查看{name}（在新标签页打开）",
+    "showMore": "再显示 {count} 个合集",
+    "showingCount": "已显示 {total} 个中的 {shown} 个",
     "previousFrame": "上一张照片",
     "nextFrame": "下一张照片",
     "fromCollection": "来自该合集",
@@ -438,6 +442,10 @@
     "viewLabel": "视图",
     "viewGrid": "网格",
     "viewIndex": "索引",
+    "viewStrip": "影带",
+    "stripLabel": "项目影带 — 横向滚动浏览",
+    "stripPrev": "上一组项目",
+    "stripNext": "更多项目",
     "ledger": {
       "colProject": "项目",
       "colType": "类型",
@@ -594,6 +602,43 @@
   "About": {
     "title": "关于",
     "intro": "一份安静的 Mark Yu 个人档案：代码、游戏、图像，以及正在整理的档案。",
+    "bento": {
+      "role": "全栈软件工程师",
+      "focus": "游戏 · 界面 · 数字艺术",
+      "liveTag": "实时",
+      "currentlyLabel": "目前",
+      "transitLabel": "行程",
+      "transitSpan": "2001 → 至今",
+      "kind": {
+        "building": "在做",
+        "reading": "在读",
+        "listening": "在听",
+        "watching": "在看"
+      },
+      "stackGroups": {
+        "code": "代码",
+        "data": "数据",
+        "creative": "创意",
+        "workflow": "流程"
+      },
+      "rack": {
+        "eyebrow": "装备",
+        "heading": "技术栈 · 按领域",
+        "regionLabel": "技能分组",
+        "systems": "项",
+        "prev": "上一组",
+        "next": "下一组",
+        "pause": "暂停轮播",
+        "play": "继续轮播",
+        "collapse": "收起",
+        "expand": "展开",
+        "gotoPage": "跳到第 {index} 组"
+      }
+    },
+    "hero": {
+      "portraitLabel": "查看照片 {index}",
+      "scroll": "向下滚动"
+    },
     "refined": {
       "heroTitle": "Mark Yu",
       "heroBody": "安大略，来自中国。做一些小的数字东西：界面、手感实验、工具、图像、笔记。剩下的部分故意保持安静。",
@@ -639,6 +684,8 @@
     "dossier": {
       "subjectEyebrow": "个人档案",
       "fileTag": "M4//YU",
+      "nameZh": "于震潇",
+      "namePrimary": "Mark Yu",
       "statusLabel": "随时欢迎好好聊聊",
       "statusAria": "当前状态：欢迎好的对话",
       "designation": "软件 · 界面 · 游戏手感 · 影像",
@@ -1293,6 +1340,8 @@
     "locationLine": "加拿大 安大略",
     "backToTop": "回到顶部",
     "techStack": "由 Next.js 16 · React 19 · Tailwind 4 构建",
+    "footerExpand": "站点地图与联系",
+    "footerCollapse": "收起站点地图",
     "socialEmail": "邮件",
     "socialGithub": "GitHub",
     "socialDevto": "dev.to",

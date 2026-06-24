@@ -91,3 +91,6 @@ scratch/
 
 # local design exploration / prototypes (kept out of the repo)
 /design/
+
+# Local image-import staging (scripts/optimize-images.mjs output)
+.image-staging/

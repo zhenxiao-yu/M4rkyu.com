@@ -59,12 +59,10 @@ export default async function NotFoundPage() {
 
       {readyProjects.length > 0 ? (
         <section className="mx-auto w-full max-w-page px-4 py-16 sm:px-6 lg:px-8">
-          <FadeIn>
-            <SectionHeading
-              eyebrow={t("archiveEyebrow")}
-              title={t("archiveTitle")}
-            />
-          </FadeIn>
+          <SectionHeading
+            eyebrow={t("archiveEyebrow")}
+            title={t("archiveTitle")}
+          />
           <Stagger className="mt-8 grid gap-5 md:grid-cols-3" delay={0.08}>
             {readyProjects.map((project) => (
               <StaggerItem key={project.slug}>

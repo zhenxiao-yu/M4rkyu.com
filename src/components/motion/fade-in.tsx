@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "motion/react"
+import { motion, useInView, useReducedMotion } from "motion/react"
 import { useRef } from "react"
 import { cn } from "@/lib/utils"
 
@@ -32,6 +32,16 @@ export function FadeIn({
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once, margin: "-80px 0px" })
   const offset = directionOffset[direction]
+  const reduce = useReducedMotion()
+
+  // Reduced motion: render the settled content, no opacity/translate tween.
+  if (reduce) {
+    return (
+      <div ref={ref} className={cn(className)}>
+        {children}
+      </div>
+    )
+  }
 
   return (
     <motion.div

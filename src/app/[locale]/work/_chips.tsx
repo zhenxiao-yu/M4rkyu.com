@@ -54,7 +54,7 @@ export function FacetChip({
       disabled={disabled}
       aria-pressed={active}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[0.66rem] uppercase tracking-[0.1em] transition-[color,border-color,background-color] duration-(--motion-fast) ease-(--ease-premium)",
+        "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[0.66rem] uppercase tracking-[0.1em] transition-[color,border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) motion-safe:active:scale-[0.97]",
         FOCUS_RING,
         disabled
           ? "cursor-not-allowed border-dashed border-border/60 text-muted-foreground/35"
