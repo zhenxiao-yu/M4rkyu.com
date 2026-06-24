@@ -105,7 +105,7 @@ function usage() {
 }
 
 function parseArgs(argv) {
-  const result = { concurrency: 12, sheetLimit: 30 };
+  const result = { concurrency: 12, sheetLimit: 30, unmatchedMinScore: 20 };
   for (let i = 0; i < argv.length; i += 1) {
     const value = argv[i];
     if (value === "--library") result.library = argv[++i];
@@ -115,6 +115,8 @@ function parseArgs(argv) {
       result.sheetLimit = Math.max(1, Number(argv[++i]) || 30);
     } else if (value === "--concurrency") {
       result.concurrency = Math.max(1, Number(argv[++i]) || 12);
+    } else if (value === "--unmatched-min-score") {
+      result.unmatchedMinScore = Number(argv[++i]) || 0;
     } else if (value === "--help") {
       usage();
       process.exit(0);
@@ -456,7 +458,9 @@ async function main() {
     unmatchedCandidates: inspected
       .filter(
         (item) =>
-          !item.destination && !item.inferredDestination && item.score >= 20,
+          !item.destination &&
+          !item.inferredDestination &&
+          item.score >= args.unmatchedMinScore,
       )
       .sort((a, b) => b.score - a.score),
   };

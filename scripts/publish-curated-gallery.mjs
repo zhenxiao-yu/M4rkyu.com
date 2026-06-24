@@ -90,23 +90,30 @@ for (const collection of plan.collections) {
         captured_at: exported.capturedAt,
         location: collection.title,
         mood: collection.mood,
-        tags: ["travel", collection.slug, "photography"],
+        tags: [
+          "travel",
+          collection.slug,
+          "photography",
+          `source:eagle:${item.eagleId}`,
+        ],
         featured: Boolean(item.featured),
         pinned: index === 0,
-        sort_order: index,
+        sort_order: (collection.sortOrderStart ?? 0) + index,
       },
       { onConflict: "collection_id,slug" },
     );
     if (itemError) throw itemError;
   }
 
-  const { error: coverError } = await supabase
-    .from("gallery_collections")
-    .update({
-      cover_path: coverPath,
-      cover_alt: collection.items[0]?.alt ?? "",
-    })
-    .eq("id", collectionRow.id);
-  if (coverError) throw coverError;
+  if (coverPath && !collection.preserveCover) {
+    const { error: coverError } = await supabase
+      .from("gallery_collections")
+      .update({
+        cover_path: coverPath,
+        cover_alt: collection.items[0]?.alt ?? "",
+      })
+      .eq("id", collectionRow.id);
+    if (coverError) throw coverError;
+  }
   console.log(`${collection.slug}: ${collection.items.length} item(s)`);
 }
