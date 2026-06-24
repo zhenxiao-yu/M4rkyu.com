@@ -18,10 +18,10 @@ import {
  *
  * `swatch` = [paper, ink, accent] used by the picker preview chip.
  */
-export type Palette = "risograph" | "terminal" | "editorial";
+export type Palette = "risograph" | "terminal" | "editorial" | "blueprint";
 
 /** The signature texture a theme paints over its surfaces. */
-export type PreviewTexture = "grain" | "scanlines" | "none";
+export type PreviewTexture = "grain" | "scanlines" | "grid" | "none";
 
 /** Colour set for a preview poster tile, mirroring the globals.css token
  * block for the theme in one mode. */
@@ -50,31 +50,41 @@ export const PALETTES: readonly PaletteMeta[] = [
   {
     value: "risograph",
     key: "risograph",
-    swatch: ["#efe7d8", "#16130d", "#e8412a"],
+    swatch: ["#f1e8d3", "#15110a", "#ec4226"],
     texture: "grain",
     preview: {
-      light: { paper: "#efe7d8", ink: "#16130d", accent: "#e8412a", accent2: "#2740e0", accent3: "#c98a00", muted: "#d6ccb6" },
-      dark: { paper: "#0c0b08", ink: "#efe7d6", accent: "#ff5a3c", accent2: "#5b78ff", accent3: "#ffc24d", muted: "#2a241a" },
+      light: { paper: "#f1e8d3", ink: "#15110a", accent: "#ec4226", accent2: "#2740e0", accent3: "#c98a00", muted: "#c4b487" },
+      dark: { paper: "#080705", ink: "#f6efe2", accent: "#ff5a3c", accent2: "#5b78ff", accent3: "#ffc24d", muted: "#342c1e" },
     },
   },
   {
     value: "terminal",
     key: "terminal",
-    swatch: ["#07080a", "#ded8c8", "#ffb000"],
+    swatch: ["#060809", "#d6e0cf", "#ffb000"],
     texture: "scanlines",
     preview: {
-      light: { paper: "#ece6d8", ink: "#1a1610", accent: "#b06a00", accent2: "#1c7a32", accent3: "#0e7490", muted: "#d2c8b0" },
-      dark: { paper: "#07080a", ink: "#ded8c8", accent: "#ffb000", accent2: "#46f06a", accent3: "#38d6ff", muted: "#233040" },
+      light: { paper: "#e3e8df", ink: "#121711", accent: "#9a6000", accent2: "#1d7a3a", accent3: "#0e7490", muted: "#bcc5b1" },
+      dark: { paper: "#060809", ink: "#d6e0cf", accent: "#ffb000", accent2: "#46f06a", accent3: "#38d6ff", muted: "#233040" },
     },
   },
   {
     value: "editorial",
     key: "editorial",
-    swatch: ["#f6f4ee", "#0a0a0a", "#e2231a"],
+    swatch: ["#f2f2f0", "#0a0a0a", "#e2231a"],
     texture: "none",
     preview: {
-      light: { paper: "#f6f4ee", ink: "#0a0a0a", accent: "#e2231a", accent2: "#1a3fd0", accent3: "#b07d18", muted: "#d8d4c8" },
-      dark: { paper: "#0b0b0b", ink: "#f4f1e8", accent: "#ff3b2f", accent2: "#5b78ff", accent3: "#e0a23e", muted: "#2a2a2a" },
+      light: { paper: "#f2f2f0", ink: "#0a0a0a", accent: "#e2231a", accent2: "#1a3fd0", accent3: "#a87b1e", muted: "#d4d4ce" },
+      dark: { paper: "#0a0a0a", ink: "#f3f3f0", accent: "#ff3b2f", accent2: "#5b78ff", accent3: "#e0a23e", muted: "#2b2b2b" },
+    },
+  },
+  {
+    value: "blueprint",
+    key: "blueprint",
+    swatch: ["#eaf0f6", "#16263f", "#1f6fd6"],
+    texture: "grid",
+    preview: {
+      light: { paper: "#eaf0f6", ink: "#16263f", accent: "#1f6fd6", accent2: "#0e8fb8", accent3: "#d6492f", muted: "#b9cadd" },
+      dark: { paper: "#0a1320", ink: "#d6e3f2", accent: "#4aa8f0", accent2: "#38d0e8", accent3: "#ff6a4d", muted: "#243750" },
     },
   },
 ] as const;

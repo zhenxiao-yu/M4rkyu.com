@@ -60,13 +60,16 @@
     "modeDark": "Dark",
     "modeSystem": "System",
     "selected": "Selected",
+    "applying": "Applying…",
     "risograph": "Risograph",
     "terminal": "Terminal",
     "editorial": "Editorial",
+    "blueprint": "Blueprint",
     "description": {
       "risograph": "Warm two-ink press",
       "terminal": "Amber phosphor console",
-      "editorial": "Black, white & one red"
+      "editorial": "Black, white & one red",
+      "blueprint": "Cyanotype draft grid"
     }
   },
   "Hud": {

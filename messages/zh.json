@@ -60,13 +60,16 @@
     "modeDark": "深色",
     "modeSystem": "跟随系统",
     "selected": "当前选用",
+    "applying": "正在应用…",
     "risograph": "孔版印刷",
     "terminal": "终端",
     "editorial": "刊物",
+    "blueprint": "蓝图",
     "description": {
       "risograph": "暖色双油墨印刷风",
       "terminal": "琥珀荧光终端",
-      "editorial": "黑白与一抹红"
+      "editorial": "黑白与一抹红",
+      "blueprint": "氰版蓝图网格"
     }
   },
   "Hud": {

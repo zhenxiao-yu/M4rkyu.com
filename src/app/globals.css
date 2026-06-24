@@ -210,12 +210,12 @@
   --secondary: #e7e4dc;
   --secondary-foreground: #111111;
   --muted: #e9e7e0;
-  --muted-foreground: #5f5f5f;
+  --muted-foreground: #545350;
   --accent: #d8dde0;
   --accent-foreground: #0a0a0a;
   --destructive: #8d1111;
-  --border: #cecbc2;
-  --input: #cecbc2;
+  --border: #c6c2b6;
+  --input: #c6c2b6;
   --ring: #0ea5b7;
   /* Second + third accent inks — only the multi-theme palettes use true
    * extra inks (e.g. Risograph's cobalt + marigold). The base/classic
@@ -451,36 +451,37 @@
  * legitimately vary the accent + a second ink now).
  * ============================================================ */
 
-/* —— RISOGRAPH (default) — high-contrast press, vermilion + cobalt + marigold
- * Retuned 2026-06 for B/W snap: near-true-black ink on bright near-white card
- * over warm paper, with darkened hairlines + secondary text so nothing blends.
+/* —— RISOGRAPH (default) — WARM identity: recycled-paper cream, vermilion +
+ * cobalt + marigold overprint. The analog/tactile theme — its signature is the
+ * warm temperature, which sets it apart from Terminal (cool) and Editorial
+ * (neutral). Near-true-black ink on bright cream card over warm paper.
  * See design/risograph-flagship-notes.md. —— */
 :root[data-palette="risograph"] {
-  --background: #f1ead9;
-  --foreground: #0c0a06;
-  --card: #fcf8ee;
-  --card-foreground: #0c0a06;
-  --popover: #fcf8ee;
-  --popover-foreground: #0c0a06;
-  --primary: #0c0a06;
-  --primary-foreground: #fcf8ee;
-  --secondary: #e8dfca;
-  --secondary-foreground: #0c0a06;
-  --muted: #e8dfca;
-  --muted-foreground: #463f30;
-  --accent: #e4dac5;
-  --accent-foreground: #0c0a06;
+  --background: #f1e8d3;
+  --foreground: #15110a;
+  --card: #fffdf6;
+  --card-foreground: #15110a;
+  --popover: #fffdf6;
+  --popover-foreground: #15110a;
+  --primary: #15110a;
+  --primary-foreground: #fffdf6;
+  --secondary: #e7ddc4;
+  --secondary-foreground: #15110a;
+  --muted: #e7ddc4;
+  --muted-foreground: #463f2f;
+  --accent: #e3d8c1;
+  --accent-foreground: #15110a;
   --destructive: #9e2b2b;
-  --border: #c6b994;
-  --input: #c6b994;
-  --ring: #e8412a;
+  --border: #c4b487;
+  --input: #c4b487;
+  --ring: #ec4226;
   --ring-2: #2740e0;
   --ring-3: #c98a00;
   --signal: #c62a1c;
   --success: #0f8f67;
   --warning: #9a6a00;
-  --surface-ink: #0c0a06;
-  --surface-paper: #f1ead9;
+  --surface-ink: #15110a;
+  --surface-paper: #f1e8d3;
 }
 :root[data-palette="risograph"][data-theme="dark"] {
   --background: #080705;
@@ -510,49 +511,54 @@
   --surface-paper: #050403;
 }
 
-/* —— TERMINAL — phosphor amber + green; daylight / CRT —— */
+/* —— TERMINAL — COOL identity: phosphor console. Light = a daylight terminal
+ * housing — cool green-grey surface, green-black ink, a bright phosphor-GREEN
+ * primary (green reads "terminal" hardest), with amber + cyan as the 2nd/3rd
+ * inks. Dark = the hero: a cool blue-black CRT glowing amber + green + cyan.
+ * The cool temperature is the whole point — it must NOT read like Risograph's
+ * warm cream. —— */
 :root[data-palette="terminal"] {
-  --background: #ece6d8;
-  --foreground: #1a1610;
-  --card: #f2ecde;
-  --card-foreground: #1a1610;
-  --popover: #f2ecde;
-  --popover-foreground: #1a1610;
-  --primary: #1a1610;
-  --primary-foreground: #fdf7e9;
-  --secondary: #e2dac6;
-  --secondary-foreground: #1a1610;
-  --muted: #e2dac6;
-  --muted-foreground: #5a5040;
-  --accent: #e6dcc6;
-  --accent-foreground: #1a1610;
-  --destructive: #c1271c;
-  --border: #d2c8b0;
-  --input: #d2c8b0;
-  --ring: #b06a00;
-  --ring-2: #1c7a32;
+  --background: #e3e8df;
+  --foreground: #121711;
+  --card: #f1f4ec;
+  --card-foreground: #121711;
+  --popover: #f1f4ec;
+  --popover-foreground: #121711;
+  --primary: #121711;
+  --primary-foreground: #f1f4ec;
+  --secondary: #d6dccd;
+  --secondary-foreground: #121711;
+  --muted: #d6dccd;
+  --muted-foreground: #4a5143;
+  --accent: #dae0d1;
+  --accent-foreground: #121711;
+  --destructive: #b91c1c;
+  --border: #bcc5b1;
+  --input: #bcc5b1;
+  --ring: #9a6000;
+  --ring-2: #1d7a3a;
   --ring-3: #0e7490;
-  --signal: #c1271c;
-  --success: #1c7a32;
-  --warning: #8a5400;
-  --surface-ink: #1a1610;
-  --surface-paper: #ece6d8;
+  --signal: #b91c1c;
+  --success: #1d7a3a;
+  --warning: #9a6000;
+  --surface-ink: #121711;
+  --surface-paper: #e3e8df;
 }
 :root[data-palette="terminal"][data-theme="dark"] {
-  --background: #07080a;
-  --foreground: #ded8c8;
-  --card: #0e1217;
-  --card-foreground: #ded8c8;
-  --popover: #0c0f13;
-  --popover-foreground: #ded8c8;
-  --primary: #ded8c8;
-  --primary-foreground: #07080a;
-  --secondary: #141a20;
-  --secondary-foreground: #ded8c8;
-  --muted: #141a20;
-  --muted-foreground: #9a9486;
-  --accent: #16202a;
-  --accent-foreground: #ded8c8;
+  --background: #060809;
+  --foreground: #d6e0cf;
+  --card: #0d1217;
+  --card-foreground: #d6e0cf;
+  --popover: #0b0f13;
+  --popover-foreground: #d6e0cf;
+  --primary: #d6e0cf;
+  --primary-foreground: #060809;
+  --secondary: #13191f;
+  --secondary-foreground: #d6e0cf;
+  --muted: #13191f;
+  --muted-foreground: #93a08c;
+  --accent: #14202a;
+  --accent-foreground: #d6e0cf;
   --destructive: #ff453a;
   --border: #233040;
   --input: #233040;
@@ -562,64 +568,128 @@
   --signal: #ff453a;
   --success: #46f06a;
   --warning: #ffb000;
-  --surface-ink: #ded8c8;
-  --surface-paper: #050608;
+  --surface-ink: #d6e0cf;
+  --surface-paper: #040506;
 }
 
-/* —— EDITORIAL — Swiss ink: black / paper, hot red + cobalt + gold —— */
+/* —— EDITORIAL — NEUTRAL identity: Swiss magazine. Light = crisp near-white
+ * (cool neutral, NOT warm cream) with pure-black ink and a hot red — the
+ * sharpest, freshest surface. Dark = true neutral black + clean white + red.
+ * Its neutral temperature is what separates it from Risograph's cream and
+ * Terminal's green-grey. hot red + cobalt + gold inks. —— */
 :root[data-palette="editorial"] {
-  --background: #f6f4ee;
+  --background: #f2f2f0;
   --foreground: #0a0a0a;
-  --card: #fbfaf5;
+  --card: #ffffff;
   --card-foreground: #0a0a0a;
-  --popover: #fbfaf5;
+  --popover: #ffffff;
   --popover-foreground: #0a0a0a;
   --primary: #0a0a0a;
-  --primary-foreground: #fbfaf5;
-  --secondary: #eeebe2;
+  --primary-foreground: #ffffff;
+  --secondary: #eaeae7;
   --secondary-foreground: #0a0a0a;
-  --muted: #eeebe2;
-  --muted-foreground: #46443e;
-  --accent: #e9e6dc;
+  --muted: #eaeae7;
+  --muted-foreground: #44443f;
+  --accent: #e5e5e1;
   --accent-foreground: #0a0a0a;
   --destructive: #b51d14;
-  --border: #d8d4c8;
-  --input: #d8d4c8;
+  --border: #d4d4ce;
+  --input: #d4d4ce;
   --ring: #e2231a;
   --ring-2: #1a3fd0;
-  --ring-3: #b07d18;
+  --ring-3: #a87b1e;
   --signal: #e2231a;
   --success: #0f8f67;
   --warning: #9a6a00;
   --surface-ink: #0a0a0a;
-  --surface-paper: #f6f4ee;
+  --surface-paper: #f2f2f0;
 }
 :root[data-palette="editorial"][data-theme="dark"] {
-  --background: #0b0b0b;
-  --foreground: #f4f1e8;
-  --card: #101010;
-  --card-foreground: #f4f1e8;
-  --popover: #0e0e0e;
-  --popover-foreground: #f4f1e8;
-  --primary: #f4f1e8;
-  --primary-foreground: #0b0b0b;
-  --secondary: #171717;
-  --secondary-foreground: #f4f1e8;
-  --muted: #171717;
-  --muted-foreground: #a5a59c;
-  --accent: #1c1c1c;
-  --accent-foreground: #f4f1e8;
+  --background: #0a0a0a;
+  --foreground: #f3f3f0;
+  --card: #141414;
+  --card-foreground: #f3f3f0;
+  --popover: #111111;
+  --popover-foreground: #f3f3f0;
+  --primary: #f3f3f0;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #f3f3f0;
+  --muted: #1a1a1a;
+  --muted-foreground: #a6a6a0;
+  --accent: #1d1d1d;
+  --accent-foreground: #f3f3f0;
   --destructive: #ff4d4d;
-  --border: #2a2a2a;
-  --input: #2a2a2a;
+  --border: #2b2b2b;
+  --input: #2b2b2b;
   --ring: #ff3b2f;
   --ring-2: #5b78ff;
   --ring-3: #e0a23e;
   --signal: #ff3b2f;
   --success: #46c08a;
   --warning: #e0a23e;
-  --surface-ink: #f4f1e8;
-  --surface-paper: #070707;
+  --surface-ink: #f3f3f0;
+  --surface-paper: #060606;
+}
+
+/* —— BLUEPRINT — COOL-BLUE identity: an architect's cyanotype. Light = a pale
+ * blue-grey draft sheet, deep blueprint-navy ink, an electric-blue primary;
+ * Dark = a classic deep-navy blueprint glowing cyan. Its blue temperature is
+ * what separates it from Terminal's green and the warm/neutral pair. Inks:
+ * blueprint blue + cyan + a red-pencil markup. —— */
+:root[data-palette="blueprint"] {
+  --background: #eaf0f6;
+  --foreground: #16263f;
+  --card: #f6f9fc;
+  --card-foreground: #16263f;
+  --popover: #f6f9fc;
+  --popover-foreground: #16263f;
+  --primary: #16263f;
+  --primary-foreground: #f6f9fc;
+  --secondary: #dde7f0;
+  --secondary-foreground: #16263f;
+  --muted: #dde7f0;
+  --muted-foreground: #3f5470;
+  --accent: #d9e4ef;
+  --accent-foreground: #16263f;
+  --destructive: #c02a1c;
+  --border: #b9cadd;
+  --input: #b9cadd;
+  --ring: #1f6fd6;
+  --ring-2: #0e8fb8;
+  --ring-3: #d6492f;
+  --signal: #d6492f;
+  --success: #0f8f67;
+  --warning: #9a6a00;
+  --surface-ink: #16263f;
+  --surface-paper: #eaf0f6;
+}
+:root[data-palette="blueprint"][data-theme="dark"] {
+  --background: #0a1320;
+  --foreground: #d6e3f2;
+  --card: #0f1c2e;
+  --card-foreground: #d6e3f2;
+  --popover: #0d1826;
+  --popover-foreground: #d6e3f2;
+  --primary: #d6e3f2;
+  --primary-foreground: #0a1320;
+  --secondary: #16263a;
+  --secondary-foreground: #d6e3f2;
+  --muted: #16263a;
+  --muted-foreground: #93a7c2;
+  --accent: #16263a;
+  --accent-foreground: #d6e3f2;
+  --destructive: #ff5a4a;
+  --border: #243750;
+  --input: #243750;
+  --ring: #4aa8f0;
+  --ring-2: #38d0e8;
+  --ring-3: #ff6a4d;
+  --signal: #ff6a4d;
+  --success: #46c08a;
+  --warning: #e0a23e;
+  --surface-ink: #d6e3f2;
+  --surface-paper: #070d16;
 }
 
 /* The reading face indirection. A plain :root var (not a @theme token, so the
@@ -630,7 +700,8 @@
 :root {
   --font-reading: var(--font-serif);
 }
-:root[data-palette="terminal"] {
+:root[data-palette="terminal"],
+:root[data-palette="blueprint"] {
   --font-reading: var(--font-sans);
 }
 
@@ -1016,6 +1087,57 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 @media (prefers-reduced-motion: reduce) {
   .m4-dialog-overlay[data-state="open"],
   .m4-dialog-content[data-state="open"] {
+    animation: none;
+  }
+}
+
+/* ── Readable micro-label ──────────────────────────────────────────────
+ * The HUD/mono caption pattern (uppercase, wide-tracked) was being set as
+ * low as 0.5rem (8px) inline, which turns to unreadable mush on small or
+ * low-DPI phones. This floors the effective size with a clamp so it never
+ * drops below 10px, eases the tracking on the narrowest screens (wide
+ * letter-spacing is what actually destroys legibility at tiny sizes), and
+ * keeps the editorial character on larger displays. Adopt via class instead
+ * of bare `text-[0.5rem]`. */
+.hud-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.625rem, 0.55rem + 0.3vw, 0.7rem);
+  line-height: 1.35;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+@media (max-width: 400px) {
+  .hud-label {
+    letter-spacing: 0.1em;
+  }
+}
+
+/* Apply-confirm sweep — a single diagonal light pass across a tile the
+ * instant a palette is chosen, reading as "applying" before it settles. */
+@keyframes m4-tile-sweep {
+  from {
+    transform: translateX(-120%) skewX(-12deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+.m4-tile-sweep {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--ring) 55%, transparent),
+    transparent
+  );
+  animation: m4-tile-sweep 600ms var(--ease-premium);
+}
+@media (prefers-reduced-motion: reduce) {
+  .m4-tile-sweep {
     animation: none;
   }
 }

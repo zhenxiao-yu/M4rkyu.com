@@ -15,17 +15,19 @@ import {
 } from "@/components/ui/dialog";
 import { usePalette, type Palette, type PaletteMeta } from "./palette-provider";
 import { useTheme, type Theme } from "./theme-provider";
-import { cn, FOCUS_RING } from "@/lib/utils";
+import { cn, FOCUS_RING, FOCUS_RING_INSET } from "@/lib/utils";
 
 /**
- * The Appearance studio. The header control is a compact swatch button that
- * opens a modal gallery: a Light/Dark/System mode control (this is where the
+ * The Appearance studio. The header control is a compact square swatch button
+ * — matched to the bell / theme-toggle footprint beside it — that opens a
+ * modal gallery: a Light/Dark/System mode control (this is where the
  * otherwise-hidden "System" option surfaces) plus three live-preview poster
- * tiles, each rendered in its own theme's tokens with its signature texture.
- * Replaces the old plain Select — same trigger footprint, far more discovery.
+ * tiles, each rendered in its own theme's tokens with its signature texture
+ * and SVG motif. On open the tiles settle from a skeleton; picking one fires
+ * an "applying" sweep so the swap reads as deliberate, not a silent flash.
  */
-const HUD_CONTROL =
-  "group inline-flex h-9 pointer-coarse:h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-border bg-background/70 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-[color,border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0";
+const HUD_TRIGGER =
+  "group inline-flex size-9 pointer-coarse:size-11 shrink-0 items-center justify-center rounded-md border border-border bg-background/70 text-muted-foreground transition-[color,border-color,background-color,transform] duration-(--motion-fast) ease-(--ease-premium) hover:border-ring/50 hover:text-foreground motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0";
 
 const MODES: { value: Theme; icon: LucideIcon; key: string }[] = [
   { value: "light", icon: Sun, key: "modeLight" },
@@ -33,29 +35,66 @@ const MODES: { value: Theme; icon: LucideIcon; key: string }[] = [
   { value: "system", icon: Monitor, key: "modeSystem" },
 ];
 
-function ChannelEdge() {
-  return (
-    <span
-      aria-hidden="true"
-      className="h-3.5 w-0.5 shrink-0 rounded-full bg-ring/40 transition-[background-color,box-shadow] duration-(--motion-fast) ease-(--ease-premium) group-hover:bg-ring group-hover:shadow-[0_0_8px_var(--ring)] group-data-[state=open]:bg-ring group-data-[state=open]:shadow-[0_0_8px_var(--ring)]"
-    />
-  );
-}
-
-function Swatch({
-  swatch,
+/**
+ * Per-theme signature SVG motif — real iconography in each theme's voice,
+ * replacing the old plain accent dot. Risograph = an overprint of two
+ * misregistered rings; Terminal = a prompt chevron + caret; Editorial =
+ * stacked masthead rules. `currentColor` inherits the tile's accent ink, so
+ * one component themes itself. Always decorative → `aria-hidden`.
+ */
+function ThemeMotif({
+  palette,
+  className,
+  style,
 }: {
-  swatch: readonly [string, string, string];
+  palette: Palette;
+  className?: string;
+  style?: CSSProperties;
 }) {
+  const common = {
+    viewBox: "0 0 16 16",
+    fill: "none",
+    stroke: "currentColor",
+    "aria-hidden": true as const,
+    className,
+    style,
+  };
+  if (palette === "risograph") {
+    return (
+      <svg {...common} strokeWidth={1.4}>
+        <circle cx={6} cy={8} r={4} />
+        <circle cx={10} cy={8} r={4} />
+      </svg>
+    );
+  }
+  if (palette === "terminal") {
+    return (
+      <svg
+        {...common}
+        strokeWidth={1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M3 4l4 4-4 4" />
+        <path d="M9 12h4" />
+      </svg>
+    );
+  }
+  if (palette === "blueprint") {
+    // Drafting registration crosshair — a technical-drawing target mark.
+    return (
+      <svg {...common} strokeWidth={1.4} strokeLinecap="round">
+        <circle cx={8} cy={8} r={3.1} />
+        <path d="M8 1.5v2.6M8 11.9v2.6M1.5 8h2.6M11.9 8h2.6" />
+      </svg>
+    );
+  }
   return (
-    <span
-      aria-hidden="true"
-      className="flex size-5 overflow-hidden rounded-[3px] border border-border/50"
-    >
-      {swatch.map((color, i) => (
-        <span key={i} className="flex-1" style={{ backgroundColor: color }} />
-      ))}
-    </span>
+    <svg {...common} strokeWidth={1.6} strokeLinecap="round">
+      <path d="M2 4h12" />
+      <path d="M2 8h8" />
+      <path d="M2 12h12" />
+    </svg>
   );
 }
 
@@ -73,6 +112,23 @@ const LIVE_SWATCH = [
   "var(--ring)",
 ] as const;
 
+function Swatch({
+  swatch,
+}: {
+  swatch: readonly [string, string, string];
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className="flex size-5 overflow-hidden rounded-[3px] border border-border/60 shadow-sm transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover:scale-105"
+    >
+      {swatch.map((color, i) => (
+        <span key={i} className="flex-1" style={{ backgroundColor: color }} />
+      ))}
+    </span>
+  );
+}
+
 export function ThemePicker() {
   const t = useTranslations("Theme");
 
@@ -83,13 +139,12 @@ export function ThemePicker() {
           type="button"
           aria-label={t("appearance")}
           data-testid="theme-picker"
-          className={cn(HUD_CONTROL, "w-auto pl-2 pr-2.5", FOCUS_RING)}
+          className={cn(HUD_TRIGGER, FOCUS_RING)}
         >
-          <ChannelEdge />
           <Swatch swatch={LIVE_SWATCH} />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl gap-6">
+      <DialogContent className="max-w-2xl gap-6 max-h-[85dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-xl tracking-tight">
             {t("appearance")}
@@ -109,9 +164,7 @@ function ModeControl() {
 
   return (
     <div className="grid gap-2">
-      <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
-        {t("mode")}
-      </p>
+      <p className="hud-label text-muted-foreground">{t("mode")}</p>
       <div
         role="radiogroup"
         aria-label={t("mode")}
@@ -163,6 +216,7 @@ const THEME_CHARACTER: Record<Palette, ThemeCharacter> = {
   risograph: { font: "font-display", tag: "press", treatment: "overprint" },
   terminal: { font: "font-mono", tag: "sys", treatment: "phosphor" },
   editorial: { font: "font-wordmark", tag: "01", treatment: "rule" },
+  blueprint: { font: "font-mono", tag: "ref", treatment: "rule" },
 };
 
 function ThemeGrid() {
@@ -173,11 +227,9 @@ function ThemeGrid() {
 
   return (
     <div className="grid gap-2">
-      <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
-        {t("label")}
-      </p>
+      <p className="hud-label text-muted-foreground">{t("label")}</p>
       <motion.div
-        className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
         initial={reduce ? undefined : "hidden"}
         animate={reduce ? undefined : "show"}
         variants={
@@ -187,6 +239,7 @@ function ThemeGrid() {
         {palettes.map((meta) => (
           <motion.div
             key={meta.value}
+            className="min-w-0"
             variants={
               reduce
                 ? undefined
@@ -210,6 +263,7 @@ function ThemeGrid() {
               name={t(meta.key)}
               description={t(`description.${meta.key}`)}
               selectedLabel={t("selected")}
+              applyingLabel={t("applying")}
             />
           </motion.div>
         ))}
@@ -226,6 +280,7 @@ function ThemeTile({
   name,
   description,
   selectedLabel,
+  applyingLabel,
 }: {
   meta: PaletteMeta;
   mode: "light" | "dark";
@@ -234,17 +289,18 @@ function ThemeTile({
   name: string;
   description: string;
   selectedLabel: string;
+  applyingLabel: string;
 }) {
   const c = meta.preview[mode];
   const character = THEME_CHARACTER[meta.value];
   const reduce = useReducedMotion();
-  // One-shot accent bloom that confirms a palette switch. Fired only on a
+  // One-shot "applying" sweep that confirms a palette switch. Fired only on a
   // real user selection (not on initial mount), and skipped under
   // reduced-motion — the border + check already signal the active tile.
-  const [pulse, setPulse] = useState(false);
+  const [applying, setApplying] = useState(false);
   const handleSelect = () => {
     onSelect();
-    if (!reduce) setPulse(true);
+    if (!reduce) setApplying(true);
   };
 
   // The signature texture, drawn as an inline overlay so the tile is fully
@@ -263,7 +319,14 @@ function ThemeTile({
               "repeating-linear-gradient(0deg, transparent 0 1px, currentColor 1px 2px)",
             opacity: 0.12,
           }
-        : undefined;
+        : meta.texture === "grid"
+          ? {
+              backgroundImage:
+                "linear-gradient(currentColor 0.5px, transparent 0.5px), linear-gradient(90deg, currentColor 0.5px, transparent 0.5px)",
+              backgroundSize: "9px 9px",
+              opacity: 0.1,
+            }
+          : undefined;
 
   return (
     <button
@@ -272,31 +335,13 @@ function ThemeTile({
       aria-pressed={active}
       aria-label={`${name}${active ? ` — ${selectedLabel}` : ""}`}
       className={cn(
-        "group/tile relative overflow-hidden rounded-xl border-2 text-left transition-[border-color,transform,box-shadow] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5",
-        FOCUS_RING,
+        "group/tile relative block w-full overflow-hidden rounded-xl border-2 text-left transition-[border-color,transform,box-shadow] duration-(--motion-fast) ease-(--ease-premium) motion-safe:hover:-translate-y-0.5",
+        FOCUS_RING_INSET,
         active
           ? "border-ring shadow-[0_0_0_1px_var(--ring)]"
           : "border-border hover:border-ring/55",
       )}
     >
-      {pulse ? (
-        <motion.span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-10"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--ring) 38%, transparent), transparent 68%)",
-          }}
-          initial={{ opacity: 0.6 }}
-          animate={{ opacity: 0 }}
-          // Inline easing: motion can't read CSS vars in `transition.ease`,
-          // so --ease-premium is mirrored here by hand. 0.45s keeps the
-          // confirm flash inside the <500ms UI-feedback budget.
-          transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
-          onAnimationComplete={() => setPulse(false)}
-        />
-      ) : null}
-
       {/* Poster — a type specimen rendered in the theme's own colours and
        * voice. The signature texture is drawn last so it overlays the type
        * (press grain / CRT scanlines) for the authentic look. */}
@@ -304,14 +349,15 @@ function ThemeTile({
         className="relative isolate aspect-[5/4] overflow-hidden p-3.5"
         style={{ backgroundColor: c.paper, color: c.ink }}
       >
-        {/* mini HUD strip */}
+        {/* mini HUD strip — tag + the theme's signature SVG motif */}
         <div className="flex items-center justify-between">
-          <span className="font-mono text-[0.5rem] uppercase tracking-[0.18em] opacity-70">
+          <span className="hud-label text-[0.625rem] leading-none opacity-70">
             {character.tag}
           </span>
-          <span
-            className="size-1.5 rounded-full"
-            style={{ backgroundColor: c.accent }}
+          <ThemeMotif
+            palette={meta.value}
+            className="size-3.5"
+            style={{ color: c.accent }}
           />
         </div>
 
@@ -418,7 +464,7 @@ function ThemeTile({
         {/* accent chip + the second & third inks (the three-ink budget) */}
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
-            className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[0.5rem] font-bold"
+            className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[0.625rem] font-bold leading-none"
             style={{ backgroundColor: c.accent, color: c.paper }}
           >
             ›_
@@ -440,6 +486,25 @@ function ThemeTile({
             style={textureStyle}
           />
         ) : null}
+
+        {/* Applying sweep + status — a single diagonal light pass with an
+         * "applying…" chip, confirming the switch took. Self-clears on the
+         * sweep's animationend. */}
+        {applying ? (
+          <>
+            <span
+              aria-hidden="true"
+              className="m4-tile-sweep pointer-events-none absolute inset-0 z-10"
+              onAnimationEnd={() => setApplying(false)}
+            />
+            <span
+              className="hud-label absolute left-2 top-2 z-20 inline-flex items-center rounded px-1.5 py-0.5 text-[0.625rem] leading-none shadow-sm"
+              style={{ backgroundColor: c.ink, color: c.paper }}
+            >
+              {applyingLabel}
+            </span>
+          </>
+        ) : null}
       </div>
 
       {/* Footer label — on the dialog's own surface. */}
@@ -448,7 +513,7 @@ function ThemeTile({
           <p className="truncate text-sm font-medium leading-tight text-foreground">
             {name}
           </p>
-          <p className="truncate font-mono text-[0.55rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="hud-label truncate text-muted-foreground">
             {description}
           </p>
         </div>
