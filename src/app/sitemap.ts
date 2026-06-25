@@ -109,8 +109,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .flatMap((product) => entry(`/shop/${product.slug}`, "monthly", 0.5));
 
   // Cross-domain topic hubs — one indexable URL per tag shared by >= 2
-  // ready items. Built from the same static catalog the page route uses.
-  const topicEntries = getAllTopics().flatMap((topic) =>
+  // ready items. Built from the same DB-first catalog the page route uses.
+  const topicEntries = (await getAllTopics()).flatMap((topic) =>
     entry(`/topics/${topic.slug}`, "weekly", 0.4),
   );
 

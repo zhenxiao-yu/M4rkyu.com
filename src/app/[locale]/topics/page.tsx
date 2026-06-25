@@ -42,7 +42,7 @@ export default async function TopicsIndexPage({
   const t = await getTranslations({ locale, namespace: "Topics" });
   const tMeta = await getTranslations({ locale, namespace: "Meta" });
   const tNav = await getTranslations({ locale, namespace: "Navigation" });
-  const topics = getAllTopics();
+  const topics = await getAllTopics();
 
   return (
     <PageShell locale={locale}>

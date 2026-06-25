@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { buildSearchCatalog, type SearchDoc } from "@/lib/search/catalog";
 
 // Minimum ready items for a tag to earn its own hub page. Below this a
@@ -52,17 +53,16 @@ export function buildTopicIndex(docs: SearchDoc[]): Topic[] {
     );
 }
 
-// Built once per server process from the static content arrays — the same
-// deterministic source the AI search catalog uses.
-let cache: Topic[] | null = null;
+// Built from the same DB-first content sources the AI search catalog uses, so
+// CMS-authored content earns topic hubs too. `cache()`'d for per-render dedupe
+// (the underlying source readers are `cache()`'d as well), which also keeps it
+// fresh across ISR regenerations rather than pinning a process-level memo.
+export const getAllTopics = cache(async (): Promise<Topic[]> => {
+  return buildTopicIndex(await buildSearchCatalog());
+});
 
-export function getAllTopics(): Topic[] {
-  if (!cache) cache = buildTopicIndex(buildSearchCatalog());
-  return cache;
-}
-
-export function getTopic(slug: string): Topic | undefined {
-  return getAllTopics().find((topic) => topic.slug === slug);
+export async function getTopic(slug: string): Promise<Topic | undefined> {
+  return (await getAllTopics()).find((topic) => topic.slug === slug);
 }
 
 /**
@@ -71,7 +71,9 @@ export function getTopic(slug: string): Topic | undefined {
  * content outside the catalog such as dev.to logs). Callers use this to
  * linkify tag chips only where the link won't 404.
  */
-export function topicSlugForTag(tag: string): string | null {
+export async function topicSlugForTag(tag: string): Promise<string | null> {
   const slug = slugifyTag(tag);
-  return getAllTopics().some((topic) => topic.slug === slug) ? slug : null;
+  return (await getAllTopics()).some((topic) => topic.slug === slug)
+    ? slug
+    : null;
 }

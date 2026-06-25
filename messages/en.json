@@ -42,7 +42,7 @@
     "shopDescription": "Prints, posters, and one-off objects",
     "blogsDescription": "Long-form devlogs and field notes",
     "notesDescription": "Short observations, links, snippets",
-    "toolsDescription": "38 in-browser developer utilities",
+    "toolsDescription": "{count} in-browser developer utilities",
     "linksDescription": "Daily-use dev and design bookmarks"
   },
   "Language": {
@@ -348,7 +348,11 @@
     "placeholderHint": "Placeholder frame keeps the gallery structure in place until the final image is ready.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
-    "plate": "Plate"
+    "plate": "Plate",
+    "viewToggleLabel": "Collection view",
+    "viewEditorial": "Editorial",
+    "viewGrid": "Grid",
+    "enter": "Enter"
   },
   "Social": {
     "like": "Like",
@@ -879,6 +883,10 @@
         "watching": "Watching"
       }
     },
+    "now": {
+      "ariaLabel": "Now — tune the channel",
+      "onAir": "On air"
+    },
     "portrait": {
       "eyebrow": "portrait",
       "title": "Mark, 2026",
@@ -1201,7 +1209,7 @@
     "resourcesTitle": "Resources — tools and daily links",
     "resourcesDescription": "Interactive in-browser tools plus a curated set of daily-use developer links. Pick a side: hands-on utilities, or the bookmarks I actually open.",
     "resourcesToolsTitle": "Free in-browser developer tools",
-    "resourcesToolsDescription": "Thirty-eight interactive tools — JSON formatter, contrast checker, JWT decoder, password generator, and more — that run in your browser. No login, no upload, no tracking.",
+    "resourcesToolsDescription": "Interactive in-browser tools — JSON formatter, contrast checker, JWT decoder, password generator, and more — that run entirely in your browser. No login, no upload, no tracking.",
     "resourcesLinksTitle": "Daily-use developer links",
     "resourcesLinksDescription": "Curated bookmarks for docs, AI assistants, color tools, hosting, playgrounds, and inspiration — the ones I actually open every day.",
     "contactTitle": "Contact",
@@ -2026,7 +2034,22 @@
       "retry": "Retry {count} failed",
       "failedBadge": "Failed",
       "failed": "Some photos couldn't be uploaded.",
-      "done": "{count, plural, one {# photo added as draft} other {# photos added as drafts}}"
+      "done": "{count, plural, one {# photo added as draft} other {# photos added as drafts}}",
+      "addPhotos": "Add photos",
+      "promptMobile": "Optimized to WebP before upload",
+      "cropOne": "Crop",
+      "error": {
+        "decode": "Can't read",
+        "tooLarge": "Too large",
+        "upload": "Upload failed"
+      }
+    },
+    "crop": {
+      "title": "Crop photo",
+      "loading": "Loading…",
+      "free": "Free",
+      "confirm": "Apply crop",
+      "cancel": "Cancel"
     },
     "library": {
       "title": "Photo library",

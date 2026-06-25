@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -78,8 +79,14 @@ export function useCollectionItemsManager({
   );
   const [, startTransition] = useTransition();
 
+  // Mouse + Touch as separate sensors (not PointerSensor): mouse drags at a
+  // 6px threshold, touch requires a 220ms long-press so a vertical swipe scrolls
+  // the page instead of starting a reorder on the mobile grid.
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 220, tolerance: 8 },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),

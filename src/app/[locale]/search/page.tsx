@@ -36,7 +36,7 @@ export default async function SearchPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Search" });
-  const catalog = buildSearchCatalog();
+  const catalog = await buildSearchCatalog();
 
   return (
     <PageShell locale={locale}>

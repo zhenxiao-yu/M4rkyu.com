@@ -25,8 +25,8 @@ import { cn, FOCUS_RING } from "@/lib/utils";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
-export function generateStaticParams() {
-  return getAllTopics().flatMap((topic) =>
+export async function generateStaticParams() {
+  return (await getAllTopics()).flatMap((topic) =>
     routing.locales.map((locale) => ({ locale, tag: topic.slug })),
   );
 }
@@ -37,7 +37,7 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale; tag: string }>;
 }): Promise<Metadata> {
   const { locale, tag } = await params;
-  const topic = getTopic(tag);
+  const topic = await getTopic(tag);
   if (!topic) return {};
   const t = await getTranslations({ locale, namespace: "Topics" });
   return {
@@ -115,7 +115,7 @@ export default async function TopicPage({
 }) {
   const { locale, tag } = await params;
   setRequestLocale(locale);
-  const topic = getTopic(tag);
+  const topic = await getTopic(tag);
   if (!topic) notFound();
 
   const t = await getTranslations({ locale, namespace: "Topics" });

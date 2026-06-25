@@ -88,6 +88,14 @@ export async function VisualPreview({
   );
 }
 
+/** A cover is displayable only once a real frame is uploaded (lives under
+ * /storage/). The per-slug `/gallery/<slug>.svg` placeholders don't exist for
+ * every collection, so anything else falls back to a designed placeholder
+ * rather than a 404'd <img>. Mirrors the archive plate's `hasRealCover`. */
+function hasRealCover(collection: GalleryCollection): boolean {
+  return Boolean(collection.cover?.src?.includes("/storage/"));
+}
+
 function CollectionSlide({
   collection,
   locale,
@@ -101,17 +109,36 @@ function CollectionSlide({
   total: number;
   labels: { collection: string; open: string; frames: string };
 }) {
+  const cover = hasRealCover(collection) ? collection.cover : null;
+  const num = String(position).padStart(2, "0");
+
   return (
     <div className="grid overflow-hidden rounded-xl border bg-card/60 md:h-[clamp(18rem,44vh,28rem)] md:grid-cols-2">
-      {/* Cover. */}
+      {/* Cover — a real uploaded frame, else a designed contact-sheet
+          placeholder (never a broken image). */}
       <div className="relative aspect-16/10 overflow-hidden bg-muted md:aspect-auto md:h-full">
-        <Image
-          src={collection.cover.src}
-          alt={collection.cover.alt}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:hover:grayscale-0"
-        />
+        {cover ? (
+          <Image
+            src={cover.src}
+            alt={cover.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover [@media(pointer:fine)]:grayscale transition duration-500 ease-(--ease-premium) [@media(pointer:fine)]:hover:grayscale-0"
+          />
+        ) : (
+          <>
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 contact-sheet opacity-60"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-6xl font-bold leading-none tabular-nums text-foreground/10"
+            >
+              {num}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Meta. */}

@@ -908,6 +908,13 @@ body::after {
 
 html {
   scroll-behavior: auto;
+  /* Non-static scroll root. <html> is `document.scrollingElement`, i.e. the
+   * default scroll container motion/react resolves for `useScroll({ target })`
+   * (FooterReveal, FooterSceneFloor). Motion warns in dev when that container
+   * is position:static because its offset math is then imprecise; `relative`
+   * silences it with zero visual effect (root element, no offsets — does not
+   * affect sticky/fixed, and absolute children keep the same containing box). */
+  position: relative;
   /* Reserve the scrollbar gutter even on pages whose content fits the
    * viewport. Without this, navigating from a tall page (with scrollbar)
    * to a short page (without) shifts the layout horizontally by the

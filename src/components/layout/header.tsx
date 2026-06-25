@@ -11,6 +11,7 @@ import { NotificationBell } from "@/components/system/notification-bell";
 import { UserMenu } from "@/components/auth/user-menu";
 import { SignInSheet } from "@/components/auth/sign-in-sheet";
 import { getNotificationFeed } from "@/lib/notifications/feed";
+import { getResourcesSource } from "@/lib/resources/source";
 import { AudioNavBar } from "@/components/ui/magic/audio-visualizer";
 import { MobileNav } from "./mobile-nav";
 import { HeaderDock } from "./header-dock";
@@ -20,6 +21,14 @@ import { buildNavStructure, type NavLabels } from "./nav-structure";
 
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "Navigation" });
+
+  // Live tool count — keeps the Resources dropdown in lockstep with the
+  // DB-first resources source (44 today), so the dropdown can never drift
+  // the way the old hardcoded "38" literal did. Mirrors resources/page.tsx.
+  const resources = await getResourcesSource();
+  const toolCount = resources.filter(
+    (resource) => resource.type === "tool" && resource.status === "ready",
+  ).length;
 
   const labels: NavLabels = {
     build: t("build"),
@@ -39,7 +48,7 @@ export async function Header({ locale }: { locale: Locale }) {
     notesDescription: t("notesDescription"),
     resources: t("resources"),
     tools: t("tools"),
-    toolsDescription: t("toolsDescription"),
+    toolsDescription: t("toolsDescription", { count: toolCount }),
     links: t("links"),
     linksDescription: t("linksDescription"),
     about: t("about"),

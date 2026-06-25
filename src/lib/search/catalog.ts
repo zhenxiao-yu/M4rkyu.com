@@ -1,9 +1,10 @@
-import { allProjects } from "@/content/projects";
-import { games } from "@/content/games";
-import { resources } from "@/content/resources";
-import { galleryItems } from "@/content/gallery";
-import { notes } from "@/content/notes";
-import { mediaItems } from "@/content/media";
+import { cache } from "react";
+import { getProjectsSource } from "@/lib/projects/source";
+import { getGamesSource } from "@/lib/games/source";
+import { getResourcesSource } from "@/lib/resources/source";
+import { getGallerySource } from "@/lib/gallery/source";
+import { getNotesSource } from "@/lib/notes/source";
+import { getMediaSource } from "@/lib/media/source";
 import { services } from "@/content/services";
 import type {
   GalleryItem,
@@ -165,15 +166,33 @@ export function assembleCatalog(sources: CatalogSources): SearchDoc[] {
   return docs;
 }
 
-/** Wire the real content arrays into {@link assembleCatalog}. */
-export function buildSearchCatalog(): SearchDoc[] {
+/**
+ * Wire the live, DB-first content sources into {@link assembleCatalog}, so
+ * CMS-authored items (gallery / notes / media uploaded via the admin) are
+ * searchable — the static content arrays are the readers' own fallback when
+ * the DB is empty (or Supabase env is absent at build/preview), so this never
+ * regresses the static catalog. `cache()`'d for per-render dedupe; the source
+ * readers are individually `cache()`'d too. Services have no DB source, so
+ * they stay static.
+ */
+export const buildSearchCatalog = cache(async (): Promise<SearchDoc[]> => {
+  const [projects, games, resources, gallery, notes, media] = await Promise.all(
+    [
+      getProjectsSource(),
+      getGamesSource(),
+      getResourcesSource(),
+      getGallerySource(),
+      getNotesSource(),
+      getMediaSource(),
+    ],
+  );
   return assembleCatalog({
-    projects: allProjects,
+    projects,
     games,
     resources,
-    gallery: galleryItems,
+    gallery: gallery.items,
     notes,
-    media: mediaItems,
+    media,
     services,
   });
-}
+});

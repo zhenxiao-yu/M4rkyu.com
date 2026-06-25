@@ -7,7 +7,7 @@ import { CopyCitationButton } from "@/components/system/copy-citation-button";
 import { ShareActions } from "@/components/system/share-actions";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { Link } from "@/i18n/navigation";
-import { topicSlugForTag } from "@/lib/search/topics";
+import { getAllTopics, slugifyTag } from "@/lib/search/topics";
 import { cn, FOCUS_RING } from "@/lib/utils";
 
 interface PostHeaderProps {
@@ -39,6 +39,9 @@ export async function PostHeader({
 }: PostHeaderProps) {
   const t = await getTranslations("Blog");
   const citation = `${title} — M4rkyu.com. ${canonicalUrl}`;
+  // Pre-resolve the topic hubs once (server-side, cache()'d) so each tag chip
+  // below can be linkified with a synchronous Set lookup inside the map.
+  const topicSlugs = new Set((await getAllTopics()).map((topic) => topic.slug));
   return (
     <header className="border-b border-border/70 bg-background">
       <ReadingProgress />
@@ -123,7 +126,8 @@ export async function PostHeader({
               // Linkify only tags that have a cross-domain topic hub;
               // dev.to-only tags (no catalog overlap) stay plain so they
               // never link to a 404.
-              const topicSlug = topicSlugForTag(tag);
+              const slug = slugifyTag(tag);
+              const topicSlug = topicSlugs.has(slug) ? slug : null;
               return topicSlug ? (
                 <Link
                   key={tag}

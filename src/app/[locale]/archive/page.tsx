@@ -7,7 +7,7 @@ import { PageHero } from "@/components/layout/page-hero";
 import { PageSection } from "@/components/layout/page-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EmptyArchiveState } from "@/components/placeholders/empty-archive-state";
-import { CollectionFlowMenu } from "@/components/gallery/collection-flow-menu";
+import { CollectionsExplorer } from "@/components/gallery/collections-explorer";
 import {
   COLLECTION_PLACE_QUERIES,
   pinnedRank,
@@ -52,13 +52,14 @@ export default async function ArchivePage({
 
   const featuredFrames = items.filter((item) => item.featured).slice(0, 8);
 
-  // Pinned collections lead (Artworks first, curated in gallery-curation),
-  // then featured, then source order. Stable sort keeps source order within
-  // each tier, so the index stays predictable as more collections land.
+  // Featured sets lead the index (front-and-centre, the headline ask), then
+  // the curated pin order (Artworks) breaks ties inside each tier, then source
+  // order. Stable sort keeps source order within a tier, so the index stays
+  // predictable as more collections land.
   const orderedCollections = [...collections].sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
     const pinDelta = pinnedRank(a.slug) - pinnedRank(b.slug);
     if (pinDelta !== 0) return pinDelta;
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
     return 0;
   });
 
@@ -113,7 +114,7 @@ export default async function ArchivePage({
               description={t("collectionsDescription")}
             />
             <div className="mt-8">
-              <CollectionFlowMenu
+              <CollectionsExplorer
                 collections={orderedCollections}
                 counts={countByCollection}
                 placeQueries={COLLECTION_PLACE_QUERIES}

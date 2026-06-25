@@ -18,8 +18,8 @@ const limiter = createRateLimiter({ windowMs: 60_000, max: 12 });
 
 // Grounding: the model is told exactly what exists and the precise locale-less
 // href for each item, so every link it emits resolves to a real page.
-function buildSystemPrompt(): string {
-  const catalog = buildSearchCatalog()
+async function buildSystemPrompt(): Promise<string> {
+  const catalog = (await buildSearchCatalog())
     .map(
       (d) =>
         `- [${d.type}] "${d.title}" → ${d.href}${d.external ? " (external)" : ""} :: ${d.description}`,
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: MODEL,
-    system: buildSystemPrompt(),
+    system: await buildSystemPrompt(),
     messages: await convertToModelMessages(recent),
     temperature: 0.4,
     maxOutputTokens: 700,

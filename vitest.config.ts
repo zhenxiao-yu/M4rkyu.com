@@ -11,6 +11,16 @@ export default defineConfig({
       // Mirror the tsconfig `@/*` -> `src/*` path so tests import the
       // same way app code does.
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // The `server-only` / `client-only` marker packages have no meaning under
+      // unit tests (no bundle boundary). Stub them to a no-op so pure functions
+      // in modules that transitively import server-only source readers stay
+      // testable (e.g. assembleCatalog / buildTopicIndex in src/lib/search).
+      "server-only": fileURLToPath(
+        new URL("./tests/stubs/server-only.ts", import.meta.url),
+      ),
+      "client-only": fileURLToPath(
+        new URL("./tests/stubs/server-only.ts", import.meta.url),
+      ),
     },
   },
   test: {

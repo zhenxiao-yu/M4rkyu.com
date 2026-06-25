@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { usePathname, Link } from "@/i18n/navigation";
@@ -16,7 +17,7 @@ interface DesktopNavProps {
 }
 
 const PILL_BASE = cn(
-  "relative inline-flex h-9 items-center rounded-full px-3 font-mono text-[0.68rem] uppercase tracking-[0.18em] transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
+  "group/pill relative inline-flex h-9 items-center rounded-full px-3 font-mono text-[0.68rem] uppercase tracking-[0.18em] transition-colors duration-(--motion-fast) ease-(--ease-premium) hover:text-foreground",
   FOCUS_RING,
 );
 // The raised background now lives in <ActivePill> (a shared-layout element)
@@ -43,6 +44,41 @@ function ActivePill({ animate }: { animate: boolean }) {
   );
 }
 
+// Hover highlight — a soft accent capsule that glides under the cursor as it
+// travels across nav items (one shared `layoutId`, so Motion slides a single
+// element from item to item). Suppressed on the active item, where ActivePill
+// already marks position, and skipped entirely for reduced-motion users.
+function HoverGlide() {
+  return (
+    <motion.span
+      aria-hidden="true"
+      layoutId="nav-hover-pill"
+      className="pointer-events-none absolute inset-0 rounded-full bg-ring/10"
+      transition={{ type: "spring", stiffness: 520, damping: 42, mass: 0.7 }}
+    />
+  );
+}
+
+// Nav label with a vertical roll on hover: the resting copy lifts out the top
+// as an identical copy rolls up from below — a tactile, characterful swap.
+// Falls back to plain static text when motion is reduced.
+function NavLabel({ children, roll }: { children: string; roll: boolean }) {
+  if (!roll) return <span className="relative z-10">{children}</span>;
+  return (
+    <span className="relative z-10 block overflow-hidden">
+      <span className="block transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover/pill:-translate-y-full group-focus-within/pill:-translate-y-full">
+        {children}
+      </span>
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 block translate-y-full transition-transform duration-(--motion-base) ease-(--ease-premium) group-hover/pill:translate-y-0 group-focus-within/pill:translate-y-0"
+      >
+        {children}
+      </span>
+    </span>
+  );
+}
+
 export function DesktopNav({
   locale,
   groups,
@@ -51,6 +87,7 @@ export function DesktopNav({
 }: DesktopNavProps) {
   const pathname = usePathname();
   const animatePill = !useReducedMotion();
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
@@ -65,13 +102,20 @@ export function DesktopNav({
       aria-label={ariaLabel}
       className="hidden min-w-0 justify-center px-4 lg:flex lg:justify-self-center"
     >
-      <ul className="flex items-center gap-0.5 rounded-full border border-border/55 bg-muted/25 p-1 shadow-inner shadow-black/5 dark:shadow-black/20">
+      <ul
+        onMouseLeave={() => setHoveredId(null)}
+        className="flex items-center gap-0.5 rounded-full border border-border/55 bg-muted/25 p-1 shadow-inner shadow-black/5 dark:shadow-black/20"
+      >
         {groups.map((group) => {
           const parentActive =
             isActive(group.href) ||
             group.items.some((item) => isActive(item.href));
           return (
-            <li key={group.id} className="nav-group group/menu relative">
+            <li
+              key={group.id}
+              onMouseEnter={() => setHoveredId(group.id)}
+              className="nav-group group/menu relative"
+            >
               <Link
                 href={group.href}
                 locale={locale}
@@ -83,7 +127,10 @@ export function DesktopNav({
                 )}
               >
                 {parentActive ? <ActivePill animate={animatePill} /> : null}
-                <span className="relative z-10">{group.label}</span>
+                {animatePill && hoveredId === group.id && !parentActive ? (
+                  <HoverGlide />
+                ) : null}
+                <NavLabel roll={animatePill}>{group.label}</NavLabel>
                 <ChevronDown
                   aria-hidden="true"
                   className="relative z-10 size-3 opacity-70 transition-transform duration-(--motion-fast) ease-(--ease-premium) group-hover/menu:rotate-180 group-focus-within/menu:rotate-180"
@@ -177,7 +224,7 @@ export function DesktopNav({
         {flatLinks.map((link) => {
           const active = isActive(link.href);
           return (
-            <li key={link.id}>
+            <li key={link.id} onMouseEnter={() => setHoveredId(link.id)}>
               <Link
                 href={link.href}
                 locale={locale}
@@ -187,7 +234,10 @@ export function DesktopNav({
                 )}
               >
                 {active ? <ActivePill animate={animatePill} /> : null}
-                <span className="relative z-10">{link.label}</span>
+                {animatePill && hoveredId === link.id && !active ? (
+                  <HoverGlide />
+                ) : null}
+                <NavLabel roll={animatePill}>{link.label}</NavLabel>
               </Link>
             </li>
           );

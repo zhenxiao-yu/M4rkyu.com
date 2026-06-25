@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Check,
+  Crop,
   FolderUp,
   ImageUp,
   Loader2,
@@ -16,9 +17,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { optimizeImageFile, readCapturedAt } from "@/lib/gallery/client-image";
+import { ImageCropper } from "@/components/admin/image-cropper";
 import { slugify } from "@/components/admin/slug-field";
 import { createGalleryItemsBatchAction } from "@/lib/gallery/admin";
 import { ADMIN_ACTION_IDLE } from "@/lib/admin/action-state";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 interface Staged {
@@ -35,7 +38,13 @@ interface Staged {
   height?: number;
   blurDataUrl?: string;
   capturedAt?: string;
+  /** Why a failed tile failed — drives a legible cause instead of "Failed". */
+  error?: "decode" | "tooLarge" | "upload";
 }
+
+// Skip the canvas decode for absurdly large originals (they'd jank the tab and
+// blow past the storage limit anyway); surfaced as a "too large" tile reason.
+const OPTIMIZE_MAX_INPUT_BYTES = 40 * 1024 * 1024;
 
 interface BatchPayloadItem {
   path: string;
@@ -166,6 +175,22 @@ export function BatchUploadDropzone({
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(
     null,
   );
+  const coarse = useMediaQuery("(pointer: coarse)");
+  // The staged tile currently open in the cropper (null = closed).
+  const [cropId, setCropId] = useState<string | null>(null);
+
+  // Warn before an accidental tab-close / back-swipe drops an in-flight upload.
+  // Gated strictly on `busy` (optimize-in-flight is cheap + re-runnable, so it
+  // doesn't arm the native prompt).
+  useEffect(() => {
+    if (!busy) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [busy]);
 
   // Mirror staged into a ref so slug de-duplication + retry read the latest set
   // without putting side effects (createObjectURL, optimize) inside a state
@@ -200,6 +225,16 @@ export function BatchUploadDropzone({
 
   // Optimize + read EXIF for one staged entry, patching it to ready/error.
   const prepare = useCallback((entry: Staged) => {
+    if (entry.sourceFile.size > OPTIMIZE_MAX_INPUT_BYTES) {
+      setStaged((cur) =>
+        cur.map((s) =>
+          s.id === entry.id
+            ? { ...s, status: "error", file: null, error: "tooLarge" }
+            : s,
+        ),
+      );
+      return;
+    }
     void Promise.all([
       optimizeImageFile(entry.sourceFile),
       readCapturedAt(entry.sourceFile),
@@ -216,13 +251,38 @@ export function BatchUploadDropzone({
                   height: opt.height,
                   blurDataUrl: opt.blurDataUrl,
                   capturedAt: capturedAt ?? undefined,
+                  error: undefined,
                 }
-              : { ...s, status: "error", file: null }
+              : { ...s, status: "error", file: null, error: "decode" }
             : s,
         ),
       );
     });
   }, []);
+
+  // Replace a tile's source with its cropped version + re-run the optimize pass.
+  const applyCrop = useCallback(
+    (id: string, cropped: File) => {
+      setCropId(null);
+      let target: Staged | null = null;
+      setStaged((cur) =>
+        cur.map((s) => {
+          if (s.id !== id) return s;
+          const next: Staged = {
+            ...s,
+            sourceFile: cropped,
+            status: "preparing",
+            file: null,
+            error: undefined,
+          };
+          target = next;
+          return next;
+        }),
+      );
+      if (target) prepare(target);
+    },
+    [prepare],
+  );
 
   const addFiles = useCallback(
     (files: File[]) => {
@@ -323,16 +383,29 @@ export function BatchUploadDropzone({
           ),
         );
         const path = `${collectionSlug}/${item.slug}-${rid()}.webp`;
-        const { error } = await supabase.storage
-          .from("gallery-images")
-          .upload(path, item.file, { contentType: "image/webp", upsert: false });
+        let uploadFailed = false;
+        try {
+          const { error } = await supabase.storage
+            .from("gallery-images")
+            .upload(path, item.file, {
+              contentType: "image/webp",
+              upsert: false,
+            });
+          uploadFailed = Boolean(error);
+        } catch {
+          uploadFailed = true;
+        }
         setStaged((cur) =>
           cur.map((s) =>
-            s.id === item.id ? { ...s, status: error ? "error" : "done" } : s,
+            s.id === item.id
+              ? uploadFailed
+                ? { ...s, status: "error", error: "upload" }
+                : { ...s, status: "done", error: undefined }
+              : s,
           ),
         );
         setProgress((p) => (p ? { ...p, done: p.done + 1 } : p));
-        if (!error) {
+        if (!uploadFailed) {
           ok.push({
             path,
             slug: item.slug,
@@ -391,47 +464,77 @@ export function BatchUploadDropzone({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "grid place-items-center gap-3 rounded-lg border border-dashed bg-background/60 px-6 py-8 text-center transition-colors",
-          dragging ? "border-ring bg-ring/5" : "border-border",
+          "grid place-items-center gap-3 text-center",
+          // Touch: phones can't drag files into a div, so drop the dashed
+          // framing and lead with one full-width "Add photos" button.
+          coarse
+            ? "px-1 py-1"
+            : cn(
+                "rounded-lg border border-dashed bg-background/60 px-6 py-8 transition-colors",
+                dragging ? "border-ring bg-ring/5" : "border-border",
+              ),
         )}
       >
-        <ImageUp
-          aria-hidden="true"
-          className={cn(
-            "size-7 transition-colors",
-            dragging ? "text-ring" : "text-muted-foreground/70",
+        {!coarse ? (
+          <>
+            <ImageUp
+              aria-hidden="true"
+              className={cn(
+                "size-7 transition-colors",
+                dragging ? "text-ring" : "text-muted-foreground/70",
+              )}
+            />
+            <div className="grid gap-1">
+              <span className="text-sm font-medium text-foreground">
+                {t("batch.prompt")}
+              </span>
+              <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground/70">
+                {t("batch.hint")}
+              </span>
+            </div>
+          </>
+        ) : null}
+        <div className={cn("flex flex-wrap items-center justify-center gap-2", coarse && "w-full")}>
+          {coarse ? (
+            <Button
+              type="button"
+              disabled={busy}
+              onClick={() => filesInputRef.current?.click()}
+              className="min-h-11 w-full"
+            >
+              <ImageUp className="size-4" aria-hidden="true" />
+              {t("batch.addPhotos")}
+            </Button>
+          ) : (
+            <>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={busy}
+                onClick={() => filesInputRef.current?.click()}
+              >
+                <ImageUp className="size-3.5" aria-hidden="true" />
+                {t("batch.browse")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={busy}
+                onClick={() => folderInputRef.current?.click()}
+              >
+                <FolderUp className="size-3.5" aria-hidden="true" />
+                {t("batch.browseFolder")}
+              </Button>
+            </>
           )}
-        />
-        <div className="grid gap-1">
-          <span className="text-sm font-medium text-foreground">
-            {t("batch.prompt")}
-          </span>
+        </div>
+        {coarse ? (
           <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted-foreground/70">
-            {t("batch.hint")}
+            {t("batch.promptMobile")}
           </span>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={busy}
-            onClick={() => filesInputRef.current?.click()}
-          >
-            <ImageUp className="size-3.5" aria-hidden="true" />
-            {t("batch.browse")}
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={busy}
-            onClick={() => folderInputRef.current?.click()}
-          >
-            <FolderUp className="size-3.5" aria-hidden="true" />
-            {t("batch.browseFolder")}
-          </Button>
-        </div>
+        ) : null}
         <input
           ref={filesInputRef}
           type="file"
@@ -529,7 +632,13 @@ export function BatchUploadDropzone({
                   )}
                   {s.status === "error" && (
                     <div className="absolute inset-x-0 bottom-0 bg-destructive/90 py-0.5 text-center font-mono text-[0.5rem] uppercase tracking-[0.14em] text-destructive-foreground">
-                      {t("batch.failedBadge")}
+                      {t(
+                        s.error === "decode"
+                          ? "batch.error.decode"
+                          : s.error === "tooLarge"
+                            ? "batch.error.tooLarge"
+                            : "batch.error.upload",
+                      )}
                     </div>
                   )}
                   {!busy ? (
@@ -537,9 +646,25 @@ export function BatchUploadDropzone({
                       type="button"
                       onClick={() => removeStaged(s.id)}
                       aria-label={t("batch.remove")}
-                      className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-background/80 text-foreground shadow-sm backdrop-blur hover:bg-background"
+                      className={cn(
+                        "absolute right-1 top-1 grid place-items-center rounded-full bg-background/80 text-foreground shadow-sm backdrop-blur hover:bg-background",
+                        coarse ? "size-9" : "size-5",
+                      )}
                     >
-                      <X aria-hidden="true" className="size-3" />
+                      <X aria-hidden="true" className={coarse ? "size-4" : "size-3"} />
+                    </button>
+                  ) : null}
+                  {!busy && s.status !== "done" && s.status !== "error" ? (
+                    <button
+                      type="button"
+                      onClick={() => setCropId(s.id)}
+                      aria-label={t("batch.cropOne")}
+                      className={cn(
+                        "absolute bottom-1 left-1 grid place-items-center rounded-full bg-background/80 text-foreground shadow-sm backdrop-blur hover:bg-background",
+                        coarse ? "size-9" : "size-6",
+                      )}
+                    >
+                      <Crop aria-hidden="true" className={coarse ? "size-4" : "size-3"} />
                     </button>
                   ) : null}
                 </div>
@@ -593,6 +718,22 @@ export function BatchUploadDropzone({
           </div>
         </>
       ) : null}
+
+      {cropId
+        ? (() => {
+            const target = staged.find((s) => s.id === cropId);
+            if (!target) return null;
+            return (
+              <ImageCropper
+                file={target.sourceFile}
+                aspect={nearestAspect(target.width, target.height)}
+                open
+                onConfirm={(cropped) => applyCrop(cropId, cropped)}
+                onCancel={() => setCropId(null)}
+              />
+            );
+          })()
+        : null}
     </div>
   );
 }
