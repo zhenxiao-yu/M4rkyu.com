@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { createSupabaseReadClient } from "@/lib/supabase/read";
+import { contentImageUrlFor } from "@/lib/content-images/storage";
 import type { Game } from "@/content/schemas";
 
 // DB-backed games reads. Wrapped in React cache() so multiple
@@ -32,6 +33,21 @@ export interface DbGameRow {
 
 const SELECT_COLUMNS =
   "id, slug, title, engine, year, status, pitch, role, notes, cover_src, cover_alt, trailer_url, platforms, pillars, postmortem, outcome, build_links, sort_order";
+
+export interface DbGameScreenshotRow {
+  id: string;
+  game_id: string;
+  path: string;
+  alt: string;
+  label: string;
+  caption: string;
+  width: number | null;
+  height: number | null;
+  sort_order: number;
+}
+
+const SCREENSHOT_COLUMNS =
+  "id, game_id, path, alt, label, caption, width, height, sort_order";
 
 // `createSupabaseServerClient` reads request cookies, which throws
 // when Next is enumerating `generateStaticParams` /
@@ -75,10 +91,56 @@ export const getDbGameBySlug = cache(
   },
 );
 
+// Batched read of every game's screenshots, grouped by game id, so the
+// detail page renders uploaded shots without an N+1 (mirrors
+// getPublicScreenshotsByProject). Returns an empty map on any error so
+// callers degrade to a cover-only game.
+export const getPublicScreenshotsByGame = cache(
+  async (gameIds: string[]): Promise<Map<string, DbGameScreenshotRow[]>> => {
+    const grouped = new Map<string, DbGameScreenshotRow[]>();
+    if (gameIds.length === 0) return grouped;
+    const supabase = createSupabaseReadClient();
+    if (!supabase) return grouped;
+    try {
+      const { data, error } = await supabase
+        .from("game_screenshots")
+        .select(SCREENSHOT_COLUMNS)
+        .in("game_id", gameIds)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true });
+      if (error || !data) return grouped;
+      for (const row of data as DbGameScreenshotRow[]) {
+        const list = grouped.get(row.game_id) ?? [];
+        list.push(row);
+        grouped.set(row.game_id, list);
+      }
+      return grouped;
+    } catch {
+      return grouped;
+    }
+  },
+);
+
+// Map a screenshot row to the schema's image shape (resolves the
+// content-images public URL, or passes through a /public path).
+export function dbGameScreenshotRowToImage(row: DbGameScreenshotRow) {
+  return {
+    src: contentImageUrlFor(row.path) ?? "",
+    alt: row.alt || row.label || "",
+    label: row.label || undefined,
+    caption: row.caption || undefined,
+    width: row.width ?? undefined,
+    height: row.height ?? undefined,
+  };
+}
+
 // Map a DB row to the Game shape consumed by /games and /games/[slug].
 // `translations` lives only in static content for now, so we leave it
 // undefined — the existing components fall back to the base fields.
-export function dbGameRowToGame(row: DbGameRow): Game {
+export function dbGameRowToGame(
+  row: DbGameRow,
+  screenshots: DbGameScreenshotRow[] = [],
+): Game {
   return {
     title: row.title,
     slug: row.slug,
@@ -91,7 +153,7 @@ export function dbGameRowToGame(row: DbGameRow): Game {
     cover: row.cover_src
       ? { src: row.cover_src, alt: row.cover_alt || row.title }
       : undefined,
-    screenshots: [],
+    screenshots: screenshots.map(dbGameScreenshotRowToImage),
     decisions: [],
     trailerUrl: row.trailer_url ?? undefined,
     platforms: row.platforms ?? [],
