@@ -6,6 +6,14 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { AdminPageHeader } from "./_components/admin-page-header";
+import { allProjects } from "@/content/projects";
+import { games } from "@/content/games";
+import { mediaItems } from "@/content/media";
+import { resources } from "@/content/resources";
+import { notes } from "@/content/notes";
+import { products } from "@/content/shop";
+import { galleryItems } from "@/content/gallery";
+import { countNotImported } from "@/lib/admin/import/not-imported";
 
 // Content types an admin creates + manages. `newHref` is omitted for the
 // singleton profile editor. `table` is the Supabase table queried for the
@@ -110,6 +118,50 @@ export default async function AdminOverviewPage({
   const hasAttention =
     pendingCount > 0 || draftItems.length > 0 || altGap > 0 || posterGap > 0;
 
+  // Sync status — per section, how much built-in content still needs
+  // importing into the DB (the single source of truth). A separate batched
+  // read keeps the existing `results` offsets untouched.
+  const slugResults = await Promise.all(
+    MANAGE_SECTIONS.map((s) =>
+      s.table
+        ? supabase.from(s.table).select("slug")
+        : Promise.resolve({ data: null as { slug: string }[] | null }),
+    ),
+  );
+  const STATIC_BY_SECTION: Record<string, { slug: string }[]> = {
+    projects: allProjects,
+    games,
+    media: mediaItems,
+    gallery: galleryItems,
+    resources,
+    notes,
+    shop: products,
+  };
+  const PUBLIC_ROUTE: Record<string, string> = {
+    projects: "/work",
+    games: "/games",
+    media: "/media",
+    gallery: "/archive",
+    resources: "/resources",
+    notes: "/notes",
+    shop: "/shop",
+    profile: "/about",
+  };
+  const truthRows = MANAGE_SECTIONS.map((section, index) => {
+    const staticItems = STATIC_BY_SECTION[section.key] ?? [];
+    const dbSlugs = ((slugResults[index]?.data ?? []) as { slug: string }[]).map(
+      (r) => r.slug,
+    );
+    return {
+      key: section.key,
+      total: sectionCounts[index]?.count ?? 0,
+      drafts: draftCounts[index]?.count ?? 0,
+      notImported: countNotImported(staticItems.map((i) => i.slug), dbSlugs),
+      publicRoute: PUBLIC_ROUTE[section.key] ?? "/",
+    };
+  });
+  const totalNotImported = truthRows.reduce((n, r) => n + r.notImported, 0);
+
   return (
     <>
       <AdminPageHeader
@@ -151,6 +203,56 @@ export default async function AdminOverviewPage({
             </div>
           ))}
         </div>
+
+        {/* Sync status — does admin mirror the live site? Per section: total +
+         * drafts, plus how many built-in items still need importing. */}
+        <section className="mt-10 grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+              {t("truthHeading")}
+            </h2>
+            {totalNotImported > 0 ? (
+              <Link
+                href="/admin/import"
+                locale={locale}
+                className="inline-flex items-center gap-1 rounded-full border border-ring/40 px-2.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-ring"
+              >
+                {t("truthNotImported", { count: totalNotImported })}
+                <ArrowUpRight aria-hidden="true" className="size-3" />
+              </Link>
+            ) : null}
+          </div>
+          <ul className="grid list-none grid-cols-1 gap-1.5 p-0 sm:grid-cols-2">
+            {truthRows.map((row) => (
+              <li
+                key={row.key}
+                className="glass-surface flex items-center justify-between gap-3 rounded-lg px-3 py-2"
+              >
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-medium text-foreground">
+                    {t(row.key)}
+                  </span>
+                  <span className="block font-mono text-[0.65rem] text-muted-foreground">
+                    {t("truthTotal", { count: row.total })} ·{" "}
+                    {t("truthDrafts", { count: row.drafts })}
+                    {row.notImported > 0
+                      ? ` · ${t("truthNotImported", { count: row.notImported })}`
+                      : ""}
+                  </span>
+                </span>
+                <a
+                  href={`/${locale}${row.publicRoute}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex shrink-0 items-center gap-1 text-[0.65rem] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {t("truthViewOnSite")}
+                  <ArrowUpRight aria-hidden="true" className="size-3" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* Needs attention — actionable queue. Hidden entirely when the
          * desk is clear; otherwise each row links to the exact filtered
