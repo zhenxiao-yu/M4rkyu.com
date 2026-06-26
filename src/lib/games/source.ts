@@ -15,7 +15,7 @@ import type { Game } from "@/content/schemas";
 
 export const getGamesSource = cache(async (): Promise<Game[]> => {
   const rows = await getDbGames();
-  const dbGames = rows.map(dbGameRowToGame);
+  const dbGames = rows.map((row) => dbGameRowToGame(row));
   const publishedDbSlugs = new Set(
     dbGames.filter((game) => game.status === "ready").map((game) => game.slug),
   );
