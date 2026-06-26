@@ -1803,6 +1803,11 @@
     "attentionDrafts": "{section} —— {count} 篇草稿",
     "attentionAlt": "{count} 张照片缺少替代文本",
     "attentionPoster": "{count} 个媒体项缺少海报",
+    "truthHeading": "同步状态",
+    "truthTotal": "共 {count}",
+    "truthDrafts": "草稿 {count}",
+    "truthNotImported": "未导入 {count}",
+    "truthViewOnSite": "查看线上页面",
     "assist": {
       "generate": "AI 起草",
       "success": "已生成草稿——保存前请核对。",
@@ -1811,6 +1816,7 @@
       "rateLimited": "操作过于频繁，请稍候再试。"
     },
     "overview": "概览",
+    "importNav": "导入",
     "gallery": "影像",
     "projects": "项目",
     "games": "游戏",
@@ -1991,6 +1997,14 @@
       "placeholder": "占位",
       "comingSoon": "即将推出"
     }
+  },
+  "AdminImport": {
+    "title": "导入既有内容",
+    "description": "把内置内容文件中的全部条目导入数据库，让它们在这里显示并可编辑。导入的条目会以草稿形式出现——请逐个栏目检查后再发布。",
+    "dryRunLabel": "预览（试运行——不会写入任何数据）",
+    "runLabel": "全部导入",
+    "back": "返回控制台",
+    "note": "可反复运行：数据库中已存在的条目会被跳过，绝不覆盖。商品图集与项目案例文字需在导入后自行补充。"
   },
   "AdminGallery": {
     "title": "影像管理",

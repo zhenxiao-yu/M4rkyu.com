@@ -12,6 +12,7 @@ import {
   StickyNote,
   ShoppingBag,
   UserCog,
+  DatabaseZap,
   MessageSquare,
   Users,
   Search,
@@ -42,6 +43,7 @@ const NAV: NavItem[] = [
   { href: "/admin/notes", key: "notes", icon: StickyNote },
   { href: "/admin/shop", key: "shop", icon: ShoppingBag },
   { href: "/admin/profile", key: "profile", icon: UserCog },
+  { href: "/admin/import", key: "importNav", icon: DatabaseZap },
   { href: "/admin/comments", key: "comments", icon: MessageSquare, groupStart: true },
   { href: "/admin/users", key: "users", icon: Users },
 ];

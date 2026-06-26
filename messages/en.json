@@ -1809,6 +1809,11 @@
     "attentionDrafts": "{section} — {count, plural, one {# draft} other {# drafts}}",
     "attentionAlt": "{count, plural, one {# photo needs alt text} other {# photos need alt text}}",
     "attentionPoster": "{count, plural, one {# media item needs a poster} other {# media items need a poster}}",
+    "truthHeading": "Sync status",
+    "truthTotal": "{count} total",
+    "truthDrafts": "{count} draft",
+    "truthNotImported": "{count} not imported",
+    "truthViewOnSite": "View on site",
     "assist": {
       "generate": "Draft with AI",
       "success": "Drafted — review before saving.",
@@ -1817,6 +1822,7 @@
       "rateLimited": "Slow down a moment, then try again."
     },
     "overview": "Overview",
+    "importNav": "Import",
     "gallery": "Gallery",
     "projects": "Projects",
     "games": "Games",
@@ -1997,6 +2003,14 @@
       "placeholder": "Placeholder",
       "comingSoon": "Coming soon"
     }
+  },
+  "AdminImport": {
+    "title": "Import legacy content",
+    "description": "Pull everything from the built-in content files into the database so it shows up here and becomes editable. Imported items land as drafts — review and publish them per section.",
+    "dryRunLabel": "Preview (dry run — nothing is written)",
+    "runLabel": "Import everything",
+    "back": "Back to dashboard",
+    "note": "Safe to run repeatedly: items already in the database are skipped, never overwritten. Product gallery images and case-study prose stay yours to add after import."
   },
   "AdminGallery": {
     "title": "Gallery",
