@@ -52,6 +52,8 @@ export interface DbItem {
 // signed URL is needed; `next/image` consumes this directly.
 export function storageUrlFor(path: string | null): string | null {
   if (!path) return null;
+  // Imported static frames keep their /public asset path; serve it as-is.
+  if (path.startsWith("/")) return path;
   const base = env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base) return null;
   return `${base}/storage/v1/object/public/gallery-images/${path}`;
