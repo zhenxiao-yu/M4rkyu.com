@@ -36,10 +36,16 @@ const EQ_BARS = [
   [0.4, 1, 0.55, 0.8, 0.45],
 ] as const;
 
+type NowItem = { kind: string; label: string; detail?: string; url?: string };
+
 interface NowConsoleProps {
   className?: string;
-  /** Override the data source (handy for Storybook). */
-  items?: typeof profile.currently;
+  /**
+   * Status feed. Defaults to the static `profile.currently`; the About
+   * page passes the live, admin-editable source through instead, so the
+   * console always reflects the same data as the rest of the page.
+   */
+  items?: readonly NowItem[];
 }
 
 /**
@@ -58,7 +64,7 @@ export function NowConsole({ className, items = profile.currently }: NowConsoleP
 
   // Only render channels we actually have, in a stable canonical order.
   const channels = React.useMemo(
-    () => ORDER.map((k) => items.find((i) => i.kind === k)).filter(Boolean) as typeof items,
+    () => ORDER.map((k) => items.find((i) => i.kind === k)).filter(Boolean) as NowItem[],
     [items],
   );
 
@@ -128,7 +134,7 @@ export function NowConsole({ className, items = profile.currently }: NowConsoleP
 
   return (
     <section
-      className={cn("glass-surface group/console rounded-2xl p-5", className)}
+      className={cn("glass-surface group/console flex flex-col rounded-2xl p-5", className)}
       aria-label={tNow("ariaLabel")}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -142,7 +148,7 @@ export function NowConsole({ className, items = profile.currently }: NowConsoleP
         role="tabpanel"
         id={`now-panel-${active}`}
         aria-live="polite"
-        className="relative mt-4 overflow-hidden rounded-xl border border-border/70 bg-background/40 p-4"
+        className="relative mt-4 flex flex-1 flex-col overflow-hidden rounded-xl border border-border/70 bg-background/40 p-4"
       >
         {/* Scanline texture: purely decorative, theme-tinted, cheap. */}
         <div
@@ -175,7 +181,7 @@ export function NowConsole({ className, items = profile.currently }: NowConsoleP
               {isListening ? <OnAir label={tNow("onAir")} reduce={!!reduceMotion} /> : null}
             </div>
 
-            <p className="mt-2 min-h-[2.5rem] text-balance text-lg font-semibold leading-snug text-foreground">
+            <p className="mt-2 min-h-10 text-balance text-lg font-semibold leading-snug text-foreground">
               {current.label}
             </p>
 
@@ -204,7 +210,7 @@ export function NowConsole({ className, items = profile.currently }: NowConsoleP
         </AnimatePresence>
 
         {/* Signal baseline. The scrubber rides above it for `listening`. */}
-        <div className="relative z-10 mt-4 flex items-end justify-between gap-3">
+        <div className="relative z-10 mt-auto flex items-end justify-between gap-3 pt-4">
           <Equalizer barClass={meta.bar} reduce={!!reduceMotion} energetic={isListening} />
           {isListening ? <Scrubber reduce={!!reduceMotion} /> : null}
         </div>
@@ -314,14 +320,14 @@ function Equalizer({
   // Fewer, calmer bars when the channel isn't `listening`.
   const bars = energetic ? EQ_BARS : EQ_BARS.slice(0, 5);
   return (
-    <div aria-hidden="true" className="flex h-6 items-end gap-[3px]">
+    <div aria-hidden="true" className="flex h-6 items-end gap-0.75">
       {bars.map((frames, i) => {
         const peak = frames[2];
         if (reduce) {
           return (
             <span
               key={i}
-              className={cn("w-[3px] rounded-full opacity-70", barClass)}
+              className={cn("w-0.75 rounded-full opacity-70", barClass)}
               style={{ height: `${Math.round(peak * 100)}%` }}
             />
           );
@@ -329,7 +335,7 @@ function Equalizer({
         return (
           <motion.span
             key={i}
-            className={cn("w-[3px] origin-bottom rounded-full opacity-80", barClass)}
+            className={cn("w-0.75 origin-bottom rounded-full opacity-80", barClass)}
             style={{ height: "100%" }}
             initial={{ scaleY: frames[0] }}
             animate={{ scaleY: [...frames] }}
@@ -349,7 +355,7 @@ function Equalizer({
 
 function Scrubber({ reduce }: { reduce: boolean }) {
   return (
-    <div className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-border">
+    <div className="relative h-0.75 flex-1 overflow-hidden rounded-full bg-border">
       {reduce ? (
         <span className="absolute inset-y-0 left-0 w-[42%] rounded-full bg-ring" />
       ) : (

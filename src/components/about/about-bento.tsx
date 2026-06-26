@@ -1,10 +1,10 @@
 "use client";
 
-import type { ComponentType, ReactNode } from "react";
-import { BookOpen, Hammer, Headphones, MonitorPlay } from "lucide-react";
+import type { ReactNode } from "react";
 import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { AboutSignalsCard } from "@/components/about/about-signals-card";
+import { NowConsole } from "@/components/about/now-console";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { BentoTilt } from "@/components/ui/magic/bento-tilt";
 import { DotGrid } from "@/components/ui/magic/dot-grid";
@@ -19,6 +19,8 @@ type ToolGroup = [group: string, items: Skill[]];
 interface CurrentlyItem {
   kind: string;
   label: string;
+  detail?: string;
+  url?: string;
 }
 
 interface AboutBentoProps {
@@ -27,13 +29,6 @@ interface AboutBentoProps {
   /** The small "currently" status feed from the content layer. */
   currently: CurrentlyItem[];
 }
-
-const KIND_ICON: Record<string, ComponentType<{ className?: string }>> = {
-  building: Hammer,
-  reading: BookOpen,
-  listening: Headphones,
-  watching: MonitorPlay,
-};
 
 const GROUP_KEY: Record<string, string> = {
   Code: "code",
@@ -82,35 +77,10 @@ export function AboutBento({ toolGroups, currently }: AboutBentoProps) {
         <AboutSignalsCard bare />
       </Tile>
 
-      {/* ── Currently — human texture ────────────────────────────────────── */}
-      <Tile
-        ariaLabel={t("bento.currentlyLabel")}
-        label={t("bento.currentlyLabel")}
-        className="sm:col-span-2 lg:col-span-5"
-        bodyClassName="flex flex-col"
-      >
-        <ul className="flex flex-1 flex-col justify-between gap-2.5">
-          {currently.map((item) => {
-            const Icon = KIND_ICON[item.kind] ?? Hammer;
-            return (
-              <li key={item.label} className="flex items-start gap-2.5">
-                <Icon
-                  className="mt-px size-3.5 shrink-0 text-ring"
-                  aria-hidden="true"
-                />
-                <span className="grid min-w-0 gap-0.5">
-                  <span className="font-mono text-[0.5rem] uppercase tracking-[0.2em] text-hud-muted">
-                    {t(`bento.kind.${item.kind}`)}
-                  </span>
-                  <span className="text-xs leading-snug text-foreground/85">
-                    {item.label}
-                  </span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </Tile>
+      {/* ── Now — the interactive tuner console (replaces the static feed) ── */}
+      <StaggerItem className="min-w-0 sm:col-span-2 lg:col-span-5">
+        <NowConsole items={currently} className="h-full" />
+      </StaggerItem>
 
       {/* ── Loadout — the heavy rotating rack (stack by domain) ──────────── */}
       <StaggerItem className="min-w-0 sm:col-span-2 lg:col-span-12">
