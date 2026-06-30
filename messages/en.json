@@ -1821,6 +1821,11 @@
       "empty": "Add a title or some content first.",
       "rateLimited": "Slow down a moment, then try again."
     },
+    "autosave": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "retry": "Retry"
+    },
     "overview": "Overview",
     "importNav": "Import",
     "gallery": "Gallery",
