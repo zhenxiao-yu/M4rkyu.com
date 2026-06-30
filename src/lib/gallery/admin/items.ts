@@ -22,6 +22,7 @@ import {
   pickField,
   revalidateGallery,
 } from "./shared";
+import { buildGalleryItemPatch } from "./field-patch";
 
 // Item server actions for the gallery CMS. Items are bespoke because they
 // carry an image upload. requireAdmin gates every entry point; RLS on the
@@ -401,4 +402,34 @@ export async function moveItemsAction(ids: string[], targetCollectionId: string)
     .update({ collection_id: targetCollectionId })
     .in("id", ids);
   revalidateGallery();
+}
+
+// Inline autosave: apply a validated partial patch to one item. Called
+// imperatively from the edit panel (not via a form), so it returns a small
+// result object instead of an AdminActionState.
+export async function setItemFieldsAction(
+  id: string,
+  patch: Record<string, unknown>,
+): Promise<{ ok: boolean; error?: string }> {
+  await requireAdmin();
+  if (!z.string().uuid().safeParse(id).success) {
+    return { ok: false, error: "Invalid id." };
+  }
+  let dbPatch: Record<string, unknown>;
+  try {
+    dbPatch = buildGalleryItemPatch(patch);
+  } catch {
+    return { ok: false, error: "Invalid value." };
+  }
+  if (Object.keys(dbPatch).length === 0) return { ok: true };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("gallery_items")
+    .update(dbPatch)
+    .eq("id", id);
+  if (error) return { ok: false, error: dbErrorToMessage(error.message) };
+
+  revalidateGallery();
+  return { ok: true };
 }

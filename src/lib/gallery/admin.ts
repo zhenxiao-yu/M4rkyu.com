@@ -27,4 +27,5 @@ export {
   bulkDeleteItemsAction,
   createGalleryItemsBatchAction,
   moveItemsAction,
+  setItemFieldsAction,
 } from "./admin/items";
