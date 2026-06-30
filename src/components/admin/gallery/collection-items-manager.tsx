@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -22,7 +22,6 @@ import {
   Type,
   X,
 } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { adminInputClass } from "../form-kit";
@@ -31,6 +30,8 @@ import {
   useCollectionItemsManager,
   type GalleryManagerItem,
 } from "./use-collection-items-manager";
+import { GalleryItemEditPanel } from "./item-edit-panel";
+import type { AutosaveResult } from "../autosave/use-autosave-field";
 
 export type { GalleryManagerItem };
 
@@ -57,6 +58,10 @@ interface Props {
   bulkStatusAction: (ids: string[], status: string) => Promise<void>;
   bulkDeleteAction: (ids: string[]) => Promise<void>;
   moveAction: (ids: string[], targetCollectionId: string) => Promise<void>;
+  setFieldsAction: (
+    id: string,
+    patch: Record<string, unknown>,
+  ) => Promise<AutosaveResult>;
 }
 
 /**
@@ -73,7 +78,6 @@ interface Props {
 export function CollectionItemsManager({
   items,
   collections,
-  locale,
   statusOptions,
   enableReorder = true,
   showCollection = false,
@@ -84,6 +88,7 @@ export function CollectionItemsManager({
   bulkStatusAction,
   bulkDeleteAction,
   moveAction,
+  setFieldsAction,
 }: Props) {
   const t = useTranslations("AdminGallery");
   const tAdmin = useTranslations("Admin");
@@ -128,6 +133,7 @@ export function CollectionItemsManager({
     setAltAction,
     reorderAction,
   });
+  const [editItem, setEditItem] = useState<GalleryManagerItem | null>(null);
 
   if (items.length === 0) {
     return (
@@ -463,21 +469,18 @@ export function CollectionItemsManager({
                             >
                               <Type className="size-3.5" aria-hidden="true" />
                             </button>
-                            <Button
-                              asChild
-                              variant="ghost"
-                              size="sm"
-                              className="size-7 shrink-0 p-0"
+                            <button
+                              type="button"
+                              onClick={() => setEditItem(item)}
+                              aria-label={t("editItem")}
+                              title={t("editItem")}
+                              className={cn(
+                                "inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                                FOCUS_RING,
+                              )}
                             >
-                              <Link
-                                href={`/admin/gallery/${item.collectionSlug}/${item.slug}`}
-                                locale={locale}
-                                aria-label={t("editItem")}
-                                title={t("editItem")}
-                              >
-                                <Pencil className="size-3.5" aria-hidden="true" />
-                              </Link>
-                            </Button>
+                              <Pencil className="size-3.5" aria-hidden="true" />
+                            </button>
                             <button
                               type="button"
                               disabled={itemBusy}
@@ -560,6 +563,15 @@ export function CollectionItemsManager({
         </SortableContext>
       </DndContext>
       )}
+
+      <GalleryItemEditPanel
+        item={editItem}
+        open={editItem !== null}
+        onOpenChange={(o) => {
+          if (!o) setEditItem(null);
+        }}
+        setFields={setFieldsAction}
+      />
     </div>
   );
 }

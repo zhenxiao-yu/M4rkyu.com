@@ -25,6 +25,11 @@ export interface GalleryManagerItem {
   featured: boolean;
   alt: string;
   caption: string;
+  location: string;
+  capturedAt: string;
+  aspect: string;
+  tags: string[];
+  pinned: boolean;
   imageUrl: string | null;
   /** Owning collection — drives the per-item edit link (items can span
    * collections in the library view). */

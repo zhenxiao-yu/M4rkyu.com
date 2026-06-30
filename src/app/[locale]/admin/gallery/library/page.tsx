@@ -15,6 +15,7 @@ import {
   reorderItemAction,
   setItemAltAction,
   setItemFeaturedAction,
+  setItemFieldsAction,
   setItemStatusAction,
 } from "@/lib/gallery/admin";
 import {
@@ -54,6 +55,11 @@ export default async function GalleryLibraryPage({
     imageUrl: storageUrlFor(item.storagePath),
     collectionSlug: item.collectionSlug,
     collectionTitle: titleById.get(item.collectionId) ?? "",
+    location: item.location ?? "",
+    capturedAt: item.capturedAt ?? "",
+    aspect: item.aspect,
+    tags: item.tags,
+    pinned: item.pinned,
   }));
   const moveTargets = collections.map((c) => ({ id: c.id, title: c.title }));
   const statusOptions = [
@@ -93,6 +99,7 @@ export default async function GalleryLibraryPage({
         bulkStatusAction={bulkSetItemStatusAction}
         bulkDeleteAction={bulkDeleteItemsAction}
         moveAction={moveItemsAction}
+        setFieldsAction={setItemFieldsAction}
       />
     </>
   );

@@ -31,6 +31,7 @@ import {
   reorderItemAction,
   setItemAltAction,
   setItemFeaturedAction,
+  setItemFieldsAction,
   setItemStatusAction,
   updateCollectionAction,
 } from "@/lib/gallery/admin";
@@ -95,6 +96,11 @@ export default async function CollectionDetailPage({ params }: PageProps) {
     imageUrl: storageUrlFor(item.storagePath),
     collectionSlug: collection.slug,
     collectionTitle: collection.title,
+    location: item.location ?? "",
+    capturedAt: item.capturedAt ?? "",
+    aspect: item.aspect,
+    tags: item.tags,
+    pinned: item.pinned,
   }));
   const otherCollections = allCollections
     .filter((c) => c.id !== collection.id)
@@ -260,6 +266,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
           bulkStatusAction={bulkSetItemStatusAction}
           bulkDeleteAction={bulkDeleteItemsAction}
           moveAction={moveItemsAction}
+          setFieldsAction={setItemFieldsAction}
         />
       </div>
     </>
