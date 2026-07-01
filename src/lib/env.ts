@@ -73,6 +73,13 @@ export const env = createEnv({
     // chat streams a graceful "unavailable" error and the rest of the site is
     // unaffected. Mint at https://platform.deepseek.com → API keys.
     DEEPSEEK_API_KEY: z.string().optional(),
+    // Vision model for admin image suggestions (alt/caption/tags). Optional:
+    // when unset the "Suggest with AI" button degrades to a toast. Any
+    // OpenAI-compatible chat endpoint works — default targets a free
+    // OpenRouter vision model; override base/model for Gemini, etc.
+    AI_VISION_API_KEY: z.string().optional(),
+    AI_VISION_BASE_URL: z.string().url().optional(),
+    AI_VISION_MODEL: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
@@ -116,6 +123,9 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
+    AI_VISION_API_KEY: process.env.AI_VISION_API_KEY,
+    AI_VISION_BASE_URL: process.env.AI_VISION_BASE_URL,
+    AI_VISION_MODEL: process.env.AI_VISION_MODEL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
