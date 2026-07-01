@@ -101,6 +101,8 @@ export default async function CollectionDetailPage({ params }: PageProps) {
     aspect: item.aspect,
     tags: item.tags,
     pinned: item.pinned,
+    width: item.width,
+    height: item.height,
   }));
   const otherCollections = allCollections
     .filter((c) => c.id !== collection.id)

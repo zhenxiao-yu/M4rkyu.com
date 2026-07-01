@@ -30,6 +30,8 @@ export interface GalleryManagerItem {
   aspect: string;
   tags: string[];
   pinned: boolean;
+  width: number | null;
+  height: number | null;
   imageUrl: string | null;
   /** Owning collection — drives the per-item edit link (items can span
    * collections in the library view). */

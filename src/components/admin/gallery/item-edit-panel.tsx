@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
+import { analyzeImageIssues } from "@/lib/gallery/image-issues";
 import {
   AutosaveSelect,
   AutosaveTags,
@@ -87,6 +88,12 @@ export function GalleryItemEditPanel({
     label: v,
   }));
 
+  const issues = analyzeImageIssues({
+    alt: seed.alt ?? item.alt,
+    width: item.width,
+    height: item.height,
+  });
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -138,6 +145,21 @@ export function GalleryItemEditPanel({
               <span className="sr-only">{tCommon("close")}</span>
             </Dialog.Close>
           </div>
+
+          {issues.length > 0 ? (
+            <ul className="mb-3 flex flex-wrap gap-1.5 p-0">
+              {issues.map((issue) => (
+                <li
+                  key={issue.key}
+                  className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/5 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.12em] text-destructive"
+                >
+                  {t(
+                    `panel.issue${issue.key === "missingAlt" ? "MissingAlt" : "TooSmall"}`,
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           <div className="grid gap-4">
             <AutosaveText

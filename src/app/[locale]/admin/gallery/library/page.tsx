@@ -60,6 +60,8 @@ export default async function GalleryLibraryPage({
     aspect: item.aspect,
     tags: item.tags,
     pinned: item.pinned,
+    width: item.width,
+    height: item.height,
   }));
   const moveTargets = collections.map((c) => ({ id: c.id, title: c.title }));
   const statusOptions = [
