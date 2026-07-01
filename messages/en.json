@@ -2023,7 +2023,11 @@
     "panel": {
       "title": "Edit photo",
       "tagsLabel": "Tags",
-      "tagsHint": "Comma-separated"
+      "tagsHint": "Comma-separated",
+      "suggest": "Suggest with AI",
+      "suggesting": "Looking…",
+      "suggestDone": "AI filled alt, caption & tags — review them.",
+      "suggestFailed": "Couldn't read the photo. Try again or fill it in."
     },
     "collectionsCount": "{count, plural, =0 {No collections} one {# collection} other {# collections}}",
     "itemCount": "{count, plural, =0 {no items} one {# item} other {# items}}",

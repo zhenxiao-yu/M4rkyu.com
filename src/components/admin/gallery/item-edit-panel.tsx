@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { cn, FOCUS_RING_INSET } from "@/lib/utils";
 import {
   AutosaveSelect,
@@ -13,6 +16,8 @@ import {
 } from "../autosave/fields";
 import type { AutosaveResult } from "../autosave/use-autosave-field";
 import type { GalleryManagerItem } from "./use-collection-items-manager";
+
+type VisionMeta = { alt: string; caption: string; tags: string[] };
 
 export function GalleryItemEditPanel({
   item,
@@ -30,6 +35,37 @@ export function GalleryItemEditPanel({
 }) {
   const t = useTranslations("AdminGallery");
   const tCommon = useTranslations("Common");
+  // Hooks must run unconditionally — declare them before the null guard.
+  const [busy, setBusy] = useState(false);
+  const [seed, setSeed] = useState<Partial<VisionMeta>>({});
+  const [rev, setRev] = useState(0);
+
+  async function suggest() {
+    if (!item?.imageUrl) return;
+    setBusy(true);
+    try {
+      const res = await fetch("/api/admin/assist/vision", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ imageUrl: item.imageUrl }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const meta = (await res.json()) as VisionMeta;
+      await setFields(item.id, {
+        alt: meta.alt,
+        caption: meta.caption,
+        tags: meta.tags,
+      });
+      setSeed({ alt: meta.alt, caption: meta.caption, tags: meta.tags });
+      setRev((r) => r + 1);
+      toast.success(t("panel.suggestDone"));
+    } catch {
+      toast.error(t("panel.suggestFailed"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (!item) return null;
 
   const id = item.id;
@@ -82,6 +118,16 @@ export function GalleryItemEditPanel({
                 {item.title}
               </Dialog.Description>
             </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={busy || !item.imageUrl}
+              onClick={suggest}
+            >
+              <Sparkles aria-hidden="true" className="size-3.5" />
+              {busy ? t("panel.suggesting") : t("panel.suggest")}
+            </Button>
             <Dialog.Close
               className={cn(
                 "rounded-sm p-1 text-muted-foreground opacity-80 transition-opacity hover:opacity-100",
@@ -100,20 +146,23 @@ export function GalleryItemEditPanel({
               onSave={(v) => save({ title: v })}
             />
             <AutosaveText
+              key={`alt-${rev}`}
               label={t("altLabel")}
-              value={item.alt}
+              value={seed.alt ?? item.alt}
               hint={t("altHint")}
               onSave={(v) => save({ alt: v })}
             />
             <AutosaveText
+              key={`caption-${rev}`}
               label={t("captionLabel")}
-              value={item.caption}
+              value={seed.caption ?? item.caption}
               multiline
               onSave={(v) => save({ caption: v })}
             />
             <AutosaveTags
+              key={`tags-${rev}`}
               label={t("panel.tagsLabel")}
-              value={item.tags}
+              value={seed.tags ?? item.tags}
               hint={t("panel.tagsHint")}
               onSave={(v) => save({ tags: v })}
             />
