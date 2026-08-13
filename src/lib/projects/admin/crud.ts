@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { copySlugLikePattern, nextCopySlug } from "@/lib/admin/slug";
 import {
   type AdminActionState,
   adminError,
@@ -141,17 +142,14 @@ export async function duplicateProjectAction(id: string) {
   const source = data as Record<string, unknown> & { slug: string; title: string };
 
   // Find a free `<slug>-copy[-n]` slug.
-  let slug = `${source.slug}-copy`.slice(0, 80);
-  for (let n = 2; ; n += 1) {
-    const { data: clash } = await supabase
-      .from("projects")
-      .select("id")
-      .eq("slug", slug)
-      .maybeSingle();
-    if (!clash) break;
-    slug = `${source.slug}-copy-${n}`.slice(0, 80);
-    if (n > 50) return;
-  }
+  const { data: takenSlugs } = await supabase
+    .from("projects")
+    .select("slug")
+    .like("slug", copySlugLikePattern(source.slug));
+  const slug = nextCopySlug(
+    source.slug,
+    ((takenSlugs ?? []) as { slug: string }[]).map((r) => r.slug),
+  );
 
   const { error } = await supabase
     .from("projects")

@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { reorderRow } from "@/lib/admin/reorder";
 import {
   type AdminActionState,
   adminError,
@@ -239,30 +240,10 @@ export async function reorderItemAction(id: string, direction: "up" | "down") {
   const collectionId = (itemRow as { collection_id: string } | null)
     ?.collection_id;
   if (!collectionId) return;
-
-  const { data } = await supabase
-    .from("gallery_items")
-    .select("id, sort_order")
-    .eq("collection_id", collectionId)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
-  const rows = (data ?? []) as { id: string; sort_order: number }[];
-  const index = rows.findIndex((r) => r.id === id);
-  if (index === -1) return;
-  const target = direction === "up" ? index - 1 : index + 1;
-  if (target < 0 || target >= rows.length) return;
-  [rows[index], rows[target]] = [rows[target], rows[index]];
-  await Promise.all(
-    rows
-      .map((row, position) => ({ row, position }))
-      .filter(({ row, position }) => row.sort_order !== position)
-      .map(({ row, position }) =>
-        supabase
-          .from("gallery_items")
-          .update({ sort_order: position })
-          .eq("id", row.id),
-      ),
-  );
+  await reorderRow("gallery_items", id, direction, {
+    column: "collection_id",
+    value: collectionId,
+  });
   revalidateGallery();
 }
 

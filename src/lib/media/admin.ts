@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { reorderRow } from "@/lib/admin/reorder";
+import { copySlugLikePattern, nextCopySlug } from "@/lib/admin/slug";
 import {
   type AdminActionState,
   adminError,
@@ -210,27 +212,7 @@ export async function setMediaStatusAction(id: string, status: string) {
 
 export async function reorderMediaAction(id: string, direction: "up" | "down") {
   await requireAdmin();
-  const supabase = await createSupabaseServerClient();
-  const { data } = await supabase
-    .from("media_items")
-    .select("id, sort_order")
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
-  const rows = (data ?? []) as { id: string; sort_order: number }[];
-  const index = rows.findIndex((r) => r.id === id);
-  if (index === -1) return;
-  const target = direction === "up" ? index - 1 : index + 1;
-  if (target < 0 || target >= rows.length) return;
-  [rows[index], rows[target]] = [rows[target], rows[index]];
-  // Normalize sort_order to the new positions; only write what changed.
-  await Promise.all(
-    rows
-      .map((row, position) => ({ row, position }))
-      .filter(({ row, position }) => row.sort_order !== position)
-      .map(({ row, position }) =>
-        supabase.from("media_items").update({ sort_order: position }).eq("id", row.id),
-      ),
-  );
+  await reorderRow("media_items", id, direction);
   revalidateMedia();
 }
 
@@ -263,17 +245,14 @@ export async function duplicateMediaAction(id: string) {
   const source = data as Record<string, unknown> & { slug: string; title: string };
 
   // Find a free `<slug>-copy[-n]` slug.
-  let slug = `${source.slug}-copy`.slice(0, 80);
-  for (let n = 2; ; n += 1) {
-    const { data: clash } = await supabase
-      .from("media_items")
-      .select("id")
-      .eq("slug", slug)
-      .maybeSingle();
-    if (!clash) break;
-    slug = `${source.slug}-copy-${n}`.slice(0, 80);
-    if (n > 50) return;
-  }
+  const { data: takenSlugs } = await supabase
+    .from("media_items")
+    .select("slug")
+    .like("slug", copySlugLikePattern(source.slug));
+  const slug = nextCopySlug(
+    source.slug,
+    ((takenSlugs ?? []) as { slug: string }[]).map((r) => r.slug),
+  );
 
   // Null the poster on the copy so two rows never point at one storage
   // object (a later delete of one would orphan the other's image).

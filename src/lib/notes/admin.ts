@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { copySlugLikePattern, nextCopySlug } from "@/lib/admin/slug";
 import {
   type AdminActionState,
   adminError,
@@ -235,17 +236,15 @@ export async function duplicateNoteAction(id: string) {
   if (!data) return;
   const source = data as Record<string, unknown> & { slug: string; title: string };
 
-  let slug = `${source.slug}-copy`.slice(0, 100);
-  for (let n = 2; ; n += 1) {
-    const { data: clash } = await supabase
-      .from("notes")
-      .select("id")
-      .eq("slug", slug)
-      .maybeSingle();
-    if (!clash) break;
-    slug = `${source.slug}-copy-${n}`.slice(0, 100);
-    if (n > 50) return;
-  }
+  const { data: takenSlugs } = await supabase
+    .from("notes")
+    .select("slug")
+    .like("slug", copySlugLikePattern(source.slug));
+  const slug = nextCopySlug(
+    source.slug,
+    ((takenSlugs ?? []) as { slug: string }[]).map((r) => r.slug),
+    100,
+  );
 
   const { error } = await supabase.from("notes").insert({
     ...source,
