@@ -12,6 +12,7 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import { arrayField, booleanField, pickField } from "@/lib/admin/form-parsing";
 import { uploadProductImage, deleteProductImage } from "@/lib/shop/storage";
 
 // Admin server actions for the shop catalog. requireAdmin gate,
@@ -46,23 +47,6 @@ const productFormSchema = z.object({
 
 const DATA_COLUMNS =
   "slug, title, summary, description, category, kind, price_in_cents, currency, image_path, image_alt, status, featured, in_stock, tags, digital_note, sort_order";
-
-function pickField(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
-}
-
-function booleanField(formData: FormData, key: string): boolean {
-  return formData.get(key) === "on" || formData.get(key) === "true";
-}
-
-// Textarea arrays: one item per line, trimmed, empties dropped.
-function arrayField(formData: FormData, key: string): string[] {
-  return pickField(formData, key)
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-}
 
 function parseForm(formData: FormData) {
   return productFormSchema.parse({

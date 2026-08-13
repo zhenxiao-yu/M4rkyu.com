@@ -12,6 +12,7 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import { arrayField, booleanField, pickField } from "@/lib/admin/form-parsing";
 
 // Admin server actions for resources. requireAdmin gate, Zod-validated
 // input, RLS as the underlying enforcement layer. create/update return
@@ -42,23 +43,6 @@ const resourceFormSchema = z.object({
 
 const DATA_COLUMNS =
   "slug, name, category, description, why, type, link, pricing, tags, status, featured, icon_key, sort_order";
-
-function pickField(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
-}
-
-function booleanField(formData: FormData, key: string): boolean {
-  return formData.get(key) === "on" || formData.get(key) === "true";
-}
-
-// Textarea arrays: one item per line, trimmed, empties dropped.
-function arrayField(formData: FormData, key: string): string[] {
-  return pickField(formData, key)
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-}
 
 function parseForm(formData: FormData) {
   return resourceFormSchema.parse({

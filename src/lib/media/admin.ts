@@ -12,6 +12,7 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import { pickField } from "@/lib/admin/form-parsing";
 import {
   uploadContentImage,
   deleteContentImage,
@@ -41,11 +42,6 @@ const mediaFormSchema = z.object({
 
 const DATA_COLUMNS =
   "slug, title, format, status, description, duration, poster_path, poster_alt, sort_order";
-
-function pickField(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
-}
 
 function nullishText(value: string): string | null {
   const trimmed = value.trim();

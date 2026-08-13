@@ -12,6 +12,7 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import { pickField } from "@/lib/admin/form-parsing";
 
 // Admin server actions for the /notes microblog. requireAdmin gate,
 // Zod-validated input, RLS as the underlying enforcement layer.
@@ -62,11 +63,6 @@ const noteFormSchema = z.object({
 
 const DATA_COLUMNS =
   "slug, kind, title, body, status, tags, published_at, link_url, link_label, rating, tiers, sort_order";
-
-function pickField(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
-}
 
 function nullishText(value: string): string | null {
   const trimmed = value.trim();

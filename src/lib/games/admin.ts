@@ -12,6 +12,7 @@ import {
   dbErrorToMessage,
   zodToActionState,
 } from "@/lib/admin/action-state";
+import { arrayField, pickField } from "@/lib/admin/form-parsing";
 
 // Admin server actions for games. requireAdmin gate, Zod-validated
 // input, RLS as the underlying enforcement layer. create/update return
@@ -50,18 +51,6 @@ const gameFormSchema = z.object({
 
 const DATA_COLUMNS =
   "slug, title, engine, year, status, pitch, role, notes, cover_src, cover_alt, trailer_url, platforms, pillars, postmortem, outcome, build_links, sort_order";
-
-function pickField(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
-}
-
-function arrayField(formData: FormData, key: string): string[] {
-  return pickField(formData, key)
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-}
 
 // buildLinks textarea: one link per line in `Label|https://url` form.
 function buildLinksField(

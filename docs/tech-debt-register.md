@@ -1,7 +1,7 @@
 # Technical Debt Register
 
-Last updated: 2026-06-22
-Total items: 7 (3 resolved, 4 open) | Estimated remaining effort: 3×M + 1×S
+Last updated: 2026-08-12
+Total items: 9 (4 resolved, 5 open) | Estimated remaining effort: 2×M + 2×S + 1×L (remaining open are mostly accepted/watch)
 
 Tech debt is a tool, not a failure — this register tracks conscious decisions.
 The codebase is otherwise notably clean: zero `TODO`/`FIXME`/`HACK` in `src`,
@@ -22,8 +22,10 @@ where Low/Med/High/Critical = 1/2/3/4 and S/M/L/XL = 1/2/3/4. Sorted high→low.
 | TD-003 | Dependency | **Mostly done (2026-05-31).** `shiki`/`@shikijs/rehype` 3→4 and `typescript` 5→6 both bumped — each clean on `validate` + a full `next build`, zero source edits. Still held: `eslint` 9→10 (**blocked — see below**), `@types/node` at 20 (pinned for Node 22.x), ~12 minor in-range bumps. | `package.json` | M | Med | 1.0 | 2026-05-30 | Backlog |
 | TD-004 | Documentation | **Resolved 2026-05-30.** Archive-hero follow-up implemented: `priority` added to the `archive/[collection]/page.tsx` cover `<Image>` (route LCP) and `docs/PERFORMANCE_AUDIT.md` §2/§13 updated to mark it landed. `/portal` archival drift reconciled — no doc presents `/portal` as a current route. | `src/app/[locale]/archive/[collection]/page.tsx`, `docs/PERFORMANCE_AUDIT.md`, `docs/COMPONENT_MAP.md`, `docs/REDESIGN_DIRECTION.md`, `docs/UI_LIBRARY_STRATEGY.md`, `docs/SHADCN_V4_REFERENCE.md` | S | Low | — | 2026-05-30 | Resolved |
 | TD-005 | Test | **Resolved 2026-06-22.** The two "command palette" smoke tests were red on every desktop project, for two stacked reasons: (1) they asserted `getByRole("button", { name: "Command palette" })`, but the desktop pill trigger's accessible name is its *visible text* **"Search…"** (`CommandPaletteTrigger`, no `aria-label`) and the `CommandPaletteIconTrigger` that *would* carry "Command palette" is **never rendered** — so the click hung to the 30s timeout (the "won't open" symptom a prior session chased); and (2) past that, they searched for content that no longer exists — all `content/shop.ts` products are `status:"draft"` so `getShopProducts()` returns none ("wallpaper" → "No matches."), and the "Open audio settings" quick action has been removed from the palette. Rewrote both to force a desktop viewport (so the pill is on the rail) and assert **code-defined** palette entries instead: search→navigate to the Colophon page, and pick the Terminal palette from settings → `data-palette="terminal"`. Verified green on the 390 + 1280 projects. | `tests/smoke.spec.ts` | M | Med | 3.0 | 2026-06-22 | Resolved |
-| TD-006 | Code Quality | **Open (found 2026-06-22).** Form-field parsers (`pickField`/`booleanField`/`arrayField`) and the `setStatus`/`reorder`/`duplicate`/`delete` server-action shapes are re-implemented across `lib/{shop,media,games,notes,resources}/admin.ts`, while `lib/gallery/admin/shared.ts` already centralizes the parsers. Clears the "3rd caller" extraction bar — but the admin layer is **under active development** (uncommitted form work in `components/admin/**`), so extracting mid-flight would thrash open changes. Defer until admin settles, then lift shared parsers → `lib/admin/form-parsing.ts` and CRUD shapes → action factories. (Related, lower value: ~25 route `generateMetadata` blocks share a shape that could fold into a `lib/seo` helper, but each reads clearly inline — not worth the 25-file churn yet.) | `src/lib/{shop,media,games,notes,resources}/admin.ts`, `src/lib/gallery/admin/shared.ts` | M | Med | 1.0 | 2026-06-22 | Backlog |
-| TD-007 | Code Quality | **Open (found 2026-06-22).** `src/app/api/health/route.ts:4` sets `runtime = "edge"` — the only edge-runtime route in the app. CLAUDE.md only forbids edge on the *OG image* routes (commit 4ff0a5e), so this is **not** a doctrine violation, but edge was deliberately stripped elsewhere and this lone holdout deserves a conscious call: keep it (a boots-only probe is a fair edge use) or drop to the default Node runtime for consistency. No user impact either way. | `src/app/api/health/route.ts` | S | Low | 1.0 | 2026-06-22 | Backlog |
+| TD-006 | Code Quality | **Parsers resolved 2026-08-12; CRUD-shape half consciously deferred.** The shared form-field parsers (`pickField`/`booleanField`/`arrayField`) were lifted into `lib/admin/form-parsing.ts` (byte-identical bodies verified first) and wired into all five domain modules — `lib/{shop,media,games,notes,resources}/admin.ts` — removing 11 duplicate function bodies. Shipped with `tests/unit/admin/form-parsing.test.ts` (9 cases). `notes`' distinct `arrayField(value: string)` variant and the 2-caller `nullishText` were left local (below the "3rd caller" bar). `lib/gallery/admin/shared.ts` was left untouched (active subtree). **Still open (lower value):** the `setStatus`/`reorder`/`duplicate`/`delete` server-action *shapes* remain per-domain — folding those into action factories is a larger, riskier refactor over live server actions with thin marginal value, so deferred. (Also lower value: ~25 route `generateMetadata` blocks share a shape but each reads clearly inline — not worth the 25-file churn yet.) | `src/lib/admin/form-parsing.ts`, `src/lib/{shop,media,games,notes,resources}/admin.ts` | S | Med | 2.0 | 2026-06-22 | Backlog (CRUD half) |
+| TD-007 | Code Quality | **Resolved 2026-08-12.** Dropped `export const runtime = "edge"` from `src/app/api/health/route.ts` so the uptime probe runs on the default Node runtime, consistent with the rest of the app (edge was deliberately stripped everywhere else). The probe does no env/third-party reads, so the runtime change is behavior-neutral; `dynamic = "force-dynamic"` and the no-store headers are unchanged. Verified: `validate` green. | `src/app/api/health/route.ts` | S | Low | 1.0 | 2026-06-22 | Resolved |
+| TD-008 | Architecture | **Open (found 2026-08-12).** The DB-as-source-of-truth cutover (commit `e3f0e46`) left `content/{projects,games}.ts` (+`resources`) **dual-purpose**: cold-start fallback *and* the `/admin/import` seed. `lib/{projects,games}/source.ts` selects DB-first with static-fallback, so public surfaces never see the split. Conscious + documented in-code, zero user impact — but the two largest files in the repo (`projects.ts` 1363, `resources.ts` 1310) are now static fixtures that become dead weight in prod once the DB is seeded (except as re-import seeds). **Accepted:** keeping them is the zero-downtime-safe choice; removing now would delete the only fallback if the DB is empty. Revisit trimming once the prod DB is confirmed authoritative and seeded. | `src/content/{projects,games,resources}.ts`, `src/lib/{projects,games}/source.ts` | S | Low | 1.0 | 2026-08-12 | Backlog (accepted) |
+| TD-009 | Code Quality | **Open (found 2026-08-12).** The admin-gallery autosave/vision work added large components: `components/admin/gallery/batch-upload-dropzone.tsx` (705 — now the repo's largest component: drag/drop + client-side optimize + concurrency-4 upload queue + aspect detect + crop), `collection-items-manager.tsx` (~600), `lib/gallery/admin/items.ts` (435). Cohesive single-concern (per TD-002's philosophy, large-but-cohesive ≠ debt) so not urgent, but the dropzone is a genuine complexity hotspot worth a **watch**: if it gains a second concern, split the upload-queue/optimize logic into a tested `lib/gallery/admin/upload-queue.ts`. | `src/components/admin/gallery/batch-upload-dropzone.tsx`, `src/components/admin/gallery/collection-items-manager.tsx`, `src/lib/gallery/admin/items.ts` | L | Low | 0.5 | 2026-08-12 | Backlog (watch) |
 
 ## Prioritization notes (2026-05-30)
 
@@ -73,6 +75,34 @@ Frequency-of-encounter is how often the debt is actually *hit* during work:
   changes (refactor-into-a-moving-target otherwise).
 - **TD-007 (freq 1 → score 1.0)** — a one-line consistency decision, no runtime
   impact; recorded so the lone edge route stays a conscious choice, not drift.
+
+### New on 2026-08-12 (re-scan)
+
+Since 2026-06-22, a **DB-as-source-of-truth cutover** (`e3f0e46`) and a large
+**admin importer + AI-vision** surface landed. The re-scan reaffirmed the clean
+baseline and found two new conscious-decision items plus one status change:
+
+- **Baseline still clean** — zero real `TODO`/`FIXME`/`HACK` in `src` (the five
+  in `lib/github/repos.ts` remain a placeholder *string constant*); no `as any`
+  / `: any` / `@ts-ignore` / `@ts-nocheck`; the lone `@ts-expect-error`
+  (`split-reveal.tsx`) is documented; all `console.*` are structured prefixed
+  logging; all `eslint-disable` lines justified inline. Crucially, every new
+  surface (11-file `tests/unit/admin/import/*` suite, `field-patch`,
+  `vision-parse`, `image-issues`, `crop`) **shipped with unit tests** — the
+  TD-001 "new logic ships with tests" doctrine held, so **no new test debt**.
+  The new vision route is SSRF-guarded, rate-limited, admin-gated, and
+  size-capped — **no security debt**.
+- **TD-008 (freq 1 → score 1.0)** — the dual-source content fixtures. Accepted:
+  they are the zero-downtime fallback + import seed. No action until the prod DB
+  is confirmed seeded.
+- **TD-009 (freq 0.5 → score 0.5)** — large new admin-gallery components.
+  Cohesive today; recorded as a watch, not a task.
+- **TD-006 status change → now actionable.** Its 2026-06-22 defer-reason ("admin
+  under active development, uncommitted form work") has **cleared**: the
+  duplicated `lib/{shop,media,games,notes,resources}/admin.ts` files have been
+  stable since ~2026-06-22 (most since May 27); only the gallery subtree churned.
+  This is the safe window to lift the shared form-field parsers into
+  `lib/admin/form-parsing.ts`. Scheduled for repayment (see resolution note).
 
 ## Accepted-debt rationale
 
